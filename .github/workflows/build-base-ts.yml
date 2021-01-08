@@ -1,8 +1,6 @@
 name: Create and Build app using TypeScript base
 
-on:
-  schedule:
-    - cron: '31 1,12 * * *'
+on: [push, pull_request]
 
 jobs:
   build:

@@ -1,6 +1,8 @@
-name: Create and Build app using Ecma Script base
+name: Periodic - Create and Build app using TypeScript base
 
-on: [push, pull_request]
+on:
+  schedule:
+    - cron: '31 1,12 * * *'
 
 jobs:
   build:
@@ -13,8 +15,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - name: Create app using Ecma Script base
-        run: npx create-react-webpack-project app
+      - name: Create app using TypeScript base
+        run: npx create-react-webpack-project app --typescript
       - name: Lint fix and build
         run: |
           cd app

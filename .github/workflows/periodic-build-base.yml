@@ -1,6 +1,8 @@
-name: Create and Build app using Ecma Script base
+name: Periodic - Create and Build app using Ecma Script base
 
-on: [push, pull_request]
+on:
+  schedule:
+    - cron: '31 1,12 * * *'
 
 jobs:
   build:
