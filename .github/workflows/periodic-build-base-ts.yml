@@ -17,8 +17,15 @@ jobs:
           node-version: '12'
       - name: Create app using TypeScript base
         run: npx create-react-webpack-project app --typescript
-      - name: Lint fix and build
+      - name: Lint code after build
         run: |
           cd app
           yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
           yarn build
