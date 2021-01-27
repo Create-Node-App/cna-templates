@@ -26,4 +26,4 @@ jobs:
       - name: Build dev bundle
         run: |
           cd app
-          yarn build
+          yarn build:dev
