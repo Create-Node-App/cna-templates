@@ -147,54 +147,6 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  ant-design-es:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install
-        run: yarn --no-progress --non-interactive --no-lockfile
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-      - name: Create app using Ecma Script + Ant Design
-        run: npx create-react-webpack-project app --verbose --ant-design
-      - name: Lint code after build
-        run: |
-          cd app
-          yarn lint:fix
-      - name: Build prod bundle
-        run: |
-          cd app
-          yarn build
-      - name: Build dev bundle
-        run: |
-          cd app
-          yarn build:dev
-  ant-design-ts:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install
-        run: yarn --no-progress --non-interactive --no-lockfile
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-      - name: Create app using TypeScript + Ant Design
-        run: npx create-react-webpack-project app --verbose --typescript --ant-design
-      - name: Lint code after build
-        run: |
-          cd app
-          yarn lint:fix
-      - name: Build prod bundle
-        run: |
-          cd app
-          yarn build
-      - name: Build dev bundle
-        run: |
-          cd app
-          yarn build:dev
   semantic-ui-es:
     runs-on: ubuntu-latest
     steps:
