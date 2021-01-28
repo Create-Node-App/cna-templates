@@ -3,7 +3,7 @@ name: Create and Build app using addon/base
 on: [push, pull_request]
 
 jobs:
-  base/es:
+  base-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  base/ts:
+  base-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

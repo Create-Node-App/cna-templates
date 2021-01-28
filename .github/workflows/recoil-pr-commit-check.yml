@@ -3,7 +3,7 @@ name: Create and Build app using addon/recoil
 on: [push, pull_request]
 
 jobs:
-  recoil/es:
+  recoil-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  recoil/ts:
+  recoil-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

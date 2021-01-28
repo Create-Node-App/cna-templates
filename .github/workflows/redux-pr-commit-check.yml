@@ -3,7 +3,7 @@ name: Create and Build app using addon/redux
 on: [push, pull_request]
 
 jobs:
-  redux/es:
+  redux-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  redux/ts:
+  redux-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  redux-saga/es:
+  redux-saga-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  redux-saga/ts:
+  redux-saga-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

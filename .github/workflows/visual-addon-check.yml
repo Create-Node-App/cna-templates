@@ -3,7 +3,7 @@ name: Create and Build app with different visual frameworks
 on: [push, pull_request]
 
 jobs:
-  bootstrap/es:
+  bootstrap-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  bootstrap/ts:
+  bootstrap-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  material-ui/es:
+  material-ui-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  material-ui/ts:
+  material-ui-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -99,7 +99,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  ant-design/es:
+  ant-design-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -123,7 +123,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  ant-design/ts:
+  ant-design-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -147,7 +147,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  ant-design/es:
+  ant-design-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -171,7 +171,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  ant-design/ts:
+  ant-design-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -195,7 +195,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  semantic-ui/es:
+  semantic-ui-es:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -219,7 +219,7 @@ jobs:
         run: |
           cd app
           yarn build:dev
-  semantic-ui/ts:
+  semantic-ui-ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
