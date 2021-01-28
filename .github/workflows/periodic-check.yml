@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script base
-        run: npx create-react-webpack-project app
+        run: npx create-react-webpack-project app --verbose
       - name: Lint code after build
         run: |
           cd app
@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript base
-        run: npx create-react-webpack-project app --typescript
+        run: npx create-react-webpack-project app --verbose --typescript
       - name: Lint code after build
         run: |
           cd app
@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux
-        run: npx create-react-webpack-project app --redux
+        run: npx create-react-webpack-project app --verbose --redux
       - name: Lint code after build
         run: |
           cd app
@@ -88,7 +88,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux
-        run: npx create-react-webpack-project app --typescript --redux
+        run: npx create-react-webpack-project app --verbose --typescript --redux
       - name: Lint code after build
         run: |
           cd app
@@ -112,7 +112,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux Saga
-        run: npx create-react-webpack-project app --redux --saga
+        run: npx create-react-webpack-project app --verbose --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -136,7 +136,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux Saga
-        run: npx create-react-webpack-project app --typescript --redux --saga
+        run: npx create-react-webpack-project app --verbose --typescript --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -160,7 +160,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Recoil
-        run: npx create-react-webpack-project app --recoil
+        run: npx create-react-webpack-project app --verbose --recoil
       - name: Lint code after build
         run: |
           cd app
@@ -184,7 +184,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Recoil
-        run: npx create-react-webpack-project app --typescript --recoil
+        run: npx create-react-webpack-project app --verbose --typescript --recoil
       - name: Lint code after build
         run: |
           cd app

@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Bootstrap
-        run: npx create-react-webpack-project app --bootstrap
+        run: npx create-react-webpack-project app --verbose --bootstrap
       - name: Lint code after build
         run: |
           cd app
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Bootstrap
-        run: npx create-react-webpack-project app --typescript --bootstrap
+        run: npx create-react-webpack-project app --verbose --typescript --bootstrap
       - name: Lint code after build
         run: |
           cd app
@@ -62,7 +62,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Material UI
-        run: npx create-react-webpack-project app --material-ui
+        run: npx create-react-webpack-project app --verbose --material-ui
       - name: Lint code after build
         run: |
           cd app
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Material UI
-        run: npx create-react-webpack-project app --typescript --material-ui
+        run: npx create-react-webpack-project app --verbose --typescript --material-ui
       - name: Lint code after build
         run: |
           cd app
@@ -110,7 +110,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + Ant Design
-        run: npx create-react-webpack-project app --ant-design
+        run: npx create-react-webpack-project app --verbose --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -134,7 +134,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Ant Design
-        run: npx create-react-webpack-project app --typescript --ant-design
+        run: npx create-react-webpack-project app --verbose --typescript --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -158,7 +158,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + Ant Design
-        run: npx create-react-webpack-project app --ant-design
+        run: npx create-react-webpack-project app --verbose --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -182,7 +182,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Ant Design
-        run: npx create-react-webpack-project app --typescript --ant-design
+        run: npx create-react-webpack-project app --verbose --typescript --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -206,7 +206,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Semantic UI
-        run: npx create-react-webpack-project app --semantic-ui
+        run: npx create-react-webpack-project app --verbose --semantic-ui
       - name: Lint code after build
         run: |
           cd app
@@ -230,7 +230,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Semantic UI
-        run: npx create-react-webpack-project app --typescript --semantic-ui
+        run: npx create-react-webpack-project app --verbose --typescript --semantic-ui
       - name: Lint code after build
         run: |
           cd app

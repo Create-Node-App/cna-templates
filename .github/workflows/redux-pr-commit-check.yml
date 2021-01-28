@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux
-        run: npx create-react-webpack-project app --redux
+        run: npx create-react-webpack-project app --verbose --redux
       - name: Lint code after build
         run: |
           cd app
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux
-        run: npx create-react-webpack-project app --typescript --redux
+        run: npx create-react-webpack-project app --verbose --typescript --redux
       - name: Lint code after build
         run: |
           cd app
@@ -62,7 +62,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux Saga
-        run: npx create-react-webpack-project app --redux --saga
+        run: npx create-react-webpack-project app --verbose --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux Saga
-        run: npx create-react-webpack-project app --typescript --redux --saga
+        run: npx create-react-webpack-project app --verbose --typescript --redux --saga
       - name: Lint code after build
         run: |
           cd app

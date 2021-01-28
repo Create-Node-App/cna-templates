@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Recoil
-        run: npx create-react-webpack-project app --recoil
+        run: npx create-react-webpack-project app --verbose --recoil
       - name: Lint code after build
         run: |
           cd app
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Recoil
-        run: npx create-react-webpack-project app --typescript --recoil
+        run: npx create-react-webpack-project app --verbose --typescript --recoil
       - name: Lint code after build
         run: |
           cd app
