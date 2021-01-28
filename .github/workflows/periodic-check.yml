@@ -1,0 +1,199 @@
+name: Periodic - Create and Build app using addon/base
+
+on:
+  schedule:
+    - cron: '31 1,12 * * *'
+
+jobs:
+  base/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script base
+        run: npx create-react-webpack-project app
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  base/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript base
+        run: npx create-react-webpack-project app --typescript
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  redux/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Redux
+        run: npx create-react-webpack-project app --redux
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  redux/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + Redux
+        run: npx create-react-webpack-project app --typescript --redux
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  redux-saga/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Redux Saga
+        run: npx create-react-webpack-project app --redux --saga
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  redux-saga/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + Redux Saga
+        run: npx create-react-webpack-project app --typescript --redux --saga
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  recoil/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Recoil
+        run: npx create-react-webpack-project app --recoil
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  recoil/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + Recoil
+        run: npx create-react-webpack-project app --typescript --recoil
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev

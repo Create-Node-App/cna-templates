@@ -1,0 +1,245 @@
+name: Create and Build app with different visual frameworks
+
+on: [push, pull_request]
+
+jobs:
+  bootstrap/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script + React Bootstrap
+        run: npx create-react-webpack-project app --bootstrap
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  bootstrap/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + React Bootstrap
+        run: npx create-react-webpack-project app --typescript --bootstrap
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  material-ui/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script + React Material UI
+        run: npx create-react-webpack-project app --material-ui
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  material-ui/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + React Material UI
+        run: npx create-react-webpack-project app --typescript --material-ui
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  ant-design/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script + Ant Design
+        run: npx create-react-webpack-project app --ant-design
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  ant-design/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + Ant Design
+        run: npx create-react-webpack-project app --typescript --ant-design
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  ant-design/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script + Ant Design
+        run: npx create-react-webpack-project app --ant-design
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  ant-design/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + Ant Design
+        run: npx create-react-webpack-project app --typescript --ant-design
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  semantic-ui/es:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using Ecma Script + React Semantic UI
+        run: npx create-react-webpack-project app --semantic-ui
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
+  semantic-ui/ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Create app using TypeScript + React Semantic UI
+        run: npx create-react-webpack-project app --typescript --semantic-ui
+      - name: Lint code after build
+        run: |
+          cd app
+          yarn lint:fix
+      - name: Build prod bundle
+        run: |
+          cd app
+          yarn build
+      - name: Build dev bundle
+        run: |
+          cd app
+          yarn build:dev
