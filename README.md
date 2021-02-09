@@ -15,5 +15,5 @@ This is the status of CI validations executed on each commit.
 
 This is the status of periodic checks executed to ensure that `create-react-webpack-project` generates production and development ready apps.
 
-![Periodic - Create and Build app using addon/base](https://github.com/Create-Node-App/react-webpack-extensions/workflows/Periodic%20-%20Create%20and%20Build%20app%20using%20addon/base/badge.svg)
+![Periodic - Create and Build app using addon/base and extensions](https://github.com/Create-Node-App/react-webpack-extensions/workflows/Periodic%20-%20Create%20and%20Build%20app%20using%20addon/base%20and%20extensions/badge.svg)
 ![Periodic - Create and Build app with different visual frameworks](https://github.com/Create-Node-App/react-webpack-extensions/workflows/Periodic%20-%20Create%20and%20Build%20app%20with%20different%20visual%20frameworks/badge.svg)
