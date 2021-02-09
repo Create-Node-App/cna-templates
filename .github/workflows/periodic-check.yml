@@ -1,4 +1,4 @@
-name: Periodic - Create and Build app using addon/base
+name: Periodic - Create and Build app using addon/base and extensions
 
 on:
   schedule:
