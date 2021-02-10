@@ -2,6 +2,8 @@
 
 This is the official repository for `create-react-webpack-project` extensions.
 
+![](https://user-images.githubusercontent.com/17727170/94766288-ce324e80-0381-11eb-99df-8472a1b17d03.png)
+
 ## Build Status
 
 This is the status of CI validations executed on each commit.
