@@ -2,8 +2,6 @@
 
 This is the official repository for `create-react-webpack-project` extensions.
 
-![](https://user-images.githubusercontent.com/17727170/94766288-ce324e80-0381-11eb-99df-8472a1b17d03.png)
-
 ## Build Status
 
 This is the status of CI validations executed on each commit.
@@ -19,3 +17,9 @@ This is the status of periodic checks executed to ensure that `create-react-webp
 
 ![Periodic - Create and Build app using addon/base and extensions](https://github.com/Create-Node-App/react-webpack-extensions/workflows/Periodic%20-%20Create%20and%20Build%20app%20using%20addon/base%20and%20extensions/badge.svg)
 ![Periodic - Create and Build app with different visual frameworks](https://github.com/Create-Node-App/react-webpack-extensions/workflows/Periodic%20-%20Create%20and%20Build%20app%20with%20different%20visual%20frameworks/badge.svg)
+
+## Extensions Design
+
+This design may change along the time.
+
+![](https://user-images.githubusercontent.com/17727170/94766288-ce324e80-0381-11eb-99df-8472a1b17d03.png)
