@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript base
-        run: yarn create react-webpack-project app --verbose --typescript
+        run: yarn create react-webpack-project app --typescript
       - name: Lint code after build
         run: |
           cd app
@@ -62,7 +62,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + i18n
-        run: yarn create react-webpack-project app --verbose --i18n
+        run: yarn create react-webpack-project app --i18n
       - name: Lint code after build
         run: |
           cd app
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + i18n
-        run: yarn create react-webpack-project app --verbose --typescript --i18n
+        run: yarn create react-webpack-project app --typescript --i18n
       - name: Lint code after build
         run: |
           cd app
