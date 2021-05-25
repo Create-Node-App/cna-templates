@@ -24,7 +24,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       lint: `prettier --ignore-path .eslintignore --check \"**/*.{js,jsx,json,css,sass,scss,less,html,md}\" && eslint ${srcDir}`,
       "lint:fix": `prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,css,sass,scss,less,html,md}\" && eslint ${srcDir} --fix`,
       "serve:dev":
-        "webpack-dev-server --mode development --open --hot --env.env=development",
+        "webpack-dev-server --mode development --open --env.env=development",
       "serve:dev:dashboard":
         "webpack-dashboard webpack-dev-server -- --mode development --env.addon=dashboard",
       start: `${command} serve:dev`,
