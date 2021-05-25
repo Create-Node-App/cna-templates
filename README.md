@@ -1,4 +1,4 @@
-# React + Webpack Extensions
+# React Extensions
 
 This is the official repository for `create-react-webpack-project` extensions.
 
