@@ -60,7 +60,7 @@ const config = {
       favicon: commonPaths.favicon,
     }),
     new WebpackManifestPlugin({
-      publicPath: PUBLIC_URL,
+      publicPath: `${PUBLIC_URL}/`,
       seed: {
         name: "<%= projectName%>",
         short_name: "<%= projectName%>",
