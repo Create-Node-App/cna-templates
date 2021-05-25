@@ -43,6 +43,7 @@ const config = {
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production', // use 'production' unless process.env.NODE_ENV is defined
+      PUBLIC_URL: JSON.stringify(PUBLIC_URL),
     }),
     new Dotenv({
       path: commonPaths.prodEnv,
