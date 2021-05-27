@@ -30,27 +30,7 @@ const config = {
       },
     },
     {
-      test: /\.(ts|tsx)?$/,
-      use: [
-        {
-          loader: 'awesome-typescript-loader',
-          options: {
-            silent: true,
-            useBabel: true,
-            babelOptions: {
-              babelrc: false,
-              compact: process.env.NODE_ENV === 'production',
-              highlightCode: true,
-            },
-            babelCore: '@babel/core',
-            useCache: true,
-          }
-        },
-      ],
-      exclude: /(node_modules|bower_components)/
-    },
-    {
-      test: /\.(js|jsx)$/,
+      test: /\.(js|jsx|ts|tsx)$/,
       exclude: /(node_modules|bower_components)/,
       loader: 'babel-loader',
     },
