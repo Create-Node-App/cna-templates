@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import 'theme';
 
-import { store, persistor, history } from 'store';
+import { store, history } from 'store';
 
 import Loading from 'components/Loading';
 import AppRoutes from 'routes/AppRoutes';
