@@ -12,7 +12,6 @@ module.exports = function resolvePackage(setup, { srcDir }) {
     "@types/react-test-renderer": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
-    "awesome-typescript-loader": "latest",
     "ts-jest": "latest",
     typescript: "latest",
   };
