@@ -20,7 +20,7 @@ const config = {
   module: {
     rules: [{
       enforce: 'pre',
-      test: /\.(js|jsx)$/,
+      test: /\.(js|jsx|ts|tsx)$/,
       exclude: /(node_modules|bower_components)/,
       loader: 'eslint-loader',
       options: {
@@ -29,7 +29,7 @@ const config = {
       },
     },
     {
-      test: /\.(js|jsx)$/,
+      test: /\.(js|jsx|ts|tsx)$/,
       exclude: /(node_modules|bower_components)/,
       loader: 'babel-loader',
     },
@@ -92,11 +92,12 @@ const config = {
     }],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       <%= project%>: commonPaths.sourcePath,
       '<%= project%>-assets': path.resolve(__dirname, '../', 'static/'),
       '../../theme.config$': path.resolve(__dirname, '../', '<%= srcDir%>/theme/semantic-ui/theme.config'),
+      heading: path.resolve(__dirname, '../', '<%= srcDir%>/semantic/heading.less'),
     },
     modules: [
       '.',
