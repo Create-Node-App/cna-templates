@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 import 'theme';
 
@@ -8,9 +8,9 @@ import AppRoutes from 'routes/AppRoutes';
 
 const App = () => (
   <Suspense fallback={<Loading />}>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <HashRouter basename={process.env.PUBLIC_URL}>
       <AppRoutes />
-    </BrowserRouter>
+    </HashRouter>
   </Suspense>
 );
 
