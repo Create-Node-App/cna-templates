@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script base
-        run: yarn create react-webpack-project app --verbose
+        run: yarn create react-webpack-project app --src-dir=src --verbose
       - name: Lint code after build
         run: |
           cd app
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript base
-        run: yarn create react-webpack-project app --typescript
+        run: yarn create react-webpack-project app --src-dir=src --typescript
       - name: Lint code after build
         run: |
           cd app
@@ -67,7 +67,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + i18n
-        run: yarn create react-webpack-project app --i18n
+        run: yarn create react-webpack-project app --src-dir=src --i18n
       - name: Lint code after build
         run: |
           cd app
@@ -91,7 +91,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + i18n
-        run: yarn create react-webpack-project app --typescript --i18n
+        run: yarn create react-webpack-project app --src-dir=src --typescript --i18n
       - name: Lint code after build
         run: |
           cd app
@@ -115,7 +115,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux
-        run: yarn create react-webpack-project app --redux
+        run: yarn create react-webpack-project app --src-dir=src --redux
       - name: Lint code after build
         run: |
           cd app
@@ -139,7 +139,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux
-        run: yarn create react-webpack-project app --typescript --redux
+        run: yarn create react-webpack-project app --src-dir=src --typescript --redux
       - name: Lint code after build
         run: |
           cd app
@@ -163,7 +163,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux Saga
-        run: yarn create react-webpack-project app --redux --saga
+        run: yarn create react-webpack-project app --src-dir=src --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -187,7 +187,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux Saga
-        run: yarn create react-webpack-project app --typescript --redux --saga
+        run: yarn create react-webpack-project app --src-dir=src --typescript --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -211,7 +211,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Recoil
-        run: yarn create react-webpack-project app --recoil
+        run: yarn create react-webpack-project app --src-dir=src --recoil
       - name: Lint code after build
         run: |
           cd app
@@ -235,7 +235,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Recoil
-        run: yarn create react-webpack-project app --typescript --recoil
+        run: yarn create react-webpack-project app --src-dir=src --typescript --recoil
       - name: Lint code after build
         run: |
           cd app

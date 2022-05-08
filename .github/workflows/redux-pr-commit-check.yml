@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux
-        run: yarn create react-webpack-project app --redux
+        run: yarn create react-webpack-project app --src-dir=src --redux
       - name: Lint code after build
         run: |
           cd app
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux
-        run: yarn create react-webpack-project app --typescript --redux
+        run: yarn create react-webpack-project app --src-dir=src --typescript --redux
       - name: Lint code after build
         run: |
           cd app
@@ -62,7 +62,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Redux Saga
-        run: yarn create react-webpack-project app --redux --saga
+        run: yarn create react-webpack-project app --src-dir=src --redux --saga
       - name: Lint code after build
         run: |
           cd app
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Redux Saga
-        run: yarn create react-webpack-project app --typescript --redux --saga
+        run: yarn create react-webpack-project app --src-dir=src --typescript --redux --saga
       - name: Lint code after build
         run: |
           cd app

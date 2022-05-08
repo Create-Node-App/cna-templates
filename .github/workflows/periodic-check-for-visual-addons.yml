@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Bootstrap
-        run: yarn create react-webpack-project app --bootstrap
+        run: yarn create react-webpack-project app --src-dir=src --bootstrap
       - name: Lint code after build
         run: |
           cd app
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Bootstrap
-        run: yarn create react-webpack-project app --typescript --bootstrap
+        run: yarn create react-webpack-project app --src-dir=src --typescript --bootstrap
       - name: Lint code after build
         run: |
           cd app
@@ -67,7 +67,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Material UI
-        run: yarn create react-webpack-project app --material-ui
+        run: yarn create react-webpack-project app --src-dir=src --material-ui
       - name: Lint code after build
         run: |
           cd app
@@ -91,7 +91,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Material UI
-        run: yarn create react-webpack-project app --typescript --material-ui
+        run: yarn create react-webpack-project app --src-dir=src --typescript --material-ui
       - name: Lint code after build
         run: |
           cd app
@@ -115,7 +115,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + Ant Design
-        run: yarn create react-webpack-project app --ant-design
+        run: yarn create react-webpack-project app --src-dir=src --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -139,7 +139,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + Ant Design
-        run: yarn create react-webpack-project app --typescript --ant-design
+        run: yarn create react-webpack-project app --src-dir=src --typescript --ant-design
       - name: Lint code after build
         run: |
           cd app
@@ -163,7 +163,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using Ecma Script + React Semantic UI
-        run: yarn create react-webpack-project app --semantic-ui
+        run: yarn create react-webpack-project app --src-dir=src --semantic-ui
       - name: Lint code after build
         run: |
           cd app
@@ -187,7 +187,7 @@ jobs:
         with:
           node-version: '12'
       - name: Create app using TypeScript + React Semantic UI
-        run: yarn create react-webpack-project app --typescript --semantic-ui
+        run: yarn create react-webpack-project app --src-dir=src --typescript --semantic-ui
       - name: Lint code after build
         run: |
           cd app
