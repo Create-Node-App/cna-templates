@@ -12,7 +12,7 @@ jobs:
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '12.22.12'
       - name: Create app using Redux
         run: yarn create react-webpack-project app --src-dir=src --redux
       - name: Lint code after build
@@ -36,7 +36,7 @@ jobs:
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '12.22.12'
       - name: Create app using TypeScript + Redux
         run: yarn create react-webpack-project app --src-dir=src --typescript --redux
       - name: Lint code after build
@@ -60,7 +60,7 @@ jobs:
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '12.22.12'
       - name: Create app using Redux Saga
         run: yarn create react-webpack-project app --src-dir=src --redux --saga
       - name: Lint code after build
@@ -84,7 +84,7 @@ jobs:
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '12.22.12'
       - name: Create app using TypeScript + Redux Saga
         run: yarn create react-webpack-project app --src-dir=src --typescript --redux --saga
       - name: Lint code after build
