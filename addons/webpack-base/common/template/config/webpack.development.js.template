@@ -9,7 +9,7 @@ const MiniCssWebpackPlugin = require('mini-css-extract-plugin');
 const commonPaths = require('./common-paths');
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
+const HOST = process.env.HOST || 'localhost';
 const URL_BASE = process.env.URL_BASE || `http://${HOST}:${DEFAULT_PORT}`;
 const isUnspecifiedHost = HOST === '0.0.0.0' || HOST === '::';
 const prettyHost = isUnspecifiedHost ? 'localhost' : HOST;
@@ -19,14 +19,15 @@ const config = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
   devServer: {
-    contentBase: commonPaths.outputPath,
+    static: {
+      directory: commonPaths.outputPath,
+    },
     compress: true,
     historyApiFallback: true,
-    hot: true,
+    liveReload: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
     host: HOST,
     port: DEFAULT_PORT,
-    public: `http://${prettyHost}:${DEFAULT_PORT}` 
   },
   plugins: [
     new webpack.EnvironmentPlugin({
