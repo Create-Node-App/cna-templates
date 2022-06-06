@@ -9,7 +9,7 @@ module.exports = {
   ],
   parserOptions: {
     project: "./tsconfig.json",
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     ecmaFeatures: {
       jsx: true,
     },
@@ -18,8 +18,8 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    es6: true,
     node: true,
+    es2020: true
     "jest/globals": true,
   },
   settings: {

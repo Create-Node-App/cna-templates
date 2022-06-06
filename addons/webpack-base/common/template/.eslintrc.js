@@ -4,8 +4,8 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    es6: true,
     node: true,
+    es2020: true
     'jest/globals': true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
