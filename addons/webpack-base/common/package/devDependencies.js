@@ -6,7 +6,7 @@ module.exports = {
   enzyme: "latest",
   "enzyme-adapter-react-16": "latest",
   "enzyme-to-json": "latest",
-  esbuild: "latest",
+  "esbuild-loader": "latest",
   eslint: "^7.25.0",
   "eslint-import-resolver-webpack": "latest",
   "eslint-loader": "latest",
