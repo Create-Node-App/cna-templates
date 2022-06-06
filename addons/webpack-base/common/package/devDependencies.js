@@ -37,6 +37,7 @@ module.exports = {
   "terser-webpack-plugin": "latest",
   "url-loader": "1.1.2",
   webpack: "latest",
+  "webpack-async-chunk-names-plugin": "latest",
   "webpack-bundle-analyzer": "latest",
   "webpack-cli": "latest",
   "webpack-dashboard": "latest",
