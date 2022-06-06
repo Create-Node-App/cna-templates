@@ -5,7 +5,7 @@ module.exports = {
     browser: true,
     commonjs: true,
     node: true,
-    es2020: true
+    es2020: true,
     'jest/globals': true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
