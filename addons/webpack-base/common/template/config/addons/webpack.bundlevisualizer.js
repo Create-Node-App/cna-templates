@@ -1,4 +1,4 @@
-const Visualizer = require('webpack-visualizer-plugin');
+const Visualizer = require('webpack-visualizer-plugin2');
 
 module.exports = {
   plugins: [

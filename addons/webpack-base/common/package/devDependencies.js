@@ -45,5 +45,5 @@ module.exports = {
   "webpack-hot-middleware": "latest",
   "webpack-manifest-plugin": "latest",
   "webpack-merge": "latest",
-  "webpack-visualizer-plugin": "latest",
+  "webpack-visualizer-plugin2": "latest",
 };
