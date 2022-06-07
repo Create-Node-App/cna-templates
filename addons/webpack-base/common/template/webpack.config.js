@@ -8,7 +8,7 @@ const commonConfig = require('./config/webpack.common.js');
  * @param {string} addons - List of addons separated by comma
  * @returns required addons modules
  */
-const getAddons = (addons) =>
+const getAddons = (addons = '') =>
   addons
     .split(',')
     .filter(Boolean)
