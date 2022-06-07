@@ -32,11 +32,7 @@ const config = {
       exclude: /(node_modules|bower_components)/,
       loader: 'esbuild-loader',
       options: {
-        // All options are optional
         loader: 'tsx',
-        target: 'es2015', // default, or 'es20XX', 'esnext'
-        jsxFactory: 'React.createElement',
-        jsxFragment: 'React.Fragment',
       },
     },
 
@@ -67,7 +63,7 @@ const config = {
       test: /\.jpe?g$|\.gif$|\.ico$|\.png$|\.svg$/,
       loader: 'file-loader',
       options: {
-        name: 'assets/fonts/[name].[hash].[ext]',
+        name: 'assets/fonts/[name].[chunkhash].[ext]',
       },
     },
 
@@ -78,14 +74,14 @@ const config = {
       options: {
         limit: 10000,
         mimetype: 'application/font-woff',
-        name: 'assets/fonts/[name].[hash].[ext]',
+        name: 'assets/fonts/[name].[chunkhash].[ext]',
       },
     },
     {
       test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'file-loader',
       options: {
-        name: 'assets/fonts/[name].[hash].[ext]',
+        name: 'assets/fonts/[name].[chunkhash].[ext]',
       },
     },
     {
