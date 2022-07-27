@@ -15,6 +15,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       ],
     },
     scripts: {
+      prepare: "husky install",
       "build:dev": `webpack --env env=development`,
       "build:dev:analyze": `${command} build:dev --env addon=bundleanalyze`,
       "build:dev:visualize": `${command} build:dev --env addon=bundlevisualizer`,
@@ -43,8 +44,8 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       },
     },
     "lint-staged": {
-      "*.{js,jsx}": ["prettier --write", "yarn lint:fix"],
-      "*.{json,css,sass,scss,less,html,md}": ["prettier --write"],
+      "*.{js,jsx}": ["prettier --write", "yarn lint:fix", "git add"],
+      "*.{json,css,sass,scss,less,html,md}": ["prettier --write", "git add"],
     },
   };
 

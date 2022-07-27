@@ -1,11 +1,10 @@
 module.exports = {
+  "@testing-library/react": "latest",
   "clean-webpack-plugin": "latest",
   "copy-webpack-plugin": "latest",
   "css-loader": "latest",
+  dotenv: "latest",
   "dotenv-webpack": "latest",
-  enzyme: "latest",
-  "enzyme-adapter-react-16": "latest",
-  "enzyme-to-json": "latest",
   "esbuild-loader": "latest",
   eslint: "^7.25.0",
   "eslint-import-resolver-webpack": "latest",

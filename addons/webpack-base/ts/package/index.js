@@ -1,8 +1,6 @@
 module.exports = function resolvePackage(setup, { srcDir }) {
   const devDependencies = {
     "@types/jest": "latest",
-    "@types/enzyme": "latest",
-    "@types/enzyme-adapter-react-16": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
