@@ -58,7 +58,7 @@ const config = {
         { loader: MiniCssWebpackPlugin.loader },
         {
           loader: 'css-loader',
-          options: { importLoaders: 1, modules: { mode: 'local' }, localIdentName: '[local]___[hash:base64:5]' },
+          options: { importLoaders: 1, modules: { mode: 'local', localIdentName: '[local]___[hash:base64:5]' } },
         },
       ],
     },
@@ -76,7 +76,7 @@ const config = {
         { loader: MiniCssWebpackPlugin.loader },
         {
           loader: 'css-loader',
-          options: { importLoaders: 1, modules: { mode: 'local' }, localIdentName: '[local]___[hash:base64:5]' },
+          options: { importLoaders: 1, modules: { mode: 'local', localIdentName: '[local]___[hash:base64:5]' } },
         },
         'sass-loader',
       ],
@@ -95,7 +95,7 @@ const config = {
         { loader: MiniCssWebpackPlugin.loader },
         {
           loader: 'css-loader',
-          options: { importLoaders: 1, modules: { mode: 'local' }, localIdentName: '[local]___[hash:base64:5]' },
+          options: { importLoaders: 1, modules: { mode: 'local', localIdentName: '[local]___[hash:base64:5]' } },
         },
         'less-loader',
       ],
