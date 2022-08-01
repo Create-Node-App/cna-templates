@@ -46,6 +46,7 @@ const config = {
     // these rules handle styles
     {
       test: cssRegex,
+      exclude: cssModuleRegex,
       use: [
         { loader: MiniCssWebpackPlugin.loader },
         { loader: 'css-loader', options: { importLoaders: 1, modules: { mode: 'icss' } } },
@@ -63,6 +64,7 @@ const config = {
     },
     {
       test: sassRegex,
+      exclude: sassModuleRegex,
       use: [
         { loader: MiniCssWebpackPlugin.loader },
         { loader: 'css-loader', options: { importLoaders: 1, modules: { mode: 'icss' } } },
@@ -82,6 +84,7 @@ const config = {
     },
     {
       test: lessRegex,
+      exclude: lessModuleRegex,
       use: [
         { loader: MiniCssWebpackPlugin.loader },
         { loader: 'css-loader', options: { importLoaders: 1, modules: { mode: 'icss' } } },
