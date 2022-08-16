@@ -20,6 +20,7 @@ module.exports = {
   "html-webpack-plugin": "latest",
   husky: "latest",
   "inject-html-webpack-plugin": "latest",
+  "is_ci": "latest",
   jest: "latest",
   "jest-transform-stub": "latest",
   less: "latest",

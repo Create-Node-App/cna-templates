@@ -15,7 +15,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       ],
     },
     scripts: {
-      // prepare: "husky install",
+      prepare: "is_ci || husky install",
       "build:dev": `webpack --env env=development`,
       "build:dev:analyze": `${command} build:dev --env addon=bundleanalyze`,
       "build:dev:visualize": `${command} build:dev --env addon=bundlevisualizer`,
@@ -26,6 +26,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       "build:watch": `${command} build --watch`,
       lint: `prettier --ignore-path .eslintignore --check \"**/*.{js,jsx,json,css,sass,scss,less,html,md}\" && eslint ${srcDir}`,
       "lint:fix": `prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,css,sass,scss,less,html,md}\" && eslint ${srcDir} --fix`,
+      "lint-staged": "lint-staged",
       "serve:dev":
         "webpack-dev-server --mode development --open --env env=development",
       "serve:dev:dashboard":
@@ -37,11 +38,6 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
         "jest -u --runInBand --verbose --watch --detectOpenHandles --passWithNoTests",
       "test:coverage":
         "jest -u --coverage --verbose --runInBand --detectOpenHandles --passWithNoTests",
-    },
-    husky: {
-      hooks: {
-        "pre-commit": "lint-staged",
-      },
     },
     "lint-staged": {
       "*.{js,jsx}": ["prettier --write", "yarn lint:fix", "git add"],
