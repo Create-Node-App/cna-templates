@@ -1,0 +1,75 @@
+name: Create and Build app
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+  schedule:
+    - cron: '31 1,12 * * *'
+
+jobs:
+  creae-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.13.2]
+        npm: [false, true]
+        typescript: [false, true]
+        src-dir: [src]
+        alias: [app, '~']
+        tools-flag:
+          - ''
+          - --i18n
+        state-management-flag:
+          - ''
+          - --recoil
+          - --redux
+          - --redux --saga
+        visual-framework-flag:
+          - ''
+          - --ant-design
+          - --bootstrap
+          - --material-ui
+          - --semantic-ui
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.13.2'
+      - name: Create app using given flags
+        run: |
+          yarn create react-webpack-project myapp \
+            $TS_FLAG \
+            --verbose \
+            --src-dir ${{ matrix.src-dir }} \
+            --alias ${{ matrix.alias }} \
+            ${{ matrix.tools-flag }} \
+            ${{ matrix.state-management-flag }} \
+            ${{ matrix.visual-framework-flag }}
+
+        env:
+          TS_FLAG: ${{ matrix.typescript == 'true' && '--typescript' || '' }}
+      - name: Get pakage manager name
+        id: get-pm-name
+        run: |
+          if [ "${{ matrix.npm }}" = "true" ]; then
+            echo "::set-output name=pm-name::npm"
+          else
+            echo "::set-output name=pm-name::$(yarn --version > /dev/null 2>&1 && echo 'yarn' || echo 'npm')"
+          fi
+      - name: Lint code after build
+        run: yarn lint:fix
+      - name: Build prod bundle
+        run: yarn build
+      - name: Build dev bundle
+        run: yarn build:dev
