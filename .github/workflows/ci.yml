@@ -68,8 +68,8 @@ jobs:
             echo "::set-output name=pm-name::$(yarn --version > /dev/null 2>&1 && echo 'yarn' || echo 'npm')"
           fi
       - name: Lint code after build
-        run: yarn lint:fix
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run lint:fix
       - name: Build prod bundle
-        run: yarn build
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run build
       - name: Build dev bundle
-        run: yarn build:dev
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run build:dev
