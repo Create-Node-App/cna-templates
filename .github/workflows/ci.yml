@@ -67,7 +67,10 @@ jobs:
           fi
       - name: Lint code after build
         run: ${{ steps.get-pm-name.outputs.pm-name }} run lint:fix
+        working-directory: myapp
       - name: Build prod bundle
         run: ${{ steps.get-pm-name.outputs.pm-name }} run build
+        working-directory: myapp
       - name: Build dev bundle
         run: ${{ steps.get-pm-name.outputs.pm-name }} run build:dev
+        working-directory: myapp
