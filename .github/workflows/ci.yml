@@ -1,5 +1,9 @@
 name: Create and Build app
 
+concurrency:
+  group: ci
+  cancel-in-progress: true
+
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -12,7 +16,7 @@ on:
     - cron: '31 1,12 * * *'
 
 jobs:
-  creae-and-build:
+  create-and-build:
     runs-on: ubuntu-latest
 
     strategy:
