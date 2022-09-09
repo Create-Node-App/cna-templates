@@ -27,7 +27,7 @@ jobs:
         typescript: [false, true]
         src-dir: [src]
         alias:
-          - src
+          - \"~\"
           - app
         flags:
           - ''
