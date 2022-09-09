@@ -176,12 +176,12 @@ const config = {
     new HtmlWebpackPlugin({
       template: paths.template,
       title: '<%= projectName%>',
-      base: paths.paths.publicUrlOrPath,
+      base: paths.publicUrlOrPath,
       filename: path.resolve(__dirname, paths.outputPath, 'index.html'),
       favicon: paths.favicon,
     }),
     new WebpackManifestPlugin({
-      publicPath: `${paths.paths.publicUrlOrPath}/`,
+      publicPath: `${paths.publicUrlOrPath}/`,
       seed: {
         name: '<%= projectName%>',
         short_name: '<%= projectName%>',
