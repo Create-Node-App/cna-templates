@@ -23,16 +23,12 @@ jobs:
         typescript: [false, true]
         src-dir: [src]
         alias: [app, '~']
-        tools-flag:
+        flags:
           - ''
           - --i18n
-        state-management-flag:
-          - ''
           - --recoil
           - --redux
           - --redux --saga
-        visual-framework-flag:
-          - ''
           - --ant-design
           - --bootstrap
           - --material-ui
@@ -53,9 +49,7 @@ jobs:
             --verbose \
             --src-dir ${{ matrix.src-dir }} \
             --alias ${{ matrix.alias }} \
-            ${{ matrix.tools-flag }} \
-            ${{ matrix.state-management-flag }} \
-            ${{ matrix.visual-framework-flag }}
+            ${{ matrix.flags }}
 
         env:
           TS_FLAG: ${{ matrix.typescript == 'true' && '--typescript' || '' }}
