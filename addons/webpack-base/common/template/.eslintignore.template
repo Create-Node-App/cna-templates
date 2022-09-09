@@ -2,4 +2,5 @@
 /build/
 /public/
 /node_modules/
-/src/theme/
+<%= srcDir%>/theme/
+webpack.config.js

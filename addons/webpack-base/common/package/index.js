@@ -16,11 +16,11 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
     },
     scripts: {
       // prepare: "is_ci || husky install",
-      "build:dev": `webpack --env env=development`,
+      "build:dev": `NODE_ENV=development webpack`,
       "build:dev:analyze": `${command} build:dev --env addon=bundleanalyze`,
       "build:dev:visualize": `${command} build:dev --env addon=bundlevisualizer`,
       "build:dev:watch": `${command} build:dev --watch --hot`,
-      build: `webpack --env env=production`,
+      build: `NODE_ENV=production webpack`,
       "build:analyze": `${command} build --env addon=bundleanalyze`,
       "build:visualize": `${command} build --env addon=bundlevisualizer`,
       "build:watch": `${command} build --watch`,
@@ -28,9 +28,9 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       "lint:fix": `prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,css,sass,scss,less,html,md}\" && eslint ${srcDir} --fix`,
       "lint-staged": "lint-staged",
       "serve:dev":
-        "webpack-dev-server --mode development --open --env env=development",
+        "NODE_ENV=development webpack-dev-server --mode development",
       "serve:dev:dashboard":
-        "webpack-dashboard webpack-dev-server -- --mode development --env addon=dashboard",
+        "NODE_ENV=development webpack-dashboard webpack-dev-server -- --mode development --env addon=dashboard",
       start: `${command} serve:dev`,
       serve: `${command} build && serve -s -C build`,
       test: "jest --runInBand --detectOpenHandles --passWithNoTests",
