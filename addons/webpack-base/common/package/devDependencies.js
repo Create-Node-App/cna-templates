@@ -1,5 +1,6 @@
 module.exports = {
   "@testing-library/react": "latest",
+  chalk: "4.1.2",
   "clean-webpack-plugin": "latest",
   "copy-webpack-plugin": "latest",
   "css-loader": "latest",
