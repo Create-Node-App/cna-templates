@@ -1,0 +1,87 @@
+name: Create and Build app
+
+concurrency:
+  group: ci
+  cancel-in-progress: true
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  schedule:
+    - cron: "31 1,12 * * *"
+
+jobs:
+  create-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.13.2]
+        npm: [false, true]
+        typescript: [false, true]
+        src-dir: [src]
+        alias:
+          - "@"
+          - app
+        flags:
+          - ""
+          - --i18n
+          - --recoil
+          - --redux
+          - --redux --saga
+          - --ant-design
+          - --bootstrap
+          - --material-ui
+          - --semantic-ui
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      - name: Install
+        run: yarn --no-progress --non-interactive --no-lockfile
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.13.2"
+      - name: Create app using given flags
+        run: |
+          yarn create react-webpack-project myapp \
+            $TS_FLAG \
+            --verbose \
+            --src-dir ${{ matrix.src-dir }} \
+            --alias ${{ matrix.alias }} \
+            ${{ matrix.flags }}
+
+        env:
+          TS_FLAG: ${{ matrix.typescript == 'true' && '--typescript' || '' }}
+          REACT_EXTENSIONS_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+      - name: Get pakage manager name
+        id: get-pm-name
+        run: |
+          if [ "${{ matrix.npm }}" = "true" ]; then
+            echo "::set-output name=pm-name::npm"
+          else
+            echo "::set-output name=pm-name::$(yarn --version > /dev/null 2>&1 && echo 'yarn' || echo 'npm')"
+          fi
+      - name: Lint code after build
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run lint:fix
+        working-directory: myapp
+      - name: Build prod bundle
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run build
+        working-directory: myapp
+      - name: Build dev bundle
+        run: ${{ steps.get-pm-name.outputs.pm-name }} run build:dev
+        working-directory: myapp
