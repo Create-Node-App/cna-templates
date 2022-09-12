@@ -1,7 +1,7 @@
 name: Create and Build app
 
 concurrency:
-  group: ci
+  group: ci-${{ github.event_name }}-${{ github.pull_request.number }}
   cancel-in-progress: true
 
 on:
