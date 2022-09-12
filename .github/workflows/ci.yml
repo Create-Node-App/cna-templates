@@ -1,7 +1,7 @@
 name: Create and Build app
 
 concurrency:
-  group: ci
+  group: ci-${{ github.event_name }}-${{ github.pull_request.number }}
   cancel-in-progress: true
 
 on:
@@ -9,6 +9,10 @@ on:
   workflow_dispatch:
 
   push:
+    branches:
+      - main
+
+  pull_request:
     branches:
       - main
 
@@ -42,12 +46,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       - name: Install
         run: yarn --no-progress --non-interactive --no-lockfile
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "16.13.2"
       - name: Create app using given flags
         run: |
           yarn create react-webpack-project myapp \
@@ -59,6 +67,7 @@ jobs:
 
         env:
           TS_FLAG: ${{ matrix.typescript == 'true' && '--typescript' || '' }}
+          REACT_EXTENSIONS_BRANCH: ${{ steps.extract_branch.outputs.branch }}
       - name: Get pakage manager name
         id: get-pm-name
         run: |
