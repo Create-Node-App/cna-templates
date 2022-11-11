@@ -17,6 +17,7 @@ module.exports = {
   "eslint-config-prettier": "latest",
   "eslint-plugin-prettier": "latest",
   "eslint-plugin-react": "latest",
+  "eslint-plugin-react-hooks": "latest",
   "file-loader": "latest",
   "html-webpack-plugin": "latest",
   husky: "latest",
