@@ -15,7 +15,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       ],
     },
     scripts: {
-      prepare: "is_ci || husky install",
+      prepare: "is-ci || husky install",
       "build:dev": `NODE_ENV=development webpack`,
       "build:dev:analyze": `${command} build:dev --env addon=bundleanalyze`,
       "build:dev:visualize": `${command} build:dev --env addon=bundlevisualizer`,
