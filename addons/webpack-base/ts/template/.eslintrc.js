@@ -4,11 +4,11 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
   parserOptions: {
-    project: "./tsconfig.json",
     ecmaVersion: 2020,
     ecmaFeatures: {
       jsx: true,
