@@ -1,5 +1,6 @@
 module.exports = {
   "@testing-library/react": "latest",
+  autoprefixer: "latest",
   chalk: "4.1.2",
   "clean-webpack-plugin": "latest",
   "copy-webpack-plugin": "latest",
@@ -31,6 +32,9 @@ module.exports = {
   "mini-css-extract-plugin": "latest",
   "node-sass": "latest",
   path: "latest",
+  "postcss-loader": "latest",
+  "postcss-normalize": "latest",
+  "postcss-preset-env": "latest",
   prettier: "latest",
   "sass-loader": "latest",
   serve: "latest",

@@ -9,17 +9,17 @@ This project was generated using [React Webpack Starter](https://github.com/Crea
 Start development environment running
 
 ```sh
-$ yarn start
+yarn start
 # or with npm
-$ npm run start
+npm run start
 ```
 
 Start development environment with docker running
 
 ```sh
-$ yarn docker:dev
+yarn docker:dev
 # or with npm
-$ npm run docker:dev
+npm run docker:dev
 ```
 
 `docker:dev` generate a docker image named <%= projectName%> and run it in a container. Run `docker:dev:start` for only start a container without build a new docker image
@@ -51,17 +51,17 @@ For **JavaScript** modules, a code change will trigger the application to re-ren
 Generate production files running
 
 ```sh
-$ yarn build
+yarn build
 # or with npm
-$ npm run build
+npm run build
 ```
 
 Generate and serve production files running
 
 ```sh
-$ yarn serve
+yarn serve
 # or with npm
-$ npm run serve
+npm run serve
 ```
 
 ## Project Structure
