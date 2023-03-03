@@ -28,7 +28,6 @@ jobs:
       matrix:
         node-version: [16.13.2]
         npm: [false, true]
-        typescript: [false, true]
         src-dir: [src]
         alias:
           - "@"
@@ -64,14 +63,12 @@ jobs:
       - name: Create app using given flags
         run: |
           yarn create react-webpack-project myapp \
-            $TS_FLAG \
             --verbose \
             --src-dir ${{ matrix.src-dir }} \
             --alias ${{ matrix.alias }} \
             ${{ matrix.flags }}
 
         env:
-          TS_FLAG: ${{ matrix.typescript == 'true' && '--typescript' || '' }}
           REACT_EXTENSIONS_BRANCH: ${{ steps.extract_branch.outputs.branch }}
       - name: Get pakage manager name
         id: get-pm-name
