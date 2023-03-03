@@ -3,7 +3,6 @@ module.exports = function resolvePackage(setup) {
     i18next: "latest",
     "i18next-browser-languagedetector": "latest",
     "i18next-http-backend": "latest",
-    "moment-timezone": "latest",
     "react-i18next": "latest",
   };
 
