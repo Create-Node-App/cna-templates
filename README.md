@@ -1,6 +1,6 @@
-# React Extensions
+# Create Node App Templates and Extensions
 
-This is the official repository for `create-react-webpack-project` extensions.
+This is the official repository for `create-node-app` templates and extensions.
 
 ## Build Status
 
