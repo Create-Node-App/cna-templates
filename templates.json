@@ -1,144 +1,106 @@
 {
-    "$schema": "./templates.schema.json",
-    "templates": [
-        {
-            "name": "React Vite Boilerplate",
-            "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
-            "labels": [
-                "React",
-                "Vite",
-                "TypeScript",
-                "ESLint",
-                "Prettier",
-                "Jest",
-                "Testing Library",
-                "React Router"
-            ]
-        }
-    ],
-    "extensions": {
-        "react": [
-          {
-            "name": "React i18n",
-            "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
-            "labels": [
-              "i18n",
-              "react-i18n",
-              "async backend",
-              "locale",
-              "timezone"
-            ]
-          },
-          {
-            "name": "Recoil.js",
-            "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
-            "labels": [
-              "Recoil.js",
-              "state management",
-              "atoms"
-            ]
-          },
-          {
-            "name": "React Redux base setup",
-            "description": "Extension to add the official React bindings for Redux with a fully configured store",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux",
-            "labels": [
-              "React",
-              "Redux",
-              "React Redux",
-              "Redux Toolkit"
-            ]
-          },
-          {
-            "name": "Redux Saga Extension",
-            "description": "Extension to add Redux Saga middleware to your React + Redux setup",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
-            "labels": [
-              "React",
-              "Redux",
-              "React Redux",
-              "Redux Toolkit",
-              "Redux Saga"
-            ]
-          },
-          {
-            "name": "Cross Platform Apps with Ionic React + Capacitor",
-            "description": "Add Ionic React and Capacitor to your cross platform react app",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic",
-            "labels": [
-              "Ionic",
-              "Capacitor",
-              "React",
-              "Cross Platform"
-            ]
-          },
-          {
-            "name": "Docker Compose Setup",
-            "description": "Add docker environments for development and production to your React project setup with docker-compose",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
-            "labels": [
-              "Docker",
-              "Docker Compose",
-              "React",
-              "Production",
-              "Development"
-            ]
-          },
-          {
-            "name": "Android Tools",
-            "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
-            "labels": [
-              "Android",
-              "React",
-              "Android Studio",
-              "Gradle",
-              "Kotlin"
-            ]
-          },
-          {
-            "name": "Semantic UI React",
-            "description": "Extension to add React Semantic UI to your setup with theme customization",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
-            "labels": [
-              "React",
-              "Semantic UI",
-              "Semantic UI React",
-              "Theme"
-            ]
-          },
-          {
-            "name": "Ant Design for React",
-            "description": "Extension to add Ant Design React",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ant-design",
-            "labels": [
-              "React",
-              "Ant Design",
-              "Ant Design React"
-            ]
-          },
-          {
-            "name": "Bootstrap React",
-            "description": "Extension to add Bootstrap React",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-bootstrap",
-            "labels": [
-              "React",
-              "Bootstrap",
-              "Bootstrap React"
-            ]
-          },
-          {
-            "name": "Material UI",
-            "description": "Extension to add Material UI to your React app",
-            "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
-            "labels": [
-              "React",
-              "Material UI"
-            ]
-          }
-        ]
+  "$schema": "./templates.schema.json",
+  "templates": [
+    {
+      "name": "React Vite Boilerplate",
+      "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
+      "type": "react",
+      "labels": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Jest",
+        "Testing Library",
+        "React Router"
+      ]
     }
+  ],
+  "extensions": [
+    {
+      "name": "React i18n",
+      "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
+      "type": "react",
+      "labels": ["i18n", "react-i18n", "async backend", "locale", "timezone"]
+    },
+    {
+      "name": "Recoil.js",
+      "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
+      "type": "react",
+      "labels": ["Recoil.js", "state management", "atoms"]
+    },
+    {
+      "name": "React Redux base setup",
+      "description": "Extension to add the official React bindings for Redux with a fully configured store",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux",
+      "type": "react",
+      "labels": ["React", "Redux", "React Redux", "Redux Toolkit"]
+    },
+    {
+      "name": "Redux Saga Extension",
+      "description": "Extension to add Redux Saga middleware to your React + Redux setup",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
+      "type": "react",
+      "labels": ["React", "Redux", "React Redux", "Redux Toolkit", "Redux Saga"]
+    },
+    {
+      "name": "Cross Platform Apps with Ionic React + Capacitor",
+      "description": "Add Ionic React and Capacitor to your cross platform react app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic",
+      "type": "react",
+      "labels": ["Ionic", "Capacitor", "React", "Cross Platform"]
+    },
+    {
+      "name": "Docker Compose Setup",
+      "description": "Add docker environments for development and production to your React project setup with docker-compose",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
+      "type": "react",
+      "labels": [
+        "Docker",
+        "Docker Compose",
+        "React",
+        "Production",
+        "Development"
+      ]
+    },
+    {
+      "name": "Android Tools",
+      "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
+      "type": "react",
+      "labels": ["Android", "React", "Android Studio", "Gradle", "Kotlin"]
+    },
+    {
+      "name": "Semantic UI React",
+      "description": "Extension to add React Semantic UI to your setup with theme customization",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
+      "type": "react",
+      "labels": ["React", "Semantic UI", "Semantic UI React", "Theme"]
+    },
+    {
+      "name": "Ant Design for React",
+      "description": "Extension to add Ant Design React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ant-design",
+      "type": "react",
+      "labels": ["React", "Ant Design", "Ant Design React"]
+    },
+    {
+      "name": "Bootstrap React",
+      "description": "Extension to add Bootstrap React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-bootstrap",
+      "type": "react",
+      "labels": ["React", "Bootstrap", "Bootstrap React"]
+    },
+    {
+      "name": "Material UI",
+      "description": "Extension to add Material UI to your React app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
+      "type": "react",
+      "labels": ["React", "Material UI"]
+    }
+  ]
 }
