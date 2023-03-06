@@ -1,6 +1,0 @@
-/config/
-/build/
-/public/
-/node_modules/
-<%= srcDir%>/theme/
-webpack.config.js
