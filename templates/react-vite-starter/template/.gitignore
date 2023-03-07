@@ -70,6 +70,8 @@ typings/
 
 # production
 /build
+/dist
+dev-dist/
 
 # misc
 .DS_Store
