@@ -3,6 +3,6 @@
   "appName": "<%= projectName%>",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
-  "webDir": "build",
+  "webDir": "dist",
   "cordova": {}
 }
