@@ -1,7 +1,7 @@
 module.exports = function resolvePackage(setup) {
   const dependencies = {
-    antd: "latest",
-    "@ant-design/icons": "latest",
+    antd: "^5.3.0",
+    "@ant-design/icons": "^5.0.1",
   };
 
   return {

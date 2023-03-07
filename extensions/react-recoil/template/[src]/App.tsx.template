@@ -5,11 +5,13 @@ import { BrowserRouter } from 'react-router-dom';
 import '<%= projectImportPath %>theme';
 
 import Loading from '<%= projectImportPath %>components/Loading';
+import { RecoilDevTools } from '<%= projectImportPath %>components/DevTools/RecoilDevTools';
 import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 
 const App = () => (
   <RecoilRoot>
     <Suspense fallback={<Loading />}>
+      {import.meta.env.NODE_ENV === "development" && <RecoilDevTools />}
       <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
         <AppRoutes />
       </BrowserRouter>
