@@ -22,7 +22,7 @@
     {
       "name": "React i18n",
       "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-i18n",
       "type": "react",
       "labels": ["i18n", "react-i18n", "async backend", "locale", "timezone"]
     },
