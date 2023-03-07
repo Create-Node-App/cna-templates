@@ -11,7 +11,7 @@ export const RecoilDevTools = () => {
         toggleVisibilityKey="ctrl-h"
         changePositionKey="ctrl-q"
         changeMonitorKey="ctrl-m"
-        defaultIsVisible
+        defaultIsVisible={false}
       >
         <LogMonitor markStateDiff />
       </DockMonitor>
