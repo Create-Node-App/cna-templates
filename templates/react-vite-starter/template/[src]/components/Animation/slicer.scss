@@ -16,12 +16,12 @@ $fontSize: 8rem;
       $key: $i + 1;
 
       &:nth-child(#{$key}) {
-        $row: floor($i / 20);
-        color: rgba(255 - $key * 2, 50 - $key / 2, $key * 3, 1);
-        clip-path: polygon(floor($i / 2) * 10% - $row * 100% $row * 50%,
-            floor($key / 2) * 10% - $row * 100% ceil($key % 2) * 50% + ($row * 50%),
-            ceil($key / 2) * 10% - $row * 100% ($row + 1) * 50%);
-        transform-origin: random(100) - 50 + floor($i / 2) * 10% - $row * 100% random(100) - 50 + $row * 50%;
+        $row: floor(math.div($i, 20));
+        color: rgba(255 - $key * 2, 50 - math.div($key, 2), $key * 3, 1);
+        clip-path: polygon(floor(math.div($i, 2)) * 10% - $row * 100% $row * 50%,
+            floor(math.div($key, 2)) * 10% - $row * 100% ceil($key % 2) * 50% + ($row * 50%),
+            ceil(math.div($key, 2)) * 10% - $row * 100% ($row + 1) * 50%);
+        transform-origin: random(100) - 50 + floor(math.div($i, 2)) * 10% - $row * 100% random(100) - 50 + $row * 50%;
         animation: fly#{$key} 5000ms $i * 40ms cubic-bezier(0.360, 0.100, 0.160, 1.000) infinite alternate;
 
         @keyframes fly#{$key} {
