@@ -29,5 +29,6 @@ module.exports = {
   sass: "^1.58.1",
   "ts-jest": "^28.0.5",
   vite: "^4.1.0",
+  "vite-plugin-eslint": "^1.8.1",
   "vite-plugin-pwa": "^0.14.4",
 };
