@@ -1,7 +1,7 @@
 module.exports = function resolvePackage(setup) {
   const dependencies = {
-    "@material-ui/core": "latest",
-    "@material-ui/icons": "latest",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
   };
 
   return {
