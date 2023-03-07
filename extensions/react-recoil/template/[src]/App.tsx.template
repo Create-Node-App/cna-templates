@@ -2,15 +2,15 @@ import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
 
-import 'theme';
+import '<%= projectImportPath %>theme';
 
-import Loading from 'components/Loading';
-import AppRoutes from 'routes/AppRoutes';
+import Loading from '<%= projectImportPath %>components/Loading';
+import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 
 const App = () => (
   <RecoilRoot>
     <Suspense fallback={<Loading />}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
         <AppRoutes />
       </BrowserRouter>
     </Suspense>

@@ -8,11 +8,11 @@ import { applyMiddleware, createStore, compose } from 'redux';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage';
 
-import { StoreType } from 'types/store';
-import reducers from 'reducers';
+import { StoreType } from '<%= projectImportPath %>types/store';
+import reducers from '<%= projectImportPath %>reducers';
 
 export const history = createBrowserHistory({
-  basename: process.env.PUBLIC_URL || '/',
+  basename: import.meta.env.VITE_APP_BASE_URL,
 });
 
 const persistConfig = {
@@ -29,7 +29,7 @@ const enhancers = [];
 packages.push(routerMiddleware(history));
 packages.push(thunk);
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.NODE_ENV === 'development') {
   // Push the middleware that are specific for development
   packages.push(createLogger());
   if (window.__REDUX_DEVTOOLS_EXTENSION__) {

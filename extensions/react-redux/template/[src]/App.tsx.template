@@ -2,12 +2,13 @@ import React, { Suspense } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
 
-import 'theme';
-
 import { store, history } from 'store';
 
-import Loading from 'components/Loading';
-import AppRoutes from 'routes/AppRoutes';
+import '<%= projectImportPath %>theme';
+
+import Loading from '<%= projectImportPath %>components/Loading';
+import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
+
 
 const App = () => (
   <Provider store={store}>
