@@ -18,7 +18,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       ],
     },
     scripts: {
-      prepare: "is-ci || husky install",
+      // prepare: "is-ci || husky install",
       dev: "vite",
       build: "tsc && vite build",
       preview: "vite preview",
@@ -31,7 +31,6 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
         "jest -u --runInBand --verbose --watch --detectOpenHandles --passWithNoTests",
       "test:coverage":
         "jest -u --coverage --verbose --runInBand --detectOpenHandles --passWithNoTests",
-      prepare: "is-ci || husky install",
       "lint-staged": "lint-staged",
       "typecheck": "tsc --noEmit",
     },
