@@ -18,6 +18,7 @@ module.exports = {
   "eslint-plugin-jsx-a11y": "^6.5.1",
   "eslint-plugin-prettier": "^4.0.0",
   "eslint-plugin-react": "^7.30.0",
+  "eslint-plugin-react-hooks": "^4.6.0",
   husky: "^8.0.1",
   "identity-obj-proxy": "^3.0.0",
   "is-ci": "^3.0.1",
