@@ -1,7 +1,7 @@
 module.exports = function resolvePackage(setup) {
   const dependencies = {
-    "semantic-ui-less": "latest",
-    "semantic-ui-react": "latest",
+    "semantic-ui-less": "^2.5.0",
+    "semantic-ui-react": "^2.1.4",
   };
 
   const devDependencies = {
