@@ -22,9 +22,10 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       dev: "vite",
       build: "tsc && vite build",
       preview: "vite preview",
-      lint: 'prettier --ignore-path .eslintignore --check "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}" && eslint src',
-      "lint:fix":
-        'prettier --ignore-path .eslintignore --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}" && eslint src --fix',
+      format:
+        'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
+      lint: "eslint .",
+      "lint:fix": "eslint . --fix",
       start: `${command} dev`,
       test: "jest --runInBand --detectOpenHandles --passWithNoTests",
       "test:watch":
@@ -32,7 +33,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       "test:coverage":
         "jest -u --coverage --verbose --runInBand --detectOpenHandles --passWithNoTests",
       "lint-staged": "lint-staged",
-      "typecheck": "tsc --noEmit",
+      typecheck: "tsc --noEmit",
     },
     "lint-staged": {
       "*.{js,jsx}": ["prettier --write", "npm run lint:fix"],
