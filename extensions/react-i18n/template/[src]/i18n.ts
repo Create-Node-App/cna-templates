@@ -18,11 +18,11 @@ i18n
       // function(lngs, namespaces) { return customPath; }
       // the returned path will interpolate lng, ns if provided like giving a static path
       loadPath: `${
-        import.meta.env.VITE_APP_BASE_URL
+        import.meta.env.VITE_APP_BASE_URL || ''
       }locales/{{lng}}/{{ns}}.json`,
 
       // path to post missing resources
-      addPath: `${import.meta.env.VITE_APP_BASE_URL}locales/{{lng}}/{{ns}}`,
+      addPath: `${import.meta.env.VITE_APP_BASE_URL || ''}locales/{{lng}}/{{ns}}`,
     },
 
     // have a common namespace used around the full app
