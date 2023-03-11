@@ -14,6 +14,7 @@ fnm use
 
 - [Project Structure](./docs/PROJECT_STRUCTURE.md)
 - [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
+- [Performance recommendations](./docs/PERFORMANCE.md)
 - [State Management recommendations](./docs/STATE_MANAGEMENT.md)
 
 ## Development
