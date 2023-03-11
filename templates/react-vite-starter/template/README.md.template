@@ -21,12 +21,13 @@ fnm use
 While developing, you will probably rely mostly on `<%= runCommand%> start`; however, there are additional scripts at your disposal:
 
 | `<%= runCommand%> <script>` | Description                                                                                                             |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `dev`              | Serves your app at for local development                                                                                |
-| `test`             | Runs unit tests with Jest. See [testing](#testing)                                                                      |
-| `test:watch`       | Runs `test` in watch mode to re-run tests when changed                                                                  |
-| `lint`             | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
-| `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `dev`                       | Serves your app at for local development                                                                                |
+| `test`                      | Runs unit tests with Jest. See [testing](#testing)                                                                      |
+| `test:watch`                | Runs `test` in watch mode to re-run tests when changed                                                                  |
+| `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
 
 ## Production
 
@@ -45,9 +46,9 @@ Generate and serve production files running
 Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
-| ------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `preview`          | Serves your app using your production ready setup (`.env.production` and `NODE_ENV` equals to `production`) |
-| `build`            | Builds the application to `dist/`                                                                           |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `preview`                   | Serves your app using your production ready setup (`.env.production` and `NODE_ENV` equals to `production`) |
+| `build`                     | Builds the application to `dist/`                                                                           |
 
 ## Testing
 
