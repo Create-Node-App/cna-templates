@@ -12,7 +12,8 @@ fnm use
 
 ## Useful resources
 
-- [Project structure](./docs/PROJECT_STRUCTURE.md)
+- [Project Structure](./docs/PROJECT_STRUCTURE.md)
+- [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
 - [State Management recommendations](./docs/STATE_MANAGEMENT.md)
 
 ## Development
