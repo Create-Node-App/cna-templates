@@ -33,7 +33,83 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
       "type": "react",
       "category": "State Management",
-      "labels": ["Recoil.js", "state management", "atoms"]
+      "labels": ["Recoil.js", "State Management", "Atomic State Management"]
+    },
+    {
+      "name": "Jotai",
+      "description": "Extension to add Jotai, a small and fast state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-jotai",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Jotai", "State Management", "Atomic State Management"]
+    },
+    {
+      "name": "Easy State",
+      "description": "Extension to add Easy State, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-easy-state",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Easy State", "State Management", "React Hooks"]
+    },
+    {
+      "name": "Global State",
+      "description": "Extension to add Global State, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-global-state",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Global State", "State Management", "React Hooks"]
+    },
+    {
+      "name": "Hookstate",
+      "description": "Extension to add Hookstate, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hookstate",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Hookstate", "State Management", "React Hooks"]
+    },
+    {
+      "name": "MobX",
+      "description": "Extension to add MobX, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-mobx",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["MobX", "State Management", "Bidirectional State Management"]
+    },
+    {
+      "name": "Teaful",
+      "description": "Extension to add Teaful, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-teaful",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Teaful", "State Management", "React Hooks"]
+    },
+    {
+      "name": "Valtio",
+      "description": "Extension to add Valtio, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-valtio",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["Valtio", "State Management", "Bidirectional State Management"]
+    },
+    {
+      "name": "XState",
+      "description": "Extension to add XState, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-xstate",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["XState", "State Management", "Finite State Machines"]
+    },
+    {
+      "name": "Zustand",
+      "description": "Extension to add Zustand, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-zustand",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Zustand",
+        "State Management",
+        "Unidirectional State Management"
+      ]
     },
     {
       "name": "React Redux base setup",
@@ -41,7 +117,14 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux",
       "type": "react",
       "category": "State Management",
-      "labels": ["React", "Redux", "React Redux", "Redux Toolkit"]
+      "labels": [
+        "React",
+        "State Management",
+        "Unidirectional State Management",
+        "Redux",
+        "React Redux",
+        "Redux Toolkit"
+      ]
     },
     {
       "name": "Redux Saga Extension",
@@ -49,7 +132,15 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
       "type": "react",
       "category": "State Management",
-      "labels": ["React", "Redux", "React Redux", "Redux Toolkit", "Redux Saga"]
+      "labels": [
+        "React",
+        "State Management",
+        "Unidirectional State Management",
+        "Redux",
+        "React Redux",
+        "Redux Toolkit",
+        "Redux Saga"
+      ]
     },
     {
       "name": "Cross Platform Apps with Ionic React + Capacitor",
