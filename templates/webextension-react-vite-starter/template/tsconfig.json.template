@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "<%= projectImportPath%>*": ["./<%= srcDir%>/*"],
+      "virtual:reload-on-update-in-background-script": ["./<%= srcDir%>/global.d.ts"],
+      "virtual:reload-on-update-in-view": ["./<%= srcDir%>/global.d.ts"]
+    }
+  },
+  "include": ["src", ".webext-config", "jest.setup.ts", "vite.config.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

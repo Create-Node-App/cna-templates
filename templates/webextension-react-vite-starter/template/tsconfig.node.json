@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    ".webext-config/*.ts",
+    ".webext-config/**/*.ts",
+    "vite.config.ts",
+    "package.json"
+  ]
+}

@@ -1,0 +1,61 @@
+# <%= projectName%> Frontend
+
+This project was generated using [create-react-webpack-app](https://www.npmjs.com/package/create-react-webpack-project). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
+
+## Quickstart
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> start
+```
+
+## Useful resources
+
+- [Project Structure](./docs/PROJECT_STRUCTURE.md)
+- [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
+- [Components and Styling](./docs/COMPONENTS_AND_STYLING.md)
+- [Performance recommendations](./docs/PERFORMANCE.md)
+- [State Management recommendations](./docs/STATE_MANAGEMENT.md)
+
+## Development
+
+While developing, you will probably rely mostly on `<%= runCommand%> start`; however, there are additional scripts at your disposal:
+
+| `<%= runCommand%> <script>` | Description                                                                                                             |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `dev`                       | Serves your app at for local development                                                                                |
+| `test`                      | Runs unit tests with Jest. See [testing](#testing)                                                                      |
+| `test:watch`                | Runs `test` in watch mode to re-run tests when changed                                                                  |
+| `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+
+## Production
+
+Generate production files running
+
+```sh
+<%= runCommand%> build
+```
+
+Generate and serve production files running
+
+```sh
+<%= runCommand%> serve
+```
+
+Available scripts:
+
+| `<%= runCommand%> <script>` | Description                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `preview`                   | Serves your app using your production ready setup (`.env.production` and `NODE_ENV` equals to `production`) |
+| `build`                     | Builds the application to `dist/`                                                                           |
+
+## Testing
+
+To add a unit test, create a `.test.js` file anywhere inside of `src/`. Jest will automatically find these files.
+
+## Contributing
+
+You can report bugs, request features and create Pull Requests in the [Create-Node-App/react-extensions](https://github.com/Create-Node-App/react-extensions) repository!

@@ -16,6 +16,25 @@
         "Testing Library",
         "React Router"
       ]
+    },
+    {
+      "name": "WebExtension React Boilerplate",
+      "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with WebExtension quickly.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
+      "type": "webextension-react",
+      "category": "WebExtension",
+      "labels": [
+        "WebExtension",
+        "Hot Module Replacement",
+        "WebExtension Polyfill",
+        "React",
+        "Vite",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Jest",
+        "Testing Library"
+      ]
     }
   ],
   "extensions": [
