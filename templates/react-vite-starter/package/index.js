@@ -5,6 +5,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
   const packageJson = {
     name: appName,
     version: "0.1.0",
+    description: "A web application starter template",
     private: true,
     engines: {
       node: ">=18.15",

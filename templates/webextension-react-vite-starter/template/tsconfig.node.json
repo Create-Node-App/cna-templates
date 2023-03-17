@@ -6,8 +6,7 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    ".webext-config/*.ts",
-    ".webext-config/**/*.ts",
+    ".webext-config",
     "vite.config.ts",
     "package.json"
   ]
