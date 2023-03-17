@@ -27,11 +27,6 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
       start: `${command} dev`,
-      test: "jest --runInBand --detectOpenHandles --passWithNoTests",
-      "test:watch":
-        "jest -u --runInBand --verbose --watch --detectOpenHandles --passWithNoTests",
-      "test:coverage":
-        "jest -u --coverage --verbose --runInBand --detectOpenHandles --passWithNoTests",
       "lint-staged": "lint-staged",
       typecheck: "tsc --noEmit",
     },
