@@ -54,7 +54,7 @@ Available scripts:
 
 ## Testing
 
-To add a unit test, create a `.test.js` file anywhere inside of `src/`. Jest will automatically find these files.
+To add a unit test, create a `.test.js` file anywhere inside of `<%= srcDir%>/`. Jest will automatically find these files.
 
 ## Contributing
 

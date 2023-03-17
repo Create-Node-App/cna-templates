@@ -51,11 +51,11 @@ export default defineConfig({
         options: resolve(root, 'options', 'index.html'),
       },
       watch: {
-        include: ['src/**', 'vite.config.ts'],
-        exclude: ['node_modules/**', 'src/**/*.spec.ts'],
+        include: ['<%= srcDir%>/**', 'vite.config.ts'],
+        exclude: ['node_modules/**', '<%= srcDir%>/**/*.spec.ts'],
       },
       output: {
-        entryFileNames: 'src/[name]/index.js',
+        entryFileNames: '<%= srcDir%>/[name]/index.js',
         chunkFileNames: isDev ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
         assetFileNames: (assetInfo) => {
           const { dir, name: _name } = path.parse(assetInfo.name || '');

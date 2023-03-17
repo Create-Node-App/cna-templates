@@ -35,7 +35,7 @@ In order to scale the application in the easiest and most maintainable way, keep
 A feature could have the following structure:
 
 ```sh
-src/features/awesome-feature
+<%= srcDir%>/features/awesome-feature
 |
 +-- assets # assets used only in this feature
 |

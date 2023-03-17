@@ -7,15 +7,15 @@ const manifest: Manifest.WebExtensionManifest = {
   version: packageJson.version,
   description: packageJson.description,
   options_ui: {
-    page: 'src/options/index.html',
+    page: '<%= srcDir%>/options/index.html',
   },
-  background: { service_worker: 'src/background/index.js' },
+  background: { service_worker: '<%= srcDir%>/background/index.js' },
   action: {
-    default_popup: 'src/popup/index.html',
+    default_popup: '<%= srcDir%>/popup/index.html',
     default_icon: 'icon-34.png',
   },
   chrome_url_overrides: {
-    newtab: 'src/newtab/index.html',
+    newtab: '<%= srcDir%>/newtab/index.html',
   },
   icons: {
     '128': 'icon-128.png',
@@ -23,12 +23,12 @@ const manifest: Manifest.WebExtensionManifest = {
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['src/content/index.js'],
+      js: ['<%= srcDir%>/content/index.js'],
       // KEY for cache invalidation
       css: ['assets/css/contentStyle<KEY>.chunk.css'],
     },
   ],
-  devtools_page: 'src/devtools/index.html',
+  devtools_page: '<%= srcDir%>/devtools/index.html',
   web_accessible_resources: [
     {
       resources: ['assets/js/*.js', 'assets/css/*.css', 'icon-128.png', 'icon-34.png'],

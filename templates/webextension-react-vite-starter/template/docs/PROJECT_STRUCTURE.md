@@ -7,7 +7,7 @@ Most of the code lives in the `src` and `.webext-config` folders. The `src` fold
 |
 +-- manifest.ts # manifest for the extension
 |
-src/ # source code
+<%= srcDir%>/ # source code
 |
 +-- assets # static assets
 |
