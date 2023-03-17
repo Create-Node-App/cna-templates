@@ -20,6 +20,14 @@
   ],
   "extensions": [
     {
+      "name": "Jest + React Testing Library",
+      "description": "Extension to add Jest and React Testing Library",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
+      "type": "react",
+      "category": "Tooling",
+      "labels": ["Jest", "React Testing Library"]
+    },
+    {
       "name": "React i18n",
       "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-i18n",
