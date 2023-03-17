@@ -7,7 +7,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
     version: "0.1.0",
     private: true,
     engines: {
-      node: ">=16.13",
+      node: ">=18.15",
     },
     browserslist: {
       production: [">0.2%", "not dead", "not op_mini all"],
