@@ -31,9 +31,8 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       typecheck: "tsc --noEmit",
     },
     "lint-staged": {
-      "*.{js,jsx}": ["prettier --write", "npm run lint:fix"],
+      "*.{js,jsx,ts,tsx}": ["prettier --write", "npm run lint:fix"],
       "*.{json,css,sass,scss,less,html,md,yml,yaml}": ["prettier --write"],
-      "*.{ts,tsx}": ["prettier --write", "npm run lint:fix"],
     },
   };
 
