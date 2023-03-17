@@ -21,11 +21,11 @@ export default function makeManifest(
     const manifestPath = resolve(to, 'manifest.json');
 
     // Naming change for cache invalidation
-    if (config.contentScriptCssKey) {
-      manifest.content_scripts?.forEach((script) => {
-        script.css = script.css?.map((css) => css.replace('<KEY>', config.contentScriptCssKey || ''));
-      });
-    }
+    // if (config.contentScriptCssKey) {
+    //   manifest.content_scripts?.forEach((script) => {
+    //     script.css = script.css?.map((css) => css.replace('<KEY>', config.contentScriptCssKey || ''));
+    //   });
+    // }
 
     fs.writeFileSync(manifestPath, ManifestParser.convertManifestToString(manifest));
 
