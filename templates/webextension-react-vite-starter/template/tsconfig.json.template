@@ -21,7 +21,7 @@
       "virtual:reload-on-update-in-view": ["./<%= srcDir%>/global.d.ts"]
     }
   },
-  "include": ["src", ".webext-config", "jest.setup.ts", "vite.config.ts"],
+  "include": ["src", ".webext-config", "jest.setup.ts", "manifest.ts", "vite.config.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"
