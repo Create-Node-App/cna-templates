@@ -35,6 +35,16 @@ fnm use
 <%= runCommand%> start
 ```
 
+Then load the extension in your browser running any of the following commands:
+
+```sh
+# on Chromium based browsers
+<%= runCommand%> web-ext:chromium
+
+# on Firefox
+<%= runCommand%> web-ext:firefox
+```
+
 ## Useful resources
 
 - [Project Structure](./docs/PROJECT_STRUCTURE.md)
