@@ -29,7 +29,12 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
-      start: `${command} dev`,
+      "start:chromium": "(run-p dev web-ext:chromium)",
+      "start:firefox": "(run-p dev web-ext:firefox)",
+      "web-ext:chromium":
+        "web-ext run --source-dir ./dist --target=chromium",
+      "web-ext:firefox":
+        "web-ext run --source-dir ./dist --target=firefox-desktop",
       "lint-staged": "lint-staged",
       typecheck: "tsc --noEmit",
     },

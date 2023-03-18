@@ -37,5 +37,6 @@ module.exports = {
   typescript: "^4.9.5",
   vite: "^4.1.0",
   "vite-plugin-eslint": "^1.8.1",
+  "web-ext": "^7.5.0",
   ws: "^8.13.0",
 };

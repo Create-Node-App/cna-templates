@@ -25,6 +25,7 @@ This project was generated using [create-react-webpack-app](https://www.npmjs.co
 - [prettier](https://prettier.io/) - Opinionated code formatter
 - [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
 - [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+- [web-ext](https://www.npmjs.com/package/web-ext) - A command line tool to help build, run, and test web extensions
 
 ## Quickstart
 
