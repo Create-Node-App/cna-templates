@@ -24,13 +24,12 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       "build:watch": "NODE_ENV=development vite build --watch",
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
+      start: `${command} dev`,
       preview: "vite preview",
       format:
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
-      "start:chromium": "(run-p dev web-ext:chromium)",
-      "start:firefox": "(run-p dev web-ext:firefox)",
       "web-ext:chromium":
         "web-ext run --source-dir ./dist --target=chromium",
       "web-ext:firefox":
