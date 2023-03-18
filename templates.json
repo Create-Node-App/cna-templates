@@ -42,6 +42,14 @@
       "name": "Jest + React Testing Library",
       "description": "Extension to add Jest and React Testing Library",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
+      "type": "webextension-react",
+      "category": "Tooling",
+      "labels": ["Jest", "React Testing Library"]
+    },
+    {
+      "name": "Jest + React Testing Library",
+      "description": "Extension to add Jest and React Testing Library",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
       "type": "react",
       "category": "Tooling",
       "labels": ["Jest", "React Testing Library"]
