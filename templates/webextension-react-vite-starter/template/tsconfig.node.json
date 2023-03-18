@@ -7,6 +7,7 @@
   },
   "include": [
     ".webext-config",
+    "manifest.ts",
     "vite.config.ts",
     "package.json"
   ]

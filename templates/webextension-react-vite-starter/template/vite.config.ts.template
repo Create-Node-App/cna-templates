@@ -4,7 +4,7 @@ import path, { resolve } from 'path';
 import makeManifest from './.webext-config/plugins/make-manifest';
 import customDynamicImport from './.webext-config/plugins/custom-dynamic-import';
 import addHmr from './.webext-config/plugins/add-hmr';
-import manifest from './.webext-config/manifest';
+import manifest from './manifest';
 
 const root = resolve(__dirname, '<%= srcDir%>');
 const outDir = resolve(__dirname, 'dist');
