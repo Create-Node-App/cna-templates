@@ -2,6 +2,30 @@
 
 This project was generated using [create-react-webpack-app](https://www.npmjs.com/package/create-react-webpack-project). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
 
+## Features
+
+- ⚡️ **Instant HMR** - use [Vite](https://vitejs.dev/) on dev (no more refresh!)
+- ⚛ React - [React](https://reactjs.org/) is used for UI
+- 💬 Effortless communications between contexts
+- 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
+- 🌍 WebExtension - isomorphic extension for Chrome, Firefox, and others
+- 📃 Dynamic `manifest.json` with full type support
+
+## Pre-packed
+
+### WebExtension Libraries
+
+- [`webextension-polyfill`](https://github.com/mozilla/webextension-polyfill) - WebExtension browser API Polyfill with types
+
+### Dev tools
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [npm-run-all](https://github.com/mysticatea/npm-run-all) - Run multiple npm-scripts in parallel or sequential
+- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
+- [prettier](https://prettier.io/) - Opinionated code formatter
+- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
+- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+
 ## Quickstart
 
 ```sh
@@ -37,12 +61,6 @@ Generate production files running
 
 ```sh
 <%= runCommand%> build
-```
-
-Generate and serve production files running
-
-```sh
-<%= runCommand%> serve
 ```
 
 Available scripts:
