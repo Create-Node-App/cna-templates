@@ -19,7 +19,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       ],
     },
     scripts: {
-      // prepare: "is-ci || husky install",
+      prepare: "is-ci || husky install",
       dev: "vite",
       build: "tsc && vite build",
       preview: "vite preview",
