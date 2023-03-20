@@ -40,7 +40,6 @@ export default defineConfig({
     minify: isProduction,
     reportCompressedSize: isProduction,
     rollupOptions: {
-      external: ['webextension-polyfill'],
       input: {
         devtools: resolve(root, 'devtools', 'index.html'),
         panel: resolve(root, 'panel', 'index.html'),
