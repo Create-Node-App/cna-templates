@@ -10,7 +10,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "eslint": "^7.23.0",
-    "eslint-config": "*"
+    "eslint-config-base": "*"
   },
   "devDependencies": {
     "typescript": "^4.7.4"

@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["eslint-config"],
+  "extends": ["eslint-config-base"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020,

@@ -1,7 +1,7 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    "eslint-config",
+    "eslint-config-base",
     "plugin:@typescript-eslint/recommended",
   ],
   rules: {
