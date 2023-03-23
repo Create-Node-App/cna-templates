@@ -1,0 +1,22 @@
+{
+  "name": "eslint-config-ts",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "eslint": "^7.23.0",
+    "eslint-config": "*"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "scope": "@create-node-app"
+  }
+}

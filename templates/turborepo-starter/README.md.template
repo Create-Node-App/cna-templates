@@ -1,0 +1,53 @@
+<!--lint disable double-link awesome-heading awesome-git-repo-age awesome-toc-->
+
+<div align="center">
+<h1>TS Monorepo</h1>
+
+</div>
+<div align="center">
+
+</div>
+
+This project was generated using [create-react-webpack-app](https://www.npmjs.com/package/create-react-webpack-project). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
+
+## Features
+
+- **Monorepo** - All packages are managed by [Turborepo](https://turborepo.com/).
+- **Workspaces** - All packages are managed by [Workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces).
+- **Changesets** - All packages are managed by [Changesets](https://github.com/changesets/changesets).
+- **TypeScript** - All packages are written in [TypeScript](https://www.typescriptlang.org/).
+- **ESLint** - All packages are linted by [ESLint](https://eslint.org/).
+- **Prettier** - All packages are formatted by [Prettier](https://prettier.io/).
+- **React** - There is a [React](https://reactjs.org/) app inside the apps folder.
+- **Storybook** - There is a [Storybook](https://storybook.js.org/) playground inside the playgrounds folder.
+- **Local Development Environment** - This project includes all the tools and configuration files you need to develop a new awesome set of packages and applications.
+
+## Pre-packed
+
+### Dev tools
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Turbo](https://turborepo.com/) - A monorepo manager for JavaScript and TypeScript
+- [Changesets](https://github.com/changesets/changesets) - A way to manage your versioning and changelogs with a focus on multi-package repositories
+- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
+- [prettier](https://prettier.io/) - Opinionated code formatter
+- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
+- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+
+## Applications and Services
+
+- **Playground** - A [Storybook](https://storybook.js.org/) playground.
+- **React App** - React app created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) powered by [Vite](https://vitejs.dev/).
+- **WebExtension** - WebExtension created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) powered by [Vite](https://vitejs.dev/) and [WebExtension-Polyfill](https://github.com/mozilla/webextension-polyfill).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+| `npm run <script>` | Description                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `test`             | Runs unit tests with Jest.                                                                                              |
+| `lint`             | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+| `format`           | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `typecheck`        | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |

@@ -2,6 +2,23 @@
   "$schema": "./templates.schema.json",
   "templates": [
     {
+      "name": "Mono Repo Boilerplate",
+      "description": "A highly opinionated mono repo boilerplate with TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with a mono repo quickly.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
+      "type": "monorepo",
+      "category": "Mono Repo",
+      "labels": [
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Turborepo",
+        "Workspaces",
+        "Changesets",
+        "Husky",
+        "Lint Staged"
+      ]
+    },
+    {
       "name": "React Vite Boilerplate",
       "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
@@ -13,9 +30,9 @@
         "TypeScript",
         "ESLint",
         "Prettier",
-        "Jest",
-        "Testing Library",
-        "React Router"
+        "React Router",
+        "Husky",
+        "Lint Staged"
       ]
     },
     {
@@ -33,8 +50,8 @@
         "TypeScript",
         "ESLint",
         "Prettier",
-        "Jest",
-        "Testing Library"
+        "Husky",
+        "Lint Staged"
       ]
     }
   ],
