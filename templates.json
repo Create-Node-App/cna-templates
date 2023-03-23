@@ -1,4 +1,5 @@
 {
+  "$schema": "./templates.schema.json",
   "templates": [
     {
       "name": "React Vite Boilerplate",
@@ -39,18 +40,18 @@
   ],
   "extensions": [
     {
-      "name": "Jest + React Testing Library",
-      "description": "Extension to add Jest and React Testing Library",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
-      "type": "webextension-react",
+      "name": "GitHub Setup",
+      "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
+      "type": ["all"],
       "category": "Tooling",
-      "labels": ["Jest", "React Testing Library"]
+      "labels": ["GitHub", "GitHub Actions", "Dependabot", "Issue Templates", "Pull Request Templates"]
     },
     {
       "name": "Jest + React Testing Library",
       "description": "Extension to add Jest and React Testing Library",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
-      "type": "react",
+      "type": ["react", "webextension-react"],
       "category": "Tooling",
       "labels": ["Jest", "React Testing Library"]
     },
