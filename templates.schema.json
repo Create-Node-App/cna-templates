@@ -75,7 +75,10 @@
               "type": "string"
             },
             "type": {
-              "type": "string"
+              "type": [
+                "string",
+                "array"
+              ]
             },
             "category": {
               "type": "string"

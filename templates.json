@@ -43,7 +43,7 @@
       "name": "GitHub Setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
-      "type": ["all"],
+      "type": "all",
       "category": "Tooling",
       "labels": ["GitHub", "GitHub Actions", "Dependabot", "Issue Templates", "Pull Request Templates"]
     },
@@ -205,7 +205,7 @@
       "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
       "type": "react",
-      "category": "Tooling",
+      "category": "Cross Platform",
       "labels": ["Android", "React", "Android Studio", "Gradle", "Kotlin"]
     },
     {
