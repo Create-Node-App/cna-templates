@@ -41,8 +41,6 @@
     "tsup": "^6.2.3"
   },
   "engines": {
-    "npm": ">=7.0.0",
     "node": ">=16.16.0"
-  },
-  "packageManager": "npm@8.1.2"
+  }
 }
