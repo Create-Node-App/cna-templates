@@ -84,37 +84,9 @@ if (appModified) {
 
 // Warns if there are changes to package.json, and tags the team.
 const packageJSON = danger.git.fileMatch("package.json");
-const yarnLockfile = danger.git.fileMatch("yarn.lock");
-const npmLockfile = danger.git.fileMatch("package-lock.json");
 
 if (packageJSON.modified) {
   const title = ":lock: package.json";
   const idea = "Changes were made to package.json.";
   warn(`${title} - <i>${idea}</i>`);
-}
-
-if (packageJSON.modified && !npmLockfile.modified) {
-  const title = ":lock: package.json";
-  const idea =
-    "If you’ve changed any dependencies (added, removed or updated any packages), " +
-    "please run `npm install` and commit changes in package-lock.json file. " +
-    "Make sure you’re using the correct npm and node versions.";
-  warn(`${title} - <i>${idea}</i>`);
-}
-
-if (!packageJSON.modified && npmLockfile.modified) {
-  const title = ":lock: package.json";
-  const idea =
-    "Changes were made to `package-lock.json`, but not to `package.json`. " +
-    "Please remove `package-lock.json` changes from your pull request. " +
-    "Try to run `git checkout master -- package-lock.json` and commit changes.";
-  fail(`${title} - <i>${idea}</i>`);
-}
-
-if (yarnLockfile.modified) {
-  const title = ":rage: yarn.lock";
-  const idea =
-    "This PR is adding file `yarn.lock` and we don't use npm!. " +
-    "Please remove `yarn.lock` and commit changes.";
-  fail(`${title} - <i>${idea}</i>`);
 }
