@@ -2,6 +2,7 @@
   "name": "eslint-config-ts",
   "version": "0.0.0",
   "main": "index.js",
+  "private": true,
   "license": "MIT",
   "files": [
     "index.js"
@@ -13,10 +14,5 @@
   },
   "devDependencies": {
     "typescript": "^4.7.4"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "scope": "@create-node-app"
   }
 }
