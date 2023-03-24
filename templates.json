@@ -23,7 +23,7 @@
       "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
-      "category": "Frontend",
+      "category": "Frontend application",
       "labels": [
         "React",
         "Vite",
@@ -54,7 +54,7 @@
       "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with WebExtension quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
-      "category": "WebExtension",
+      "category": "Web Extension",
       "labels": [
         "WebExtension",
         "Hot Module Replacement",
@@ -87,7 +87,7 @@
       "description": "Serverless Framework example to deploy an AWS AppSync API using TypeScript. It also has a local development environment using [Serverless Offline](https://www.serverless.com/plugins/serverless-offline).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-appsync-node-typescript",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "AWS AppSync", "TypeScript"]
     },
     {
@@ -95,7 +95,7 @@
       "description": "Serverless Framework example to deploy an AWS AppSync API using Python. It also has a local development environment using [Serverless Offline](https://www.serverless.com/plugins/serverless-offline).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-appsync-python",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "AWS AppSync", "Python"]
     },
     {
@@ -103,7 +103,7 @@
       "description": "Serverless Framework example to deploy an AWS Glue job using Python Shell and PySpark.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue-deployment",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "AWS Glue", "Python Shell", "PySpark"]
     },
     {
@@ -111,7 +111,7 @@
       "description": "Serverless Framework example to deploy a Neo4j instance in EC2.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-neo4j-ec2",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "Neo4j", "EC2"]
     },
     {
@@ -119,7 +119,7 @@
       "description": "Serverless Framework example to run a lambda function locally using [Serverless S3 Local](https://www.serverless.com/plugins/serverless-s3-local).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-s3-local",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "Serverless S3 Local"]
     },
     {
@@ -127,7 +127,7 @@
       "description": "Serverless Framework example to run lambda functions locally using [Serverless Offline SQS](https://www.serverless.com/plugins/serverless-offline-sqs) with ElasticMQ. It provides a full local development environment using [Serverless Offline](https://www.serverless.com/plugins/serverless-offline).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-sqs-node-typescript-offline-with-elasticmq",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": [
         "Serverless Framework",
         "SQS",
@@ -141,7 +141,7 @@
       "description": "Serverless Framework example to start and stop EC2 instances using AWS Lambda.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-start-stop-ec2-instance",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "EC2", "AWS Lambda"]
     },
     {
@@ -149,7 +149,7 @@
       "description": "Serverless Framework example to deploy a DocumentDB cluster with all the necessary resources.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-documentdb",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "DocumentDB"]
     },
     {
@@ -157,7 +157,7 @@
       "description": "Serverless Framework example to deploy a RDS Postgres cluster with all the necessary resources.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-rds-postgres",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "RDS Postgres"]
     },
     {
@@ -165,7 +165,7 @@
       "description": "Serverless Framework example to deploy a lambda function using [Middy](https://middy.js.org/), the stylish Node.js middleware engine for AWS Lambda.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-node-typescript-middy",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "Middy"]
     },
     {
@@ -173,7 +173,7 @@
       "description": "Serverless Framework example to deploy a lambda function using [Middy](https://middy.js.org/), the stylish Node.js middleware engine for AWS Lambda.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-node-typescript-middy-custom-middleware",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "Middy", "Custom Middleware"]
     },
     {
@@ -181,7 +181,7 @@
       "description": "Serverless Framework example to deploy a NestJS application using TypeScript.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-node-typescript-nest",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "NestJS", "TypeScript"]
     },
     {
@@ -189,7 +189,7 @@
       "description": "AWS Cognito local enviroment with Docker and Serverless offline",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-cognito-local",
       "type": "sls",
-      "category": "Serverless Framework based Starters",
+      "category": "Serverless Framework based application",
       "labels": [
         "Serverless Framework",
         "Serverless Offline",
