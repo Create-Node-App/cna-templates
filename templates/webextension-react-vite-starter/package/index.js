@@ -1,7 +1,7 @@
 const dependencies = require("./dependencies");
 const devDependencies = require("./devDependencies");
 
-module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
+module.exports = function resolvePackage(setup, { appName, runCommand }) {
   const packageJson = {
     name: appName,
     version: "0.1.0",
@@ -24,7 +24,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
       "build:watch": "NODE_ENV=development vite build --watch",
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
-      start: `${command} dev`,
+      start: `${runCommand} dev`,
       preview: "vite preview",
       format:
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',

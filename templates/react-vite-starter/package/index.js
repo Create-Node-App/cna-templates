@@ -1,7 +1,7 @@
 const dependencies = require("./dependencies");
 const devDependencies = require("./devDependencies");
 
-module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
+module.exports = function resolvePackage(setup, { appName, runCommand }) {
   const packageJson = {
     name: appName,
     version: "0.1.0",
@@ -27,7 +27,7 @@ module.exports = function resolvePackage(setup, { appName, command, srcDir }) {
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
-      start: `${command} dev`,
+      start: `${runCommand} dev`,
       "lint-staged": "lint-staged",
       typecheck: "tsc --noEmit",
     },
