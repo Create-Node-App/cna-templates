@@ -1,14 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path, { resolve } from 'path';
+import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import makeManifest from './.webext-config/plugins/make-manifest';
 import customDynamicImport from './.webext-config/plugins/custom-dynamic-import';
 import addHmr from './.webext-config/plugins/add-hmr';
 import manifest from './manifest';
 
-const root = resolve(__dirname, '<%= srcDir%>');
-const outDir = resolve(__dirname, 'dist');
-const publicDir = resolve(__dirname, 'public');
+const root = path.resolve(__dirname, '<%= srcDir%>');
+const outDir = path.resolve(__dirname, 'dist');
+const publicDir = path.resolve(__dirname, 'public');
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProduction = !isDev;
@@ -18,13 +19,9 @@ const enableHmrInBackgroundScript = process.env.ENABLE_HMR_IN_BACKGROUND_SCRIPT 
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: {
-      '<%= projectImportPath%>': path.resolve(__dirname, '<%= srcDir%>'),
-    },
-  },
   plugins: [
     react(),
+    tsconfigPaths(),
     makeManifest(manifest, {
       isDev,
       contentScriptCssKey: regenerateCacheInvalidationKey(),
@@ -41,14 +38,14 @@ export default defineConfig({
     reportCompressedSize: isProduction,
     rollupOptions: {
       input: {
-        devtools: resolve(root, 'devtools', 'index.html'),
-        panel: resolve(root, 'panel', 'index.html'),
-        content: resolve(root, 'content', 'index.ts'),
-        background: resolve(root, 'background', 'index.ts'),
-        contentStyle: resolve(root, 'content', 'style.scss'),
-        popup: resolve(root, 'popup', 'index.html'),
-        newtab: resolve(root, 'newtab', 'index.html'),
-        options: resolve(root, 'options', 'index.html'),
+        devtools: path.resolve(root, 'devtools', 'index.html'),
+        panel: path.resolve(root, 'panel', 'index.html'),
+        content: path.resolve(root, 'content', 'index.ts'),
+        background: path.resolve(root, 'background', 'index.ts'),
+        contentStyle: path.resolve(root, 'content', 'style.scss'),
+        popup: path.resolve(root, 'popup', 'index.html'),
+        newtab: path.resolve(root, 'newtab', 'index.html'),
+        options: path.resolve(root, 'options', 'index.html'),
       },
       watch: {
         include: ['<%= srcDir%>/**', 'vite.config.ts'],

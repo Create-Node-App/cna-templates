@@ -29,8 +29,9 @@ module.exports = {
   prettier: "^2.6.2",
   sass: "^1.58.1",
   "ts-jest": "^28.0.5",
-  "typescript": "^4.9.5",
+  typescript: "^4.9.5",
   vite: "^4.1.0",
   "vite-plugin-eslint": "^1.8.1",
   "vite-plugin-pwa": "^0.14.4",
+  "vite-tsconfig-paths": "^4.0.7",
 };
