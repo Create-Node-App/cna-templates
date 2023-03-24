@@ -34,7 +34,7 @@ For JavaScript (`jsconfig.json`) projects:
 "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "<%= projectImport%>*": ["./<%= srcDir%>/*"]
+      "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
   }
 ```
@@ -45,11 +45,11 @@ For TypeScript (`tsconfig.json`) projects:
 "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "<%= projectImport%>*": ["./<%= srcDir%>/*"]
+      "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
   }
 ```
 
 [Paths Configuration](../tsconfig.json)
 
-It is also possible to define multiple paths for various folders(such as `@components`, `@hooks`, etc.), but using `<%= projectImport%>*` works very well because it is short enough so there is no need to configure multiple paths and it differs from other dependency modules so there is no confusion in what comes from `node_modules` and what is our source folder. That means that anything in the `src` folder can be accessed via `@`, e.g some file that lives in `<%= srcDir%>/components/MyComponent` can be accessed using `<%= projectImport%>components/MyComponents`.
+It is also possible to define multiple paths for various folders(such as `<%= projectImportPath%>components`, `<%= projectImportPath%>hooks`, etc.), but using `<%= projectImportPath%>*` works very well because it is short enough so there is no need to configure multiple paths and it differs from other dependency modules so there is no confusion in what comes from `node_modules` and what is our source folder. That means that anything in the `src` folder can be accessed via `@`, e.g some file that lives in `<%= srcDir%>/components/MyComponent` can be accessed using `<%= projectImportPath%>components/MyComponents`.

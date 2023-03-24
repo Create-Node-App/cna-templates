@@ -33,6 +33,20 @@
         "React Router",
         "Husky",
         "Lint Staged"
+      ],
+      "customOptions": [
+        {
+          "name": "srcDir",
+          "type": "text",
+          "message": "Sub directory to put all source content (.e.g. `src`, `app`). Leave blank to use the root directory.",
+          "initial": "src"
+        },
+        {
+          "name": "projectImportPath",
+          "type": "text",
+          "message": "Import alias to use for the project, e.g. `@/`",
+          "initial": "@/"
+        }
       ]
     },
     {
@@ -52,6 +66,20 @@
         "Prettier",
         "Husky",
         "Lint Staged"
+      ],
+      "customOptions": [
+        {
+          "name": "srcDir",
+          "type": "text",
+          "message": "Sub directory to put all source content (.e.g. `src`, `app`). Leave blank to use the root directory.",
+          "initial": "src"
+        },
+        {
+          "name": "projectImportPath",
+          "type": "text",
+          "message": "Import alias to use for the project, e.g. `@/`",
+          "initial": "@/"
+        }
       ]
     }
   ],

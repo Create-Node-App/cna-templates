@@ -43,7 +43,7 @@ export default defineConfig({
   base: process.env.VITE_APP_BASE_URL,
   resolve: {
     alias: {
-      '<%= projectImport%>': path.resolve(__dirname, '<%= srcDir%>'),
+      '<%= projectImportPath%>': path.resolve(__dirname, '<%= srcDir%>'),
     },
   },
   esbuild: {
