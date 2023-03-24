@@ -11,7 +11,7 @@ import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 const App = () => (
   <RecoilRoot>
     <Suspense fallback={<Loading />}>
-      {import.meta.env.NODE_ENV === "development" && <RecoilDevTools />}
+      {import.meta.env.DEV && <RecoilDevTools />}
       <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
         <AppRoutes />
       </BrowserRouter>

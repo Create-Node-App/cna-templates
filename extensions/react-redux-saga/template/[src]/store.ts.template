@@ -33,7 +33,7 @@ const sagaMiddleware = createSagaMiddleware();
 packages.push(routerMiddleware(history));
 packages.push(sagaMiddleware);
 
-if (import.meta.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   // Push the middleware that are specific for development
   packages.push(createLogger());
   if (window.__REDUX_DEVTOOLS_EXTENSION__) {
