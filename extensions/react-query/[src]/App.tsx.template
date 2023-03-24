@@ -1,0 +1,23 @@
+import React, { Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import "<%= projectImportPath %>theme";
+
+import Loading from "<%= projectImportPath %>components/Loading";
+import AppRoutes from "<%= projectImportPath %>routes/AppRoutes";
+
+// Create a client
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <Suspense fallback={<Loading />}>
+      <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
+        <AppRoutes />
+      </BrowserRouter>
+    </Suspense>
+  </QueryClientProvider>
+);
+
+export default App;
