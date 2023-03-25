@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "antd": "^5.3.0",
+    "@ant-design/icons": "^5.0.1"
+  }
+}
