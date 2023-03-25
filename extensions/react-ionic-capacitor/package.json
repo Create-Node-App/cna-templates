@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@ionic/react": "latest",
+    "@ionic/react-router": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/android": "latest",
+    "@capacitor/cli": "latest",
+    "@capacitor/core": "latest",
+    "@ionic/cli": "latest"
+  },
+  "scripts": {
+    "prepare:android": "ionic cap add android && ionic cap copy android"
+  }
+}

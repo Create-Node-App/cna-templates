@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@risingstack/react-easy-state": "^6.3.0"
+  }
+}

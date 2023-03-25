@@ -1,0 +1,23 @@
+import React, { Suspense } from 'react';
+import { ConnectedRouter } from 'connected-react-router';
+import { Provider } from 'react-redux';
+
+import { store, history } from 'store';
+
+import '<%= projectImportPath %>theme';
+
+import Loading from '<%= projectImportPath %>components/Loading';
+import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
+
+
+const App = () => (
+  <Provider store={store}>
+    <Suspense fallback={<Loading />}>
+      <ConnectedRouter history={history}>
+        <AppRoutes />
+      </ConnectedRouter>
+    </Suspense>
+  </Provider>
+);
+
+export default App;
