@@ -1,21 +1,20 @@
 import React, { Suspense } from 'react';
-import { ConnectedRouter } from 'connected-react-router';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { store, history } from 'store';
+import { store } from 'store';
 
 import '<%= projectImportPath %>theme';
 
 import Loading from '<%= projectImportPath %>components/Loading';
 import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 
-
 const App = () => (
   <Provider store={store}>
     <Suspense fallback={<Loading />}>
-      <ConnectedRouter history={history}>
+      <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
         <AppRoutes />
-      </ConnectedRouter>
+      </BrowserRouter>
     </Suspense>
   </Provider>
 );

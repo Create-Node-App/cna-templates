@@ -1,7 +1,5 @@
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
-import { routerMiddleware } from 'connected-react-router';
-import { createBrowserHistory } from 'history';
 import { persistStore, persistReducer } from 'redux-persist';
 import { applyMiddleware, createStore, compose } from 'redux';
 
@@ -11,10 +9,6 @@ import storage from 'redux-persist/lib/storage';
 import { StoreType } from 'types/store';
 import reducers from 'reducers';
 import rootSaga from 'sagas';
-
-export const history = createBrowserHistory({
-  basename: '/',
-});
 
 const persistConfig = {
   key: 'root',
@@ -30,7 +24,6 @@ const enhancers = [];
 const sagaMiddleware = createSagaMiddleware();
 
 // Push middleware that you need for both development and production
-packages.push(routerMiddleware(history));
 packages.push(sagaMiddleware);
 
 if (import.meta.env.DEV) {
@@ -44,7 +37,7 @@ if (import.meta.env.DEV) {
 const middleware = applyMiddleware(...packages);
 
 export const store = createStore(
-  persistReducer<StoreType>(persistConfig, reducers(history)),
+  persistReducer<StoreType>(persistConfig, reducers()),
   compose(middleware, ...enhancers),
 );
 
@@ -55,5 +48,4 @@ export const persistor = persistStore(store);
 export default {
   store,
   persistor,
-  history,
 };
