@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "@ionic/react": "latest",
-    "@ionic/react-router": "latest"
+    "@ionic/react": "^6.7.0",
+    "@ionic/react-router": "^6.7.0"
   },
   "devDependencies": {
-    "@capacitor/android": "latest",
-    "@capacitor/cli": "latest",
-    "@capacitor/core": "latest",
-    "@ionic/cli": "latest"
+    "@capacitor/android": "^4.7.1",
+    "@capacitor/cli": "^4.7.1",
+    "@capacitor/core": "^4.7.1",
+    "@ionic/cli": "^6.20.9"
   },
   "scripts": {
     "prepare:android": "ionic cap add android && ionic cap copy android"

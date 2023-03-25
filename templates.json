@@ -236,7 +236,13 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-query",
       "type": "react",
       "category": "State Management",
-      "labels": ["TanStack", "React Query", "State Management", "Asynchronous State Management", "stale-while-revalidate"]
+      "labels": [
+        "TanStack",
+        "React Query",
+        "State Management",
+        "Asynchronous State Management",
+        "stale-while-revalidate"
+      ]
     },
     {
       "name": "Recoil.js",
@@ -323,23 +329,8 @@
       ]
     },
     {
-      "name": "React Redux base setup",
-      "description": "Extension to add the official React bindings for Redux with a fully configured store",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux",
-      "type": "react",
-      "category": "State Management",
-      "labels": [
-        "React",
-        "State Management",
-        "Unidirectional State Management",
-        "Redux",
-        "React Redux",
-        "Redux Toolkit"
-      ]
-    },
-    {
-      "name": "Redux Saga Extension",
-      "description": "Extension to add Redux Saga middleware to your React + Redux setup",
+      "name": "React Redux with Redux Saga",
+      "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Saga",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
       "type": "react",
       "category": "State Management",
@@ -349,8 +340,22 @@
         "Unidirectional State Management",
         "Redux",
         "React Redux",
-        "Redux Toolkit",
         "Redux Saga"
+      ]
+    },
+    {
+      "name": "React Redux with Redux Thunk",
+      "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Thunk",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-thunk",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "React",
+        "State Management",
+        "Unidirectional State Management",
+        "Redux",
+        "React Redux",
+        "Redux Thunk"
       ]
     },
     {
