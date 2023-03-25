@@ -29,7 +29,7 @@ i18n
     ns: ["translations"],
     defaultNS: "translations",
 
-    debug: import.meta.env.NODE_ENV === "development",
+    debug: import.meta.env.DEV,
 
     interpolation: {
       escapeValue: false, // not needed for react!!

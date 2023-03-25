@@ -231,6 +231,14 @@
       "labels": ["i18n", "react-i18n", "async backend", "locale", "timezone"]
     },
     {
+      "name": "TanStack React Query",
+      "description": "High-quality open-source software for web developers.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-query",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["TanStack", "React Query", "State Management", "Asynchronous State Management", "stale-while-revalidate"]
+    },
+    {
       "name": "Recoil.js",
       "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",

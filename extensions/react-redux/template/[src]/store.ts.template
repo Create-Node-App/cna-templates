@@ -29,7 +29,7 @@ const enhancers = [];
 packages.push(routerMiddleware(history));
 packages.push(thunk);
 
-if (import.meta.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   // Push the middleware that are specific for development
   packages.push(createLogger());
   if (window.__REDUX_DEVTOOLS_EXTENSION__) {
