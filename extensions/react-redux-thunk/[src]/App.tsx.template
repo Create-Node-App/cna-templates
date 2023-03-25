@@ -2,10 +2,9 @@ import React, { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { store } from 'store';
-
 import '<%= projectImportPath %>theme';
 
+import { store } from '<%= projectImportPath %>store';
 import Loading from '<%= projectImportPath %>components/Loading';
 import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 
