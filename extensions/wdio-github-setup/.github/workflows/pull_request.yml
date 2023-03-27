@@ -1,0 +1,30 @@
+name: Pull Request Validation
+
+concurrency:
+  group: pull_request_${{ github.event.number }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-e2e-tests:
+    if: github.event.pull_request.draft == false
+
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: [0, 1, 2, 3, 4]
+
+    uses: ./.github/workflows/automation_exec.yml
+    with:
+      log_level: info
+      suite: ci.pull_request
+      spec_ci_index: ${{ matrix.jobs }}
+      spec_ci_total: 5
+      max_instances: 3
+      chrome_instances: 2
+      browser_visible: true
+      enable_video: false

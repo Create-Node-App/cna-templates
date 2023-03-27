@@ -1,0 +1,28 @@
+name: Main Report Update
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  main-check:
+    concurrency: report
+
+    uses: ./.github/workflows/automation_exec.yml
+    with:
+      log_level: info
+      suite: ci.report
+      max_instances: 3
+      chrome_instances: 2
+      browser_visible: true
+      enable_video: false
+      update_report: true

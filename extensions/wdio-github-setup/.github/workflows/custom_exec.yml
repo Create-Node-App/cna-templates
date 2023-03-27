@@ -1,0 +1,112 @@
+name: Manual Execution
+
+permissions:
+  contents: write
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      log_level:
+        description: Specifies the log level
+        required: true
+        type: choice
+        default: 'info'
+        options:
+          - 'trace'
+          - 'debug'
+          - 'info'
+          - 'warn'
+          - 'error'
+          - 'silent'
+
+      suite:
+        description: Suite to be executed
+        default: 'debug'
+        required: true
+
+      spec:
+        description: Spec to be executed. (Won't be used if suite is specified)
+        default: ''
+        required: false
+
+      webdriver_spec_file_retries:
+        description: Specifies the number of retries for each spec file
+        default: '0'
+        required: false
+
+      max_instances:
+        description: Maximum number of instances to be executed
+        default: ''
+        required: false
+
+      chrome_instances:
+        description: Amount of Chrome Instances to be used. Won't use Chrome when its value is a blank string
+        default: '1'
+        required: false
+
+      firefox_instances:
+        description: Amount of Firefox Instances to be used. Won't use Firefox when its value is a blank string
+        default: ''
+        required: false
+
+      browser_visible:
+        description: Specifies whether the browser is visible on the Remote Dashboard. If false, the browsers will run in headless mode.
+        type: boolean
+        default: true
+        required: false
+
+      enable_video:
+        description: Specifies whether browser is recorded or not. Will be disabled if the browsers run in headless mode.
+        type: boolean
+        default: true
+        required: false
+
+      update_report:
+        description: Specifies whether the report is updated or not.
+        type: boolean
+        default: false
+        required: false
+
+jobs:
+  run-workflow-suite:
+    if: github.event.inputs.suite != ''
+
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: [0, 1, 2, 3, 4]
+
+    uses: ./.github/workflows/automation_exec.yml
+    with:
+      ref: ${{ github.ref  }}
+      log_level: ${{ github.event.inputs.log_level }}
+      suite: ${{ github.event.inputs.suite }}
+      spec_ci_index: ${{ matrix.jobs }}
+      spec_ci_total: 5
+      max_instances: ${{ github.event.inputs.max_instances }}
+      chrome_instances: ${{ github.event.inputs.chrome_instances }}
+      firefox_instances: ${{ github.event.inputs.firefox_instances }}
+      browser_visible: ${{ github.event.inputs.browser_visible }}
+      enable_video: ${{ github.event.inputs.enable_video }}
+
+  run-workflow-spec:
+    if: github.event.inputs.spec != ''
+
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: [0, 1, 2, 3, 4]
+
+    uses: ./.github/workflows/automation_exec.yml
+    with:
+      ref: ${{ github.ref  }}
+      log_level: ${{ github.event.inputs.log_level }}
+      spec: ${{ github.event.inputs.spec }}
+      spec_ci_index: ${{ matrix.jobs }}
+      spec_ci_total: 5
+      max_instances: ${{ github.event.inputs.max_instances }}
+      chrome_instances: ${{ github.event.inputs.chrome_instances }}
+      firefox_instances: ${{ github.event.inputs.firefox_instances }}
+      browser_visible: ${{ github.event.inputs.browser_visible }}
+      enable_video: ${{ github.event.inputs.enable_video }}
