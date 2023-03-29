@@ -65,7 +65,7 @@ Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `preview`                   | Serves your app using your production ready setup (`.env.production` and `NODE_ENV` equals to `production`) |
+| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
 | `build`                     | Builds the application to `dist/`                                                                           |
 
 ## Testing

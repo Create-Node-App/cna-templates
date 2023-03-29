@@ -11,19 +11,16 @@ const root = path.resolve(__dirname, '<%= srcDir%>');
 const outDir = path.resolve(__dirname, 'dist');
 const publicDir = path.resolve(__dirname, 'public');
 
-const isDev = process.env.NODE_ENV === 'development';
-const isProduction = !isDev;
-
 // ENABLE HMR IN BACKGROUND SCRIPT
 const enableHmrInBackgroundScript = process.env.ENABLE_HMR_IN_BACKGROUND_SCRIPT === 'true';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tsconfigPaths(),
     makeManifest(manifest, {
-      isDev,
+      isDev: mode === 'development',
       contentScriptCssKey: regenerateCacheInvalidationKey(),
     }),
     customDynamicImport(),
@@ -33,9 +30,9 @@ export default defineConfig({
   build: {
     outDir,
     /** Can slowDown build speed. */
-    sourcemap: isDev,
-    minify: isProduction,
-    reportCompressedSize: isProduction,
+    sourcemap: mode === 'development',
+    minify: mode === 'production',
+    reportCompressedSize: mode === 'production',
     rollupOptions: {
       input: {
         devtools: path.resolve(root, 'devtools', 'index.html'),
@@ -53,7 +50,7 @@ export default defineConfig({
       },
       output: {
         entryFileNames: '<%= srcDir%>/[name]/index.js',
-        chunkFileNames: isDev ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
+        chunkFileNames: mode === 'development' ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
         assetFileNames: (assetInfo) => {
           const { dir, name: _name } = path.parse(assetInfo.name || '');
           const assetFolder = dir.split('/').at(-1);
@@ -66,7 +63,7 @@ export default defineConfig({
       },
     },
   },
-});
+}));
 
 function firstUpperCase(str: string) {
   const firstAlphabet = new RegExp(/( |^)[a-z]/, 'g');

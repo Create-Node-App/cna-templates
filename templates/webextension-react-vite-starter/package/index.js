@@ -21,7 +21,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     scripts: {
       // prepare: "is-ci || husky install",
       build: "tsc && vite build",
-      "build:watch": "NODE_ENV=development vite build --watch",
+      "build:watch": "vite build --watch",
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
       start: `${runCommand} dev`,
