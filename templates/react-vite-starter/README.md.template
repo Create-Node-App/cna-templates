@@ -23,6 +23,7 @@ This project was generated using [create-react-webpack-app](https://www.npmjs.co
 ```sh
 fnm use
 <%= installCommand%>
+<%= runCommand %> prepare:git-hooks
 <%= runCommand%> start
 ```
 

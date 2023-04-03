@@ -14,16 +14,11 @@
     "src",
     "node_modules"
   ],
-  "lint-staged": {
-    "*.{js,ts,json,css,sass,scss,less,html,md,yml,yaml}": [
-      "prettier --write",
-      "npm run lint:fix"
-    ]
-  },
   "scripts": {
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "prepare:git-hooks": "is_ci || husky install",
     "report": "allure generate",
     "selenoid": "./bin/selenoid",
     "test": "wdio run wdio.conf.js --no-autoCompileOpts.autoCompile",
@@ -58,6 +53,7 @@
     "eslint-config-prettier": "^8.3.0",
     "glob": "^9.3.2",
     "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
     "lint-staged": "^11.2.4",
     "log4js": "^6.9.1",
     "path": "^0.12.7",

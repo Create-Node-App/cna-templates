@@ -19,6 +19,7 @@ This app is created with the goals to have examples of ours React components, ho
 ```sh
 fnm use
 <%= installCommand%>
+<%= runCommand %> prepare:git-hooks
 ```
 
 ## Quickstart

@@ -10,6 +10,7 @@
 ```sh
 fnm use
 <%= installCommand%>
+<%= runCommand %> prepare:git-hooks
 ```
 
 ## Publishing Packages
