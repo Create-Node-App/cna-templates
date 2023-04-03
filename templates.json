@@ -193,6 +193,14 @@
       "labels": ["Serverless Framework", "Middy", "Custom Middleware"]
     },
     {
+      "name": "Serverless Twilio + Typescript Lambda example",
+      "description": "Serverless Framework example to deploy a lambda function using Twilio and TypeScript.",
+      "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-twilio-aws-lambdas-typescript",
+      "type": "sls",
+      "category": "Serverless Framework based application",
+      "labels": ["Serverless Framework", "Serverless Offline", "AWS", "Twilio", "TypeScript"]
+    },
+    {
       "name": "Serverless Nest Application with TypeScript",
       "description": "Serverless Framework example to deploy a NestJS application using TypeScript.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-node-typescript-nest",
