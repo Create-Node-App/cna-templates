@@ -220,7 +220,7 @@
       "name": "GitHub Setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
-      "type": "all",
+      "type": ["sls", "webdriverio", "react", "webextension-react", "monorepo"],
       "category": "Tooling",
       "labels": [
         "GitHub",
