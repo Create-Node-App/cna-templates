@@ -195,7 +195,7 @@
     {
       "name": "Serverless Twilio + Typescript Lambda example",
       "description": "Serverless Framework example to deploy a lambda function using Twilio and TypeScript.",
-      "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-twilio-aws-lambdas-typescript/",
+      "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-twilio-aws-lambdas-typescript",
       "type": "sls",
       "category": "Serverless Framework based application",
       "labels": ["Serverless Framework", "Serverless Offline", "AWS", "Twilio", "TypeScript"]
