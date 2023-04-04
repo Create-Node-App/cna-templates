@@ -285,6 +285,14 @@
       ]
     },
     {
+      "name": "React Hook Form",
+      "description": "Extension to add React Hook Form, a performant, flexible and extensible forms with easy-to-use validation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hook-form",
+      "type": "react",
+      "category": "State Management",
+      "labels": ["React Hook Form", "State Management", "Form Validation"]
+    },
+    {
       "name": "Recoil.js",
       "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
