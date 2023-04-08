@@ -28,6 +28,7 @@
     "babel-loader": "^9.1.2",
     "<%= scope%>eslint-config-react": "*",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "react-docgen-typescript-plugin": "^1.0.5",
     "tsconfig": "*",
     "typescript": "^5.0.2"
   }
