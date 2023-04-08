@@ -16,6 +16,16 @@
         "Changesets",
         "Husky",
         "Lint Staged"
+      ],
+      "customOptions": [
+        {
+          "name": "scope",
+          "type": "text",
+          "message": "Scope to use for the packages, e.g. `@my-org/`",
+          "initial": "",
+          "required": false,
+          "validate": "^[a-zA-Z0-9-]+$"
+        }
       ]
     },
     {

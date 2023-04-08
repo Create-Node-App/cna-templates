@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-react",
+  "name": "<%= scope%>eslint-config-react",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,
@@ -8,7 +8,7 @@
     "index.js"
   ],
   "dependencies": {
-    "eslint-config-ts": "*",
+    "<%= scope%>eslint-config-ts": "*",
     "eslint": "^7.23.0",
     "eslint-config-react-hooks": "^1.0.0"
   },

@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-next",
+  "name": "<%= scope%>eslint-config-next",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,
@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "eslint": "^7.23.0",
-    "eslint-config-ts": "*",
+    "<%= scope%>eslint-config-ts": "*",
     "eslint-config-next": "^12.0.8"
   }
 }

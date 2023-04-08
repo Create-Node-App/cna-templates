@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-ts",
+  "name": "<%= scope%>eslint-config-ts",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,
@@ -10,7 +10,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "eslint": "^7.23.0",
-    "eslint-config-base": "*"
+    "<%= scope%>eslint-config-base": "*"
   },
   "devDependencies": {
     "typescript": "^4.7.4"
