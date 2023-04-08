@@ -461,11 +461,25 @@
     },
     {
       "name": "Semantic UI React",
-      "description": "Extension to add React Semantic UI to your setup with theme customization",
+      "description": "Extension to add Semantic UI React to your setup",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
       "type": "react",
       "category": "UI",
-      "labels": ["React", "Semantic UI", "Semantic UI React", "Theme"]
+      "labels": ["React", "Semantic UI", "Semantic UI React", "CSS"]
+    },
+    {
+      "name": "Semantic UI React with Theme",
+      "description": "Extension to add Semantic UI React to your setup with theme customization",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui-less",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Semantic UI",
+        "Semantic UI React",
+        "Less",
+        "Theme Customization"
+      ]
     },
     {
       "name": "Ant Design for React",
