@@ -161,6 +161,21 @@
         "ElasticMQ"
       ]
     },
+        {
+      "name": "Serverless SQS offline + Python + Localstack Example",
+      "description": "Serverless Framework example to run lambda functions locally using Serverless Offline SQS with Localstack. It provides a full local development environment using Serverless Offline.",
+      "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-sqs-python",
+      "type": "sls",
+      "category": "Serverless Framework based application",
+      "labels": [
+        "Serverless Framework",
+        "SQS",
+        "Serverless Offline",
+        "Serverless Offline SQS",
+        "Localstack",
+        "Python"
+      ]
+    },
     {
       "name": "Start and Stop EC2 Instances with AWS Lambda",
       "description": "Serverless Framework example to start and stop EC2 instances using AWS Lambda.",
