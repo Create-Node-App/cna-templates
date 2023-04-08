@@ -15,38 +15,39 @@
 
 set -e
 
-ROOT=$(dirname "$0")
+ROOT=$(realpath "$(dirname "${0}")/..")
+BIN_DIR="${ROOT}/bin"
 
 # shellcheck source=/dev/null
-. "${ROOT}/util/opts/opts.sh"
+. "${BIN_DIR}/util/opts/opts.sh"
 
 if ! type -p docker >/dev/null; then
     echo "docker is not installed on this system."
     exit 1
 fi
 
-if [[ ! -x "${ROOT}"/cm ]]; then
-    cd "${ROOT}"
+if [[ ! -x "${BIN_DIR}"/cm ]]; then
+    cd "${BIN_DIR}"
     curl -s https://aerokube.com/cm/bash | bash
     cd ..
 fi
 
 if [[ -n "${start}" ]]; then
-    "${ROOT}"/cm selenoid start --vnc
+    "${BIN_DIR}"/cm selenoid start --vnc
 
     if [[ -n "${ui}" ]]; then
         # init selenoid ui
-        "${ROOT}"/cm selenoid-ui start
+        "${BIN_DIR}"/cm selenoid-ui start
     fi
     exit
 fi
 
 if [[ -n "${stop}" ]]; then
-    "${ROOT}"/cm selenoid stop
+    "${BIN_DIR}"/cm selenoid stop
 
     if [[ -n "${ui}" ]]; then
         # init selenoid ui
-        "${ROOT}"/cm selenoid-ui stop
+        "${BIN_DIR}"/cm selenoid-ui stop
     fi
     exit
 fi
