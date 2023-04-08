@@ -207,7 +207,13 @@
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-twilio-aws-lambdas-typescript",
       "type": "sls",
       "category": "Serverless Framework based application",
-      "labels": ["Serverless Framework", "Serverless Offline", "AWS", "Twilio", "TypeScript"]
+      "labels": [
+        "Serverless Framework",
+        "Serverless Offline",
+        "AWS",
+        "Twilio",
+        "TypeScript"
+      ]
     },
     {
       "name": "Serverless Nest Application with TypeScript",
@@ -262,6 +268,14 @@
         "Selenium",
         "User Acceptance Testing"
       ]
+    },
+    {
+      "name": "Development Container",
+      "description": "Add a development container setup to your TypeScript project",
+      "url": "https://https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
+      "type": ["sls", "react", "webextension-react", "monorepo", "webdriverio"],
+      "category": "Tooling",
+      "labels": ["Development Container", "VSCode", "Docker"]
     },
     {
       "name": "Jest + React Testing Library",
