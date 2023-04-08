@@ -13,9 +13,12 @@
 ##         --ui                Makes it possible to handle Selenoid UI in combination with `--start` or `--stop`
 ##
 
+set -e
+
 ROOT=$(dirname "$0")
 
-source "${ROOT}/util/opts/opts.sh" || exit
+# shellcheck source=/dev/null
+. "${ROOT}/util/opts/opts.sh"
 
 if ! type -p docker >/dev/null; then
     echo "docker is not installed on this system."
@@ -23,7 +26,7 @@ if ! type -p docker >/dev/null; then
 fi
 
 if [[ ! -x "${ROOT}"/cm ]]; then
-    cd "${ROOT}" || exit
+    cd "${ROOT}"
     curl -s https://aerokube.com/cm/bash | bash
     cd ..
 fi
