@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # 1. For build React app
-FROM node:18-alpine AS development
+FROM node:18 AS development
 
 # Set working directory
 WORKDIR /app
