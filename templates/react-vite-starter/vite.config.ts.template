@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite';
+import path from 'path';
 import react from '@vitejs/plugin-react';
 import eslint from 'vite-plugin-eslint';
 import { VitePWA } from 'vite-plugin-pwa';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 const { PORT = '3000' } = process.env;
+
+const root = path.resolve(__dirname, '<%= srcDir%>');
 
 const vitePluginPWA = () =>
   VitePWA({
@@ -41,11 +43,16 @@ const vitePluginPWA = () =>
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), eslint(), tsconfigPaths(), vitePluginPWA()],
+  plugins: [react(), eslint(), vitePluginPWA()],
   base: process.env.VITE_APP_BASE_URL,
   server: {
     host: '0.0.0.0',
     port: parseInt(PORT, 10),
+  },
+  resolve: {
+    alias: {
+      '<%= projectImportPath%>': `${root}/`,
+    },
   },
   esbuild: {
     loader: 'tsx',

@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import makeManifest from './.webext-config/plugins/make-manifest';
 import customDynamicImport from './.webext-config/plugins/custom-dynamic-import';
 import addHmr from './.webext-config/plugins/add-hmr';
@@ -18,7 +17,6 @@ const enableHmrInBackgroundScript = process.env.ENABLE_HMR_IN_BACKGROUND_SCRIPT 
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
-    tsconfigPaths(),
     makeManifest(manifest, {
       isDev: mode === 'development',
       contentScriptCssKey: regenerateCacheInvalidationKey(),
@@ -27,6 +25,11 @@ export default defineConfig(({ mode }) => ({
     addHmr({ background: enableHmrInBackgroundScript, view: true }),
   ],
   publicDir,
+  resolve: {
+    alias: {
+      '<%= projectImportPath%>': `${root}/`,
+    },
+  },
   build: {
     outDir,
     /** Can slowDown build speed. */

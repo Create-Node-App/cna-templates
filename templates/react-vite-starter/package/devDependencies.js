@@ -33,5 +33,4 @@ module.exports = {
   vite: "^4.1.0",
   "vite-plugin-eslint": "^1.8.1",
   "vite-plugin-pwa": "^0.14.4",
-  "vite-tsconfig-paths": "^4.0.7",
 };
