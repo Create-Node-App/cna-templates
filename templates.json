@@ -231,6 +231,20 @@
       ]
     },
     {
+      "name": "Serverless FastAPI",
+      "description": "Serverless Framework example to deploy a FastAPI application using Python. It also has local development environment using Serverless Offline.",
+      "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-python-fastapi/",
+      "type": "sls",
+      "category": "Serverless Framework based application",
+      "labels": [
+        "Serverless Framework",
+        "Serverless Offline",
+        "AWS",
+        "Python",
+        "FastApi"
+      ]
+    },
+    {
       "name": "Serverless Nest Application with TypeScript",
       "description": "Serverless Framework example to deploy a NestJS application using TypeScript.",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-node-typescript-nest",
