@@ -108,7 +108,7 @@
       ]
     },
     {
-      "name": "AWS AppSync + TypeScript",
+      "name": "AWS AppSync TypeScript",
       "description": "Serverless Framework example to deploy an AWS AppSync API using TypeScript. It also has a local development environment using [Serverless Offline](https://www.serverless.com/plugins/serverless-offline).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-appsync-node-typescript",
       "type": "sls",
@@ -116,7 +116,7 @@
       "labels": ["Serverless Framework", "AWS AppSync", "TypeScript"]
     },
     {
-      "name": "AWS AppSync + Python",
+      "name": "AWS AppSync Python",
       "description": "Serverless Framework example to deploy an AWS AppSync API using Python. It also has a local development environment using [Serverless Offline](https://www.serverless.com/plugins/serverless-offline).",
       "url": "https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-appsync-python",
       "type": "sls",
