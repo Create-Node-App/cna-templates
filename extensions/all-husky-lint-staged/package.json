@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "prepare": "is-ci && husky install || echo 'husky - not running on CI server'",
+    "prepare": "is-ci && echo 'CI detected, skipping husky installation' || husky install",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
