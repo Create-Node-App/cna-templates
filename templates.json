@@ -6,7 +6,7 @@
       "description": "A highly opinionated mono repo boilerplate with TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with a mono repo quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
-      "category": "Mono repository",
+      "category": "Mono Repo Boilerplate",
       "labels": [
         "TypeScript",
         "ESLint",
@@ -30,7 +30,7 @@
       "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
-      "category": "Frontend application",
+      "category": "Frontend Application",
       "labels": [
         "React",
         "Vite",
