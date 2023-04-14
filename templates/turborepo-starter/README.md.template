@@ -1,7 +1,7 @@
 <!--lint disable double-link awesome-heading awesome-git-repo-age awesome-toc-->
 
 <div align="center">
-<h1>TS Monorepo</h1>
+<h1>TypeScript Monorepo</h1>
 
 </div>
 <div align="center">
@@ -17,7 +17,6 @@ This project was generated using [create-react-webpack-app](https://www.npmjs.co
 ```sh
 fnm use
 <%= installCommand %>
-<%= runCommand %> prepare:git-hooks
 ```
 
 ## Features
@@ -41,8 +40,6 @@ fnm use
 - [Changesets](https://github.com/changesets/changesets) - A way to manage your versioning and changelogs with a focus on multi-package repositories
 - [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
 - [prettier](https://prettier.io/) - Opinionated code formatter
-- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
-- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
 
 ## Applications and Services
 
@@ -60,4 +57,4 @@ In the project directory, you can run:
 | `lint`             | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
 | `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
 | `format`           | Formats the project using [Prettier](https://prettier.io/)                                                              |
-| `typecheck`        | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |
+| `type-check`        | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |

@@ -13,9 +13,7 @@
         "Prettier",
         "Turborepo",
         "Workspaces",
-        "Changesets",
-        "Husky",
-        "Lint Staged"
+        "Changesets"
       ],
       "customOptions": [
         {
@@ -39,9 +37,7 @@
         "TypeScript",
         "ESLint",
         "Prettier",
-        "React Router",
-        "Husky",
-        "Lint Staged"
+        "React Router"
       ],
       "customOptions": [
         {
@@ -72,9 +68,7 @@
         "Vite",
         "TypeScript",
         "ESLint",
-        "Prettier",
-        "Husky",
-        "Lint Staged"
+        "Prettier"
       ],
       "customOptions": [
         {
@@ -102,9 +96,7 @@
         "TypeScript",
         "ESLint",
         "Prettier",
-        "Selenoid",
-        "Husky",
-        "Lint Staged"
+        "Selenoid"
       ]
     },
     {
@@ -297,6 +289,22 @@
         "Selenium",
         "User Acceptance Testing"
       ]
+    },
+    {
+      "name": "Husky + Lint Staged",
+      "description": "Extension to add Husky and Lint Staged to your project",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
+      "type": ["sls", "react", "webextension-react", "webdriverio"],
+      "category": "Tooling",
+      "labels": ["Husky", "Lint Staged"]
+    },
+    {
+      "name": "Husky + Lint Staged",
+      "description": "Extension to add Husky and Lint Staged to your project",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
+      "type": ["monorepo"],
+      "category": "Tooling",
+      "labels": ["Husky", "Lint Staged"]
     },
     {
       "name": "Development Container",

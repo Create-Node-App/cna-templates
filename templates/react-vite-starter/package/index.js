@@ -19,7 +19,6 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       ],
     },
     scripts: {
-      "prepare:git-hooks": "is-ci || husky install",
       dev: "vite",
       build: "tsc && vite build",
       preview: "vite preview",
@@ -27,9 +26,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
-      start: `${runCommand} dev`,
-      "lint-staged": "lint-staged",
-      typecheck: "tsc --noEmit",
+      "type-check": "tsc --noEmit",
     },
   };
 

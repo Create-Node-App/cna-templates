@@ -23,8 +23,6 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 - [npm-run-all](https://github.com/mysticatea/npm-run-all) - Run multiple npm-scripts in parallel or sequential
 - [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
 - [prettier](https://prettier.io/) - Opinionated code formatter
-- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
-- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
 - [web-ext](https://www.npmjs.com/package/web-ext) - A command line tool to help build, run, and test web extensions
 
 ## Quickstart
@@ -32,8 +30,7 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 ```sh
 fnm use
 <%= installCommand%>
-<%= runCommand %> prepare:git-hooks
-<%= runCommand%> start
+<%= runCommand%> dev
 ```
 
 Then load the extension in your browser running any of the following commands:
@@ -69,22 +66,11 @@ While developing, you will probably rely mostly on `<%= runCommand%> start`; how
 
 ## Production
 
-Generate production files running
-
-```sh
-<%= runCommand%> build
-```
-
 Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
 | `build`                     | Builds the application to `dist/`                                                                           |
-
-## Testing
-
-To add a unit test, create a `.test.js` file anywhere inside of `<%= srcDir%>/`. Jest will automatically find these files.
 
 ## Contributing
 

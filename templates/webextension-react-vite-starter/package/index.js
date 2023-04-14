@@ -19,12 +19,10 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       ],
     },
     scripts: {
-      "prepare:git-hooks": "is-ci || husky install",
       build: "tsc && vite build",
       "build:watch": "vite build --watch",
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
-      start: `${runCommand} dev`,
       preview: "vite preview",
       format:
         'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
@@ -34,8 +32,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
         "web-ext run --source-dir ./dist --target=chromium",
       "web-ext:firefox":
         "web-ext run --source-dir ./dist --target=firefox-desktop",
-      "lint-staged": "lint-staged",
-      typecheck: "tsc --noEmit",
+      "type-check": "tsc --noEmit",
     },
   };
 
