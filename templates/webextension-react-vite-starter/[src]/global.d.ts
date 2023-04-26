@@ -1,6 +1,5 @@
-import Chrome from "chrome";
-
 declare namespace chrome {
+  import Chrome = require("chrome");
   export default Chrome;
 }
 
