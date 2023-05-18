@@ -1,25 +1,32 @@
-{
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "env": {
+module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  env: {
     "node": true,
     "es6": true
   },
-  "plugins": [
+  parserOptions: {
+    project: './tsconfig.json',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
+  },
+  plugins: [
     "@typescript-eslint"
   ],
-  "extends": [
+  ignorePatterns: ['.eslintrc.js'],
+  extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "rules": {
-    "semi": [
+  rules: {
+    semi: [
       "error",
       "always"
     ],
-    "quotes": [
+    quotes: [
       "error",
       "single"
     ],
