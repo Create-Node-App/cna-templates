@@ -28,7 +28,6 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 ```sh
 fnm use
 <%= installCommand %>
-<%= runCommand %> prepare:git-hooks
 <%= runCommand %> test --help
 ```
 
