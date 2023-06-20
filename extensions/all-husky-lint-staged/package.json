@@ -3,7 +3,7 @@
     "prepare": "is-ci && echo 'CI detected, skipping husky installation' || husky install",
     "lint-staged": "lint-staged"
   },
-  "dependencies": {
+  "devDependencies": {
     "husky": "^8.0.1",
     "is-ci": "^3.0.1",
     "lint-staged": "^13.0.1"
