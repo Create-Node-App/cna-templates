@@ -41,8 +41,6 @@ While developing, you will probably rely mostly on `<%= runCommand%> start`; how
 | `<%= runCommand%> <script>` | Description                                                                                                             |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `dev`                       | Serves your app at for local development                                                                                |
-| `test`                      | Runs unit tests with Jest. See [testing](#testing)                                                                      |
-| `test:watch`                | Runs `test` in watch mode to re-run tests when changed                                                                  |
 | `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
 | `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
 | `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
