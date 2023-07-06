@@ -21,7 +21,7 @@ COPY . /app
 ENV CI=true
 ENV PORT=3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]
 
 FROM development AS build
 
@@ -41,13 +41,13 @@ usermod -aG docker vscode
 EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]
 
 # 2. For Nginx setup
 FROM nginx:alpine as production
 
 # Copy config nginx
-COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/.docker/web/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
 
@@ -55,7 +55,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy static assets from builder stage
-COPY --from=build /app/build .
+COPY --from=build /app/dist .
 
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
