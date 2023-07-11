@@ -5,7 +5,7 @@
       "name": "NestJS Boilerplate",
       "description": "A boilerplate for building backend applications using the NestJS framework with TypeScript, ESLint, and Prettier.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
-      "type": "backend",
+      "type": "nestjs-backend",
       "category": "Backend Application",
       "labels": [
         "TypeScript",
@@ -573,7 +573,7 @@
       "name": "Drizzle ORM SQLite",
       "description": "Extension to add Drizzle ORM with SQLite to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-sqlite",
-      "type": "backend",
+      "type": "nestjs-backend",
       "category": "Database",
       "labels": ["NestJS", "Drizzle ORM", "SQLite"]
     }
