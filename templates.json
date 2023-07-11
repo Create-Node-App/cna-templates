@@ -6,7 +6,7 @@
       "description": "NestJS Framework .",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "backend",
-      "category": "Backend API WIP",
+      "category": "Backend Application",
       "labels": [
         "TypeScript",
         "ESLint",
