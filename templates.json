@@ -277,7 +277,7 @@
       "name": "GitHub Setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
-      "type": ["sls", "react", "webextension-react", "monorepo", "backend"],
+      "type": ["sls", "react", "webextension-react", "monorepo", "backend", "nestjs-backend"],
       "category": "Tooling",
       "labels": [
         "GitHub",
@@ -307,7 +307,7 @@
       "name": "Husky + Lint Staged",
       "description": "Extension to add Husky and Lint Staged to your project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
-      "type": ["sls", "react", "webextension-react", "webdriverio", "backend"],
+      "type": ["sls", "react", "webextension-react", "webdriverio", "backend", "nestjs-backend"],
       "category": "Tooling",
       "labels": ["Husky", "Lint Staged"]
     },
@@ -505,7 +505,7 @@
       "name": "Docker Compose Setup",
       "description": "Add docker environments for development and production to your Backend project setup with docker-compose",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/backend-compose",
-      "type": "backend",
+      "type": ["backend", "nestjs-backend"],
       "category": "Tooling",
       "labels": [
         "Docker",
