@@ -3,7 +3,7 @@
   "templates": [
     {
       "name": "NestJS Boilerplate",
-      "description": "NestJS Framework .",
+      "description": "A boilerplate for building backend applications using the NestJS framework with TypeScript, ESLint, and Prettier.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "backend",
       "category": "Backend Application",
@@ -16,10 +16,10 @@
     },
     {
       "name": "Turborepo Boilerplate",
-      "description": "A highly opinionated mono repo boilerplate with TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with a mono repo quickly.",
+      "description": "A highly opinionated monorepo boilerplate with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start working with a monorepo.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
-      "category": "Mono Repo Boilerplate",
+      "category": "Monorepo Boilerplate",
       "labels": [
         "TypeScript",
         "ESLint",
@@ -32,7 +32,7 @@
         {
           "name": "scope",
           "type": "text",
-          "message": "Scope to use for the packages, e.g. `@my-org/`",
+          "message": "Scope to use for the packages, e.g., `@my-org/`",
           "initial": "",
           "required": false
         }
@@ -40,7 +40,7 @@
     },
     {
       "name": "React Vite Boilerplate",
-      "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with React quickly.",
+      "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with React.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
       "category": "Frontend Application",
@@ -56,20 +56,20 @@
         {
           "name": "srcDir",
           "type": "text",
-          "message": "Sub directory to put all source content (.e.g. `src`, `app`). Leave blank to use the root directory.",
+          "message": "Subdirectory to put all source content (e.g., `src`, `app`). Leave blank to use the root directory.",
           "initial": "src"
         },
         {
           "name": "projectImportPath",
           "type": "text",
-          "message": "Import alias to use for the project, e.g. `@/`",
+          "message": "Import alias to use for the project, e.g., `@/`",
           "initial": "@/"
         }
       ]
     },
     {
       "name": "Web Extension React Boilerplate",
-      "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with WebExtension quickly.",
+      "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building WebExtensions.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
       "category": "Web Extension",
@@ -87,20 +87,20 @@
         {
           "name": "srcDir",
           "type": "text",
-          "message": "Sub directory to put all source content (.e.g. `src`, `app`). Leave blank to use the root directory.",
+          "message": "Subdirectory to put all source content (e.g., `src`, `app`). Leave blank to use the root directory.",
           "initial": "src"
         },
         {
           "name": "projectImportPath",
           "type": "text",
-          "message": "Import alias to use for the project, e.g. `@/`",
+          "message": "Import alias to use for the project, e.g., `@/`",
           "initial": "@/"
         }
       ]
     },
     {
       "name": "WebdriverIO Boilerplate",
-      "description": "A highly opinionated WebdriverIO boilerplate with TypeScript, ESLint, Prettier, Selenoid, and more. Aimed at developers who want to get started with WebdriverIO quickly.",
+      "description": "A highly opinionated WebdriverIO boilerplate with TypeScript, ESLint, Prettier, Selenoid, and more. Ideal for developers who want to quickly start writing WebdriverIO tests.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
       "category": "User Acceptance Testing",
