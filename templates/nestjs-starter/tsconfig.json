@@ -12,5 +12,16 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "*coverage",
+    "logs",
+    "scripts",
+    "tools"
+  ]
 }
