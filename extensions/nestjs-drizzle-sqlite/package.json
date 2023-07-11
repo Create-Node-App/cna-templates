@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "drizzle-orm": "0.27.1",
+    "better-sqlite3": "8.4.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.19.3"
+  }
+}

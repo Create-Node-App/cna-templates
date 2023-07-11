@@ -568,6 +568,14 @@
       "type": "react",
       "category": "UI",
       "labels": ["React", "Material UI"]
+    },
+    {
+      "name": "Drizzle ORM SQLite",
+      "description": "Extension to add Drizzle ORM with SQLite to your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-sqlite",
+      "type": "backend",
+      "category": "Database",
+      "labels": ["NestJS", "Drizzle ORM", "SQLite"]
     }
   ]
 }
