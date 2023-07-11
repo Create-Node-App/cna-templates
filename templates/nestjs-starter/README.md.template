@@ -48,7 +48,7 @@ Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `start:prod`                   | Serves your app using your production ready setup (`.env.production`) |
+| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
 | `build`                     | Builds the application to `dist/`                                                                           |
 
 ## Contributing
