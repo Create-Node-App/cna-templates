@@ -2,6 +2,19 @@
   "$schema": "./templates.schema.json",
   "templates": [
     {
+      "name": "NestJS Boilerplate",
+      "description": "NestJS Framework .",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
+      "type": "backend",
+      "category": "Backend API WIP",
+      "labels": [
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "NestJS"
+      ]
+    },
+    {
       "name": "Turborepo Boilerplate",
       "description": "A highly opinionated mono repo boilerplate with TypeScript, ESLint, Prettier, and more. Aimed at developers who want to get started with a mono repo quickly.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
@@ -264,7 +277,7 @@
       "name": "GitHub Setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
-      "type": ["sls", "react", "webextension-react", "monorepo"],
+      "type": ["sls", "react", "webextension-react", "monorepo", "backend"],
       "category": "Tooling",
       "labels": [
         "GitHub",
@@ -294,7 +307,7 @@
       "name": "Husky + Lint Staged",
       "description": "Extension to add Husky and Lint Staged to your project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
-      "type": ["sls", "react", "webextension-react", "webdriverio"],
+      "type": ["sls", "react", "webextension-react", "webdriverio", "backend"],
       "category": "Tooling",
       "labels": ["Husky", "Lint Staged"]
     },
@@ -479,6 +492,20 @@
       "description": "Add docker environments for development and production to your React project setup with docker-compose",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
       "type": "react",
+      "category": "Tooling",
+      "labels": [
+        "Docker",
+        "Docker Compose",
+        "React",
+        "Production",
+        "Development"
+      ]
+    },
+    {
+      "name": "Docker Compose Setup",
+      "description": "Add docker environments for development and production to your Backend project setup with docker-compose",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/backend-compose",
+      "type": "backend",
       "category": "Tooling",
       "labels": [
         "Docker",
