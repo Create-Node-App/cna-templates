@@ -27,9 +27,8 @@ fnm use
 
 - [Project Structure](./docs/PROJECT_STRUCTURE.md)
 - [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
-- [Components and Styling](./docs/COMPONENTS_AND_STYLING.md)
+- [Environment](./docs/ENVIRONMENT.md)
 - [Performance recommendations](./docs/PERFORMANCE.md)
-- [State Management recommendations](./docs/STATE_MANAGEMENT.md)
 
 ## Development
 
@@ -48,9 +47,9 @@ Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
+| `preview`                   | Serves your app using your production ready setup                                                           |
 | `build`                     | Builds the application to `dist/`                                                                           |
 
 ## Contributing
 
-You can report bugs, request features and create Pull Requests in the [Create-Node-App/react-extensions](https://github.com/Create-Node-App/react-extensions) repository!
+You can report bugs, request features and create Pull Requests in the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
