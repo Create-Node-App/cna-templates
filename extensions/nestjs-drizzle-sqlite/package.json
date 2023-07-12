@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "migrate": "drizzle-kit generate:sqlite"
+  },
   "dependencies": {
     "drizzle-orm": "0.27.1",
     "better-sqlite3": "8.4.0"
