@@ -18,9 +18,6 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
     "devDependencies": {
       "@changesets/cli": "^2.25.0",
       "eslint-config-base": "*",
-      "husky": "^8.0.2",
-      "is-ci": "^3.0.1",
-      "lint-staged": "^13.0.3",
       "prettier": "^2.7.1",
       "turbo": "^1.5.5"
     },
