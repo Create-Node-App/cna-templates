@@ -1,20 +1,28 @@
-# <%= projectName%> NestJS API
+# NestJS API
 
-This project was generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
+This project is a NestJS API generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). However, it is recommended to generate your own project using the command and following the options in the interactive menu. Please refer to the documentation for more information.
 
 ## Features
 
-- 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
+- 🦾 [TypeScript](https://www.typescriptlang.org/) - Ensures type safety
+- 🌐 RESTful API - Build scalable and maintainable APIs
+- 🚀 NestJS Framework - Utilize the power of NestJS for efficient development
+- 💾 Database Integration - Connect to databases like MongoDB or PostgreSQL
+- 🔒 Validation and Error Handling - Handle user input validation and error responses
+- ⚙️ Configuration Management - Manage different environments and configurations
+- 📜 Logging - Implement logging for debugging and monitoring purposes
+- 📄 API Documentation - Generate API documentation using Swagger or OpenAPI
+- 🧪 Unit Testing - Write and execute unit tests to ensure code quality
 
-## Pre-packed
+## Pre-packed with
 
-### Dev tools
+### Development Tools
 
 - [TypeScript](https://www.typescriptlang.org/)
-- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
-- [prettier](https://prettier.io/) - Opinionated code formatter
-- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
-- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+- [ESLint](https://eslint.org/) - JavaScript and JSX linting utility
+- [Prettier](https://prettier.io/) - Opinionated code formatter
+- [Husky](https://www.npmjs.com/package/husky) - Simplifies Git hooks setup
+- [lint-staged](https://www.npmjs.com/package/lint-staged) - Runs linters against staged git files, preventing 💩 from slipping into your code base!
 
 ## Quickstart
 
@@ -24,23 +32,16 @@ fnm use
 <%= runCommand%> dev
 ```
 
-## Useful resources
-
-- [Project Structure](./docs/PROJECT_STRUCTURE.md)
-- [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
-- [Environment](./docs/ENVIRONMENT.md)
-- [Performance recommendations](./docs/PERFORMANCE.md)
-
 ## Development
 
-While developing, you will probably rely mostly on `<%= runCommand%> dev`; however, there are additional scripts at your disposal:
+While developing, you will mostly rely on `<%= runCommand%> dev`; however, there are additional scripts available:
 
 | `<%= runCommand%> <script>` | Description                                                                                                             |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `dev`                       | Serves your app at for local development                                                                                |
+| `dev`                       | Serves your app locally for development                                                                                 |
 | `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
-| `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
-| `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+| `lint`                      | Lints the project for potential errors                                                                                   |
+| `lint:fix`                  | Lints the project and fixes all correctable errors                                                                       |
 
 ## Production
 
@@ -48,9 +49,9 @@ Available scripts:
 
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `preview`                   | Serves your app using your production ready setup                                                           |
-| `build`                     | Builds the application to `dist/`                                                                           |
+| `preview`                   | Serves your app using your production-ready setup                                                           |
+| `build`                     | Builds the application to the `dist/` directory                                                              |
 
 ## Contributing
 
-You can report bugs, request features and create Pull Requests in the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
+You can report bugs, request features, and create Pull Requests in the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
