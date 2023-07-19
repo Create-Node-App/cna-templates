@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "drizzle:migrate": "drizzle-kit generate:pg",
+    "drizzle:db-up": "docker compose -f postgres/compose.yml up",
+    "drizzle:db-down": "docker compose -f postgres/compose.yml down"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.363.0",
+    "drizzle-orm": "0.27.1",
+    "pg": "^8.11.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.2",
+    "drizzle-kit": "0.19.3"
+  }
+}
