@@ -417,6 +417,14 @@
       "type": "nestjs-backend",
       "category": "Database",
       "labels": ["NestJS", "Drizzle ORM", "SQLite"]
+    },
+    {
+      "name": "Drizzle ORM PostgreSQL",
+      "description": "Extension to add Drizzle ORM with PostgreSQL to your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-postgres",
+      "type": "nestjs-backend",
+      "category": "Database",
+      "labels": ["NestJS", "Drizzle ORM", "PostgreSQL"]
     }
   ]
 }
