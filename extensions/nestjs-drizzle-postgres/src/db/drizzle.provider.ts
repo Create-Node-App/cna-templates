@@ -42,7 +42,7 @@ export class DrizzleProvider implements OnModuleInit {
     let password = this.configService.get<string>('POSTGRES_PASSWORD');
     let database = this.configService.get<string>('POSTGRES_DB');
 
-    if (!this.shouldUseSecretsManager()) {
+    if (this.shouldUseSecretsManager()) {
       const secretName = 'secret-name'; //Here you should put the name of your secret
       const postgresSecret = (await getSecretValue(secretName)) as string;
       const postgresSecretJson = JSON.parse(postgresSecret) as Record<string, string>;
