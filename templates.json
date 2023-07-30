@@ -425,6 +425,14 @@
       "type": "nestjs-backend",
       "category": "Database",
       "labels": ["NestJS", "Drizzle ORM", "PostgreSQL"]
+    },
+    {
+      "name": "Mongoose ORM MongoDB",
+      "description": "Extension to add Mongoose ORM with MongoDB to your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-mongoose",
+      "type": "nestjs-backend",
+      "category": "Database",
+      "labels": ["NestJS", "Mongoose ORM", "MongoDB"]
     }
   ]
 }
