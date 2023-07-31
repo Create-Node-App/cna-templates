@@ -5,7 +5,7 @@ This document details the use of useful development tools present on this projec
 ## Build docker
 
 ```sh
-$ docker image build -t ionic-react:latest -f ./.docker/android/develop.Dockerfile .
+docker image build -t ionic-react:latest -f develop.Dockerfile .
 ```
 
 ## Set up the helper script
@@ -18,20 +18,20 @@ interactive use.
 Add the script to your path:
 
 ```sh
-$ cp ./bin/ionic-react ~/bin/ionic-react
-$ export PATH="$HOME/bin:$PATH"
+cp ./bin/ionic-react ~/bin/ionic-react
+export PATH="$HOME/bin:$PATH"
 ```
 
 Single command example:
 
 ```sh
-$ ionic-react emulator -avd nexus5
+ionic-react emulator -avd nexus5
 ```
 
 Interactive shell example:
 
 ```sh
-$ ionic-react bash
+ionic-react bash
 ~> emulator -avd nexus5 &
 ...
 ~> yarn
@@ -45,13 +45,13 @@ Connect a physical or virtual android device (see [Caveats](#caveats) below),
 then:
 
 ```sh
-$ ionic-react ionic-react android
+ionic-react ionic-react android
 ```
 
 ### Hot reload
 
 ```sh
-$ ionic-react bash
+ionic-react bash
 ~> watchman watch .
 ~> ionic-react android
 ```
@@ -67,13 +67,13 @@ Docker won't be able to run any GUI applications unless you give it permission
 to use the host's display:
 
 ```sh
-$ xhost local:docker
+xhost local:docker
 ```
 
 Or, on NixOS:
 
 ```sh
-$ nix-shell -p xorg.xhost --run 'xhost local:docker'
+nix-shell -p xorg.xhost --run 'xhost local:docker'
 ```
 This will need to be run each time the host is rebooted (or possibly at each
 login, if on a multi-user machine?).
@@ -86,9 +86,9 @@ physical device (connected via USB). For NixOS users this is as simple as adding
 the following should work (warning: I have not tested this personally):
 
 ```sh
-$ wget -S -O - http://source.android.com/source/51-android.rules | sed "s/<username>/$USER/" | sudo tee >/dev/null /etc/udev/rules.d/51-android.rules
+wget -S -O - http://source.android.com/source/51-android.rules | sed "s/<username>/$USER/" | sudo tee >/dev/null /etc/udev/rules.d/51-android.rules
 
-$ sudo udevadm control --reload-rules
+sudo udevadm control --reload-rules
 ```
 
 ## Using an emulator
@@ -101,7 +101,7 @@ First, get the list of built-in device definitions. In our case, we'll be trying
 to create a Nexus 5 emulator, just to demonstrate.
 
 ```sh
-$ ionic-react avdmanager list device
+ionic-react avdmanager list device
 # ...
 #     OEM : Google
 # ---------
@@ -115,7 +115,7 @@ $ ionic-react avdmanager list device
 So we want the device ID of `8`, or we can use `Nexus 5`. Now to create the AVD:
 
 ```sh
-$ ionic-react avdmanager create avd --name nameOfAvd --package 'system-images;android-23;default;x86_64' --device "Nexus 5"
+ionic-react avdmanager create avd --name nameOfAvd --package 'system-images;android-23;default;x86_64' --device "Nexus 5"
 ```
 
 If asked if you want to create a custom hardware profile, say no (creating a
@@ -133,5 +133,5 @@ Once the AVD has been created, add keyboard support to its config.ini:
 You're then ready to launch the emulator via:
 
 ```sh
-$ ionic-react emulator -avd nameOfAvd
+ionic-react emulator -avd nameOfAvd
 ```
