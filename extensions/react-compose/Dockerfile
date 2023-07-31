@@ -47,7 +47,7 @@ CMD [ "npm", "run", "dev" ]
 FROM nginx:alpine as production
 
 # Copy config nginx
-COPY --from=build /app/.docker/web/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/.nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
 
