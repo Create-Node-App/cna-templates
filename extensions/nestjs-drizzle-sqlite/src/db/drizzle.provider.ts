@@ -13,9 +13,9 @@ export class DrizzleProvider implements OnModuleInit {
 
   async onModuleInit() {
     this.db = drizzle(this.createDb());
-    //IMPORTANT: After defining the database schema, run the command "npm run migrate"
-    //then uncomment the following line!
-    //this.migrateDb();
+    // IMPORTANT: After defining the database schema, run the command "npm run migrate"
+    // then uncomment the following line!
+    // this.migrateDb();
   }
 
   private createDb() {
