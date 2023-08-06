@@ -8,6 +8,10 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 - ⚛ React - [React](https://reactjs.org/) is used for UI
 - 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
 
+## Extra documentation
+
+You can find useful information such as project structure, available scripts and much more in the [docs](./docs) folder!
+
 ## Pre-packed
 
 ### Dev tools
@@ -25,14 +29,6 @@ fnm use
 <%= installCommand%>
 <%= runCommand%> dev
 ```
-
-## Useful resources
-
-- [Project Structure](./docs/PROJECT_STRUCTURE.md)
-- [Project Configuration](./docs/PROJECT_CONFIGURATION.md)
-- [Components and Styling](./docs/COMPONENTS_AND_STYLING.md)
-- [Performance recommendations](./docs/PERFORMANCE.md)
-- [State Management recommendations](./docs/STATE_MANAGEMENT.md)
 
 ## Development
 

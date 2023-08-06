@@ -14,6 +14,10 @@ This project is a NestJS API generated using [create-awesome-node-app](https://w
 - 📄 API Documentation - Generate API documentation using Swagger or OpenAPI
 - 🧪 Unit Testing - Write and execute unit tests to ensure code quality
 
+## Extra documentation
+
+You can find useful information such as project structure, available scripts and much more in the [docs](./docs) folder!
+
 ## Pre-packed with
 
 ### Development Tools
