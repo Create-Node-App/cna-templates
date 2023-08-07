@@ -19,5 +19,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "dist", "*coverage", "logs", "scripts", "tools"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "*coverage",
+    "logs",
+    "scripts",
+    "tools"
+  ]
 }

@@ -6,6 +6,7 @@ import { Pool } from 'pg';
 import path from 'path';
 import * as schema from './schema';
 import { getSecretValue } from 'src/helpers/asm';
+
 @Injectable()
 export class DrizzleProvider implements OnModuleInit {
   db: NodePgDatabase<typeof schema>;
@@ -14,9 +15,9 @@ export class DrizzleProvider implements OnModuleInit {
 
   async onModuleInit() {
     this.db = drizzle(await this.getConnectionPool(), { schema });
-    //IMPORTANT: After defining the database schema, run the command "npm run migrate"
-    //then uncomment the following line!
-    //this.migrateDb();
+    // IMPORTANT: After defining the database schema, run the command "npm run migrate"
+    // then uncomment the following line!
+    // this.migrateDb();
   }
 
   private async getConnectionPool() {
@@ -32,7 +33,7 @@ export class DrizzleProvider implements OnModuleInit {
 
   private migrateDb() {
     const migrationsFolder = this.getMigrationsFolder();
-    migrate(this.db, { migrationsFolder: migrationsFolder });
+    migrate(this.db, { migrationsFolder });
   }
 
   private async getPostgresConfig() {
