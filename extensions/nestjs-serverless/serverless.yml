@@ -19,17 +19,24 @@ custom:
     noPrependStageInUrl: true
     reloadHandler: true
   bundle:
+    sourcemaps: true
+    tsConfig: "./tsconfig.build.json"
     caching: false
-    tsConfig: './tsconfig.build.json'
     linting: true
+    minifyOptions:
+      keepNames: true
     ignorePackages:
-      - '@nestjs/microservices'
-      - '@nestjs/microservices/microservices-module'
-      - '@nestjs/websockets/socket-module'
-      - 'cache-manager'
-      - class-transformer/storage
+      - "@nestjs/microservices"
+      - "@nestjs/microservices/microservices-module"
+      - "@nestjs/websockets/socket-module"
+      - "cache-manager"
+      - "class-transformer/storage"
+      - "@apollo/federation"
+      - "@apollo/subgraph"
+      - "@apollo/subgraph/dist/directives"
+      - "apollo-server-fastify"
     forceExclude:
-      - aws-sdk
+      - "aws-sdk"
 
 provider:
   name: aws
