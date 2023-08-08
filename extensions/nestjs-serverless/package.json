@@ -2,7 +2,7 @@
   "scripts": {
     "sls": "serverless",
     "sls:deploy": "serverless deploy",
-    "sls:offline": "serverless offline start --stage local",
+    "sls:offline": "serverless offline start",
     "sls:package": "serverless package"
   },
   "dependencies": {
