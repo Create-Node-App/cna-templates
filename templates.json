@@ -433,6 +433,14 @@
       "type": "nestjs-backend",
       "category": "Database",
       "labels": ["NestJS", "Mongoose ORM", "MongoDB"]
+    },
+    {
+      "name": "Serverless Framework Packaging",
+      "description": "Extension to add Severless Framework packaging to deploy your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-serverless",
+      "type": "nestjs-backend",
+      "category": "Deployment",
+      "labels": ["NestJS", "Serverless Framework", "AWS lambda"]
     }
   ]
 }
