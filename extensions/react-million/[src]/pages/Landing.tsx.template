@@ -1,0 +1,16 @@
+import React from 'react';
+import Cracked from '<%= projectImportPath %>components/Animation/Cracked';
+
+import './Landing.css';
+
+/**
+ * Million 2.5.10 NOTE: the current implementation of the automatic mode, does not support using
+ * nested routes in React Router, so to fix potential problems, we need to use the comment
+ * //million-ignore in the component route that contains the nested routes. This just disable
+ * the automatic mode for this component, and nested components will interact with million.
+ */
+
+//million-ignore
+const Landing = () => <Cracked><%= projectName %></Cracked>;
+
+export default Landing;
