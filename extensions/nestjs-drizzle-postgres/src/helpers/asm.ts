@@ -2,13 +2,16 @@ import {
   SecretsManagerClient,
   GetSecretValueCommand,
 } from '@aws-sdk/client-secrets-manager';
+
 let secretsManagerClient: SecretsManagerClient;
+
 export const getSecretsManagerClient = () => {
   if (!secretsManagerClient) {
-    secretsManagerClient = new SecretsManagerClient({ region: 'us-east-1' });
+    secretsManagerClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
   }
   return secretsManagerClient;
 };
+
 export const getSecretValue = async (secretName: string) => {
   const client = getSecretsManagerClient();
   try {

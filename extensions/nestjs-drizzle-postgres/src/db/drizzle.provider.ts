@@ -44,7 +44,7 @@ export class DrizzleProvider implements OnModuleInit {
     let database = this.configService.get<string>('POSTGRES_DB');
 
     if (this.shouldUseSecretsManager()) {
-      const secretName = 'secret-name'; //Here you should put the name of your secret
+      const secretName = this.configService.get<string>('POSTGRES_SECRET_NAME');
       const postgresSecret = (await getSecretValue(secretName)) as string;
       const postgresSecretJson = JSON.parse(postgresSecret) as Record<string, string>;
       host = host || postgresSecretJson.host;
@@ -65,7 +65,7 @@ export class DrizzleProvider implements OnModuleInit {
 
   private shouldUseSecretsManager() {
     const stage = this.configService.get<string>('STAGE');
-    return !['local', 'offline'].includes(stage);
+    return !['local', 'offline'].includes(stage) && !!this.configService.get<string>('POSTGRES_SECRET_NAME');
   }
 
   private async getPostgresConnectionUrls() {

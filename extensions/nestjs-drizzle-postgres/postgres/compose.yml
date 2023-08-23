@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   postgresql:
-    container_name: postgresql-db-container
     image: postgres:15.2
     volumes:
       - ./initdb.d:/docker-entrypoint-initdb.d
