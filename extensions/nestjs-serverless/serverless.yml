@@ -1,4 +1,4 @@
-service: ${env:SERVICE_NAME, 'Nest'}
+service: ${env:SERVICE_NAME, 'nestjs-serverless'}
 
 frameworkVersion: '3'
 
