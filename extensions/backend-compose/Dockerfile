@@ -3,7 +3,7 @@
 FROM node:16.16-alpine AS development
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -15,24 +15,19 @@ RUN \
     else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
     fi
 
-
-RUN npm cache clean --force
-
-RUN npm install --frozen-lockfile
-
 # Copy the rest of the files
-COPY . .
+COPY . ./
 
 CMD [ "npm", "run", "dev" ]
 
 FROM node:16.16-alpine AS build
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install dependencies to use npm
 COPY --chown=node:node package.json package-lock.json ./
-COPY --chown=node:node --from=development /usr/src/app/node_modules node_modules
+COPY --chown=node:node --from=development /app/node_modules node_modules
 
 # Copy the rest of the files
 COPY --chown=node:node . .
@@ -44,7 +39,13 @@ RUN npm run build
 ENV NODE_ENV=production
 
 # Install production dependencies and clean up the cache
-RUN npm ci
+RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile --production; \
+    elif [ -f package-lock.json ]; then npm ci --only=production; \
+    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --prod; \
+    else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install --production; \
+    fi && \
+    npm cache clean --force && \
+    rm -rf /tmp/*
 
 # Use the node user from the image as the user to run the app
 USER node
@@ -52,11 +53,11 @@ USER node
 FROM node:16.16-alpine AS production
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy the bundled code from the build stage to the production image
-COPY --chown=node:node --from=build /usr/src/app/dist dist
-COPY --chown=node:node --from=build /usr/src/app/node_modules node_modules
+COPY --chown=node:node --from=build /app/dist dist
+COPY --chown=node:node --from=build /app/node_modules node_modules
 
 # Use the node user from the image as the user to run the app
 USER node

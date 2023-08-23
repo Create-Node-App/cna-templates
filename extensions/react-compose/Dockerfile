@@ -16,7 +16,7 @@ RUN \
     else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
     fi
 
-COPY . /app
+COPY . ./
 
 ENV CI=true
 ENV PORT=3000
@@ -55,7 +55,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy static assets from builder stage
-COPY --from=build /app/dist .
+COPY --from=build /app/dist ./
 
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
