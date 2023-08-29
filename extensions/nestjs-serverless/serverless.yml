@@ -20,7 +20,7 @@ custom:
     reloadHandler: true
   bundle:
     sourcemaps: true
-    tsConfig: "./tsconfig.build.json"
+    tsConfig: "./tsconfig.bundle.json"
     caching: false
     linting: true
     minifyOptions:
