@@ -7,12 +7,7 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "nestjs-backend",
       "category": "Backend Application",
-      "labels": [
-        "TypeScript",
-        "ESLint",
-        "Prettier",
-        "NestJS"
-      ]
+      "labels": ["TypeScript", "ESLint", "Prettier", "NestJS"]
     },
     {
       "name": "Turborepo Boilerplate",
@@ -104,13 +99,7 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
       "category": "User Acceptance Testing",
-      "labels": [
-        "WebdriverIO",
-        "TypeScript",
-        "ESLint",
-        "Prettier",
-        "Selenoid"
-      ]
+      "labels": ["WebdriverIO", "TypeScript", "ESLint", "Prettier", "Selenoid"]
     }
   ],
   "extensions": [
@@ -118,7 +107,14 @@
       "name": "GitHub Setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
-      "type": ["sls", "react", "webextension-react", "monorepo", "backend", "nestjs-backend"],
+      "type": [
+        "sls",
+        "react",
+        "webextension-react",
+        "monorepo",
+        "backend",
+        "nestjs-backend"
+      ],
       "category": "Tooling",
       "labels": [
         "GitHub",
@@ -148,7 +144,14 @@
       "name": "Husky + Lint Staged",
       "description": "Extension to add Husky and Lint Staged to your project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
-      "type": ["sls", "react", "webextension-react", "webdriverio", "backend", "nestjs-backend"],
+      "type": [
+        "sls",
+        "react",
+        "webextension-react",
+        "webdriverio",
+        "backend",
+        "nestjs-backend"
+      ],
       "category": "Tooling",
       "labels": ["Husky", "Lint Staged"]
     },
@@ -441,6 +444,14 @@
       "type": "nestjs-backend",
       "category": "Deployment",
       "labels": ["NestJS", "Serverless Framework", "AWS lambda", "AWS"]
+    },
+    {
+      "name": "React Million DOM Optimization",
+      "description": "Extension to add Million DOM Optimization to your React app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-million",
+      "type": "react",
+      "category": "Tooling",
+      "labels": ["React", "Million", "Optimization"]
     }
   ]
 }
