@@ -23,7 +23,6 @@
     "dist",
     "*coverage",
     "logs",
-    "scripts",
-    "tools"
+    "scripts"
   ]
 }
