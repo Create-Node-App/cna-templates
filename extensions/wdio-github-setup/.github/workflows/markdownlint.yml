@@ -1,12 +1,22 @@
 name: Markdown Lint
 
 on:
-  workflow_call:
+  # Run this workflow on push to main
+  push:
+    branches:
+      - main
+
+  # Run this workflow on pull request to main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   markdownlint:
-    name: Markdown Lint
+    if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Begin CI...
         uses: actions/checkout@v3
