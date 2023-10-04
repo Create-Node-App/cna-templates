@@ -452,6 +452,14 @@
       "type": "react",
       "category": "Tooling",
       "labels": ["React", "Million", "Optimization"]
+    },
+    {
+      "name": "OpenAPI",
+      "description": "Extension to add OpenAPI documentation to your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
+      "type": "nestjs-backend",
+      "category": "Documentation",
+      "labels": ["NestJS", "OpenAPI", "Swagger"] 
     }
   ]
 }
