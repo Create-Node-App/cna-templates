@@ -458,7 +458,7 @@
       "description": "Extension to add OpenAPI documentation to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
       "type": "nestjs-backend",
-      "category": "Documentation",
+      "category": "Tooling",
       "labels": ["NestJS", "OpenAPI", "Swagger"] 
     }
   ]
