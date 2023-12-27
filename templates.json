@@ -460,6 +460,14 @@
       "type": "nestjs-backend",
       "category": "Tooling",
       "labels": ["NestJS", "OpenAPI", "Swagger"] 
+    },
+    {
+      "name": "React Electron Vite",
+      "description": "Add Electron to your cross platform React Vite app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-electron-vite",
+      "type": "react",
+      "category": "Cross Platform",
+      "labels": ["React", "Electron", "Vite", "Cross Platform"]
     }
   ]
 }
