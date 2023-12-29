@@ -22,8 +22,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       dev: "vite",
       build: "tsc && vite build",
       preview: "vite preview",
-      format:
-        'prettier --write "**/*.{js,jsx,ts,tsx,json,css,sass,scss,less,html,md,yml,yaml}"',
+      format: 'prettier --write .',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
       "type-check": "tsc --noEmit",

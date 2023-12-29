@@ -7,7 +7,7 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
       "build": "turbo run build",
       "build-storybook": "turbo run build-storybook",
       "changeset": "changeset",
-      "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,json,css,sass,scss,less,html,yml,yaml}\"",
+      "format": "prettier --write .",
       "lint": "turbo run lint",
       "lint:fix": "turbo run lint:fix",
       "publish-packages": "turbo run lint && changeset version && turbo run build && changeset publish",

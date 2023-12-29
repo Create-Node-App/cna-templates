@@ -11,7 +11,7 @@ import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 const App = () => (
   <Provider store={store}>
     <Suspense fallback={<Loading />}>
-      <BrowserRouter basename={import.meta.env.VITE_APP_BASE_URL}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <AppRoutes />
       </BrowserRouter>
     </Suspense>
