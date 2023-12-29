@@ -19,7 +19,6 @@
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
   },
-  "include": ["src", "jest.setup.ts", "vite.config.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"
