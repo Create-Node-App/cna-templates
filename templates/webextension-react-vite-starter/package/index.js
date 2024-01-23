@@ -24,7 +24,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
       preview: "vite preview",
-      format: 'prettier --write .',
+      format: 'prettier -u --write .',
       lint: "eslint .",
       "lint:fix": "eslint . --fix",
       "web-ext:chromium":

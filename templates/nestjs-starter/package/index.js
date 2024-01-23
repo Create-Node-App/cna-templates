@@ -10,7 +10,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     license: 'MIT',
     scripts: {
       build: 'nest build',
-      format: 'prettier --write .',
+      format: 'prettier -u --write .',
       start: 'nest start',
       dev: 'nest start --watch',
       'dev:debug': 'nest start --debug --watch',
