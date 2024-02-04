@@ -5,8 +5,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
   const packageJson = {
     name: appName,
     version: "0.1.0",
-    description: "A web extension starter template",
-    private: true,
+    description: "A Web Extension created by create-awesome-node-app",
     engines: {
       node: ">=18.15",
     },

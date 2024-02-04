@@ -2,8 +2,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
   return {
     name: appName,
     version: '0.1.0',
-    description: 'Automation framework using WebdriverIO',
-    private: true,
+    description: 'Automation framework created by create-awesome-node-app',
     keywords: ['automation', 'wdio', 'selenium', 'webdriver', 'typescript'],
     moduleDirectories: ['src', 'node_modules'],
     scripts: {

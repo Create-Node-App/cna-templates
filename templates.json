@@ -346,20 +346,6 @@
       ]
     },
     {
-      "name": "Docker Compose Setup",
-      "description": "Add docker environments for development and production to your Backend project setup with docker-compose",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/backend-compose",
-      "type": ["backend", "nestjs-backend"],
-      "category": "Tooling",
-      "labels": [
-        "Docker",
-        "Docker Compose",
-        "React",
-        "Production",
-        "Development"
-      ]
-    },
-    {
       "name": "Android Tools",
       "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",

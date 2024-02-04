@@ -2,6 +2,16 @@ import { ConfigService } from '@nestjs/config';
 import { MongooseModuleOptions } from '@nestjs/mongoose';
 
 export const mongooseConfig = (configService: ConfigService): MongooseModuleOptions => {
+  // Use the MONGO_URI if it exists, otherwise build the URI from the other environment variables.
+  // This is helpful when using a service like MongoDB Atlas.
+  const mongoUri = configService.get<string>("MONGO_URI", "");
+
+  if (mongoUri) {
+    return {
+      uri: mongoUri,
+    };
+  }
+
   const protocol = configService.get<string>("MONGO_PROTOCOL", "mongodb");
   const username = configService.get<string>("MONGO_USERNAME");
   const password = configService.get<string>("MONGO_PASSWORD");

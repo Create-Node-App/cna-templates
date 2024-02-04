@@ -4,4 +4,4 @@ This folder contains extra documentation for the project such us project structu
 
 ## Resources
 
-- [NestJS Documentation](https://docs.nestjs.com/)
+- [NestJS Documentation](https://docs.nestjs.com/) - Official NestJS documentation

@@ -8,7 +8,7 @@ import { DrizzleProvider } from './db/drizzle.provider';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.local'],
+      envFilePath: ['.env'],
     }),
   ],
   controllers: [AppController],

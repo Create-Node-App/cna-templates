@@ -5,7 +5,6 @@ This project is a NestJS API generated using [create-awesome-node-app](https://w
 ## Features
 
 - 🦾 [TypeScript](https://www.typescriptlang.org/) - Ensures type safety
-- 🌐 RESTful API - Build scalable and maintainable APIs
 - 🚀 NestJS Framework - Utilize the power of NestJS for efficient development
 - 💾 Database Integration - Connect to databases like MongoDB or PostgreSQL
 - 🔒 Validation and Error Handling - Handle user input validation and error responses
@@ -34,6 +33,14 @@ You can find useful information such as project structure, available scripts and
 fnm use
 <%= installCommand%>
 <%= runCommand%> dev
+```
+
+or using Docker and Docker Compose (_recommended_):
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> compose:up
 ```
 
 ## Development

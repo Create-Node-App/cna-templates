@@ -1,11 +1,9 @@
 module.exports = {
-  "@testing-library/react": "^13.3.0",
   "@types/node": "^17.0.41",
   "@types/react": "^18.0.12",
   "@types/react-dom": "^18.0.5",
   "@types/react-router": "^5.1.18",
   "@types/react-router-dom": "^5.3.3",
-  "@types/react-test-renderer": "^18.0.0",
   "@typescript-eslint/eslint-plugin": "^5.27.1",
   "@typescript-eslint/parser": "^5.27.1",
   "@vitejs/plugin-react": "^3.1.0",

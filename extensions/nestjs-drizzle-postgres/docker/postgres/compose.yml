@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  postgresql:
+    image: postgres:15.2
+    volumes:
+      - ./docker/postgres/initdb.d:/docker-entrypoint-initdb.d:ro
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user1234
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - postgres-local-net
+      - default
+
+  pgadmin:
+    image: dpage/pgadmin4:6.11
+    restart: always
+    volumes:
+      - ./docker/postgres/pgadmin-bootstrap:/pgadmin4/bootstrap:ro
+    depends_on:
+      - postgresql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/bootstrap/servers.json
+    ports:
+      - 5050:80
+    networks:
+      - postgres-local-net
+
+networks:
+  postgres-local-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    name: postgres-data

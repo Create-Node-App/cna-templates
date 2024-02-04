@@ -1,8 +1,4 @@
 {
-    "scripts": {
-        "mongoose:db-up": "docker compose -f mongodb/compose.yml --env-file ./.env.local up --build",
-        "mongoose:db-down": "docker compose -f mongodb/compose.yml down"
-    },
     "dependencies": {
         "mongoose": "^7.4.1",
         "@nestjs/mongoose": "^10.0.1"
