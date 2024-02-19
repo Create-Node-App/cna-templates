@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   pr-review:
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
@@ -18,14 +21,14 @@ jobs:
 
     steps:
       - name: Begin CI...
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Danger Files
         run: |
           echo "Setting up Danger files..."
           mv tools/danger/* .
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: "v18.15.0"
 

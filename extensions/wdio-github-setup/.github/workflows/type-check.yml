@@ -11,6 +11,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   type-check:
     if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
@@ -19,10 +22,10 @@ jobs:
 
     steps:
       - name: Begin CI...
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
 
@@ -34,6 +37,7 @@ jobs:
           elif [ -f "package-lock.json" ]; then
             npm install
           elif [ -f "pnpm-lock.yaml" ]; then
+            yarn global add pnpm
             pnpm install
           else
             echo "No lockfile found. Please add a lockfile to your repository."

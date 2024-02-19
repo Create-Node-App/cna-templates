@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   run-e2e-tests:
     if: github.event.pull_request.draft == false

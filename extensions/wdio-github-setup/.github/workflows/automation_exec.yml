@@ -94,7 +94,7 @@ jobs:
 
     steps:
       - name: Begin CI...
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
           selenoid-start-arguments: |
             --browsers "chrome" --last-versions 1 --shm-size 1024
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
 

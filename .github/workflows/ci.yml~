@@ -44,7 +44,7 @@ jobs:
           - --semantic-ui
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Extract branch name
         id: extract_branch
         shell: bash
@@ -56,8 +56,8 @@ jobs:
           fi
       - name: Install
         run: yarn --no-progress --non-interactive --no-lockfile
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "16.13.2"
       - name: Create app using given flags
