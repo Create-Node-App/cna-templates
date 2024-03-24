@@ -10,6 +10,14 @@
       "labels": ["TypeScript", "ESLint", "Prettier", "NestJS"]
     },
     {
+      "name": "NextJS Starter",
+      "description": "A highly opinionated Next.js starter with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
+      "type": "nextjs",
+      "category": "FullStack Application",
+      "labels": ["TypeScript", "ESLint", "Prettier", "Next.js"]
+    },
+    {
       "name": "Turborepo Boilerplate",
       "description": "A highly opinionated monorepo boilerplate with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start working with a monorepo.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
@@ -113,7 +121,8 @@
         "webextension-react",
         "monorepo",
         "backend",
-        "nestjs-backend"
+        "nestjs-backend",
+        "nextjs"
       ],
       "category": "Tooling",
       "labels": [
@@ -150,7 +159,8 @@
         "webextension-react",
         "webdriverio",
         "backend",
-        "nestjs-backend"
+        "nestjs-backend",
+        "nextjs"
       ],
       "category": "Tooling",
       "labels": ["Husky", "Lint Staged"]
@@ -167,7 +177,7 @@
       "name": "Development Container",
       "description": "Add a development container setup to your TypeScript project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
-      "type": ["sls", "react", "webextension-react", "monorepo", "webdriverio"],
+      "type": ["sls", "react", "webextension-react", "monorepo", "webdriverio", "backend", "nestjs-backend", "nextjs"],
       "category": "Tooling",
       "labels": ["Development Container", "VSCode", "Docker"]
     },
@@ -175,7 +185,7 @@
       "name": "Jest + React Testing Library",
       "description": "Extension to add Jest and React Testing Library",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
-      "type": ["react", "webextension-react"],
+      "type": ["react", "webextension-react", "nextjs"],
       "category": "Tooling",
       "labels": ["Jest", "React Testing Library"]
     },
@@ -333,7 +343,7 @@
     },
     {
       "name": "Docker Compose Setup",
-      "description": "Add docker environments for development and production to your React project setup with docker-compose",
+      "description": "Add docker environments for development and production to your project setup with docker-compose",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
       "type": "react",
       "category": "Tooling",
@@ -341,6 +351,7 @@
         "Docker",
         "Docker Compose",
         "React",
+        "Next",
         "Production",
         "Development"
       ]
