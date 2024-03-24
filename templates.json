@@ -15,7 +15,21 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
       "type": "nextjs",
       "category": "FullStack Application",
-      "labels": ["TypeScript", "ESLint", "Prettier", "Next.js"]
+      "labels": ["TypeScript", "ESLint", "Prettier", "Next.js"],
+      "customOptions": [
+        {
+          "name": "srcDir",
+          "type": "text",
+          "message": "Subdirectory to put all source content (e.g., `src`). Leave blank to use the root directory.",
+          "initial": "src"
+        },
+        {
+          "name": "projectImportPath",
+          "type": "text",
+          "message": "Import alias to use for the project, e.g., `@/`",
+          "initial": "@/"
+        }
+      ]
     },
     {
       "name": "Turborepo Boilerplate",
