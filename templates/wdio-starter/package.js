@@ -6,7 +6,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     keywords: ['automation', 'wdio', 'selenium', 'webdriver', 'typescript'],
     moduleDirectories: ['src', 'node_modules'],
     scripts: {
-      format: 'prettier -u --write .',
+      format: 'prettier --ignore-path .gitignore -u --write .',
       lint: 'eslint .',
       'lint:fix': 'eslint . --fix',
       report: 'allure generate',

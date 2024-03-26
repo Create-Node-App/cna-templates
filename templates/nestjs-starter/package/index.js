@@ -8,7 +8,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     description: 'Nest TypeScript project created by create-awesome-node-app',
     scripts: {
       build: 'nest build',
-      format: 'prettier -u --write .',
+      format: 'prettier --ignore-path .gitignore -u --write .',
       start: 'nest start',
       dev: 'nest start --watch',
       'dev:debug': 'nest start --debug --watch',
