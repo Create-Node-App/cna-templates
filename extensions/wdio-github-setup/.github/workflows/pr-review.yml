@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "v18.15.0"
+          node-version: "v18.20.2"
 
       - name: Get npm cache directory
         id: npm-cache-dir
