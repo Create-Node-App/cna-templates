@@ -12,11 +12,15 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  super-linter:
     name: Lint Code Base
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-requests: write
+      actions: read
+      checks: read
+      statuses: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -31,3 +35,4 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_TYPESCRIPT_STANDARD: false
+          LINTER_RULES_PATH: .
