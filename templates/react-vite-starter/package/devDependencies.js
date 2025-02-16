@@ -7,6 +7,7 @@ module.exports = {
   '@types/react-router-dom': '^5.3.3',
   '@vitejs/plugin-react': '^4.3.4',
   eslint: '^9.20.1',
+  'eslint-config-prettier': '^10.0.1',
   'eslint-plugin-jsx-a11y': '^6.10.2',
   'eslint-plugin-prettier': '^5.2.3',
   globals: '^15.15.0',
