@@ -21,6 +21,7 @@
       "virtual:reload-on-update-in-view": ["./<%= srcDir%>/global.d.ts"]
     }
   },
+  "exclude": ["./tools/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"

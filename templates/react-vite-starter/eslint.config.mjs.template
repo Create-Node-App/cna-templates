@@ -1,56 +1,42 @@
 import globals from 'globals';
-import js from '@eslint/js';
+import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import react from 'eslint-plugin-react';
-import prettier from 'eslint-plugin-prettier';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
-import importPlugin from 'eslint-plugin-import';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 
 export default [
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
+  },
+  {
     ignores: [
-      'node_modules/',
-      'coverage/',
-      'dist/',
-      'dev-dist/',
-      'public/',
-      '__mocks__/',
-      '<%= srcDir %>/theme/',
-      'tools/',
+      'node_modules',
+      'coverage',
+      'dist',
+      'dev-dist',
+      'public',
+      '__mocks__',
+      '<%= srcDir %>/theme',
+      'tools',
       '*.d.ts',
-      'jest.config.js',
       'postcss.config.js',
     ],
+  },
+  {
     languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-      parserOptions: {
-        project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
       globals: {
         ...globals.browser,
         ...globals.commonjs,
         ...globals.node,
         ...globals.es2020,
-        ...globals.jest,
       },
     },
   },
-
-  js.configs.recommended,
+  pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  react.configs.recommended,
-  prettier.configs.recommended,
-
+  eslintPluginPrettierRecommended,
+  jsxA11yPlugin.flatConfigs.recommended,
   {
-    plugins: {
-      react,
-      prettier,
-      jsxA11y,
-      import: importPlugin,
-    },
     rules: {
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
