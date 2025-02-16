@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   mongo:
-    image: mongo:5.0.9
+    image: mongo:8.0.4
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -25,8 +25,8 @@ services:
       - default
 
   mongo-express:
-    image: mongo-express:1.0.0-alpha.4
-    restart: unless-stopped
+    image: mongo-express:1.0.2
+    restart: always
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: supersecret

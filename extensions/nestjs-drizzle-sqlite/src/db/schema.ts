@@ -1,1 +1,2 @@
-//Here you can define the Schema of your SQLite database!!
+// Here you can define the Schema of your SQLite database!!
+export {};

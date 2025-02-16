@@ -1,0 +1,48 @@
+name: Run tests
+
+on:
+  # Run this workflow on push to main
+  push:
+    branches:
+      - main
+
+  # Run this workflow on pull request to main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  type-check:
+    if: github.event_name != 'pull_request' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+
+      - name: Install dependencies
+        run: |
+          # Install dependencies based on the lockfile and the package manager
+          if [ -f "yarn.lock" ]; then
+            yarn install --frozen-lockfile
+          elif [ -f "package-lock.json" ]; then
+            npm install
+          elif [ -f "pnpm-lock.yaml" ]; then
+            yarn global add pnpm
+            pnpm install
+          else
+            echo "No lockfile found. Please add a lockfile to your repository."
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm run test --if-present

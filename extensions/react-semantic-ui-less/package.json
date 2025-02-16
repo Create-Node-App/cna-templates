@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "semantic-ui-less": "^2.5.0",
-    "semantic-ui-react": "^2.1.4"
+    "semantic-ui-react": "^2.1.5"
   },
   "devDependencies": {
     "less": "2.7.3",

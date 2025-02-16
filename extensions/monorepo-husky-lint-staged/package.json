@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "prepare": "is-ci && echo 'CI detected, skipping husky installation' || husky install",
-    "lint-staged": "lint-staged"
+    "prepare": "husky"
   },
-  "dependencies": {
-    "husky": "^8.0.1",
-    "is-ci": "^3.0.1",
-    "lint-staged": "^13.0.1"
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3"
   }
 }

@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@hookstate/core": "^4.0.0"
+    "@hookstate/core": "^4.0.1"
   }
 }

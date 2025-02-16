@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   postgresql:
-    image: postgres:15.2
+    image: postgres:16.7
     volumes:
       - ./docker/postgres/initdb.d:/docker-entrypoint-initdb.d:ro
       - postgres-data:/var/lib/postgresql/data
@@ -19,8 +19,8 @@ services:
       - postgres-local-net
       - default
 
-  pgadmin:
-    image: dpage/pgadmin4:6.11
+  pgadmin4:
+    image: dpage/pgadmin4:9.0.0
     restart: always
     volumes:
       - ./docker/postgres/pgadmin-bootstrap:/pgadmin4/bootstrap:ro

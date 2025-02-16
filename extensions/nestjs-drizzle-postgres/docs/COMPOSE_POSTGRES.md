@@ -4,8 +4,8 @@ As part of our `docker-compose` setup, we provide a Postgres server and a PGAdmi
 
 The configuration files can be found in the `docker/postgres` directory and will run the following services:
 
-- `postgres`: Postgres server
-- `pgadmin`: PGAdmin4 server running at [http://localhost:5050](http://localhost:5050)
+- `postgresql`: Postgres server
+- `pgadmin4`: PGAdmin4 server running at [http://localhost:5050](http://localhost:5050)
 
 ## Initialization
 

@@ -3,10 +3,10 @@
     "drizzle:migrate": "drizzle-kit generate:sqlite"
   },
   "dependencies": {
-    "drizzle-orm": "0.27.1",
-    "better-sqlite3": "8.4.0"
+    "drizzle-orm": "^0.39.3",
+    "better-sqlite3": "^11.8.1"
   },
   "devDependencies": {
-    "drizzle-kit": "0.19.3"
+    "drizzle-kit": "^0.30.4"
   }
 }

@@ -3,12 +3,12 @@
     "drizzle:migrate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.363.0",
-    "drizzle-orm": "0.27.1",
-    "pg": "^8.11.1"
+    "@aws-sdk/client-secrets-manager": "^3.744.0",
+    "drizzle-orm": "^0.39.3",
+    "pg": "^8.13.3"
   },
   "devDependencies": {
-    "@types/pg": "^8.10.2",
-    "drizzle-kit": "0.19.3"
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.4"
   }
 }
