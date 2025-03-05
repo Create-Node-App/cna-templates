@@ -26,7 +26,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # Install dependencies to use npm
-COPY --chown=node:node package.json package-lock.json ./
+COPY --chown=node:node package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 COPY --chown=node:node --from=development /app/node_modules node_modules
 
 # Copy the rest of the files
