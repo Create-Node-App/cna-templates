@@ -36,16 +36,22 @@ jobs:
           const path = './templates.json';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
 
-          const templates = data.templates.map(t => t.slug);
+          const templates = data.templates.map(t => ({ slug: t.slug, type: t.type }));
           const extensions = data.extensions;
 
-          const categories = [...new Set(extensions.map(e => e.category))];
           const randomCombinations = templates.map(template => {
+            const compatibleExtensions = extensions.filter(ext => {
+              const extTypes = Array.isArray(ext.type) ? ext.type : [ext.type];
+              return extTypes.includes(template.type);
+            });
+
+            const categories = [...new Set(compatibleExtensions.map(e => e.category))];
             const selectedExtensions = categories.map(category => {
-              const categoryExtensions = extensions.filter(e => e.category === category);
+              const categoryExtensions = compatibleExtensions.filter(e => e.category === category);
               return categoryExtensions[Math.floor(Math.random() * categoryExtensions.length)]?.slug;
             }).filter(Boolean);
-            return { template, extensions: selectedExtensions };
+
+            return { template: template.slug, extensions: selectedExtensions };
           });
 
           console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
