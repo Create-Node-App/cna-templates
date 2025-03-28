@@ -54,7 +54,7 @@ jobs:
             return { template: template.slug, extensions: selectedExtensions };
           });
 
-          fs.writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(randomCombinations)}`);
+          console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
           EOF
 
   test-combinations:
