@@ -31,6 +31,7 @@ jobs:
       - name: Generate random combinations
         id: set-matrix
         run: |
+          node <<EOF
           const fs = require('fs');
           const path = './templates.json';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -53,7 +54,7 @@ jobs:
             return { template: template.slug, extensions: selectedExtensions };
           });
 
-          console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
+          fs.writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(randomCombinations)}`);
           EOF
 
   test-combinations:
