@@ -51,6 +51,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -59,7 +62,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -117,6 +121,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -125,7 +132,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         }
       ]
@@ -169,6 +177,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -177,7 +188,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -217,6 +229,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -225,7 +240,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -259,6 +275,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -267,7 +286,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -301,6 +321,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -309,7 +332,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -343,6 +367,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -351,7 +378,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -385,6 +413,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -393,7 +424,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -427,6 +459,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -435,7 +470,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -469,6 +505,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -477,7 +516,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -511,6 +551,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -519,7 +562,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -553,6 +597,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -561,7 +608,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -595,6 +643,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -603,7 +654,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -637,6 +689,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -645,7 +700,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -677,17 +733,11 @@
                 },
                 {
                   "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -696,7 +746,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -728,20 +779,11 @@
                 },
                 {
                   "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -750,52 +792,8 @@
             "url",
             "type",
             "category",
-            "labels"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "category": {
-              "type": "string"
-            },
-            "labels": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "required": [
-            "name",
-            "description",
-            "url",
-            "type",
-            "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -833,8 +831,17 @@
                 },
                 {
                   "type": "string"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -843,7 +850,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -883,6 +891,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -891,136 +902,8 @@
             "url",
             "type",
             "category",
-            "labels"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "category": {
-              "type": "string"
-            },
-            "labels": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "required": [
-            "name",
-            "description",
-            "url",
-            "type",
-            "category",
-            "labels"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "category": {
-              "type": "string"
-            },
-            "labels": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "required": [
-            "name",
-            "description",
-            "url",
-            "type",
-            "category",
-            "labels"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "category": {
-              "type": "string"
-            },
-            "labels": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "required": [
-            "name",
-            "description",
-            "url",
-            "type",
-            "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         },
         {
@@ -1051,6 +934,9 @@
                   "type": "string"
                 }
               ]
+            },
+            "slug": {
+              "type": "string"
             }
           },
           "required": [
@@ -1059,7 +945,8 @@
             "url",
             "type",
             "category",
-            "labels"
+            "labels",
+            "slug"
           ]
         }
       ]

@@ -3,6 +3,7 @@
   "templates": [
     {
       "name": "NestJS Boilerplate",
+      "slug": "nestjs-boilerplate",
       "description": "A boilerplate for building backend applications using the NestJS framework with TypeScript, ESLint, and Prettier.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "nestjs-backend",
@@ -11,6 +12,7 @@
     },
     {
       "name": "NextJS Starter",
+      "slug": "nextjs-starter",
       "description": "A highly opinionated Next.js starter with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with Next.js.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
       "type": "nextjs",
@@ -33,6 +35,7 @@
     },
     {
       "name": "Turborepo Boilerplate",
+      "slug": "turborepo-boilerplate",
       "description": "A highly opinionated monorepo boilerplate with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start working with a monorepo.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
@@ -57,6 +60,7 @@
     },
     {
       "name": "React Vite Boilerplate",
+      "slug": "react-vite-boilerplate",
       "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with React.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
@@ -86,6 +90,7 @@
     },
     {
       "name": "Web Extension React Boilerplate",
+      "slug": "web-extension-react-boilerplate",
       "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building WebExtensions.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
@@ -117,6 +122,7 @@
     },
     {
       "name": "WebdriverIO Boilerplate",
+      "slug": "webdriverio-boilerplate",
       "description": "A highly opinionated WebdriverIO boilerplate with TypeScript, ESLint, Prettier, Selenoid, and more. Ideal for developers who want to quickly start writing WebdriverIO tests.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
@@ -127,6 +133,7 @@
   "extensions": [
     {
       "name": "GitHub Setup",
+      "slug": "github-setup",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
       "type": [
@@ -149,6 +156,7 @@
     },
     {
       "name": "GitHub Setup for User Acceptance Testing",
+      "slug": "github-setup-uat",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more. It also adds a GitHub Action to run User Acceptance Tests using Selenium.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/wdio-github-setup",
       "type": ["webdriverio"],
@@ -165,6 +173,7 @@
     },
     {
       "name": "Husky + Lint Staged",
+      "slug": "husky-lint-staged",
       "description": "Extension to add Husky and Lint Staged to your project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
       "type": [
@@ -181,6 +190,7 @@
     },
     {
       "name": "Husky + Lint Staged",
+      "slug": "husky-lint-staged",
       "description": "Extension to add Husky and Lint Staged to your project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
       "type": ["monorepo"],
@@ -189,6 +199,7 @@
     },
     {
       "name": "Development Container",
+      "slug": "development-container",
       "description": "Add a development container setup to your TypeScript project",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
       "type": ["sls", "react", "webextension-react", "monorepo", "webdriverio", "backend", "nestjs-backend", "nextjs"],
@@ -197,6 +208,7 @@
     },
     {
       "name": "Jest + React Testing Library",
+      "slug": "jest-react-testing-library",
       "description": "Extension to add Jest and React Testing Library",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
       "type": ["react", "webextension-react", "nextjs"],
@@ -205,6 +217,7 @@
     },
     {
       "name": "React i18n",
+      "slug": "react-i18n",
       "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-i18n",
       "type": "react",
@@ -213,6 +226,7 @@
     },
     {
       "name": "TanStack React Query",
+      "slug": "tanstack-react-query",
       "description": "High-quality open-source software for web developers.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-query",
       "type": "react",
@@ -227,6 +241,7 @@
     },
     {
       "name": "React Hook Form",
+      "slug": "react-hook-form",
       "description": "Extension to add React Hook Form, a performant, flexible and extensible forms with easy-to-use validation.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hook-form",
       "type": "react",
@@ -235,6 +250,7 @@
     },
     {
       "name": "Recoil.js (Deprecated)",
+      "slug": "recoil-js",
       "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
       "type": "react",
@@ -243,6 +259,7 @@
     },
     {
       "name": "Jotai",
+      "slug": "jotai",
       "description": "Extension to add Jotai, a small and fast state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-jotai",
       "type": "react",
@@ -251,6 +268,7 @@
     },
     {
       "name": "Easy State",
+      "slug": "easy-state",
       "description": "Extension to add Easy State, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-easy-state",
       "type": "react",
@@ -259,6 +277,7 @@
     },
     {
       "name": "Global State",
+      "slug": "global-state",
       "description": "Extension to add Global State, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-global-state",
       "type": "react",
@@ -267,6 +286,7 @@
     },
     {
       "name": "Hookstate",
+      "slug": "hookstate",
       "description": "Extension to add Hookstate, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hookstate",
       "type": "react",
@@ -275,6 +295,7 @@
     },
     {
       "name": "MobX",
+      "slug": "mobx",
       "description": "Extension to add MobX, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-mobx",
       "type": "react",
@@ -283,6 +304,7 @@
     },
     {
       "name": "Teaful",
+      "slug": "teaful",
       "description": "Extension to add Teaful, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-teaful",
       "type": "react",
@@ -291,6 +313,7 @@
     },
     {
       "name": "Valtio",
+      "slug": "valtio",
       "description": "Extension to add Valtio, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-valtio",
       "type": "react",
@@ -299,6 +322,7 @@
     },
     {
       "name": "XState",
+      "slug": "xstate",
       "description": "Extension to add XState, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-xstate",
       "type": "react",
@@ -307,6 +331,7 @@
     },
     {
       "name": "Zustand",
+      "slug": "zustand",
       "description": "Extension to add Zustand, a tiny state management library for React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-zustand",
       "type": "react",
@@ -319,6 +344,7 @@
     },
     {
       "name": "React Redux with Redux Saga",
+      "slug": "react-redux-saga",
       "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Saga",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
       "type": "react",
@@ -334,6 +360,7 @@
     },
     {
       "name": "React Redux with Redux Thunk",
+      "slug": "react-redux-thunk",
       "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Thunk",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-thunk",
       "type": "react",
@@ -349,6 +376,7 @@
     },
     {
       "name": "Cross Platform Apps with Ionic React + Capacitor",
+      "slug": "ionic-react-capacitor",
       "description": "Add Ionic React and Capacitor to your cross platform react app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic",
       "type": "react",
@@ -357,6 +385,7 @@
     },
     {
       "name": "Docker Compose Setup",
+      "slug": "docker-compose-setup",
       "description": "Add docker environments for development and production to your project setup with docker-compose",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
       "type": "react",
@@ -372,6 +401,7 @@
     },
     {
       "name": "Android Tools",
+      "slug": "android-tools",
       "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
       "type": "react",
@@ -380,6 +410,7 @@
     },
     {
       "name": "Semantic UI React",
+      "slug": "semantic-ui-react",
       "description": "Extension to add Semantic UI React to your setup",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
       "type": "react",
@@ -388,6 +419,7 @@
     },
     {
       "name": "Semantic UI React with Theme",
+      "slug": "semantic-ui-react-theme",
       "description": "Extension to add Semantic UI React to your setup with theme customization",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui-less",
       "type": "react",
@@ -402,6 +434,7 @@
     },
     {
       "name": "Ant Design for React",
+      "slug": "ant-design-react",
       "description": "Extension to add Ant Design React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ant-design",
       "type": "react",
@@ -410,6 +443,7 @@
     },
     {
       "name": "Bootstrap React",
+      "slug": "bootstrap-react",
       "description": "Extension to add Bootstrap React",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-bootstrap",
       "type": "react",
@@ -418,6 +452,7 @@
     },
     {
       "name": "Material UI",
+      "slug": "material-ui",
       "description": "Extension to add Material UI to your React app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
       "type": "react",
@@ -426,6 +461,7 @@
     },
     {
       "name": "Drizzle ORM SQLite",
+      "slug": "drizzle-orm-sqlite",
       "description": "Extension to add Drizzle ORM with SQLite to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-sqlite",
       "type": "nestjs-backend",
@@ -434,6 +470,7 @@
     },
     {
       "name": "Drizzle ORM PostgreSQL",
+      "slug": "drizzle-orm-postgresql",
       "description": "Extension to add Drizzle ORM with PostgreSQL to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-postgres",
       "type": "nestjs-backend",
@@ -442,6 +479,7 @@
     },
     {
       "name": "Mongoose ORM MongoDB",
+      "slug": "mongoose-orm-mongodb",
       "description": "Extension to add Mongoose ORM with MongoDB to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-mongoose",
       "type": "nestjs-backend",
@@ -450,6 +488,7 @@
     },
     {
       "name": "Serverless Framework",
+      "slug": "serverless-framework",
       "description": "Extension to add Severless Framework packaging to deploy your NestJS API to AWS Lambda",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-serverless",
       "type": "nestjs-backend",
@@ -458,6 +497,7 @@
     },
     {
       "name": "React Million DOM Optimization",
+      "slug": "react-million-dom-optimization",
       "description": "Extension to add Million DOM Optimization to your React app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-million",
       "type": "react",
@@ -466,6 +506,7 @@
     },
     {
       "name": "OpenAPI",
+      "slug": "openapi",
       "description": "Extension to add OpenAPI documentation to your NestJS API",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
       "type": "nestjs-backend",
@@ -474,6 +515,7 @@
     },
     {
       "name": "React Electron Vite",
+      "slug": "react-electron-vite",
       "description": "Add Electron to your cross platform React Vite app",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-electron-vite",
       "type": "react",

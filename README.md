@@ -10,7 +10,8 @@ This repository contains templates and extensions for the <https://www.npmjs.com
 
    ```json
    {
-     "name": "template-name",
+     "slug": "template-slug",
+     "name": "Template Name",
      "description": "Template description",
      "url": "https://github.com/username/repository/tree/branch/path/to/template",
      "type": "template_type",
@@ -27,6 +28,7 @@ This repository contains templates and extensions for the <https://www.npmjs.com
 
 | Property        | Description                                                                                                                                                                                                                               | Type       |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| **slug**        | A unique identifier for the template or extension, typically a URL-friendly version of the name.                                                                                                                                          | `string`   |
 | **name**        | The name of the template or extension                                                                                                                                                                                                     | `string`   |
 | **description** | A short description of the template or extension                                                                                                                                                                                          | `string`   |
 | **url**         | The URL to the template or extension. For example, if you want to use a template from a GitHub repository, you can use the following format: `https://github.com/username/repository/tree/branch/path/to/template`                        | `string`   |
