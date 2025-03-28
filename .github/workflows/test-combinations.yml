@@ -31,7 +31,6 @@ jobs:
       - name: Generate random combinations
         id: set-matrix
         run: |
-          node <<EOF
           const fs = require('fs');
           const path = './templates.json';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -54,7 +53,7 @@ jobs:
             return { template: template.slug, extensions: selectedExtensions };
           });
 
-          console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
+          fs.writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(randomCombinations)}`);
           EOF
 
   test-combinations:
@@ -77,5 +76,10 @@ jobs:
         run: |
           echo "Testing template: ${{ matrix.combination.template }}"
           echo "With extensions: ${{ matrix.combination.extensions }}"
-          # Replace the following with the actual test command
           npx create-awesome-node-app --template ${{ matrix.combination.template }} --addons ${{ join(matrix.combination.extensions, ' ') }}
+
+          # Move to the generated project
+          cd my-project
+
+          # Print the generated files
+            tree -I 'node_modules|dist|.git'
