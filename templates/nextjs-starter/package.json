@@ -4,8 +4,8 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --ignore-path .gitignore --write .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -14,12 +14,17 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.8.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "typescript": "^5.2.2",
-    "eslint": "^9.23.0",
+    "@next/eslint-plugin-next": "^13.5.6",
+    "@types/node": "^20.8.6",
+    "@types/react": "^19.0.27",
+    "@types/react-dom": "^19.0.11",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "eslint": "^9.24.0",
     "eslint-config-next": "^15.2.4",
-    "prettier": "^3.0.3"
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^6.7.5"
   }
 }
