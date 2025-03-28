@@ -82,5 +82,12 @@ jobs:
           # Move to the generated project
           cd my-project
 
+          # Run format and lint fix if present
+          npm run format --if-present
+          npm run lint:fix --if-present
+
+          # Run build if present
+          npm run build --if-present
+
           # Print the generated files
           tree -I 'node_modules|dist|.git'
