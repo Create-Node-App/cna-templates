@@ -82,4 +82,4 @@ jobs:
           cd my-project
 
           # Print the generated files
-            tree -I 'node_modules|dist|.git'
+          tree -I 'node_modules|dist|.git'
