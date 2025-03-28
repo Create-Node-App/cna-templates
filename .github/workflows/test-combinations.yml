@@ -1,0 +1,74 @@
+name: Test Template and Extension Combinations
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
+
+jobs:
+  generate-combinations:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate random combinations
+        id: set-matrix
+        run: |
+          node <<EOF
+          const fs = require('fs');
+          const path = './templates.json';
+          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+
+          const templates = data.templates.map(t => t.slug);
+          const extensions = data.extensions;
+
+          const categories = [...new Set(extensions.map(e => e.category))];
+          const randomCombinations = templates.map(template => {
+            const selectedExtensions = categories.map(category => {
+              const categoryExtensions = extensions.filter(e => e.category === category);
+              return categoryExtensions[Math.floor(Math.random() * categoryExtensions.length)]?.slug;
+            }).filter(Boolean);
+            return { template, extensions: selectedExtensions };
+          });
+
+          console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
+          EOF
+
+  test-combinations:
+    needs: generate-combinations
+    strategy:
+      matrix:
+        combination: ${{ fromJson(needs.generate-combinations.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run tests for combination
+        run: |
+          echo "Testing template: ${{ matrix.combination.template }}"
+          echo "With extensions: ${{ matrix.combination.extensions }}"
+          # Replace the following with the actual test command
+          npx create-awesome-node-app --template ${{ matrix.combination.template }} --addons "${{ join(matrix.combination.extensions, ' ') }}"
