@@ -26,10 +26,33 @@ This repository contains templates and extensions for the <https://www.npmjs.com
 
 ## Understanding `templates.json`
 
-The `templates.json` file is the core configuration file that defines all available templates and extensions. It contains two main sections:
+The `templates.json` file is the core configuration file that defines all available templates, extensions, and categories.
 
-- **Templates**: These are the base scaffolds for your project, such as `react-vite-boilerplate` or `nestjs-boilerplate`. Each template defines its type, category, and other metadata.
-- **Extensions**: These are optional add-ons that enhance your project, such as adding `material-ui` or `github-setup`. Extensions are associated with one or more template types, ensuring compatibility.
+### Categories
+
+The `categories` property provides metadata about the types of templates available. Each category includes:
+
+- **slug**: A unique identifier for the category.
+- **name**: The display name of the category.
+- **description**: A short description of the category.
+- **details**: Additional details about the category.
+- **labels**: Keywords associated with the category.
+
+### Example `categories` Structure
+
+```json
+{
+  "categories": [
+    {
+      "slug": "frontend-applications",
+      "name": "Frontend Applications",
+      "description": "Templates for building modern web interfaces.",
+      "details": "Discover templates for React, Vue, and other frontend frameworks to build beautiful user interfaces.",
+      "labels": ["Frontend", "UI", "React", "Vue", "Web"]
+    }
+  ]
+}
+```
 
 ### How Templates and Extensions Work Together
 

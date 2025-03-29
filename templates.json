@@ -1,5 +1,49 @@
 {
   "$schema": "./templates.schema.json",
+  "categories": [
+    {
+      "slug": "frontend-applications",
+      "name": "Frontend Applications",
+      "description": "Templates for building modern web interfaces.",
+      "details": "Discover templates for React, Vue, and other frontend frameworks to build beautiful user interfaces.",
+      "labels": ["Frontend", "UI", "React", "Vue", "Web"]
+    },
+    {
+      "slug": "backend-applications",
+      "name": "Backend Applications",
+      "description": "Templates for building robust server-side applications.",
+      "details": "Explore templates for Node.js, Express, NestJS, and other backend frameworks to build powerful APIs.",
+      "labels": ["Backend", "API", "Server", "Node.js", "Express", "NestJS"]
+    },
+    {
+      "slug": "fullstack-applications",
+      "name": "Full Stack Applications",
+      "description": "Templates for building complete web applications.",
+      "details": "Find templates for Next.js, Remix, and other full stack frameworks to build end-to-end applications.",
+      "labels": ["FullStack", "Frontend", "Backend", "Next.js", "Remix"]
+    },
+    {
+      "slug": "monorepo-boilerplate",
+      "name": "Monorepo Boilerplate",
+      "description": "Templates for managing multiple packages in a single repository.",
+      "details": "Streamline development with monorepo templates using tools like Nx, Turborepo, and Lerna for efficient code sharing.",
+      "labels": ["Monorepo", "Workspaces", "Turborepo", "Nx", "Lerna"]
+    },
+    {
+      "slug": "user-acceptance-testing",
+      "name": "User Acceptance Testing",
+      "description": "Templates with built-in testing frameworks for end-to-end validation.",
+      "details": "Ensure your applications meet user requirements with templates featuring Cypress, Playwright, or Selenium for comprehensive testing.",
+      "labels": ["Testing", "End-to-End", "Cypress", "Playwright", "Selenium"]
+    },
+    {
+      "slug": "web-extension",
+      "name": "Web Extension",
+      "description": "Templates for building browser extensions and add-ons.",
+      "details": "Develop cross-browser extensions with templates that support Chrome, Firefox, and Edge with modern web technologies.",
+      "labels": ["WebExtension", "Browser", "Chrome", "Firefox", "Edge"]
+    }
+  ],
   "templates": [
     {
       "name": "NestJS Boilerplate",
@@ -7,7 +51,7 @@
       "description": "A boilerplate for building scalable and maintainable backend applications using NestJS with TypeScript, ESLint, and Prettier.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "nestjs-backend",
-      "category": "Backend Application",
+      "category": "backend-applications",
       "labels": [
         "NestJS",
         "Backend",
@@ -24,7 +68,7 @@
       "description": "A production-ready Next.js starter with TypeScript, ESLint, Prettier, and customizable options for rapid full-stack development.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
       "type": "nextjs",
-      "category": "FullStack Application",
+      "category": "fullstack-applications",
       "labels": [
         "Next.js",
         "FullStack",
@@ -55,7 +99,7 @@
       "description": "A modern monorepo boilerplate with Turborepo, TypeScript, Changesets, and Workspaces for efficient multi-package management.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
-      "category": "Monorepo Boilerplate",
+      "category": "monorepo-boilerplate",
       "labels": [
         "Monorepo",
         "Turborepo",
@@ -81,7 +125,7 @@
       "description": "A fast and lightweight React boilerplate with Vite, TypeScript, React Router, and modern tooling for frontend development.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
-      "category": "Frontend Application",
+      "category": "frontend-applications",
       "labels": [
         "React",
         "Vite",
@@ -114,7 +158,7 @@
       "description": "A boilerplate for building WebExtensions with React, Vite, TypeScript, and features like hot module replacement and polyfills.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
-      "category": "Web Extension",
+      "category": "web-extension",
       "labels": [
         "WebExtension",
         "React",
@@ -146,7 +190,7 @@
       "description": "A comprehensive WebdriverIO boilerplate with TypeScript, ESLint, Prettier, and Selenoid for automated user acceptance testing.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
-      "category": "User Acceptance Testing",
+      "category": "user-acceptance-testing",
       "labels": [
         "WebdriverIO",
         "Testing",

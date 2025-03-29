@@ -825,70 +825,6 @@
                 },
                 {
                   "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ]
-            },
-            "slug": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "name",
-            "description",
-            "url",
-            "type",
-            "category",
-            "labels",
-            "slug"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "category": {
-              "type": "string"
-            },
-            "labels": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
                 }
               ]
             },
@@ -950,7 +886,34 @@
           ]
         }
       ]
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["slug", "name", "description", "labels"]
+      }
     }
   },
-  "required": ["templates", "extensions"]
+  "required": ["templates", "extensions", "categories"]
 }
