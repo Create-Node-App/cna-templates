@@ -4,20 +4,36 @@
     {
       "name": "NestJS Boilerplate",
       "slug": "nestjs-boilerplate",
-      "description": "A boilerplate for building backend applications using the NestJS framework with TypeScript, ESLint, and Prettier.",
+      "description": "A boilerplate for building scalable and maintainable backend applications using NestJS with TypeScript, ESLint, and Prettier.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "nestjs-backend",
       "category": "Backend Application",
-      "labels": ["TypeScript", "ESLint", "Prettier", "NestJS"]
+      "labels": [
+        "NestJS",
+        "Backend",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Scalable",
+        "Maintainable"
+      ]
     },
     {
       "name": "NextJS Starter",
       "slug": "nextjs-starter",
-      "description": "A highly opinionated Next.js starter with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with Next.js.",
+      "description": "A production-ready Next.js starter with TypeScript, ESLint, Prettier, and customizable options for rapid full-stack development.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
       "type": "nextjs",
       "category": "FullStack Application",
-      "labels": ["TypeScript", "ESLint", "Prettier", "Next.js"],
+      "labels": [
+        "Next.js",
+        "FullStack",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Customizable",
+        "Production-ready"
+      ],
       "customOptions": [
         {
           "name": "srcDir",
@@ -36,17 +52,18 @@
     {
       "name": "Turborepo Boilerplate",
       "slug": "turborepo-boilerplate",
-      "description": "A highly opinionated monorepo boilerplate with TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start working with a monorepo.",
+      "description": "A modern monorepo boilerplate with Turborepo, TypeScript, Changesets, and Workspaces for efficient multi-package management.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
       "category": "Monorepo Boilerplate",
       "labels": [
-        "TypeScript",
-        "ESLint",
-        "Prettier",
+        "Monorepo",
         "Turborepo",
+        "TypeScript",
+        "Changesets",
         "Workspaces",
-        "Changesets"
+        "Efficient",
+        "Multi-package"
       ],
       "customOptions": [
         {
@@ -61,17 +78,20 @@
     {
       "name": "React Vite Boilerplate",
       "slug": "react-vite-boilerplate",
-      "description": "A highly opinionated React boilerplate with Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building applications with React.",
+      "description": "A fast and lightweight React boilerplate with Vite, TypeScript, React Router, and modern tooling for frontend development.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
       "category": "Frontend Application",
       "labels": [
         "React",
         "Vite",
+        "Frontend",
         "TypeScript",
         "ESLint",
         "Prettier",
-        "React Router"
+        "React Router",
+        "Fast",
+        "Lightweight"
       ],
       "customOptions": [
         {
@@ -91,17 +111,17 @@
     {
       "name": "Web Extension React Boilerplate",
       "slug": "web-extension-react-boilerplate",
-      "description": "A highly opinionated WebExtension boilerplate with React, Vite, TypeScript, ESLint, Prettier, and more. Ideal for developers who want to quickly start building WebExtensions.",
+      "description": "A boilerplate for building WebExtensions with React, Vite, TypeScript, and features like hot module replacement and polyfills.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
       "category": "Web Extension",
       "labels": [
         "WebExtension",
-        "Hot Module Replacement",
-        "WebExtension Polyfill",
         "React",
         "Vite",
         "TypeScript",
+        "Hot Reload",
+        "Polyfill",
         "ESLint",
         "Prettier"
       ],
@@ -123,18 +143,26 @@
     {
       "name": "WebdriverIO Boilerplate",
       "slug": "webdriverio-boilerplate",
-      "description": "A highly opinionated WebdriverIO boilerplate with TypeScript, ESLint, Prettier, Selenoid, and more. Ideal for developers who want to quickly start writing WebdriverIO tests.",
+      "description": "A comprehensive WebdriverIO boilerplate with TypeScript, ESLint, Prettier, and Selenoid for automated user acceptance testing.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
       "category": "User Acceptance Testing",
-      "labels": ["WebdriverIO", "TypeScript", "ESLint", "Prettier", "Selenoid"]
+      "labels": [
+        "WebdriverIO",
+        "Testing",
+        "TypeScript",
+        "Selenoid",
+        "ESLint",
+        "Prettier",
+        "Automated Testing"
+      ]
     }
   ],
   "extensions": [
     {
       "name": "GitHub Setup",
       "slug": "github-setup",
-      "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more.",
+      "description": "Automate GitHub workflows with Actions, Dependabot, and templates for issues and pull requests.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
       "type": [
         "sls",
@@ -148,10 +176,11 @@
       "category": "Tooling",
       "labels": [
         "GitHub",
-        "GitHub Actions",
+        "Automation",
+        "Actions",
         "Dependabot",
-        "Issue Templates",
-        "Pull Request Templates"
+        "Templates",
+        "CI/CD"
       ]
     },
     {
@@ -174,7 +203,7 @@
     {
       "name": "Husky + Lint Staged",
       "slug": "husky-lint-staged",
-      "description": "Extension to add Husky and Lint Staged to your project",
+      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
       "type": [
         "sls",
@@ -186,43 +215,82 @@
         "nextjs"
       ],
       "category": "Tooling",
-      "labels": ["Husky", "Lint Staged"]
+      "labels": [
+        "Husky",
+        "Lint Staged",
+        "Code Quality",
+        "Pre-commit",
+        "Automation"
+      ]
     },
     {
       "name": "Husky + Lint Staged",
       "slug": "husky-lint-staged",
-      "description": "Extension to add Husky and Lint Staged to your project",
+      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
       "type": ["monorepo"],
       "category": "Tooling",
-      "labels": ["Husky", "Lint Staged"]
+      "labels": [
+        "Husky",
+        "Lint Staged",
+        "Code Quality",
+        "Pre-commit",
+        "Automation"
+      ]
     },
     {
       "name": "Development Container",
       "slug": "development-container",
-      "description": "Add a development container setup to your TypeScript project",
+      "description": "Set up a development container with Docker and VSCode for consistent environments.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
-      "type": ["sls", "react", "webextension-react", "monorepo", "webdriverio", "backend", "nestjs-backend", "nextjs"],
+      "type": [
+        "sls",
+        "react",
+        "webextension-react",
+        "monorepo",
+        "webdriverio",
+        "backend",
+        "nestjs-backend",
+        "nextjs"
+      ],
       "category": "Tooling",
-      "labels": ["Development Container", "VSCode", "Docker"]
+      "labels": [
+        "Docker",
+        "VSCode",
+        "DevContainer",
+        "Environment",
+        "Consistency"
+      ]
     },
     {
       "name": "Jest + React Testing Library",
       "slug": "jest-react-testing-library",
-      "description": "Extension to add Jest and React Testing Library",
+      "description": "Add Jest and React Testing Library for unit and integration testing in React projects.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
       "type": ["react", "webextension-react", "nextjs"],
-      "category": "Tooling",
-      "labels": ["Jest", "React Testing Library"]
+      "category": "Testing",
+      "labels": [
+        "Jest",
+        "React Testing Library",
+        "Unit Testing",
+        "Integration Testing",
+        "React"
+      ]
     },
     {
       "name": "React i18n",
       "slug": "react-i18n",
-      "description": "Extension to add i18n setup using react-i18n and async backend with locale and timezone support",
+      "description": "Add internationalization support to your React app with react-i18n and async backend.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-i18n",
       "type": "react",
-      "category": "Tooling",
-      "labels": ["i18n", "react-i18n", "async backend", "locale", "timezone"]
+      "category": "Localization",
+      "labels": [
+        "i18n",
+        "Localization",
+        "React",
+        "Async Backend",
+        "Multi-language"
+      ]
     },
     {
       "name": "TanStack React Query",
@@ -453,11 +521,11 @@
     {
       "name": "Material UI",
       "slug": "material-ui",
-      "description": "Extension to add Material UI to your React app",
+      "description": "Add Material UI components and theming capabilities to your React application.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
       "type": "react",
       "category": "UI",
-      "labels": ["React", "Material UI"]
+      "labels": ["React", "Material UI", "Components", "Theming", "UI Library"]
     },
     {
       "name": "Drizzle ORM SQLite",
@@ -511,7 +579,7 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
       "type": "nestjs-backend",
       "category": "Tooling",
-      "labels": ["NestJS", "OpenAPI", "Swagger"] 
+      "labels": ["NestJS", "OpenAPI", "Swagger"]
     },
     {
       "name": "React Electron Vite",
