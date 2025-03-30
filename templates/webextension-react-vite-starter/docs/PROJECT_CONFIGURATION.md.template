@@ -1,14 +1,14 @@
 # ⚙️ Project Configuration
 
-The application has been bootstrapped using `Creae Vite App` for simplicity reasons. It allows us to create applications quickly without dealing with a complex tooling setup such as bundling, transpiling etc.
+The application has been bootstrapped using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) for simplicity reasons. It allows us to create applications quickly without dealing with a complex tooling setup such as bundling, transpiling etc.
 
 You should always configure and use the following tools:
 
 ## ESLint
 
-ESLint is a linting tool for JavaScript. By providing specific configuration defined in the`.eslintrc` file it prevents developers from making silly mistakes in their code and enforces consistency in the codebase.
+ESLint is a linting tool for JavaScript. By providing specific configuration defined in the`eslint.config.mjs` file it prevents developers from making silly mistakes in their code and enforces consistency in the codebase.
 
-[ESLint Configuration](../.eslintrc)
+[ESLint Configuration](../eslint.config.mjs)
 
 ## Prettier
 
