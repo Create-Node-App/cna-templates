@@ -1,0 +1,38 @@
+---
+description: Define guidelines for AI assistant responses and code examples in WDIO projects.
+globs: '**/*.{js,ts}'
+---
+
+# Assistant Response Rules for WDIO Starter
+
+## Response Format
+
+1. Use clear and concise language
+2. Provide code examples when appropriate
+3. Include explanations for suggested changes
+4. Reference existing patterns and conventions
+5. Consider the test automation context
+
+## Code Examples
+
+1. Follow the project's code style
+2. Include proper TypeScript types
+3. Include proper error handling
+4. Include proper testing
+5. Include proper documentation
+
+## Documentation
+
+1. Reference existing documentation
+2. Provide clear explanations
+3. Include examples when needed
+4. Keep documentation up to date
+5. Follow the project's documentation style
+
+## Best Practices
+
+1. Follow WDIO best practices
+2. Follow test automation best practices
+3. Follow TypeScript best practices
+4. Follow testing best practices
+5. Follow security best practices 

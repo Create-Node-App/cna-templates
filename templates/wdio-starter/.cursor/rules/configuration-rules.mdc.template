@@ -1,0 +1,22 @@
+---
+description: Guidelines for managing and documenting configuration files in WDIO projects.
+globs: 'config/**/*.{ts,js}'
+---
+
+# Configuration Rules for WDIO Starter
+
+## Configuration Structure
+
+1. Organize configuration files by environment
+2. Use TypeScript for type safety
+3. Document configuration options
+4. Keep configuration files DRY
+5. Use environment variables for sensitive data
+
+## Configuration Best Practices
+
+1. Avoid hardcoded values
+2. Use default values where appropriate
+3. Document changes to configuration
+4. Keep configuration files up to date
+5. Review configuration for security issues 

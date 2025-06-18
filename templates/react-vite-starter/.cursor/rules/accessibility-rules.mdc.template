@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for implementing accessibility best practices in React Vite projects.
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Accessibility Rules for React Vite Starter
+
+## Accessibility Best Practices
+
+1. Use proper ARIA attributes
+2. Use proper semantic HTML
+3. Use proper keyboard navigation
+4. Use proper screen reader support
+5. Use proper accessibility best practices
+
+## Accessibility Testing
+
+1. Test accessibility compliance
+2. Test accessibility navigation
+3. Test accessibility screen readers
+4. Test accessibility keyboard
+5. Test accessibility best practices
+
+## Accessibility Documentation
+
+1. Document accessibility best practices
+2. Document accessibility navigation
+3. Document accessibility screen readers
+4. Document accessibility keyboard
+5. Document accessibility best practices
+
+## Accessibility Maintenance
+
+1. Keep accessibility up to date
+2. Keep accessibility maintainable
+3. Keep accessibility testable
+4. Keep accessibility documented
+5. Keep accessibility following best practices
+
+## Accessibility Best Practices
+
+1. Use proper accessibility tools
+2. Use proper accessibility workflows
+3. Use proper accessibility reviews
+4. Use proper accessibility testing
+5. Use proper accessibility deployment

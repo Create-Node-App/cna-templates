@@ -1,0 +1,22 @@
+---
+description: Guidelines for creating and maintaining page objects in WDIO projects.
+globs: 'test/pageobjects/**/*.{ts,js}'
+---
+
+# Page Object Rules for WDIO Starter
+
+## Page Object Structure
+
+1. Use a class for each page object
+2. Define selectors as class properties
+3. Implement methods for page actions
+4. Keep page objects focused on a single page or component
+5. Use TypeScript for type safety
+
+## Page Object Best Practices
+
+1. Reuse selectors and methods where possible
+2. Avoid hardcoded values
+3. Keep page objects DRY (Don't Repeat Yourself)
+4. Document methods and selectors
+5. Keep page objects up to date with UI changes 

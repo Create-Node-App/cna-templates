@@ -1,0 +1,60 @@
+---
+description: Specifies frontend development guidelines for React Vite projects, including component patterns and performance optimization.
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Frontend Stack Rules for React Vite Starter
+
+## Core Technologies
+
+1. React
+2. TypeScript
+3. Vite
+4. React Router
+5. ESLint
+6. Prettier
+7. SASS
+8. PWA Support
+
+## Component Guidelines
+
+1. Functional Components:
+   - Use TypeScript for type safety
+   - Implement proper prop types
+   - Use React hooks for state management
+   - Follow React best practices
+
+2. Routing:
+   - Use React Router for navigation
+   - Implement proper route guards
+   - Handle loading and error states
+   - Follow routing best practices
+
+3. Styling:
+   - Use SASS for styling
+   - Follow BEM naming convention
+   - Implement responsive design
+   - Follow accessibility guidelines
+
+## State Management
+
+1. Use React hooks for local state
+2. Implement proper context usage
+3. Use proper data fetching patterns
+4. Handle loading and error states
+
+## Performance Optimization
+
+1. Use Vite's build optimizations
+2. Implement code splitting
+3. Optimize bundle size
+4. Use proper caching strategies
+5. Monitor performance metrics
+
+## PWA Features
+
+1. Implement proper service workers
+2. Handle offline functionality
+3. Implement proper caching
+4. Follow PWA best practices
+5. Test PWA features

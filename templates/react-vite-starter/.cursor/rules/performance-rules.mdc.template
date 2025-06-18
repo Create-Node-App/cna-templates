@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for optimizing performance in React Vite projects, including code splitting and lazy loading.
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Performance Rules for React Vite Starter
+
+## Performance Optimization
+
+1. Use code splitting
+2. Use lazy loading
+3. Use proper caching
+4. Use proper bundling
+5. Use proper optimization
+
+## Performance Best Practices
+
+1. Use proper code organization
+2. Use proper code splitting
+3. Use proper lazy loading
+4. Use proper caching
+5. Use proper performance best practices
+
+## Performance Testing
+
+1. Test performance metrics
+2. Test performance optimization
+3. Test performance caching
+4. Test performance bundling
+5. Test performance best practices
+
+## Performance Documentation
+
+1. Document performance metrics
+2. Document performance optimization
+3. Document performance caching
+4. Document performance bundling
+5. Document performance best practices
+
+## Performance Maintenance
+
+1. Keep performance optimized
+2. Keep performance maintainable
+3. Keep performance testable
+4. Keep performance documented
+5. Keep performance following best practices

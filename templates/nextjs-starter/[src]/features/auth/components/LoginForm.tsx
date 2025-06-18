@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../hooks';
+import { useAuth } from '../hooks/use-auth';
 import styles from './LoginForm.module.css';
 
 export const LoginForm = () => {

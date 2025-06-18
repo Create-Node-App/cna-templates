@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for state management in React Vite projects, focusing on Redux Toolkit and React Query.
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# State Management Rules for React Vite Starter
+
+## State Organization
+
+1. Use Redux Toolkit for global state
+2. Use React Query for server state
+3. Use local state for component state
+4. Use proper state organization
+5. Use proper state naming
+
+## State Management Best Practices
+
+1. Use proper state immutability
+2. Use proper state normalization
+3. Use proper state selectors
+4. Use proper state actions
+5. Use proper state reducers
+
+## State Testing
+
+1. Test state actions
+2. Test state reducers
+3. Test state selectors
+4. Test state integration
+5. Test state performance
+
+## State Documentation
+
+1. Document state structure
+2. Document state actions
+3. Document state reducers
+4. Document state selectors
+5. Document state best practices
+
+## State Maintenance
+
+1. Keep state organized
+2. Keep state maintainable
+3. Keep state performant
+4. Keep state testable
+5. Keep state following best practices

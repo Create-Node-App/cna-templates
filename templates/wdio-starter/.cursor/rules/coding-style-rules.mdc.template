@@ -1,0 +1,32 @@
+---
+description: Guidelines for code style, file organization, and documentation in WDIO projects.
+globs: '**/*.{js,ts,md}'
+---
+
+# Coding Style Rules for WDIO Starter
+
+## File Organization
+
+1. Use consistent file naming conventions
+2. Organize tests by feature or functionality
+3. Place page objects in a dedicated folder
+4. Keep configuration files separate
+5. Use TypeScript for type safety
+
+## Code Style
+
+1. Use 2 spaces for indentation
+2. Use semicolons at the end of statements
+3. Use single quotes for strings
+4. Use template literals for string interpolation
+5. Use arrow functions for callbacks
+6. Use async/await for asynchronous operations
+7. Use proper TypeScript types and avoid `any`
+
+## Comments and Documentation
+
+1. Use JSDoc for function and class documentation
+2. Add comments for complex logic
+3. Keep comments up to date with code changes
+4. Use TODO comments for future improvements
+5. Document test cases and page objects 

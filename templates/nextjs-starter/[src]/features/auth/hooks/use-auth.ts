@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { login as loginService } from '../services';
+import { login as loginService } from '../services/auth-service';
 
 interface LoginCredentials {
   email: string;

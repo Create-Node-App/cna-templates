@@ -1,0 +1,53 @@
+---
+description: Defines backend development guidelines for Next.js projects, including API routes and data fetching patterns.
+globs: **/*.{js,jsx,ts,tsx}
+---
+
+# Backend Stack Rules for Next.js Starter
+
+## API Routes
+
+1. Follow the API route structure:
+   ```
+   app/
+     api/
+       [resource]/
+         route.ts
+   ```
+
+2. Implement proper error handling
+3. Use proper HTTP methods and status codes
+4. Implement proper validation
+5. Follow RESTful principles
+
+## Data Fetching
+
+1. Use Server Components for data fetching
+2. Implement proper caching strategies
+3. Handle loading and error states
+4. Use proper data validation
+5. Implement proper error boundaries
+
+## Authentication
+
+1. Implement proper authentication flow
+2. Use secure session management
+3. Implement proper authorization
+4. Handle token management
+5. Follow security best practices
+
+## Database
+
+1. Use proper database connection management
+2. Implement proper error handling
+3. Use proper data validation
+4. Implement proper migrations
+5. Follow database best practices
+
+## Security
+
+1. Implement proper CORS policies
+2. Use proper input validation
+3. Implement proper rate limiting
+4. Use proper security headers
+5. Follow security best practices
