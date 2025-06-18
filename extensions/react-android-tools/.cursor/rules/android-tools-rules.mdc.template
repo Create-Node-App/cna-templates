@@ -15,24 +15,22 @@ globs: '**/*.{ts,tsx,js,jsx}'
 
 ## Android Tools
 
-1. Use proper Android tools
-2. Implement proper Android debugging
-3. Use appropriate Android testing
-4. Handle Android performance properly
-5. Follow Android best practices
+1. Implement proper Android debugging
+2. Use appropriate Android testing
+3. Handle Android performance properly
+4. Follow Android best practices
 
 ## Performance
 
 1. Use proper Android optimization
 2. Implement proper Android caching
-3. Use appropriate Android tools
-4. Handle large applications properly
-5. Optimize Android performance
+3. Handle large applications properly
+4. Optimize Android performance
 
 ## Best Practices
 
 1. Use proper Android organization
 2. Implement proper Android documentation
-3. Use appropriate Android tools
+3. Use appropriate Android tools (e.g., Android Studio, Gradle, and ADB) to ensure consistency and efficiency in development.
 4. Handle Android updates properly
 5. Follow Android development guidelines 
