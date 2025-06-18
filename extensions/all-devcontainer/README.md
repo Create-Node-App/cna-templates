@@ -1,6 +1,6 @@
-# React Material UI Extension
+# DevContainer Extension
 
-This extension provides a set of rules and guidelines for using Material UI in React projects. It includes:
+This extension provides a set of rules and guidelines for using DevContainer in projects. It includes:
 
 - Guidelines for AI assistant responses
 - Code style and best practices
@@ -10,7 +10,7 @@ This extension provides a set of rules and guidelines for using Material UI in R
 
 The extension includes the following Cursor rules:
 
-- `material-ui-rules.mdc.template`: Best practices and advanced guidelines for using Material UI in React projects.
+- `devcontainer-specific-rules.mdc.template`: Specific guidelines for configuring and using DevContainer in projects.
 
 ## Usage
 

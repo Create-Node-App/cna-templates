@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing mobile applications with Ionic and Capacitor.
+globs: '**/*.{ts,tsx,js,jsx}, capacitor.config.ts'
+---
+
+# Ionic Capacitor Rules
+
+## Mobile UI Patterns
+
+1. Use consistent mobile-first design patterns
+2. Implement proper gesture handling
+3. Use appropriate mobile navigation
+4. Handle platform-specific UI properly
+5. Implement proper mobile animations
+
+## Native Features
+
+1. Use proper Capacitor plugins
+2. Implement proper native API calls
+3. Use appropriate platform checks
+4. Handle permissions properly
+5. Follow mobile best practices
+
+## Performance
+
+1. Use proper lazy loading
+2. Implement proper caching
+3. Use appropriate optimization
+4. Handle large applications properly
+5. Optimize mobile performance
+
+## Development
+
+1. Use proper development tools
+2. Implement proper testing
+3. Use appropriate debugging
+4. Handle development workflow properly
+5. Follow mobile development guidelines 

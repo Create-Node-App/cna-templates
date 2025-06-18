@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing Electron applications with Vite in React.
+globs: '**/*.{ts,tsx,js,jsx}, electron/**/*'
+---
+
+# Electron Vite Rules
+
+## Application Structure
+
+1. Use consistent directory structure
+2. Implement proper main process
+3. Use TypeScript for type safety
+4. Handle IPC communication properly
+5. Implement proper error handling
+
+## Build Configuration
+
+1. Use proper Vite configuration
+2. Implement proper build scripts
+3. Use appropriate environment variables
+4. Handle native modules properly
+5. Follow Electron best practices
+
+## Best Practices
+
+1. Use proper security measures
+2. Implement proper auto-updates
+3. Use appropriate packaging
+4. Handle app lifecycle properly
+5. Follow Electron security guidelines
+
+## Performance
+
+1. Use proper code splitting
+2. Implement proper caching
+3. Use appropriate optimization
+4. Handle large applications properly
+5. Optimize application startup 

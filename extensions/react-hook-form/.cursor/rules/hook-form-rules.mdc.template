@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and using React Hook Form in projects.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# React Hook Form Rules
+
+## Form Implementation
+
+1. Use TypeScript for form schemas
+2. Implement proper form validation
+3. Use controlled components when necessary
+4. Handle form submission properly
+5. Implement proper error handling
+
+## Best Practices
+
+1. Use form context for complex forms
+2. Implement proper form state management
+3. Use appropriate validation methods
+4. Handle form reset properly
+5. Implement proper form submission handling
+
+## Performance
+
+1. Use proper form optimization techniques
+2. Implement proper form memoization
+3. Use appropriate form state updates
+4. Handle form re-renders properly
+5. Use proper form validation strategies
+
+## Accessibility
+
+1. Implement proper form labels
+2. Use appropriate ARIA attributes
+3. Handle form errors properly
+4. Implement proper form focus management
+5. Use proper form validation feedback 

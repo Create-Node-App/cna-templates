@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing state with Valtio's proxy-based state management.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Valtio Rules
+
+## Proxy State Management
+
+1. Use consistent state object structure
+2. Implement proper state immutability patterns
+3. Use TypeScript for state types
+4. Handle nested state updates properly
+5. Implement proper state subscriptions
+
+## State Updates
+
+1. Use proper state mutation patterns
+2. Implement proper state snapshots
+3. Use appropriate state subscriptions
+4. Handle async state updates properly
+5. Follow Valtio's proxy patterns
+
+## Performance
+
+1. Use proper state splitting
+2. Implement proper state memoization
+3. Use appropriate state subscriptions
+4. Handle large state objects properly
+5. Optimize proxy performance
+
+## Best Practices
+
+1. Use proper state organization
+2. Implement proper state persistence
+3. Use appropriate state selectors
+4. Handle state updates properly
+5. Follow Valtio best practices 

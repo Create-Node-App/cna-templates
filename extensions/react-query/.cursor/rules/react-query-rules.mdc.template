@@ -1,0 +1,46 @@
+---
+description: Specific guidelines for implementing data fetching, caching, and state management with React Query.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# React Query Rules
+
+## Data Fetching Patterns
+
+1. Use consistent query key structure (e.g., ['todos', { status, page }])
+2. Implement proper error boundaries for failed queries
+3. Use appropriate query options (staleTime, cacheTime, retry)
+4. Handle loading and error states with proper UI feedback
+5. Implement proper query invalidation strategies
+
+## Cache Management
+
+1. Configure cache time based on data volatility
+2. Use optimistic updates for better UX
+3. Implement proper cache invalidation on mutations
+4. Handle stale data with appropriate UI indicators
+5. Use query prefetching for anticipated user actions
+
+## Server State Synchronization
+
+1. Implement proper background refetching
+2. Use appropriate refetch intervals
+3. Handle offline support with proper caching
+4. Implement proper error retry logic
+5. Use proper data transformation patterns
+
+## Performance Optimization
+
+1. Use proper query deduplication
+2. Implement proper query suspense
+3. Use appropriate query batching
+4. Handle infinite queries properly
+5. Optimize query performance with proper selectors
+
+## Best Practices
+
+1. Use TypeScript for query types
+2. Implement proper error boundaries
+3. Use appropriate query hooks
+4. Handle offline support properly
+5. Follow React Query best practices 

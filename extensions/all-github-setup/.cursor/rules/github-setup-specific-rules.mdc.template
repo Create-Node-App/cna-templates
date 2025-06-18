@@ -1,0 +1,22 @@
+---
+description: Specific guidelines for setting up and configuring GitHub workflows and actions.
+globs: '.github/**/*.{yml,yaml}'
+---
+
+# GitHub Setup Specific Rules
+
+## Workflow Configuration
+
+1. Use a consistent workflow structure
+2. Define clear and concise workflow files
+3. Use environment variables for sensitive data
+4. Keep workflow files DRY
+5. Document workflow options
+
+## Best Practices
+
+1. Use GitHub's built-in features
+2. Implement proper error handling
+3. Keep workflow files up to date
+4. Review workflows for security issues
+5. Follow GitHub's best practices 

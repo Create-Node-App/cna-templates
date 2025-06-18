@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing state with Jotai in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Jotai Rules
+
+## State Management
+
+1. Use consistent atom naming
+2. Implement proper atom composition
+3. Use TypeScript for atom types
+4. Handle derived state properly
+5. Implement proper error handling
+
+## Atom Implementation
+
+1. Use proper atom creation
+2. Implement proper atom splitting
+3. Use appropriate atom families
+4. Handle async atoms properly
+5. Follow Jotai best practices
+
+## Best Practices
+
+1. Use proper state organization
+2. Implement proper state persistence
+3. Use appropriate selectors
+4. Handle state updates properly
+5. Follow atomic state patterns
+
+## Performance
+
+1. Use proper atom optimization
+2. Implement proper memoization
+3. Use appropriate atom splitting
+4. Handle large state properly
+5. Optimize atom updates 

@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing PostgreSQL database with Drizzle in NestJS applications.
+globs: '**/*.{ts,js}, drizzle.config.ts'
+---
+
+# Drizzle PostgreSQL Rules
+
+## Database Schema
+
+1. Use consistent table naming
+2. Implement proper schema structure
+3. Use TypeScript for schema types
+4. Handle migrations properly
+5. Implement proper error handling
+
+## Query Building
+
+1. Use proper query builders
+2. Implement proper query optimization
+3. Use appropriate query patterns
+4. Handle complex queries properly
+5. Follow Drizzle best practices
+
+## Performance
+
+1. Use proper indexing
+2. Implement proper query caching
+3. Use appropriate connection pooling
+4. Handle large datasets properly
+5. Optimize query performance
+
+## Best Practices
+
+1. Use proper schema organization
+2. Implement proper migration strategy
+3. Use appropriate query tools
+4. Handle database updates properly
+5. Follow PostgreSQL best practices 

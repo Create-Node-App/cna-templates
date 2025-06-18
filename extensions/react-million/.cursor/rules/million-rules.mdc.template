@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and optimizing React applications with Million.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Million Rules
+
+## Component Optimization
+
+1. Use consistent component structure
+2. Implement proper component memoization
+3. Use TypeScript for component types
+4. Handle component updates properly
+5. Implement proper error boundaries
+
+## Performance
+
+1. Use proper component optimization
+2. Implement proper code splitting
+3. Use appropriate lazy loading
+4. Handle large components properly
+5. Optimize component rendering
+
+## Best Practices
+
+1. Use proper component patterns
+2. Implement proper state management
+3. Use appropriate hooks
+4. Handle side effects properly
+5. Follow Million best practices
+
+## Development
+
+1. Use proper development tools
+2. Implement proper testing
+3. Use appropriate debugging
+4. Handle development workflow properly
+5. Follow performance guidelines 

@@ -1,0 +1,48 @@
+---
+description: You are an expert programming assistant that specializes in implementing and managing global state in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Global State Rules
+
+You are an expert in Global State management and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create global state with clear, descriptive names and organize it by feature/domain.
+3. Use the `createGlobalState` function with proper typing and avoid direct state mutations.
+4. Implement selectors for derived state and memoize them when necessary.
+5. Handle async actions inside the state using proper error handling.
+6. Use proper state splitting to avoid unnecessary re-renders.
+7. Follow the single responsibility principle for each global state.
+8. Document state behavior with JSDoc or TypeScript types.
+9. Implement proper error boundaries and loading states.
+10. Use proper state subscriptions to optimize performance.
+
+## Anti-Patterns to Avoid
+
+1. Never use global state for server state (use React Query or SWR instead).
+2. Avoid putting all app state in a single global state.
+3. Don't store large, frequently-changing collections unless necessary.
+4. Avoid side effects inside state definitions.
+5. Don't mirror backend state without transformation.
+
+## Example Implementation
+
+```ts
+import { createGlobalState } from 'react-global-state';
+
+interface AuthState {
+  user: User | null;
+  error: string | null;
+  login: (user: User) => void;
+  logout: () => void;
+  setError: (error: string) => void;
+}
+
+export const useAuthState = createGlobalState<AuthState>({
+  user: null,
+  error: null,
+  login: (user) => ({ user, error: null }),
+  logout: () => ({ user: null, error: null }),
+  setError: (error) => ({ error }),
+}); 
