@@ -1,0 +1,146 @@
+---
+description: You are an expert programming assistant that specializes in implementing and using Bootstrap components in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Bootstrap Rules
+
+You are an expert in Bootstrap and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create components with clear, descriptive names and organize them by feature/domain.
+3. Use Bootstrap's grid system with proper TypeScript support.
+4. Leverage Bootstrap's responsive utilities for mobile-first design.
+5. Use Bootstrap's color system with proper dark mode support.
+6. Follow Bootstrap's design principles for consistent UX.
+7. Document component behavior with JSDoc or TypeScript types.
+8. Implement proper error boundaries and loading states.
+9. Use proper component composition and avoid prop drilling.
+10. Follow accessibility best practices (WCAG 2.1).
+
+## Anti-Patterns to Avoid
+
+1. Never use Bootstrap components without proper theming setup.
+2. Avoid using Bootstrap components for complex, custom UI elements.
+3. Don't use Bootstrap components for performance-critical UI elements.
+4. Avoid using Bootstrap components for complex animations.
+5. Don't use Bootstrap components for complex, custom layouts.
+
+## Example Implementation
+
+```tsx
+import React from 'react';
+import { 
+  Card, 
+  Button, 
+  Spinner,
+  Row,
+  Col
+} from 'react-bootstrap';
+
+interface ProductCardProps {
+  product: Product;
+  onAddToCart: (product: Product) => void;
+  isLoading?: boolean;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onAddToCart,
+  isLoading = false 
+}) => {
+  return (
+    <Card className="h-100 shadow-sm">
+      <Card.Img 
+        variant="top" 
+        src={product.image} 
+        alt={product.name}
+        style={{ height: '200px', objectFit: 'cover' }}
+      />
+      <Card.Body className="d-flex flex-column">
+        <Card.Title>{product.name}</Card.Title>
+        <Card.Text className="text-muted">
+          {product.description}
+        </Card.Text>
+        <div className="mt-auto">
+          {isLoading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            <Button 
+              variant="primary" 
+              onClick={() => onAddToCart(product)}
+              aria-label={`Add ${product.name} to cart`}
+            >
+              Add to Cart
+            </Button>
+          )}
+        </div>
+      </Card.Body>
+    </Card>
+  );
+};
+
+// Example usage in a grid
+export const ProductGrid: React.FC<{ products: Product[] }> = ({ products }) => {
+  return (
+    <Row xs={1} md={2} lg={3} className="g-4">
+      {products.map(product => (
+        <Col key={product.id}>
+          <ProductCard 
+            product={product}
+            onAddToCart={() => {}}
+          />
+        </Col>
+      ))}
+    </Row>
+  );
+};
+```
+
+## Component Usage
+
+1. Use consistent component imports from react-bootstrap
+2. Implement proper component props with Bootstrap classes
+3. Use TypeScript for component types and events
+4. Handle component states with proper hooks
+5. Implement proper error handling with Alert components
+
+## Bootstrap Grid System
+
+1. Use Container, Row, and Col components properly
+2. Implement responsive layouts with breakpoints
+3. Use appropriate grid classes (col-md-6, etc.)
+4. Handle nested grids properly
+5. Follow Bootstrap's grid patterns
+
+## Component Styling
+
+1. Use proper Bootstrap utility classes
+2. Implement consistent spacing with spacing utilities
+3. Use appropriate color system and variables
+4. Handle responsive design with Bootstrap classes
+5. Follow Bootstrap's design system
+
+## Form Components
+
+1. Use Form components with proper validation
+2. Implement proper form submission handling
+3. Use appropriate form controls (Form.Control, Form.Select)
+4. Handle form state with Form.Group
+5. Follow Bootstrap's form patterns
+
+## Best Practices
+
+1. Use proper component composition
+2. Implement proper form handling
+3. Use appropriate grid system
+4. Handle loading states properly
+5. Follow Bootstrap best practices
+
+## Performance
+
+1. Use proper component optimization
+2. Implement proper lazy loading
+3. Use appropriate component caching
+4. Handle large data sets properly
+5. Optimize component rendering 

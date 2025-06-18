@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing state with Redux Thunk.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Redux Thunk Rules
+
+## State Management
+
+1. Use consistent action naming
+2. Implement proper action creators
+3. Use TypeScript for state types
+4. Handle async actions properly
+5. Implement proper error handling
+
+## Thunk Implementation
+
+1. Use proper thunk middleware
+2. Implement proper async flow
+3. Handle side effects properly
+4. Use appropriate error handling
+5. Implement proper loading states
+
+## Best Practices
+
+1. Use proper state normalization
+2. Implement proper selectors
+3. Use appropriate middleware
+4. Handle state updates properly
+5. Follow Redux best practices
+
+## Performance
+
+1. Use proper memoization
+2. Implement proper state updates
+3. Use appropriate selectors
+4. Handle large state properly
+5. Optimize Redux performance 

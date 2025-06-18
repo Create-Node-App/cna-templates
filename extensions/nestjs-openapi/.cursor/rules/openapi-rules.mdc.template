@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing OpenAPI documentation in NestJS applications.
+globs: '**/*.{ts,js}, **/swagger.json'
+---
+
+# NestJS OpenAPI Rules
+
+## API Documentation
+
+1. Use consistent endpoint naming
+2. Implement proper request/response schemas
+3. Use TypeScript decorators properly
+4. Document all endpoints thoroughly
+5. Maintain API versioning
+
+## Schema Management
+
+1. Use proper DTOs
+2. Implement proper validation
+3. Use appropriate decorators
+4. Handle nested schemas properly
+5. Maintain schema consistency
+
+## Best Practices
+
+1. Use proper security schemes
+2. Implement proper error responses
+3. Use appropriate content types
+4. Handle file uploads properly
+5. Follow OpenAPI best practices
+
+## Documentation
+
+1. Use proper API descriptions
+2. Implement proper examples
+3. Use appropriate tags
+4. Handle deprecated endpoints
+5. Maintain documentation up to date 

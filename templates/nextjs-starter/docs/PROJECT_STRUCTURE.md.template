@@ -1,0 +1,197 @@
+# 🗄️ Project Structure
+
+This project follows a Feature-Based Architecture adapted for Next.js App Router, combining the best practices of Feature-Based Architecture with Next.js conventions. The main goal is to organize code around business capabilities while leveraging Next.js's powerful routing and server components.
+
+## Architecture Overview
+
+The codebase is organized into three main categories:
+
+1. **App Router** (`<%= srcDir%>/app/`) - Next.js routing and layouts
+2. **Features** (`<%= srcDir%>/features/`) - Business capabilities
+3. **Shared Infrastructure** (`<%= srcDir%>/shared/`) - Common utilities and components
+
+### Directory Structure
+
+```sh
+<%= srcDir%>
+|
++-- app # Next.js App Router
+|   |
+|   +-- (auth) # Auth group route
+|   |   +-- login
+|   |   |   +-- page.tsx
+|   |   +-- register
+|   |   |   +-- page.tsx
+|   |   +-- layout.tsx
+|   |
+|   +-- (dashboard) # Dashboard group route
+|   |   +-- page.tsx
+|   |   +-- layout.tsx
+|   |
+|   +-- layout.tsx # Root layout
+|   +-- page.tsx # Home page
+|
++-- features # Feature modules
+|   |
+|   +-- auth # Authentication feature
+|   |   |
+|   |   +-- components # Feature-specific components
+|   |   |   +-- LoginForm.tsx
+|   |   |   +-- RegisterForm.tsx
+|   |   |
+|   |   +-- hooks # Feature-specific hooks
+|   |   |   +-- useAuth.ts
+|   |   |
+|   |   +-- services # Feature-specific services
+|   |   |   +-- authService.ts
+|   |   |
+|   |   +-- types # Feature-specific types
+|   |   |   +-- auth.types.ts
+|   |   |
+|   |   +-- utils # Feature-specific utilities
+|   |   |   +-- validation.ts
+|   |   |
+|   |   +-- index.ts # Public API
+|   |
+|   +-- dashboard # Dashboard feature
+|   |   |
+|   |   +-- components
+|   |   +-- hooks
+|   |   +-- services
+|   |   +-- types
+|   |   +-- utils
+|   |   +-- index.ts
+|
++-- shared # Shared infrastructure
+    |
+    +-- components # Shared components
+    |   +-- ui # UI components
+    |   |   +-- Button.tsx
+    |   |   +-- Input.tsx
+    |   |
+    |   +-- layout # Layout components
+    |   |   +-- Header.tsx
+    |   |   +-- Footer.tsx
+    |
+    +-- hooks # Shared hooks
+    |   +-- useMediaQuery.ts
+    |   +-- useLocalStorage.ts
+    |
+    +-- lib # Shared libraries
+    |   +-- api.ts
+    |   +-- storage.ts
+    |
+    +-- styles # Shared styles
+    |   +-- theme.ts
+    |   +-- globals.css
+    |
+    +-- utils # Shared utilities
+    |   +-- format.ts
+    |   +-- validation.ts
+```
+
+## Key Principles
+
+1. **Feature Encapsulation**
+   - Each feature is a self-contained module
+   - Features should not depend on the internal structure of other features
+   - All feature exports should go through the `index.ts` file
+
+2. **Next.js Integration**
+   - Use route groups (folders in parentheses) to organize related routes
+   - Leverage server components for data fetching and server-side rendering
+   - Keep page components thin, delegating logic to features
+
+3. **Public API**
+   - Features expose their functionality through a public API (`index.ts`)
+   - Other parts of the application should only import from the feature's root:
+   ```typescript
+   // ✅ Good
+   import { LoginForm } from '<%= projectImportPath%>features/auth';
+
+   // ❌ Bad
+   import { LoginForm } from '<%= projectImportPath%>features/auth/components/LoginForm';
+   ```
+
+4. **Import Rules**
+   To enforce these principles, add the following ESLint rule:
+   ```js
+   {
+       rules: {
+           'no-restricted-imports': [
+               'error',
+               {
+                   patterns: ['<%= projectImportPath%>features/*/*'],
+               },
+           ],
+       }
+   }
+   ```
+
+## Best Practices
+
+1. **Route Organization**
+   - Use route groups to organize related routes
+   - Keep page components focused on routing and layout
+   - Delegate business logic to features
+
+2. **Feature Development**
+   - Keep features focused on a single business capability
+   - Minimize dependencies between features
+   - Use the shared infrastructure for common functionality
+
+3. **Server Components**
+   - Use server components for data fetching and server-side rendering
+   - Keep client components minimal and focused on interactivity
+   - Leverage Next.js's built-in optimizations
+
+4. **State Management**
+   - Use React Server Components for server state
+   - Use React Context for client state when needed
+   - Consider using libraries like Zustand for complex client state
+
+5. **Data Fetching**
+   - Use Next.js's built-in data fetching methods
+   - Keep data fetching logic in features
+   - Use React Query for client-side data fetching when needed
+
+## Example: Auth Feature
+
+Here's how a typical feature might be structured:
+
+```typescript
+// features/auth/index.ts
+export * from './components';
+export * from './hooks';
+export * from './services';
+export * from './types';
+
+// features/auth/components/LoginForm.tsx
+import { useAuth } from '../hooks';
+import { login } from '../services';
+
+export const LoginForm = () => {
+  const { login } = useAuth();
+  // Component implementation
+};
+
+// app/(auth)/login/page.tsx
+import { LoginForm } from '<%= projectImportPath%>features/auth';
+
+export default function LoginPage() {
+  return (
+    <div>
+      <h1>Login</h1>
+      <LoginForm />
+    </div>
+  );
+}
+```
+
+## Benefits
+
+1. **Maintainability**: Changes to a feature are isolated and don't affect other parts of the application
+2. **Scalability**: New features can be added without modifying existing code
+3. **Performance**: Leverages Next.js's built-in optimizations
+4. **Developer Experience**: Clear organization and separation of concerns
+5. **Type Safety**: Full TypeScript support throughout the application

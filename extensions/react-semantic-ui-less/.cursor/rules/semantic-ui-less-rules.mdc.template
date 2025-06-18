@@ -1,0 +1,95 @@
+---
+description: You are an expert programming assistant that specializes in implementing and using Semantic UI React with Less in React applications.
+globs: '**/*.{ts,tsx,js,jsx,less}'
+---
+
+# Semantic UI React with Less Rules
+
+You are an expert in Semantic UI React with Less and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create components with clear, descriptive names and organize them by feature/domain.
+3. Use Semantic UI's built-in theming system with Less for consistent styling.
+4. Leverage Semantic UI's responsive utilities for mobile-first design.
+5. Use Semantic UI's color system with Less variables for consistent branding.
+6. Use Less mixins and variables for reusable styles.
+7. Follow Semantic UI's design patterns for consistent UX.
+8. Document component behavior with JSDoc or TypeScript types.
+9. Implement proper error boundaries and loading states.
+10. Follow accessibility best practices.
+
+## Anti-Patterns to Avoid
+
+1. Never use Semantic UI components for server-side rendering without proper hydration.
+2. Avoid using Semantic UI components for complex, custom UI elements.
+3. Don't use Semantic UI components for performance-critical UI elements.
+4. Avoid using Semantic UI components for complex animations.
+5. Don't use Semantic UI components for complex, custom layouts.
+
+## Example Implementation
+
+```tsx
+import React from 'react';
+import { Card, Image, Button, Loader } from 'semantic-ui-react';
+import './ProductCard.less';
+
+interface ProductCardProps {
+  product: Product;
+  onAddToCart: (product: Product) => void;
+  isLoading?: boolean;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onAddToCart,
+  isLoading = false 
+}) => (
+  <Card className="product-card">
+    <Image src={product.image} wrapped ui={false} />
+    <Card.Content>
+      <Card.Header>{product.name}</Card.Header>
+      <Card.Description>{product.description}</Card.Description>
+    </Card.Content>
+    <Card.Content extra>
+      {isLoading ? (
+        <Loader active inline="centered" />
+      ) : (
+        <Button 
+          primary 
+          onClick={() => onAddToCart(product)}
+          aria-label={`Add ${product.name} to cart`}
+        >
+          Add to Cart
+        </Button>
+      )}
+    </Card.Content>
+  </Card>
+);
+```
+
+## Example Less
+
+```less
+@import '~semantic-ui-less/semantic.less';
+
+.product-card {
+  .ui.card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .ui.button {
+    background-color: @primaryColor;
+    color: @white;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken(@primaryColor, 10%);
+    }
+  }
+}
+``` 

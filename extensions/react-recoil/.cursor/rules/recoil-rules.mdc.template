@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing state with Recoil in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Recoil Rules
+
+## State Management
+
+1. Use consistent atom naming
+2. Implement proper atom structure
+3. Use TypeScript for atom types
+4. Handle selectors properly
+5. Implement proper error handling
+
+## Atom Implementation
+
+1. Use proper atom creation
+2. Implement proper selectors
+3. Use appropriate atom families
+4. Handle async selectors properly
+5. Follow Recoil best practices
+
+## Best Practices
+
+1. Use proper state organization
+2. Implement proper state persistence
+3. Use appropriate selectors
+4. Handle state updates properly
+5. Follow atomic state patterns
+
+## Performance
+
+1. Use proper atom optimization
+2. Implement proper memoization
+3. Use appropriate selectors
+4. Handle large state properly
+5. Optimize atom updates 

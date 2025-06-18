@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for documenting React components, features, and project structure in React Vite projects.
+globs: **/*.{md,mdx}
+---
+
+# Documentation Rules for React Vite Starter
+
+## Documentation Structure
+
+1. Use proper documentation organization
+2. Use proper documentation naming
+3. Use proper documentation format
+4. Use proper documentation style
+5. Use proper documentation best practices
+
+## Documentation Content
+
+1. Document components
+2. Document features
+3. Document APIs
+4. Document configuration
+5. Document best practices
+
+## Documentation Format
+
+1. Use Markdown
+2. Use proper headings
+3. Use proper lists
+4. Use proper code blocks
+5. Use proper links
+
+## Documentation Maintenance
+
+1. Keep documentation up to date
+2. Keep documentation maintainable
+3. Keep documentation readable
+4. Keep documentation comprehensive
+5. Keep documentation following best practices
+
+## Documentation Best Practices
+
+1. Use proper documentation tools
+2. Use proper documentation workflows
+3. Use proper documentation reviews
+4. Use proper documentation testing
+5. Use proper documentation deployment

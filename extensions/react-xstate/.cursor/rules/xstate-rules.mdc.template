@@ -1,0 +1,82 @@
+---
+description: You are an expert programming assistant that specializes in implementing and managing state machines with XState in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# XState Rules
+
+You are an expert in XState state management and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create state machines with clear, descriptive names and organize them by feature/domain.
+3. Use the `createMachine` function with proper typing and avoid direct state mutations.
+4. Implement guards and actions for complex transitions.
+5. Handle async operations using services and proper error handling.
+6. Use visualization tools (XState Viz) for state machine design and debugging.
+7. Follow the single responsibility principle for each state machine.
+8. Document state machine behavior with JSDoc or TypeScript types.
+9. Implement proper error states and recovery transitions.
+10. Use proper state splitting to avoid unnecessary complexity.
+
+## Anti-Patterns to Avoid
+
+1. Never use XState for simple, local component state.
+2. Avoid over-engineering with too many states or transitions.
+3. Don't mix imperative and declarative state management.
+4. Avoid storing large, frequently-changing data in the state machine context.
+5. Don't use XState for server state (use React Query or SWR instead).
+
+## Example Implementation
+
+```ts
+import { createMachine, assign } from 'xstate';
+import { useMachine } from '@xstate/react';
+
+interface AuthContext {
+  user: User | null;
+  error: string | null;
+}
+
+type AuthEvent = 
+  | { type: 'LOGIN'; user: User }
+  | { type: 'LOGOUT' }
+  | { type: 'ERROR'; error: string };
+
+export const authMachine = createMachine<AuthContext, AuthEvent>({
+  id: 'auth',
+  initial: 'idle',
+  context: {
+    user: null,
+    error: null,
+  },
+  states: {
+    idle: {
+      on: {
+        LOGIN: {
+          target: 'authenticated',
+          actions: assign({ user: (_, event) => event.user }),
+        },
+        ERROR: {
+          target: 'error',
+          actions: assign({ error: (_, event) => event.error }),
+        },
+      },
+    },
+    authenticated: {
+      on: {
+        LOGOUT: {
+          target: 'idle',
+          actions: assign({ user: null }),
+        },
+      },
+    },
+    error: {
+      on: {
+        LOGIN: {
+          target: 'authenticated',
+          actions: assign({ user: (_, event) => event.user, error: null }),
+        },
+      },
+    },
+  },
+});

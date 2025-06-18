@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing component composition with React Compose and container orchestration with Docker Compose.
+globs: '**/*.{ts,tsx,js,jsx}, docker-compose*.{yml,yaml}'
+---
+
+# Compose Rules
+
+## React Component Composition
+
+1. Use consistent composition patterns
+2. Implement proper component structure
+3. Use TypeScript for component types
+4. Handle component props properly
+5. Implement proper error boundaries
+
+## Docker Compose Configuration
+
+1. Use consistent service naming
+2. Implement proper service structure
+3. Use appropriate environment variables
+4. Handle service dependencies properly
+5. Implement proper health checks
+
+## Development Workflow
+
+1. Use proper development environment
+2. Implement proper service orchestration
+3. Use appropriate volume management
+4. Handle service scaling properly
+5. Follow Docker best practices
+
+## Best Practices
+
+1. Use proper component organization
+2. Implement proper service documentation
+3. Use appropriate composition tools
+4. Handle updates properly
+5. Ensure consistency across all composition patterns

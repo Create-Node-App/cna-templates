@@ -1,0 +1,38 @@
+---
+description: Guidelines for tracking history, planning next tasks, and progress in Turborepo monorepos.
+globs: '**/*.{js,jsx,ts,tsx,md,mdx}'
+---
+
+# History and Next Task Rules for Turborepo Starter
+
+## Context Management
+
+1. Keep track of the current package or app being worked on
+2. Maintain awareness of the monorepo structure
+3. Consider the impact of changes on other packages and apps
+4. Follow the project's development workflow
+5. Keep track of dependencies and their versions
+
+## Task Planning
+
+1. Break down features into manageable tasks
+2. Consider dependencies between packages and apps
+3. Plan for testing and documentation
+4. Consider performance implications
+5. Plan for code review
+
+## Next Steps
+
+1. Follow the monorepo development process
+2. Implement proper testing
+3. Update documentation
+4. Consider performance implications
+5. Plan for deployment
+
+## Progress Tracking
+
+1. Keep track of completed tasks
+2. Monitor test coverage
+3. Track performance metrics
+4. Monitor security updates
+5. Track documentation updates

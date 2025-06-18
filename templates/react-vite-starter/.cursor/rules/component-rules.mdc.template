@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for React component structure and best practices in React Vite projects.
+globs: **/*.{jsx,tsx}
+---
+
+# Component Rules for React Vite Starter
+
+## Component Structure
+
+1. Use functional components
+2. Use TypeScript for type safety
+3. Use proper prop types
+4. Use proper state management
+5. Use proper error handling
+
+## Component Organization
+
+1. Organize components by feature
+2. Keep components small and focused
+3. Use proper file naming
+4. Use proper folder structure
+5. Use proper imports
+
+## Component Styling
+
+1. Use CSS modules
+2. Use proper class names
+3. Use proper CSS organization
+4. Use proper CSS variables
+5. Use proper CSS best practices
+
+## Component Testing
+
+1. Write unit tests
+2. Write integration tests
+3. Write end-to-end tests
+4. Use proper test organization
+5. Use proper test naming
+
+## Component Documentation
+
+1. Use proper JSDoc comments
+2. Use proper README files
+3. Use proper examples
+4. Use proper documentation
+5. Use proper documentation best practices

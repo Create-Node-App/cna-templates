@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing state with MobX in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# MobX Rules
+
+## State Management
+
+1. Use consistent store naming
+2. Implement proper store structure
+3. Use TypeScript for store types
+4. Handle computed values properly
+5. Implement proper error handling
+
+## Store Implementation
+
+1. Use proper store creation
+2. Implement proper actions
+3. Use appropriate observables
+4. Handle async operations properly
+5. Follow MobX best practices
+
+## Best Practices
+
+1. Use proper state organization
+2. Implement proper state persistence
+3. Use appropriate reactions
+4. Handle state updates properly
+5. Follow reactive patterns
+
+## Performance
+
+1. Use proper store optimization
+2. Implement proper memoization
+3. Use appropriate reactions
+4. Handle large state properly
+5. Optimize store updates 

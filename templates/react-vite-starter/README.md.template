@@ -7,6 +7,20 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 - ⚡️ **Instant HMR** - use [Vite](https://vitejs.dev/) on dev (no more refresh!)
 - ⚛ React - [React](https://reactjs.org/) is used for UI
 - 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
+- 🏗️ **Feature-Based Architecture** - Scalable and maintainable code organization
+- 🔒 **Encapsulated Features** - Self-contained modules with clear boundaries
+- 🎯 **Domain-Driven Design** - Code organized around business capabilities
+
+## Architecture
+
+This template uses a Feature-Based Architecture inspired by Screaming Architecture and Domain-Driven Design principles. The codebase is organized around business capabilities rather than technical concerns, making it:
+
+- 📦 **Modular**: Each feature is self-contained
+- 🔄 **Maintainable**: Changes are isolated to specific features
+- 🚀 **Scalable**: Easy to add new features without affecting existing ones
+- 🎨 **Clear**: Structure reflects business capabilities
+
+For detailed information about the architecture, see [Project Structure](./docs/PROJECT_STRUCTURE.md).
 
 ## Extra documentation
 

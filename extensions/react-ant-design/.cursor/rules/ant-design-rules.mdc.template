@@ -1,0 +1,147 @@
+---
+description: You are an expert programming assistant that specializes in implementing and using Ant Design components in React applications.
+globs: '**/*.{ts,tsx,js,jsx}'
+---
+
+# Ant Design Rules
+
+You are an expert in Ant Design and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create components with clear, descriptive names and organize them by feature/domain.
+3. Use Ant Design's theming system with proper TypeScript support.
+4. Leverage Ant Design's responsive utilities for mobile-first design.
+5. Use Ant Design's color system with proper dark mode support.
+6. Follow Ant Design's design principles for consistent UX.
+7. Document component behavior with JSDoc or TypeScript types.
+8. Implement proper error boundaries and loading states.
+9. Use proper component composition and avoid prop drilling.
+10. Follow accessibility best practices (WCAG 2.1).
+
+## Anti-Patterns to Avoid
+
+1. Never use Ant Design components without proper theming setup.
+2. Avoid using Ant Design components for complex, custom UI elements.
+3. Don't use Ant Design components for performance-critical UI elements.
+4. Avoid using Ant Design components for complex animations.
+5. Don't use Ant Design components for complex, custom layouts.
+
+## Example Implementation
+
+```tsx
+import React from 'react';
+import { 
+  Card, 
+  Image, 
+  Typography, 
+  Button, 
+  Spin,
+  theme
+} from 'antd';
+
+const { Title, Text } = Typography;
+
+interface ProductCardProps {
+  product: Product;
+  onAddToCart: (product: Product) => void;
+  isLoading?: boolean;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onAddToCart,
+  isLoading = false 
+}) => {
+  const { token } = theme.useToken();
+
+  return (
+    <Card
+      hoverable
+      cover={
+        <Image
+          alt={product.name}
+          src={product.image}
+          height={200}
+          preview={false}
+        />
+      }
+      style={{
+        maxWidth: 300,
+        transition: `box-shadow ${token.motionDurationMid}`,
+      }}
+    >
+      <Title level={4}>{product.name}</Title>
+      <Text type="secondary">{product.description}</Text>
+      <div style={{ marginTop: token.marginMD }}>
+        {isLoading ? (
+          <Spin size="small" />
+        ) : (
+          <Button 
+            type="primary" 
+            onClick={() => onAddToCart(product)}
+            aria-label={`Add ${product.name} to cart`}
+          >
+            Add to Cart
+          </Button>
+        )}
+      </div>
+    </Card>
+  );
+};
+```
+
+## Component Usage
+
+1. Use consistent component imports from antd
+2. Implement proper Form.Item validation rules
+3. Use TypeScript for component props and events
+4. Handle component states with proper hooks (useState, useRef)
+5. Implement proper error boundaries for component trees
+
+## Design System
+
+1. Use proper theme customization with ConfigProvider
+2. Implement consistent spacing using Ant Design's grid system
+3. Use appropriate typography scale and components
+4. Handle responsive design with Grid and Layout components
+5. Follow Ant Design's design tokens and variables
+
+## Form Handling
+
+1. Use Form components with proper validation
+2. Implement proper form submission handling
+3. Use appropriate form controls (Input, Select, DatePicker)
+4. Handle form state with Form.useForm()
+5. Follow Ant Design's form patterns
+
+## Data Display
+
+1. Use Table component with proper pagination
+2. Implement proper data loading states
+3. Use appropriate data visualization components
+4. Handle large datasets with virtual scrolling
+5. Follow Ant Design's data display patterns
+
+## Styling
+
+1. Use proper theme configuration
+2. Implement consistent styling
+3. Use appropriate CSS-in-JS
+4. Handle responsive design properly
+5. Follow Ant Design design system
+
+## Best Practices
+
+1. Use proper component composition
+2. Implement proper form handling
+3. Use appropriate data display
+4. Handle loading states properly
+5. Follow Ant Design best practices
+
+## Performance
+
+1. Use proper component optimization
+2. Implement proper lazy loading
+3. Use appropriate component caching
+4. Handle large data sets properly
+5. Optimize component rendering 

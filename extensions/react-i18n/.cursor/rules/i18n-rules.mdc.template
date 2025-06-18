@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for implementing and managing internationalization using react-i18n.
+globs: '**/*.{ts,tsx,js,jsx}, **/locales/**/*.json'
+---
+
+# React i18n Rules
+
+## Translation Management
+
+1. Use consistent translation key naming
+2. Organize translations by feature/domain
+3. Implement proper fallback mechanisms
+4. Use TypeScript for translation keys
+5. Maintain translation files up to date
+
+## Best Practices
+
+1. Use translation hooks appropriately
+2. Implement proper pluralization
+3. Handle date and number formatting
+4. Support RTL languages properly
+5. Use interpolation safely
+
+## Performance
+
+1. Implement proper code splitting
+2. Use lazy loading for translations
+3. Optimize bundle size
+4. Cache translations appropriately
+5. Monitor translation file sizes
+
+## Development Workflow
+
+1. Use translation management tools
+2. Implement proper review process
+3. Maintain translation documentation
+4. Use automated translation checks
+5. Follow i18n best practices 

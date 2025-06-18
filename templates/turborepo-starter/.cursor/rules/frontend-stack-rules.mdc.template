@@ -1,0 +1,67 @@
+---
+description: Guidelines for frontend app and package development, component structure, and performance in Turborepo monorepos.
+globs: 'apps/**/src/**/*.{js,jsx,ts,tsx}'
+---
+
+# Frontend Stack Rules for Turborepo Starter
+
+## Core Technologies
+
+1. React
+2. TypeScript
+3. Turborepo
+4. ESLint
+5. Prettier
+6. Storybook
+
+## Component Guidelines
+
+1. Functional Components:
+   - Use TypeScript for type safety
+   - Implement proper prop types
+   - Use React hooks for state management
+   - Follow React best practices
+
+2. Package Components:
+   - Create reusable components in packages
+   - Implement proper documentation
+   - Add Storybook stories
+   - Follow accessibility guidelines
+
+3. App Components:
+   - Use feature-based architecture
+   - Implement proper state management
+   - Handle loading and error states
+   - Follow app-specific guidelines
+
+## Package Development
+
+1. Create reusable packages:
+   - UI components
+   - Utilities
+   - Hooks
+   - Types
+   - Constants
+
+2. Package Guidelines:
+   - Clear API documentation
+   - TypeScript types
+   - Tests
+   - Storybook integration
+   - Version management
+
+## Performance Optimization
+
+1. Use Turborepo's caching
+2. Implement proper code splitting
+3. Optimize package dependencies
+4. Use proper caching strategies
+5. Monitor performance metrics
+
+## Development Tools
+
+1. Use Storybook for component development
+2. Use ESLint for code quality
+3. Use Prettier for code formatting
+4. Use TypeScript for type safety
+5. Use Turborepo for build optimization

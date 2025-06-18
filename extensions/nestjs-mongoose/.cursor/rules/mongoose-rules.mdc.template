@@ -1,0 +1,97 @@
+---
+description: You are an expert programming assistant that specializes in implementing and using Mongoose with NestJS applications.
+globs: '**/*.{ts,js}'
+---
+
+# Mongoose Rules
+
+You are an expert in Mongoose and follow these guidelines:
+
+1. Always use TypeScript for type safety and better developer experience.
+2. Create schemas with clear, descriptive names and organize them by feature/domain.
+3. Use Mongoose's schema validation with proper TypeScript support.
+4. Leverage Mongoose's middleware for cross-cutting concerns.
+5. Use Mongoose's query builder for complex queries.
+6. Follow Mongoose's best practices for performance.
+7. Document schema behavior with JSDoc or TypeScript types.
+8. Implement proper error handling and validation.
+9. Use proper dependency injection and avoid tight coupling.
+10. Follow MongoDB best practices for data modeling.
+
+## Anti-Patterns to Avoid
+
+1. Never use Mongoose without proper schema validation.
+2. Avoid using Mongoose for complex, custom queries.
+3. Don't use Mongoose for performance-critical operations.
+4. Avoid using Mongoose for complex transactions.
+5. Don't use Mongoose for complex, custom indexes.
+
+## Example Implementation
+
+```tsx
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
+
+@Schema({ timestamps: true })
+export class User extends Document {
+  @ApiProperty()
+  @Prop({ required: true })
+  name: string;
+
+  @ApiProperty()
+  @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @ApiProperty()
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Role' }] })
+  roles: Types.ObjectId[];
+
+  @ApiProperty()
+  @Prop({ default: true })
+  isActive: boolean;
+
+  @ApiProperty()
+  @Prop({ type: Date })
+  lastLoginAt: Date;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
+
+// Add indexes
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ name: 'text' });
+
+// Add middleware
+UserSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await hash(this.password, 10);
+  }
+  next();
+});
+
+// Add methods
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
+// Add statics
+UserSchema.statics.findByEmail = function(email: string) {
+  return this.findOne({ email });
+};
+
+// Add virtuals
+UserSchema.virtual('fullName').get(function() {
+  return `${this.name} ${this.email}`;
+});
+
+// Add query helpers
+UserSchema.query.byName = function(name: string) {
+  return this.where({ name: new RegExp(name, 'i') });
+};
+``` 

@@ -1,0 +1,46 @@
+---
+description: Defines guidelines for testing React components and features in React Vite projects.
+globs: **/*.{test,spec}.{js,jsx,ts,tsx}
+---
+
+# Testing Rules for React Vite Starter
+
+## Test Structure
+
+1. Use proper test organization
+2. Use proper test naming
+3. Use proper test descriptions
+4. Use proper test assertions
+5. Use proper test setup
+
+## Test Coverage
+
+1. Write unit tests
+2. Write integration tests
+3. Write end-to-end tests
+4. Use proper test coverage
+5. Use proper test coverage reporting
+
+## Test Best Practices
+
+1. Use proper test isolation
+2. Use proper test cleanup
+3. Use proper test mocking
+4. Use proper test stubbing
+5. Use proper test best practices
+
+## Test Documentation
+
+1. Use proper test documentation
+2. Use proper test examples
+3. Use proper test comments
+4. Use proper test README
+5. Use proper test documentation best practices
+
+## Test Maintenance
+
+1. Keep tests up to date
+2. Keep tests maintainable
+3. Keep tests readable
+4. Keep tests performant
+5. Keep tests following best practices

@@ -1,0 +1,38 @@
+---
+description: Specific guidelines for writing and organizing tests using React Testing Library and Jest.
+globs: '**/*.{test,spec}.{ts,tsx,js,jsx}'
+---
+
+# Testing Library and Jest Rules
+
+## Test Organization
+
+1. Group related tests using `describe` blocks
+2. Use clear and descriptive test names
+3. Follow the Arrange-Act-Assert pattern
+4. Keep tests focused and isolated
+5. Use meaningful test descriptions
+
+## Testing Library Best Practices
+
+1. Test from the user's perspective
+2. Use accessible queries (getByRole, getByLabelText, etc.)
+3. Avoid testing implementation details
+4. Use data-testid as a last resort
+5. Follow Testing Library's guiding principles
+
+## Jest Configuration
+
+1. Use appropriate matchers for assertions
+2. Configure test environment properly
+3. Use meaningful mock implementations
+4. Clean up after each test
+5. Use proper setup and teardown methods
+
+## Code Coverage
+
+1. Maintain high test coverage for critical paths
+2. Focus on testing user interactions
+3. Include edge cases and error scenarios
+4. Document complex test scenarios
+5. Review coverage reports regularly 

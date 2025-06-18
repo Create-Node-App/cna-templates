@@ -1,0 +1,53 @@
+# Coding Style Rules for React Vite Starter
+
+## File Organization
+
+1. Follow the feature-based architecture structure
+2. Keep related files close together within feature directories
+3. Use consistent file naming conventions:
+   - React components: PascalCase (e.g., `UserProfile.tsx`)
+   - Utilities: kebab-case (e.g., `format-date.ts`)
+   - Constants: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS.ts`)
+   - Styles: kebab-case (e.g., `user-profile.scss`)
+
+## Component Structure
+
+1. Use functional components with TypeScript
+2. Implement proper type definitions for props and state
+3. Follow the component structure:
+   ```typescript
+   import { type FC } from 'react'
+
+   interface Props {
+     // Props definition
+   }
+
+   export const ComponentName: FC<Props> = ({ prop1, prop2 }) => {
+     // Component implementation
+   }
+   ```
+
+## Code Style
+
+1. Use 2 spaces for indentation
+2. Use semicolons at the end of statements
+3. Use single quotes for strings
+4. Use template literals for string interpolation
+5. Use arrow functions for callbacks
+6. Use async/await for asynchronous operations
+7. Use proper TypeScript types and avoid `any`
+
+## Import Order
+
+1. React and React Router imports
+2. Third-party library imports
+3. Internal feature imports
+4. Type imports
+5. Style imports
+
+## Comments and Documentation
+
+1. Use JSDoc for function and component documentation
+2. Add comments for complex logic
+3. Keep comments up to date with code changes
+4. Use TODO comments for future improvements

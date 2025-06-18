@@ -1,0 +1,22 @@
+---
+description: Guidelines for writing and maintaining documentation in WDIO projects.
+globs: 'docs/**/*.{md,mdx}'
+---
+
+# Documentation Rules for WDIO Starter
+
+## Documentation Structure
+
+1. Organize documentation by topic
+2. Use Markdown for documentation
+3. Keep documentation up to date
+4. Provide examples and code snippets
+5. Use clear and concise language
+
+## Documentation Best Practices
+
+1. Document test cases and configuration
+2. Add usage examples for page objects
+3. Explain project structure and conventions
+4. Keep documentation comprehensive
+5. Review documentation regularly 

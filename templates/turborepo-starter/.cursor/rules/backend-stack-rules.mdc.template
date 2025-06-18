@@ -1,0 +1,63 @@
+---
+description: Guidelines for backend package development, API integration, and security in Turborepo monorepos.
+globs: 'packages/**/src/**/*.{js,ts}'
+---
+
+# Backend Stack Rules for Turborepo Starter
+
+## Package Development
+
+1. Create backend packages:
+   - API clients
+   - Data models
+   - Utilities
+   - Types
+   - Constants
+
+2. Package Guidelines:
+   - Clear API documentation
+   - TypeScript types
+   - Tests
+   - Version management
+   - Proper error handling
+
+## API Integration
+
+1. Follow the API integration structure:
+   ```
+   packages/
+     api-client/
+       src/
+         endpoints/
+         types/
+         utils/
+   ```
+
+2. Implement proper error handling
+3. Use proper HTTP methods and status codes
+4. Implement proper validation
+5. Follow RESTful principles
+
+## Data Management
+
+1. Use proper data models
+2. Implement proper validation
+3. Handle data transformations
+4. Implement proper error handling
+5. Follow data management best practices
+
+## Security
+
+1. Implement proper authentication
+2. Use secure token management
+3. Implement proper authorization
+4. Handle sensitive data
+5. Follow security best practices
+
+## Testing
+
+1. Write unit tests for utilities
+2. Write integration tests for API clients
+3. Write end-to-end tests
+4. Test error handling
+5. Test security features
