@@ -35,4 +35,4 @@ globs: '**/*.{ts,tsx,js,jsx}, docker-compose*.{yml,yaml}'
 2. Implement proper service documentation
 3. Use appropriate composition tools
 4. Handle updates properly
-5. Follow compose patterns 
+5. Ensure consistency across all composition patterns
