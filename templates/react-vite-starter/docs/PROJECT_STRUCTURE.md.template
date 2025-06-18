@@ -1,13 +1,24 @@
 # 🗄️ Project Structure
 
-Most of the code lives in the `src` folder and looks like this:
+This project follows a Feature-Based Architecture, inspired by the principles of Screaming Architecture and Domain-Driven Design (DDD). The main goal is to organize code around business capabilities rather than technical concerns, making the codebase more maintainable and scalable.
+
+## Architecture Overview
+
+The codebase is organized into two main categories:
+
+1. **Shared Infrastructure** (`<%= srcDir%>/` root level)
+2. **Feature Modules** (`<%= srcDir%>/features/`)
+
+### Shared Infrastructure
+
+The root level of `<%= srcDir%>/` contains shared resources used across multiple features:
 
 ```sh
 src
 |
 +-- components # shared components used across the entire application
 |
-+-- features # MOST IMPORTANT! feature based modules
++-- features # feature-based modules (MOST IMPORTANT!)
 |
 +-- hooks # shared hooks used across the entire application
 |
@@ -30,9 +41,16 @@ src
 +-- utils # shared helpers used across the entire application
 ```
 
-In order to scale the application in the easiest and most maintainable way, keep most of the code inside the `features` folder, which should contain different feature-based things. Every `feature` folder should contain domain specific code for a given feature. This will allow you to keep functionalities scoped to a feature and not mix its declarations with shared things. This is much easier to maintain than a flat folder structure with many files.
+### Feature Modules
 
-A feature could have the following structure:
+Each feature is a self-contained module that encapsulates all the code related to a specific business capability. This follows the principles of:
+
+- **High Cohesion**: All related code is kept together
+- **Low Coupling**: Features interact through well-defined interfaces
+- **Domain-Driven Design**: Code organization reflects business capabilities
+- **Screaming Architecture**: The structure "screams" the intent of the application
+
+A feature module structure:
 
 ```sh
 <%= srcDir%>/features/awesome-feature
@@ -56,28 +74,55 @@ A feature could have the following structure:
 +-- index.ts # public API of the feature
 ```
 
-Everything from a feature should be exported from the `index.ts` file which behaves as the public API of the feature.
+## Key Principles
 
-You should import stuff from other features only by using:
+1. **Feature Encapsulation**
 
-`import { AwesomeComponent } from "@/features/awesome-feature"`
+   - Each feature is a self-contained module
+   - Features should not depend on the internal structure of other features
+   - All feature exports should go through the `index.ts` file
 
-and not
+2. **Public API**
 
-`import { AwesomeComponent } from "@/features/awesome-feature/components/AwesomeComponent`
+   - Features expose their functionality through a public API (`index.ts`)
+   - Other parts of the application should only import from the feature's root:
 
-This can also be configured in the ESLint configuration to disallow the later import by the following rule:
+   ```typescript
+   // ✅ Good
+   import { AwesomeComponent } from '<%= projectImportPath%>features/awesome-feature';
 
-```js
-{
-    rules: {
-        'no-restricted-imports': [
-            'error',
-            {
-                patterns: ['@/features/*/*'],
-            },
-        ],
+   // ❌ Bad
+   import { AwesomeComponent } from '<%= projectImportPath%>features/awesome-feature/components/AwesomeComponent';
+   ```
 
-    // ...rest of the configuration
-}
-```
+3. **Import Rules**
+   To enforce these principles, you can add the following ESLint rule:
+
+   ```js
+   {
+       rules: {
+           'no-restricted-imports': [
+               'error',
+               {
+                   patterns: ['<%= projectImportPath%>features/*/*'],
+               },
+           ],
+       }
+   }
+   ```
+
+## Benefits
+
+1. **Maintainability**: Changes to a feature are isolated and don't affect other parts of the application
+2. **Scalability**: New features can be added without modifying existing code
+3. **Clarity**: The codebase structure clearly communicates the application's business capabilities
+4. **Reusability**: Features can be reused across different parts of the application
+5. **Testability**: Features can be tested in isolation
+
+## Best Practices
+
+1. Keep features focused on a single business capability
+2. Minimize dependencies between features
+3. Use the shared infrastructure for common functionality
+4. Document the public API of each feature
+5. Keep feature-specific code within the feature module

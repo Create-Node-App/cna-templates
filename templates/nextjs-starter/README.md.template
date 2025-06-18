@@ -1,26 +1,67 @@
-# Next.js Starter
+# Next.js TypeScript Starter
 
-This project was initialized with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **DO NOT USE THIS TEMPLATE DIRECTLY!** Instead, create your own project using the command and following the interactive menu options. For more information, refer to the documentation!
+This project was generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
 
 ## Features
 
-- ⚡️ **Instant HMR (Hot Module Replacement)** - Leveraging Next.js for fast refreshes and updates during development.
-- ⚛ **React Integration** - Utilizes [React](https://reactjs.org/) for building the user interface.
-- 🦾 **TypeScript Support** - Ensures type safety with [TypeScript](https://www.typescriptlang.org/).
+- ⚡️ **Next.js 13+** - The latest version of Next.js with App Router
+- ⚛ React - [React](https://reactjs.org/) is used for UI
+- 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
+- 🏗️ **Feature-Based Architecture** - Scalable and maintainable code organization
+- 🔒 **Encapsulated Features** - Self-contained modules with clear boundaries
+- 🎯 **Domain-Driven Design** - Code organized around business capabilities
+- 🚀 **Server Components** - Leverage React Server Components for better performance
 
-## Extra Documentation
+## Architecture
 
-Discover more about the project structure, available scripts, and much more in the [docs](./docs) folder!
+This template uses a Feature-Based Architecture adapted for Next.js App Router, combining:
 
-## Pre-packed Development Tools
+- 📦 **Modular Features**: Self-contained business capabilities
+- 🔄 **Next.js Integration**: Leverages App Router and Server Components
+- 🎨 **Clear Structure**: Routes, features, and shared code are clearly separated
+- 🚀 **Performance**: Built-in optimizations from Next.js
 
-- [TypeScript](https://www.typescriptlang.org/) - For type-safe code.
-- [eslint](https://eslint.org/) - A linter tool for identifying and reporting on patterns in JavaScript and JSX.
-- [prettier](https://prettier.io/) - An opinionated code formatter for clean and consistent code style.
-- [husky](https://www.npmjs.com/package/husky) - Simplifies the use of Git hooks in your project.
-- [lint-staged](https://www.npmjs.com/package/lint-staged) - Allows running linters on git staged files to catch errors before they're committed.
+### Example Implementation
 
-## Quick Start
+The template includes a complete authentication feature example:
+
+```typescript
+// features/auth/index.ts
+export * from './components/LoginForm';
+export * from './hooks/useAuth';
+export * from './services/authService';
+
+// features/auth/components/LoginForm.tsx
+import { useAuth } from '../hooks';
+export const LoginForm = () => {
+  const { login, isLoading, error } = useAuth();
+  // Component implementation
+};
+
+// app/(auth)/login/page.tsx
+import { LoginForm } from '<%= projectImportPath%>features/auth';
+export default function LoginPage() {
+  return <LoginForm />;
+}
+```
+
+For detailed information about the architecture, see [Project Structure](./docs/PROJECT_STRUCTURE.md).
+
+## Extra documentation
+
+You can find useful information such as project structure, available scripts and much more in the [docs](./docs) folder!
+
+## Pre-packed
+
+### Dev tools
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
+- [prettier](https://prettier.io/) - Opinionated code formatter
+- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
+- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+
+## Quickstart
 
 ```sh
 fnm use
@@ -28,26 +69,26 @@ fnm use
 <%= runCommand%> dev
 ```
 
-## Development Workflow
+## Development
 
-For most development work, you'll primarily use `<%= runCommand%> dev`. However, you have additional scripts at your disposal for various tasks:
+While developing, you will probably rely mostly on `<%= runCommand%> dev`; however, there are additional scripts at your disposal:
 
-| <%= runCommand%> <script>           | Description                                                                                                             |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`     | Starts the local development server for building and previewing your application.                                       |
-| `npm run format`  | Formats the codebase using [Prettier](https://prettier.io/) to ensure consistent code styling.                          |
-| `npm run lint`    | Runs linting on the codebase to identify and report on patterns with [eslint](https://eslint.org/).                     |
-| `npm run lint:fix`| Automatically fixes linting errors in the codebase where possible.                                                      |
+| `<%= runCommand%> <script>` | Description                                                                                                             |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `dev`                       | Serves your app at for local development                                                                                |
+| `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
 
 ## Production
 
 Scripts for preparing and viewing the production version:
 
-| <%= runCommand%> <script>             | Description                                                                                        |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
-| `npm run start`     | Serves your application using the production setup, ensuring it's ready for deployment.           |
-| `npm run build`     | Compiles the application into the `dist/` directory, preparing it for production deployment.      |
+| `<%= runCommand%> <script>` | Description                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
+| `build`                     | Builds the application to `dist/`                                                                           |
 
 ## Contributing
 
-Bug reports, feature requests, and pull requests are welcome on the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
+You can report bugs, request features and create Pull Requests in the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
