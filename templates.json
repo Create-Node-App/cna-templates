@@ -381,29 +381,47 @@
     {
       "name": "Easy State",
       "slug": "easy-state",
-      "description": "Extension to add Easy State, a tiny state management library for React",
+      "description": "Add Easy State, a lightweight state management solution with a simple API and automatic reactivity.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-easy-state",
       "type": "react",
       "category": "State Management",
-      "labels": ["Easy State", "State Management", "React Hooks"]
+      "labels": [
+        "Easy State",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Global State",
       "slug": "global-state",
-      "description": "Extension to add Global State, a tiny state management library for React",
+      "description": "Add Global State, a minimal state management solution for React applications with global state support.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-global-state",
       "type": "react",
       "category": "State Management",
-      "labels": ["Global State", "State Management", "React Hooks"]
+      "labels": [
+        "Global State",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Hookstate",
       "slug": "hookstate",
-      "description": "Extension to add Hookstate, a tiny state management library for React",
+      "description": "Add Hookstate, a modern state management solution with hooks-based API and TypeScript support.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hookstate",
       "type": "react",
       "category": "State Management",
-      "labels": ["Hookstate", "State Management", "React Hooks"]
+      "labels": [
+        "Hookstate",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "MobX",
@@ -417,11 +435,17 @@
     {
       "name": "Teaful",
       "slug": "teaful",
-      "description": "Extension to add Teaful, a tiny state management library for React",
+      "description": "Add Teaful, a tiny and fast state management solution with a simple API and TypeScript support.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-teaful",
       "type": "react",
       "category": "State Management",
-      "labels": ["Teaful", "State Management", "React Hooks"]
+      "labels": [
+        "Teaful",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Valtio",
@@ -435,23 +459,31 @@
     {
       "name": "XState",
       "slug": "xstate",
-      "description": "Extension to add XState, a tiny state management library for React",
+      "description": "Add XState, a state management and orchestration solution for complex state machines and workflows.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-xstate",
       "type": "react",
       "category": "State Management",
-      "labels": ["XState", "State Management", "Finite State Machines"]
+      "labels": [
+        "XState",
+        "State Management",
+        "Finite State Machines",
+        "TypeScript",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Zustand",
       "slug": "zustand",
-      "description": "Extension to add Zustand, a tiny state management library for React",
+      "description": "Add Zustand, a small, fast and scalable state management solution with a simple API and TypeScript support.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-zustand",
       "type": "react",
       "category": "State Management",
       "labels": [
         "Zustand",
         "State Management",
-        "Unidirectional State Management"
+        "Unidirectional State Management",
+        "TypeScript",
+        "Cursor Rules"
       ]
     },
     {
@@ -545,67 +577,118 @@
       ]
     },
     {
+      "name": "Material UI",
+      "slug": "material-ui",
+      "description": "Add Material UI components and theming capabilities to your React application with TypeScript support and best practices.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Material UI",
+        "Components",
+        "Theming",
+        "UI Library",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
       "name": "Ant Design for React",
       "slug": "ant-design-react",
-      "description": "Extension to add Ant Design React",
+      "description": "Add Ant Design React components with TypeScript support, theming capabilities and enterprise-grade UI patterns.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ant-design",
       "type": "react",
       "category": "UI",
-      "labels": ["React", "Ant Design", "Ant Design React"]
+      "labels": [
+        "React",
+        "Ant Design",
+        "Ant Design React",
+        "TypeScript",
+        "Enterprise UI",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Bootstrap React",
       "slug": "bootstrap-react",
-      "description": "Extension to add Bootstrap React",
+      "description": "Add Bootstrap React components with TypeScript support and responsive design patterns.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-bootstrap",
       "type": "react",
       "category": "UI",
-      "labels": ["React", "Bootstrap", "Bootstrap React"]
-    },
-    {
-      "name": "Material UI",
-      "slug": "material-ui",
-      "description": "Add Material UI components and theming capabilities to your React application.",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
-      "type": "react",
-      "category": "UI",
-      "labels": ["React", "Material UI", "Components", "Theming", "UI Library"]
+      "labels": [
+        "React",
+        "Bootstrap",
+        "Bootstrap React",
+        "TypeScript",
+        "Responsive Design",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Drizzle ORM SQLite",
       "slug": "drizzle-orm-sqlite",
-      "description": "Extension to add Drizzle ORM with SQLite to your NestJS API",
+      "description": "Add Drizzle ORM with SQLite to your NestJS API with TypeScript support and best practices for database operations.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-sqlite",
       "type": "nestjs-backend",
       "category": "Database",
-      "labels": ["NestJS", "Drizzle ORM", "SQLite"]
+      "labels": [
+        "NestJS",
+        "Drizzle ORM",
+        "SQLite",
+        "TypeScript",
+        "Database",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Drizzle ORM PostgreSQL",
       "slug": "drizzle-orm-postgresql",
-      "description": "Extension to add Drizzle ORM with PostgreSQL to your NestJS API",
+      "description": "Add Drizzle ORM with PostgreSQL to your NestJS API with TypeScript support and best practices for database operations.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-postgres",
       "type": "nestjs-backend",
       "category": "Database",
-      "labels": ["NestJS", "Drizzle ORM", "PostgreSQL"]
+      "labels": [
+        "NestJS",
+        "Drizzle ORM",
+        "PostgreSQL",
+        "TypeScript",
+        "Database",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Mongoose ORM MongoDB",
       "slug": "mongoose-orm-mongodb",
-      "description": "Extension to add Mongoose ORM with MongoDB to your NestJS API",
+      "description": "Add Mongoose ORM with MongoDB to your NestJS API with TypeScript support and best practices for NoSQL database operations.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-mongoose",
       "type": "nestjs-backend",
       "category": "Database",
-      "labels": ["NestJS", "Mongoose ORM", "MongoDB"]
+      "labels": [
+        "NestJS",
+        "Mongoose ORM",
+        "MongoDB",
+        "TypeScript",
+        "NoSQL",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "Serverless Framework",
       "slug": "serverless-framework",
-      "description": "Extension to add Severless Framework packaging to deploy your NestJS API to AWS Lambda",
+      "description": "Add Serverless Framework packaging to deploy your NestJS API to AWS Lambda with TypeScript support and best practices for serverless architecture.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-serverless",
       "type": "nestjs-backend",
       "category": "Deployment",
-      "labels": ["NestJS", "Serverless Framework", "AWS lambda", "AWS"]
+      "labels": [
+        "NestJS",
+        "Serverless Framework",
+        "AWS lambda",
+        "AWS",
+        "TypeScript",
+        "Serverless",
+        "Cursor Rules"
+      ]
     },
     {
       "name": "React Million DOM Optimization",
