@@ -1,53 +1,675 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and using Mongoose with NestJS applications.
+description: Advanced Mongoose patterns for NestJS including schema design, aggregation pipelines, transactions, performance optimization, and data validation.
 globs: '**/*.{ts,js}'
 ---
 
-# Mongoose Rules
+# Advanced Mongoose Patterns for NestJS
 
-You are an expert in Mongoose and follow these guidelines:
+## Schema Design & Modeling
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create schemas with clear, descriptive names and organize them by feature/domain.
-3. Use Mongoose's schema validation with proper TypeScript support.
-4. Leverage Mongoose's middleware for cross-cutting concerns.
-5. Use Mongoose's query builder for complex queries.
-6. Follow Mongoose's best practices for performance.
-7. Document schema behavior with JSDoc or TypeScript types.
-8. Implement proper error handling and validation.
-9. Use proper dependency injection and avoid tight coupling.
-10. Follow MongoDB best practices for data modeling.
+**Modern schema patterns with validation:**
+```typescript
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Document, Types, Schema as MongooseSchema } from 'mongoose'
+import { Transform } from 'class-transformer'
+import { IsEmail, IsOptional, IsEnum, MinLength } from 'class-validator'
 
-## Anti-Patterns to Avoid
-
-1. Never use Mongoose without proper schema validation.
-2. Avoid using Mongoose for complex, custom queries.
-3. Don't use Mongoose for performance-critical operations.
-4. Avoid using Mongoose for complex transactions.
-5. Don't use Mongoose for complex, custom indexes.
-
-## Example Implementation
-
-```tsx
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
-
-@Schema({ timestamps: true })
+// ✅ Advanced schema with validation and transformations
+@Schema({ 
+  timestamps: true,
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret.password
+      delete ret.__v
+      ret.id = ret._id
+      delete ret._id
+      return ret
+    }
+  }
+})
 export class User extends Document {
-  @ApiProperty()
-  @Prop({ required: true })
-  name: string;
+  @Prop({ 
+    required: true, 
+    minlength: 2, 
+    maxlength: 50,
+    trim: true,
+    validate: {
+      validator: (v: string) => /^[a-zA-Z\s]+$/.test(v),
+      message: 'Name can only contain letters and spaces'
+    }
+  })
+  @IsOptional()
+  @MinLength(2)
+  name: string
 
-  @ApiProperty()
-  @Prop({ required: true, unique: true })
-  email: string;
+  @Prop({ 
+    required: true, 
+    unique: true, 
+    lowercase: true,
+    validate: {
+      validator: (v: string) => /\S+@\S+\.\S+/.test(v),
+      message: 'Please provide a valid email'
+    }
+  })
+  @IsEmail()
+  email: string
 
-  @Prop({ required: true })
-  password: string;
+  @Prop({ 
+    required: true, 
+    minlength: 8,
+    select: false // Never include in queries by default
+  })
+  password: string
 
-  @ApiProperty()
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Role' }] })
+  @Prop({ 
+    type: String,
+    enum: ['user', 'admin', 'moderator'],
+    default: 'user'
+  })
+  @IsEnum(['user', 'admin', 'moderator'])
+  role: string
+
+  @Prop({ 
+    type: {
+      street: String,
+      city: String,
+      state: String,
+      zipCode: String,
+      country: { type: String, default: 'US' }
+    },
+    _id: false // Don't create _id for subdocuments
+  })
+  address?: {
+    street: string
+    city: string
+    state: string
+    zipCode: string
+    country: string
+  }
+
+  @Prop([{ 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Post' 
+  }])
+  posts: Types.ObjectId[]
+
+  @Prop({ 
+    type: Map, 
+    of: String,
+    default: {}
+  })
+  metadata: Map<string, string>
+
+  @Prop({ 
+    type: Date,
+    default: null,
+    index: true
+  })
+  lastLoginAt?: Date
+
+  @Prop({ 
+    type: Boolean, 
+    default: true,
+    index: true
+  })
+  isActive: boolean
+
+  // ✅ Virtual properties
+  fullAddress: string
+  postCount: number
+  
+  // ✅ Instance methods
+  comparePassword(candidatePassword: string): Promise<boolean>
+  generateAuthToken(): string
+  updateLastLogin(): Promise<void>
+}
+
+export const UserSchema = SchemaFactory.createForClass(User)
+
+// ✅ Indexes for performance
+UserSchema.index({ email: 1 })
+UserSchema.index({ role: 1, isActive: 1 })
+UserSchema.index({ lastLoginAt: -1 })
+UserSchema.index({ 'address.city': 1, 'address.state': 1 })
+
+// ✅ Virtuals
+UserSchema.virtual('fullAddress').get(function() {
+  if (!this.address) return null
+  const { street, city, state, zipCode } = this.address
+  return `${street}, ${city}, ${state} ${zipCode}`
+})
+
+UserSchema.virtual('postCount', {
+  ref: 'Post',
+  localField: '_id',
+  foreignField: 'author',
+  count: true
+})
+
+// ✅ Instance methods
+UserSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
+  const bcrypt = require('bcrypt')
+  return bcrypt.compare(candidatePassword, this.password)
+}
+
+UserSchema.methods.generateAuthToken = function(): string {
+  const jwt = require('jsonwebtoken')
+  return jwt.sign(
+    { userId: this._id, role: this.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  )
+}
+
+UserSchema.methods.updateLastLogin = async function(): Promise<void> {
+  this.lastLoginAt = new Date()
+  await this.save()
+}
+
+// ✅ Pre/Post middleware
+UserSchema.pre('save', async function(next) {
+  // Hash password if modified
+  if (!this.isModified('password')) return next()
+  
+  const bcrypt = require('bcrypt')
+  this.password = await bcrypt.hash(this.password, 12)
+  next()
+})
+
+UserSchema.pre('deleteOne', { document: true, query: false }, async function() {
+  // Cleanup related documents
+  await this.model('Post').deleteMany({ author: this._id })
+  await this.model('Comment').deleteMany({ author: this._id })
+})
+
+UserSchema.post('save', function(error: any, doc: any, next: any) {
+  if (error.code === 11000) {
+    next(new Error('Email already exists'))
+  } else {
+    next(error)
+  }
+})
+```
+
+## Advanced Repository Patterns
+
+**Custom repository with complex operations:**
+```typescript
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model, FilterQuery, UpdateQuery, QueryOptions } from 'mongoose'
+
+@Injectable()
+export class UserRepository {
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>
+  ) {}
+
+  // ✅ Advanced find with aggregation
+  async findUsersWithStats(filters: FilterQuery<User> = {}): Promise<any[]> {
+    return this.userModel.aggregate([
+      { $match: { isActive: true, ...filters } },
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'author',
+          as: 'userPosts'
+        }
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'author',
+          as: 'userComments'
+        }
+      },
+      {
+        $project: {
+          name: 1,
+          email: 1,
+          role: 1,
+          createdAt: 1,
+          lastLoginAt: 1,
+          postCount: { $size: '$userPosts' },
+          commentCount: { $size: '$userComments' },
+          totalEngagement: { 
+            $add: [
+              { $size: '$userPosts' },
+              { $size: '$userComments' }
+            ]
+          }
+        }
+      },
+      { $sort: { totalEngagement: -1 } }
+    ])
+  }
+
+  // ✅ Paginated search with facets
+  async searchUsersWithFacets(
+    searchTerm: string,
+    page: number = 1,
+    limit: number = 10
+  ) {
+    const pipeline = [
+      {
+        $match: {
+          $and: [
+            { isActive: true },
+            {
+              $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { email: { $regex: searchTerm, $options: 'i' } }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        $facet: {
+          // Get paginated results
+          results: [
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+            {
+              $lookup: {
+                from: 'posts',
+                localField: '_id',
+                foreignField: 'author',
+                as: 'recentPosts',
+                pipeline: [
+                  { $sort: { createdAt: -1 } },
+                  { $limit: 3 }
+                ]
+              }
+            }
+          ],
+          // Get total count
+          totalCount: [
+            { $count: 'count' }
+          ],
+          // Get role distribution
+          roleStats: [
+            {
+              $group: {
+                _id: '$role',
+                count: { $sum: 1 }
+              }
+            }
+          ]
+        }
+      }
+    ]
+
+    const [result] = await this.userModel.aggregate(pipeline)
+    
+    return {
+      users: result.results,
+      pagination: {
+        total: result.totalCount[0]?.count || 0,
+        page,
+        limit,
+        pages: Math.ceil((result.totalCount[0]?.count || 0) / limit)
+      },
+      facets: {
+        roles: result.roleStats
+      }
+    }
+  }
+
+  // ✅ Bulk operations with validation
+  async bulkUpdateUsers(
+    updates: Array<{
+      filter: FilterQuery<User>
+      update: UpdateQuery<User>
+    }>
+  ): Promise<any> {
+    const bulkOps = updates.map(({ filter, update }) => ({
+      updateMany: {
+        filter,
+        update: {
+          ...update,
+          updatedAt: new Date()
+        }
+      }
+    }))
+
+    return this.userModel.bulkWrite(bulkOps, { ordered: false })
+  }
+
+  // ✅ Geographic queries
+  async findUsersNearLocation(
+    longitude: number, 
+    latitude: number, 
+    radiusKm: number = 10
+  ): Promise<User[]> {
+    return this.userModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: radiusKm * 1000 // Convert to meters
+        }
+      },
+      isActive: true
+    })
+  }
+
+  // ✅ Time-based queries with aggregation
+  async getUserActivityReport(startDate: Date, endDate: Date) {
+    return this.userModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+            role: '$role'
+          },
+          count: { $sum: 1 },
+          users: { $push: { id: '$_id', name: '$name', email: '$email' }}
+        }
+      },
+      {
+        $group: {
+          _id: { year: '$_id.year', month: '$_id.month' },
+          totalUsers: { $sum: '$count' },
+          roleBreakdown: {
+            $push: {
+              role: '$_id.role',
+              count: '$count',
+              users: '$users'
+            }
+          }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } }
+    ])
+  }
+}
+```
+
+## Transaction Management
+
+**Multi-document transactions:**
+```typescript
+import { Injectable } from '@nestjs/common'
+import { InjectConnection } from '@nestjs/mongoose'
+import { Connection, ClientSession } from 'mongoose'
+
+@Injectable()
+export class TransactionService {
+  constructor(@InjectConnection() private connection: Connection) {}
+
+  // ✅ Generic transaction wrapper
+  async withTransaction<T>(
+    operation: (session: ClientSession) => Promise<T>
+  ): Promise<T> {
+    const session = await this.connection.startSession()
+    
+    try {
+      session.startTransaction()
+      const result = await operation(session)
+      await session.commitTransaction()
+      return result
+    } catch (error) {
+      await session.abortTransaction()
+      throw error
+    } finally {
+      await session.endSession()
+    }
+  }
+
+  // ✅ Complex business transaction
+  async transferUserPostsToAnotherUser(
+    fromUserId: string,
+    toUserId: string
+  ): Promise<void> {
+    await this.withTransaction(async (session) => {
+      // Verify both users exist
+      const [fromUser, toUser] = await Promise.all([
+        this.userModel.findById(fromUserId).session(session),
+        this.userModel.findById(toUserId).session(session)
+      ])
+
+      if (!fromUser || !toUser) {
+        throw new Error('One or both users not found')
+      }
+
+      // Transfer posts
+      await this.postModel.updateMany(
+        { author: fromUserId },
+        { author: toUserId },
+        { session }
+      )
+
+      // Update post counts
+      const postCount = await this.postModel.countDocuments(
+        { author: toUserId }, 
+        { session }
+      )
+
+      await this.userModel.updateMany(
+        { _id: { $in: [fromUserId, toUserId] } },
+        [
+          {
+            $set: {
+              postCount: {
+                $cond: [
+                  { $eq: ['$_id', toUserId] },
+                  postCount,
+                  0
+                ]
+              }
+            }
+          }
+        ],
+        { session }
+      )
+
+      // Log the transaction
+      await this.auditModel.create([{
+        action: 'TRANSFER_POSTS',
+        fromUser: fromUserId,
+        toUser: toUserId,
+        timestamp: new Date(),
+        metadata: { postCount }
+      }], { session })
+    })
+  }
+}
+```
+
+## Performance Optimization
+
+**Query optimization and caching:**
+```typescript
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import Redis from 'ioredis'
+
+@Injectable()
+export class OptimizedUserService {
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private redis: Redis
+  ) {}
+
+  // ✅ Query optimization with explain
+  async findUsersOptimized(filters: any) {
+    // Use explain() to analyze query performance
+    const explain = await this.userModel
+      .find(filters)
+      .select('name email role')
+      .lean() // Return plain objects instead of Mongoose documents
+      .hint({ email: 1, role: 1 }) // Force specific index usage
+      .explain('executionStats')
+
+    console.log('Query execution stats:', explain.executionStats)
+
+    return this.userModel
+      .find(filters)
+      .select('name email role')
+      .lean()
+  }
+
+  // ✅ Cached aggregation results
+  async getCachedUserStats(): Promise<any> {
+    const cacheKey = 'user:stats'
+    const cached = await this.redis.get(cacheKey)
+    
+    if (cached) {
+      return JSON.parse(cached)
+    }
+
+    const stats = await this.userModel.aggregate([
+      {
+        $group: {
+          _id: '$role',
+          count: { $sum: 1 },
+          avgPostCount: { $avg: '$postCount' },
+          lastLogin: { $max: '$lastLoginAt' }
+        }
+      },
+      {
+        $project: {
+          role: '$_id',
+          count: 1,
+          avgPostCount: { $round: ['$avgPostCount', 2] },
+          lastLogin: 1,
+          _id: 0
+        }
+      }
+    ])
+
+    // Cache for 5 minutes
+    await this.redis.setex(cacheKey, 300, JSON.stringify(stats))
+    
+    return stats
+  }
+
+  // ✅ Streaming large datasets
+  async *streamAllUsers(): AsyncGenerator<User, void, unknown> {
+    const batchSize = 1000
+    let skip = 0
+
+    while (true) {
+      const batch = await this.userModel
+        .find({ isActive: true })
+        .skip(skip)
+        .limit(batchSize)
+        .lean()
+
+      if (batch.length === 0) break
+
+      for (const user of batch) {
+        yield user
+      }
+
+      skip += batchSize
+    }
+  }
+
+  // ✅ Connection pooling and monitoring
+  async getConnectionHealth() {
+    const db = this.userModel.db
+    
+    return {
+      readyState: db.readyState,
+      host: db.host,
+      port: db.port,
+      name: db.name,
+      collections: await db.db.listCollections().toArray(),
+      stats: await db.db.stats()
+    }
+  }
+}
+```
+
+## Data Validation & Sanitization
+
+**Advanced validation patterns:**
+```typescript
+import { 
+  IsString, 
+  IsEmail, 
+  IsOptional, 
+  ValidateNested, 
+  IsPhoneNumber,
+  Matches,
+  ArrayMaxSize 
+} from 'class-validator'
+import { Transform, Type } from 'class-transformer'
+
+export class CreateUserDto {
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  @Matches(/^[a-zA-Z\s]+$/, { 
+    message: 'Name can only contain letters and spaces' 
+  })
+  name: string
+
+  @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
+  email: string
+
+  @IsString()
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+    message: 'Password must contain at least 8 characters with uppercase, lowercase, number and special character'
+  })
+  password: string
+
+  @IsOptional()
+  @IsPhoneNumber()
+  phone?: string
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AddressDto)
+  address?: AddressDto
+
+  @IsOptional()
+  @ArrayMaxSize(10)
+  @IsString({ each: true })
+  @Transform(({ value }) => value?.map((tag: string) => tag.trim().toLowerCase()))
+  tags?: string[]
+}
+
+// ✅ Custom validation pipe for Mongoose
+@Injectable()
+export class MongooseValidationPipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    if (metadata.type === 'body' && value) {
+      // Sanitize potential NoSQL injection
+      this.sanitizeObject(value)
+    }
+    return value
+  }
+
+  private sanitizeObject(obj: any): void {
+    if (typeof obj !== 'object' || obj === null) return
+
+    Object.keys(obj).forEach(key => {
+      if (key.startsWith('$') || key.includes('.')) {
+        delete obj[key]
+        return
+      }
+
+      if (typeof obj[key] === 'object') {
+        this.sanitizeObject(obj[key])
+      }
+    })
+  }
+}
+```
   roles: Types.ObjectId[];
 
   @ApiProperty()

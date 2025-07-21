@@ -1,53 +1,474 @@
 ---
-description: Defines backend development guidelines for Next.js projects, including API routes and data fetching patterns.
+description: Advanced Next.js 14+ App Router backend patterns including API routes, Server Components, Server Actions, and data fetching.
 globs: **/*.{js,jsx,ts,tsx}
 ---
 
-# Backend Stack Rules for Next.js Starter
+# Next.js App Router Backend Patterns
 
-## API Routes
+## API Routes Architecture
 
-1. Follow the API route structure:
-   ```
-   app/
-     api/
-       [resource]/
-         route.ts
-   ```
+**Modern API route patterns with App Router:**
+```typescript
+// app/api/users/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { headers } from 'next/headers'
 
-2. Implement proper error handling
-3. Use proper HTTP methods and status codes
-4. Implement proper validation
-5. Follow RESTful principles
+// ✅ Request/Response validation schemas
+const createUserSchema = z.object({
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  age: z.number().min(18).optional(),
+})
 
-## Data Fetching
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
+    
+    // ✅ Implement proper pagination
+    const users = await getUsersPaginated({ page, limit })
+    
+    return NextResponse.json({
+      data: users,
+      pagination: {
+        page,
+        limit,
+        total: await getUsersCount(),
+      }
+    })
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
+    )
+  }
+}
 
-1. Use Server Components for data fetching
-2. Implement proper caching strategies
-3. Handle loading and error states
-4. Use proper data validation
-5. Implement proper error boundaries
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    
+    // ✅ Validate request body
+    const validatedData = createUserSchema.parse(body)
+    
+    // ✅ Check authentication
+    const headersList = headers()
+    const authorization = headersList.get('authorization')
+    
+    if (!authorization) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+    
+    const user = await createUser(validatedData)
+    
+    return NextResponse.json(
+      { data: user },
+      { status: 201 }
+    )
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      )
+    }
+    
+    return NextResponse.json(
+      { error: 'Failed to create user' },
+      { status: 500 }
+    )
+  }
+}
+```
 
-## Authentication
+## Server Components & Data Fetching
 
-1. Implement proper authentication flow
-2. Use secure session management
-3. Implement proper authorization
-4. Handle token management
-5. Follow security best practices
+**Optimized server-side data fetching:**
+```tsx
+import { Suspense } from 'react'
+import { unstable_cache } from 'next/cache'
 
-## Database
+// ✅ Cached data fetching function
+const getCachedPosts = unstable_cache(
+  async () => {
+    const posts = await fetch('https://api.example.com/posts', {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    })
+    return posts.json()
+  },
+  ['posts'],
+  { tags: ['posts'], revalidate: 3600 }
+)
 
-1. Use proper database connection management
-2. Implement proper error handling
-3. Use proper data validation
-4. Implement proper migrations
-5. Follow database best practices
+// ✅ Server Component with proper error handling
+export default async function PostsPage() {
+  return (
+    <div>
+      <h1>Latest Posts</h1>
+      <Suspense fallback={<PostsSkeleton />}>
+        <PostsList />
+      </Suspense>
+    </div>
+  )
+}
 
-## Security
+async function PostsList() {
+  try {
+    const posts = await getCachedPosts()
+    
+    return (
+      <div>
+        {posts.map(post => (
+          <article key={post.id}>
+            <h2>{post.title}</h2>
+            <p>{post.excerpt}</p>
+          </article>
+        ))}
+      </div>
+    )
+  } catch (error) {
+    return <div>Failed to load posts. Please try again later.</div>
+  }
+}
 
-1. Implement proper CORS policies
-2. Use proper input validation
+// ✅ Parallel data fetching
+async function ProfilePage({ params }: { params: { id: string } }) {
+  // Fetch data in parallel
+  const [user, posts, followers] = await Promise.allSettled([
+    getUser(params.id),
+    getUserPosts(params.id),
+    getUserFollowers(params.id),
+  ])
+  
+  return (
+    <div>
+      {user.status === 'fulfilled' && (
+        <UserProfile user={user.value} />
+      )}
+      
+      <Suspense fallback={<div>Loading posts...</div>}>
+        {posts.status === 'fulfilled' && (
+          <UserPosts posts={posts.value} />
+        )}
+      </Suspense>
+    </div>
+  )
+}
+```
+
+## Server Actions
+
+**Modern form handling with Server Actions:**
+```typescript
+// app/actions/user-actions.ts
+'use server'
+
+import { revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { z } from 'zod'
+
+const updateProfileSchema = z.object({
+  name: z.string().min(1),
+  bio: z.string().max(500),
+  website: z.string().url().optional(),
+})
+
+export async function updateProfile(
+  userId: string,
+  prevState: any,
+  formData: FormData
+) {
+  try {
+    // ✅ Validate form data
+    const validatedFields = updateProfileSchema.safeParse({
+      name: formData.get('name'),
+      bio: formData.get('bio'),
+      website: formData.get('website'),
+    })
+    
+    if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        message: 'Please check your input and try again.',
+      }
+    }
+    
+    // ✅ Update user in database
+    await updateUser(userId, validatedFields.data)
+    
+    // ✅ Revalidate cached data
+    revalidateTag('user-profile')
+    revalidateTag(`user-${userId}`)
+    
+  } catch (error) {
+    return {
+      message: 'Failed to update profile. Please try again.',
+    }
+  }
+  
+  // ✅ Redirect on success
+  redirect(`/profile/${userId}`)
+}
+
+// Usage in component
+'use client'
+import { useFormState } from 'react-dom'
+import { updateProfile } from '@/actions/user-actions'
+
+export function ProfileForm({ userId }: { userId: string }) {
+  const [state, formAction] = useFormState(
+    updateProfile.bind(null, userId),
+    { message: '', errors: {} }
+  )
+  
+  return (
+    <form action={formAction}>
+      <div>
+        <input name="name" type="text" />
+        {state.errors?.name && (
+          <p className="error">{state.errors.name[0]}</p>
+        )}
+      </div>
+      
+      <button type="submit">Update Profile</button>
+      
+      {state.message && (
+        <p className={state.errors ? 'error' : 'success'}>
+          {state.message}
+        </p>
+      )}
+    </form>
+  )
+}
+```
+
+## Authentication Patterns
+
+**Next.js 14 authentication with middleware:**
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { verify } from 'jsonwebtoken'
+
+export function middleware(request: NextRequest) {
+  // ✅ Protect API routes
+  if (request.nextUrl.pathname.startsWith('/api/protected')) {
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+    
+    try {
+      verify(token, process.env.JWT_SECRET!)
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      )
+    }
+  }
+  
+  // ✅ Redirect unauthenticated users
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    const sessionCookie = request.cookies.get('session')
+    
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+  
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ['/api/protected/:path*', '/dashboard/:path*']
+}
+
+// ✅ Session management utilities
+import { cookies } from 'next/headers'
+import { SignJWT, jwtVerify } from 'jose'
+
+const secretKey = process.env.SESSION_SECRET
+const encodedKey = new TextEncoder().encode(secretKey)
+
+export async function createSession(userId: string) {
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+  const session = await new SignJWT({ userId })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime(expiresAt)
+    .sign(encodedKey)
+  
+  cookies().set('session', session, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAt,
+    sameSite: 'lax',
+    path: '/',
+  })
+}
+
+export async function verifySession() {
+  const cookie = cookies().get('session')?.value
+  
+  if (!cookie) return null
+  
+  try {
+    const { payload } = await jwtVerify(cookie, encodedKey)
+    return payload
+  } catch {
+    return null
+  }
+}
+```
+
+## Database Integration Patterns
+
+**Optimized database operations:**
+```typescript
+// lib/db.ts
+import { Pool } from 'pg'
+import { drizzle } from 'drizzle-orm/node-postgres'
+
+// ✅ Connection pooling
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+})
+
+export const db = drizzle(pool)
+
+// ✅ Transaction patterns
+export async function transferFunds(
+  fromUserId: string,
+  toUserId: string,
+  amount: number
+) {
+  return await db.transaction(async (tx) => {
+    // Deduct from sender
+    await tx
+      .update(accounts)
+      .set({ 
+        balance: sql`${accounts.balance} - ${amount}` 
+      })
+      .where(eq(accounts.userId, fromUserId))
+    
+    // Add to receiver
+    await tx
+      .update(accounts)
+      .set({ 
+        balance: sql`${accounts.balance} + ${amount}` 
+      })
+      .where(eq(accounts.userId, toUserId))
+    
+    // Create transaction record
+    await tx.insert(transactions).values({
+      fromUserId,
+      toUserId,
+      amount,
+      timestamp: new Date(),
+    })
+  })
+}
+
+// ✅ Prepared statements for performance
+export const getUserById = db
+  .select()
+  .from(users)
+  .where(eq(users.id, placeholder('id')))
+  .prepare()
+
+// ✅ Streaming for large datasets
+export async function* streamUsers() {
+  const BATCH_SIZE = 100
+  let offset = 0
+  
+  while (true) {
+    const batch = await db
+      .select()
+      .from(users)
+      .limit(BATCH_SIZE)
+      .offset(offset)
+    
+    if (batch.length === 0) break
+    
+    for (const user of batch) {
+      yield user
+    }
+    
+    offset += BATCH_SIZE
+  }
+}
+```
+
+## Error Handling & Monitoring
+
+**Production-ready error handling:**
+```typescript
+// app/global-error.tsx
+'use client'
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // ✅ Send error to monitoring service
+    console.error('Global error:', error)
+    
+    if (typeof window !== 'undefined') {
+      // Send to error tracking service
+      // Sentry, LogRocket, etc.
+    }
+  }, [error])
+  
+  return (
+    <html>
+      <body>
+        <div>
+          <h2>Something went wrong!</h2>
+          <button onClick={() => reset()}>Try again</button>
+        </div>
+      </body>
+    </html>
+  )
+}
+
+// ✅ API error handling wrapper
+export function withErrorHandling(handler: Function) {
+  return async (request: NextRequest, context: any) => {
+    try {
+      return await handler(request, context)
+    } catch (error) {
+      console.error('API Error:', error)
+      
+      // Log to monitoring service
+      if (process.env.NODE_ENV === 'production') {
+        // Send to error tracking
+      }
+      
+      return NextResponse.json(
+        { error: 'Internal Server Error' },
+        { status: 500 }
+      )
+    }
+  }
+}
+```
 3. Implement proper rate limiting
 4. Use proper security headers
 5. Follow security best practices

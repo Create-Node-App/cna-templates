@@ -1,53 +1,130 @@
 ---
-description: Specifies frontend development guidelines for React Vite projects, including component patterns and performance optimization.
-globs: **/*.{js,jsx,ts,tsx}
+description: Expert-level React + Vite development guidelines with specific patterns, HMR optimization, and modern frontend architecture.
+globs: **/*.{js,jsx,ts,tsx,css,scss}
 ---
 
 # Frontend Stack Rules for React Vite Starter
 
-## Core Technologies
+## Vite-Specific Patterns
 
-1. React
-2. TypeScript
-3. Vite
-4. React Router
-5. ESLint
-6. Prettier
-7. SASS
-8. PWA Support
+**Always leverage Vite's capabilities:**
 
-## Component Guidelines
+```typescript
+// ✅ Use import.meta for environment variables
+const API_URL = import.meta.env.VITE_API_URL
 
-1. Functional Components:
-   - Use TypeScript for type safety
-   - Implement proper prop types
-   - Use React hooks for state management
-   - Follow React best practices
+// ✅ Dynamic imports for code splitting
+const LazyComponent = React.lazy(() => import('./LazyComponent'))
 
-2. Routing:
-   - Use React Router for navigation
-   - Implement proper route guards
-   - Handle loading and error states
-   - Follow routing best practices
+// ✅ Vite's glob imports for dynamic loading
+const modules = import.meta.glob('./modules/*.ts')
 
-3. Styling:
-   - Use SASS for styling
-   - Follow BEM naming convention
-   - Implement responsive design
-   - Follow accessibility guidelines
+// ✅ Use import.meta.hot for HMR
+if (import.meta.hot) {
+  import.meta.hot.accept('./module', (newModule) => {
+    // Handle hot update
+  })
+}
+```
 
-## State Management
+## React 18+ Modern Patterns
 
-1. Use React hooks for local state
-2. Implement proper context usage
-3. Use proper data fetching patterns
-4. Handle loading and error states
+**Concurrent Features & Suspense:**
+```tsx
+// ✅ Use Suspense boundaries with error boundaries
+<ErrorBoundary fallback={<ErrorFallback />}>
+  <Suspense fallback={<ComponentSkeleton />}>
+    <LazyFeature />
+  </Suspense>
+</ErrorBoundary>
 
-## Performance Optimization
+// ✅ Use startTransition for non-urgent updates
+const [isPending, startTransition] = useTransition()
+startTransition(() => setSearchQuery(value))
 
-1. Use Vite's build optimizations
-2. Implement code splitting
-3. Optimize bundle size
+// ✅ Defer values for better UX
+const deferredQuery = useDeferredValue(searchQuery)
+```
+
+## TypeScript Integration
+
+**Vite + React + TypeScript patterns:**
+```typescript
+// ✅ Define component props with interfaces
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'danger'
+  size?: 'sm' | 'md' | 'lg'
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
+  children: React.ReactNode
+}
+
+// ✅ Use generic components when needed
+interface ListProps<T> {
+  items: T[]
+  renderItem: (item: T, index: number) => React.ReactNode
+  keyExtractor: (item: T) => string | number
+}
+
+// ✅ Proper event handlers typing
+const handleInputChange = useCallback(
+  (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value)
+  },
+  []
+)
+```
+
+## Performance & Bundle Optimization
+
+**Vite-specific optimizations:**
+```typescript
+// ✅ Use Vite's pre-bundling for large dependencies
+// vite.config.ts
+optimizeDeps: {
+  include: ['react', 'react-dom', 'react-router-dom'],
+  exclude: ['@vite/client', '@vite/env']
+}
+
+// ✅ Code splitting by routes
+const HomePage = lazy(() => import('../pages/HomePage'))
+const ProfilePage = lazy(() => 
+  import('../pages/ProfilePage').then(module => ({
+    default: module.ProfilePage
+  }))
+)
+
+// ✅ Preload critical routes
+const preloadRoute = (routeImport: () => Promise<any>) => {
+  const componentImport = routeImport()
+  return componentImport
+}
+```
+
+## SCSS/CSS Modules Patterns
+
+```scss
+// ✅ Use CSS custom properties for theming
+:root {
+  --color-primary: #007bff;
+  --color-secondary: #6c757d;
+  --spacing-unit: 0.25rem;
+}
+
+// ✅ BEM methodology with SCSS
+.card {
+  &__header {
+    border-bottom: 1px solid var(--color-border);
+    
+    &--highlighted {
+      background-color: var(--color-primary);
+    }
+  }
+  
+  &__body {
+    padding: calc(var(--spacing-unit) * 4);
+  }
+}
+```
 4. Use proper caching strategies
 5. Monitor performance metrics
 

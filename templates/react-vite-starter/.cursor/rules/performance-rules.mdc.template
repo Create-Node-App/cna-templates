@@ -1,46 +1,344 @@
 ---
-description: Defines guidelines for optimizing performance in React Vite projects, including code splitting and lazy loading.
+description: Advanced performance optimization techniques for React + Vite applications including bundle optimization, runtime performance, and Core Web Vitals.
 globs: **/*.{js,jsx,ts,tsx}
 ---
 
-# Performance Rules for React Vite Starter
+# Performance Optimization for React Vite Applications
 
-## Performance Optimization
+## Bundle Size Optimization
 
-1. Use code splitting
-2. Use lazy loading
-3. Use proper caching
-4. Use proper bundling
-5. Use proper optimization
+**Vite-specific optimizations:**
+```typescript
+// vite.config.ts - Bundle analysis and optimization
+import { defineConfig } from 'vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 
-## Performance Best Practices
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor chunks
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@mui/material', '@mui/icons-material'],
+        },
+      },
+    },
+  },
+  plugins: [
+    // Bundle analyzer
+    visualizer({ filename: 'dist/stats.html', open: true }),
+  ],
+})
 
-1. Use proper code organization
-2. Use proper code splitting
-3. Use proper lazy loading
-4. Use proper caching
-5. Use proper performance best practices
+// ✅ Tree-shake unused imports
+import { debounce } from 'lodash-es' // ✅ ES modules
+import debounce from 'lodash/debounce' // ✅ Specific import
 
-## Performance Testing
+// ❌ Avoid full library imports
+import * as _ from 'lodash' // ❌ Imports entire library
+```
 
-1. Test performance metrics
-2. Test performance optimization
-3. Test performance caching
-4. Test performance bundling
-5. Test performance best practices
+## Code Splitting Strategies
 
-## Performance Documentation
+**Route-based and component-based splitting:**
+```tsx
+import { lazy, Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
 
-1. Document performance metrics
-2. Document performance optimization
-3. Document performance caching
-4. Document performance bundling
-5. Document performance best practices
+// ✅ Route-level code splitting
+const HomePage = lazy(() => import('../pages/HomePage'))
+const ProfilePage = lazy(() => import('../pages/ProfilePage'))
 
-## Performance Maintenance
+// ✅ Component-level splitting for heavy components
+const DataVisualization = lazy(() => 
+  import('../components/DataVisualization').then(module => ({
+    default: module.DataVisualization
+  }))
+)
 
-1. Keep performance optimized
-2. Keep performance maintainable
-3. Keep performance testable
-4. Keep performance documented
-5. Keep performance following best practices
+// ✅ Conditional loading based on features
+const AdminPanel = lazy(() => 
+  Promise.all([
+    import('../components/AdminPanel'),
+    // Preload dependencies
+    import('../utils/adminUtils'),
+  ]).then(([module]) => ({ default: module.AdminPanel }))
+)
+
+// ✅ Loading components with skeletons
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={
+        <Suspense fallback={<PageSkeleton />}>
+          <HomePage />
+        </Suspense>
+      } />
+      <Route path="/profile" element={
+        <Suspense fallback={<ProfileSkeleton />}>
+          <ProfilePage />
+        </Suspense>
+      } />
+    </Routes>
+  )
+}
+```
+
+## React Performance Patterns
+
+**Memoization and optimization strategies:**
+```tsx
+import { memo, useMemo, useCallback, startTransition } from 'react'
+
+// ✅ Memo for expensive components
+const ExpensiveList = memo(({ items, onItemClick }: ListProps) => {
+  // ✅ Memoize expensive calculations
+  const sortedItems = useMemo(() => {
+    return items
+      .sort((a, b) => b.priority - a.priority)
+      .filter(item => item.active)
+  }, [items])
+  
+  // ✅ Stable callback references
+  const handleItemClick = useCallback((id: string) => {
+    onItemClick(id)
+  }, [onItemClick])
+  
+  return (
+    <div>
+      {sortedItems.map(item => (
+        <ItemComponent 
+          key={item.id}
+          item={item}
+          onClick={handleItemClick}
+        />
+      ))}
+    </div>
+  )
+})
+
+// ✅ Use startTransition for non-urgent updates
+function SearchResults({ query }: { query: string }) {
+  const [results, setResults] = useState([])
+  const [isPending, startTransition] = useTransition()
+  
+  const searchResults = useMemo(() => {
+    if (!query) return []
+    return performSearch(query) // Expensive operation
+  }, [query])
+  
+  useEffect(() => {
+    startTransition(() => {
+      setResults(searchResults)
+    })
+  }, [searchResults])
+  
+  return (
+    <div className={isPending ? 'searching' : ''}>
+      {results.map(result => <ResultItem key={result.id} result={result} />)}
+    </div>
+  )
+}
+```
+
+## Virtual Scrolling & Large Lists
+
+**Handle large datasets efficiently:**
+```tsx
+import { FixedSizeList as List } from 'react-window'
+import { memo } from 'react'
+
+// ✅ Virtualized list for thousands of items
+const VirtualizedList = memo(({ items }: { items: any[] }) => {
+  const Row = memo(({ index, style }: { index: number; style: any }) => (
+    <div style={style}>
+      <ItemComponent item={items[index]} />
+    </div>
+  ))
+  
+  return (
+    <List
+      height={600}
+      itemCount={items.length}
+      itemSize={50}
+      width="100%"
+    >
+      {Row}
+    </List>
+  )
+})
+
+// ✅ Intersection Observer for infinite scroll
+function useInfiniteScroll(loadMore: () => void) {
+  const [isFetching, setIsFetching] = useState(false)
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isFetching) {
+          setIsFetching(true)
+          loadMore()
+        }
+      },
+      { threshold: 1.0 }
+    )
+    
+    const sentinel = document.querySelector('[data-sentinel]')
+    if (sentinel) observer.observe(sentinel)
+    
+    return () => observer.disconnect()
+  }, [loadMore, isFetching])
+  
+  return [isFetching, setIsFetching] as const
+}
+```
+
+## Image and Asset Optimization
+
+**Optimize media loading:**
+```tsx
+import { lazy, useState, useEffect } from 'react'
+
+// ✅ Progressive image loading
+function LazyImage({ src, alt, className }: ImageProps) {
+  const [imageSrc, setImageSrc] = useState<string>()
+  const [imageRef, setImageRef] = useState<HTMLImageElement>()
+  
+  useEffect(() => {
+    let observer: IntersectionObserver
+    
+    if (imageRef && imageSrc !== src) {
+      observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setImageSrc(src)
+              observer.unobserve(imageRef)
+            }
+          })
+        }
+      )
+      observer.observe(imageRef)
+    }
+    
+    return () => {
+      if (observer && observer.unobserve) {
+        observer.unobserve(imageRef!)
+      }
+    }
+  }, [imageRef, imageSrc, src])
+  
+  return (
+    <img
+      ref={setImageRef}
+      src={imageSrc}
+      alt={alt}
+      className={className}
+      loading="lazy"
+    />
+  )
+}
+
+// ✅ WebP with fallback
+function OptimizedImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <picture>
+      <source srcSet={`${src}.webp`} type="image/webp" />
+      <source srcSet={`${src}.jpg`} type="image/jpeg" />
+      <img src={`${src}.jpg`} alt={alt} loading="lazy" />
+    </picture>
+  )
+}
+```
+
+## Web Vitals Optimization
+
+**Core Web Vitals improvements:**
+```typescript
+// ✅ Measure and optimize Core Web Vitals
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals'
+
+function measureWebVitals() {
+  getCLS(console.log) // Cumulative Layout Shift
+  getFID(console.log) // First Input Delay
+  getFCP(console.log) // First Contentful Paint
+  getLCP(console.log) // Largest Contentful Paint
+  getTTFB(console.log) // Time to First Byte
+}
+
+// ✅ Preload critical resources
+function preloadCriticalResources() {
+  // Preload fonts
+  const fontLink = document.createElement('link')
+  fontLink.rel = 'preload'
+  fontLink.href = '/fonts/inter-var.woff2'
+  fontLink.as = 'font'
+  fontLink.type = 'font/woff2'
+  fontLink.crossOrigin = 'anonymous'
+  document.head.appendChild(fontLink)
+  
+  // Preload critical images
+  const imageLink = document.createElement('link')
+  imageLink.rel = 'preload'
+  imageLink.href = '/images/hero-image.webp'
+  imageLink.as = 'image'
+  document.head.appendChild(imageLink)
+}
+
+// ✅ Reduce layout shifts
+.hero-section {
+  /* Reserve space for dynamic content */
+  min-height: 400px;
+  
+  /* Use transform instead of changing layout properties */
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.hero-section.loading {
+  transform: translateY(10px);
+}
+```
+
+## Runtime Performance Monitoring
+
+**Production performance tracking:**
+```typescript
+// ✅ Performance monitoring hook
+function usePerformanceMonitoring() {
+  useEffect(() => {
+    // Monitor long tasks
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry) => {
+        if (entry.duration > 50) {
+          console.warn(`Long task detected: ${entry.duration}ms`)
+          // Send to analytics
+        }
+      })
+    })
+    
+    observer.observe({ entryTypes: ['longtask'] })
+    
+    return () => observer.disconnect()
+  }, [])
+}
+
+// ✅ Memory usage tracking
+function useMemoryMonitoring() {
+  useEffect(() => {
+    const checkMemory = () => {
+      if ('memory' in performance) {
+        const memory = (performance as any).memory
+        if (memory.usedJSHeapSize > 50 * 1024 * 1024) { // 50MB
+          console.warn('High memory usage detected')
+        }
+      }
+    }
+    
+    const interval = setInterval(checkMemory, 30000) // Check every 30s
+    return () => clearInterval(interval)
+  }, [])
+}
+```
