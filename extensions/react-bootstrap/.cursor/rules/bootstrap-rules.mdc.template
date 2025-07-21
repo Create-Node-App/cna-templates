@@ -1,146 +1,1515 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and using Bootstrap components in React applications.
+description: Advanced React Bootstrap patterns for responsive web applications, custom theming, component architecture, and performance optimization.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Bootstrap Rules
+# Advanced React Bootstrap Patterns
 
-You are an expert in Bootstrap and follow these guidelines:
+## Custom Theme & Design System
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create components with clear, descriptive names and organize them by feature/domain.
-3. Use Bootstrap's grid system with proper TypeScript support.
-4. Leverage Bootstrap's responsive utilities for mobile-first design.
-5. Use Bootstrap's color system with proper dark mode support.
-6. Follow Bootstrap's design principles for consistent UX.
-7. Document component behavior with JSDoc or TypeScript types.
-8. Implement proper error boundaries and loading states.
-9. Use proper component composition and avoid prop drilling.
-10. Follow accessibility best practices (WCAG 2.1).
-
-## Anti-Patterns to Avoid
-
-1. Never use Bootstrap components without proper theming setup.
-2. Avoid using Bootstrap components for complex, custom UI elements.
-3. Don't use Bootstrap components for performance-critical UI elements.
-4. Avoid using Bootstrap components for complex animations.
-5. Don't use Bootstrap components for complex, custom layouts.
-
-## Example Implementation
-
+**Enterprise-grade theme configuration and design tokens:**
 ```tsx
-import React from 'react';
-import { 
-  Card, 
-  Button, 
-  Spinner,
-  Row,
-  Col
-} from 'react-bootstrap';
+import { createContext, useContext, useState, useEffect } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
-interface ProductCardProps {
-  product: Product;
-  onAddToCart: (product: Product) => void;
-  isLoading?: boolean;
+// ✅ Custom CSS variables for Bootstrap theme extension
+const customThemeVariables = `
+:root {
+  /* ✅ Extended color palette */
+  --bs-primary: #0066cc;
+  --bs-primary-rgb: 0, 102, 204;
+  --bs-primary-dark: #0052a3;
+  --bs-primary-light: #338fdb;
+  
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-danger: #dc3545;
+  --bs-warning: #ffc107;
+  --bs-info: #0dcaf0;
+  
+  /* ✅ Custom semantic colors */
+  --bs-accent: #8b5cf6;
+  --bs-accent-rgb: 139, 92, 246;
+  --bs-neutral-50: #f8fafc;
+  --bs-neutral-100: #f1f5f9;
+  --bs-neutral-900: #0f172a;
+  
+  /* ✅ Typography scale */
+  --bs-font-size-xs: 0.75rem;
+  --bs-font-size-sm: 0.875rem;
+  --bs-font-size-base: 1rem;
+  --bs-font-size-lg: 1.125rem;
+  --bs-font-size-xl: 1.25rem;
+  --bs-font-size-2xl: 1.5rem;
+  --bs-font-size-3xl: 1.875rem;
+  
+  /* ✅ Enhanced spacing system */
+  --bs-spacer-xs: 0.25rem;
+  --bs-spacer-sm: 0.5rem;
+  --bs-spacer-md: 1rem;
+  --bs-spacer-lg: 1.5rem;
+  --bs-spacer-xl: 3rem;
+  --bs-spacer-2xl: 6rem;
+  
+  /* ✅ Shadow system */
+  --bs-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --bs-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --bs-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --bs-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* ✅ Border radius system */
+  --bs-border-radius-xs: 0.125rem;
+  --bs-border-radius-sm: 0.25rem;
+  --bs-border-radius: 0.375rem;
+  --bs-border-radius-lg: 0.5rem;
+  --bs-border-radius-xl: 0.75rem;
+  --bs-border-radius-2xl: 1rem;
+  --bs-border-radius-full: 9999px;
+  
+  /* ✅ Animation duration */
+  --bs-transition-fast: 150ms;
+  --bs-transition-base: 200ms;
+  --bs-transition-slow: 300ms;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ 
-  product, 
-  onAddToCart,
-  isLoading = false 
-}) => {
-  return (
-    <Card className="h-100 shadow-sm">
-      <Card.Img 
-        variant="top" 
-        src={product.image} 
-        alt={product.name}
-        style={{ height: '200px', objectFit: 'cover' }}
-      />
-      <Card.Body className="d-flex flex-column">
-        <Card.Title>{product.name}</Card.Title>
-        <Card.Text className="text-muted">
-          {product.description}
-        </Card.Text>
-        <div className="mt-auto">
-          {isLoading ? (
-            <Spinner animation="border" size="sm" />
-          ) : (
-            <Button 
-              variant="primary" 
-              onClick={() => onAddToCart(product)}
-              aria-label={`Add ${product.name} to cart`}
-            >
-              Add to Cart
-            </Button>
-          )}
-        </div>
-      </Card.Body>
-    </Card>
-  );
-};
+/* ✅ Dark theme variables */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #f8fafc;
+  --bs-emphasis-color: #ffffff;
+  --bs-secondary-color: #94a3b8;
+  --bs-tertiary-color: #64748b;
+  
+  --bs-primary: #3b82f6;
+  --bs-primary-rgb: 59, 130, 246;
+  --bs-primary-dark: #2563eb;
+  --bs-primary-light: #60a5fa;
+  
+  --bs-border-color: #334155;
+  --bs-border-color-translucent: rgba(51, 65, 85, 0.175);
+}
 
-// Example usage in a grid
-export const ProductGrid: React.FC<{ products: Product[] }> = ({ products }) => {
+/* ✅ Custom component styles */
+.card-elevated {
+  box-shadow: var(--bs-shadow-lg);
+  transition: transform var(--bs-transition-base), box-shadow var(--bs-transition-base);
+}
+
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--bs-shadow-xl);
+}
+
+.btn-gradient-primary {
+  background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-light) 100%);
+  border: none;
+  color: white;
+}
+
+.btn-gradient-primary:hover {
+  background: linear-gradient(135deg, var(--bs-primary-dark) 0%, var(--bs-primary) 100%);
+  color: white;
+}
+
+.form-floating-modern .form-control {
+  border-radius: var(--bs-border-radius-lg);
+  border: 2px solid var(--bs-border-color);
+  transition: border-color var(--bs-transition-base), box-shadow var(--bs-transition-base);
+}
+
+.form-floating-modern .form-control:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+`
+
+// ✅ Theme context for app-wide theme management
+interface ThemeContextType {
+  theme: 'light' | 'dark' | 'auto'
+  effectiveTheme: 'light' | 'dark'
+  setTheme: (theme: 'light' | 'dark' | 'auto') => void
+}
+
+const ThemeContext = createContext<ThemeContextType | null>(null)
+
+export const BootstrapThemeProvider: React.FC<{ children: React.ReactNode }> = ({ 
+  children 
+}) => {
+  const [theme, setTheme] = useState<'light' | 'dark' | 'auto'>(() => {
+    const saved = localStorage.getItem('bs-theme')
+    return (saved as 'light' | 'dark' | 'auto') || 'auto'
+  })
+
+  const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    // ✅ Inject custom CSS variables
+    const styleElement = document.createElement('style')
+    styleElement.textContent = customThemeVariables
+    document.head.appendChild(styleElement)
+
+    return () => document.head.removeChild(styleElement)
+  }, [])
+
+  useEffect(() => {
+    const updateEffectiveTheme = () => {
+      let newTheme: 'light' | 'dark'
+      
+      if (theme === 'auto') {
+        newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      } else {
+        newTheme = theme
+      }
+      
+      setEffectiveTheme(newTheme)
+      document.documentElement.setAttribute('data-bs-theme', newTheme)
+    }
+
+    updateEffectiveTheme()
+
+    if (theme === 'auto') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      mediaQuery.addListener(updateEffectiveTheme)
+      return () => mediaQuery.removeListener(updateEffectiveTheme)
+    }
+  }, [theme])
+
+  const handleSetTheme = (newTheme: 'light' | 'dark' | 'auto') => {
+    setTheme(newTheme)
+    localStorage.setItem('bs-theme', newTheme)
+  }
+
   return (
-    <Row xs={1} md={2} lg={3} className="g-4">
-      {products.map(product => (
-        <Col key={product.id}>
-          <ProductCard 
-            product={product}
-            onAddToCart={() => {}}
-          />
-        </Col>
-      ))}
-    </Row>
-  );
-};
+    <ThemeContext.Provider value={{ theme, effectiveTheme, setTheme: handleSetTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export const useBootstrapTheme = () => {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useBootstrapTheme must be used within a BootstrapThemeProvider')
+  }
+  return context
+}
 ```
 
-## Component Usage
+## Advanced Component Patterns
 
-1. Use consistent component imports from react-bootstrap
-2. Implement proper component props with Bootstrap classes
-3. Use TypeScript for component types and events
-4. Handle component states with proper hooks
-5. Implement proper error handling with Alert components
+**Complex UI compositions with Bootstrap components:**
+```tsx
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Modal,
+  Alert,
+  Badge,
+  Dropdown,
+  Nav,
+  Navbar,
+  Offcanvas,
+  Pagination,
+  ProgressBar,
+  Spinner,
+  Toast,
+  ToastContainer,
+  Table,
+  ListGroup,
+  Accordion
+} from 'react-bootstrap'
+import {
+  Search,
+  Filter,
+  Plus,
+  Edit,
+  Trash,
+  Eye,
+  Download,
+  MoreVertical,
+  Bell,
+  User,
+  Settings,
+  LogOut
+} from 'react-feather'
 
-## Bootstrap Grid System
+// ✅ Advanced data table with comprehensive features
+interface DataItem {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'manager' | 'user'
+  status: 'active' | 'inactive' | 'pending'
+  lastLogin: string
+  avatar?: string
+}
 
-1. Use Container, Row, and Col components properly
-2. Implement responsive layouts with breakpoints
-3. Use appropriate grid classes (col-md-6, etc.)
-4. Handle nested grids properly
-5. Follow Bootstrap's grid patterns
+interface AdvancedDataTableProps {
+  data: DataItem[]
+  loading?: boolean
+  onEdit: (item: DataItem) => void
+  onDelete: (id: string) => void
+  onView: (item: DataItem) => void
+  onExport: () => void
+}
 
-## Component Styling
+export const AdvancedDataTable: React.FC<AdvancedDataTableProps> = ({
+  data,
+  loading,
+  onEdit,
+  onDelete,
+  onView,
+  onExport
+}) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null)
+  
+  const itemsPerPage = 10
 
-1. Use proper Bootstrap utility classes
-2. Implement consistent spacing with spacing utilities
-3. Use appropriate color system and variables
-4. Handle responsive design with Bootstrap classes
-5. Follow Bootstrap's design system
+  // ✅ Advanced filtering and pagination logic
+  const filteredData = useMemo(() => {
+    return data.filter(item => {
+      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.email.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesFilter = filterStatus === 'all' || item.status === filterStatus
+      return matchesSearch && matchesFilter
+    })
+  }, [data, searchTerm, filterStatus])
 
-## Form Components
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    return filteredData.slice(startIndex, startIndex + itemsPerPage)
+  }, [filteredData, currentPage])
 
-1. Use Form components with proper validation
-2. Implement proper form submission handling
-3. Use appropriate form controls (Form.Control, Form.Select)
-4. Handle form state with Form.Group
-5. Follow Bootstrap's form patterns
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
 
-## Best Practices
+  // ✅ Selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    setSelectedItems(checked ? paginatedData.map(item => item.id) : [])
+  }
 
-1. Use proper component composition
-2. Implement proper form handling
-3. Use appropriate grid system
-4. Handle loading states properly
-5. Follow Bootstrap best practices
+  const handleSelectItem = (id: string, checked: boolean) => {
+    setSelectedItems(prev => 
+      checked 
+        ? [...prev, id]
+        : prev.filter(itemId => itemId !== id)
+    )
+  }
 
-## Performance
+  // ✅ Status badge component
+  const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
+    const variants = {
+      active: 'success',
+      inactive: 'secondary',
+      pending: 'warning'
+    }
+    return (
+      <Badge 
+        bg={variants[status as keyof typeof variants] || 'secondary'}
+        className="text-capitalize"
+      >
+        {status}
+      </Badge>
+    )
+  }
 
-1. Use proper component optimization
-2. Implement proper lazy loading
-3. Use appropriate component caching
-4. Handle large data sets properly
-5. Optimize component rendering 
+  // ✅ Action dropdown component
+  const ActionDropdown: React.FC<{ item: DataItem }> = ({ item }) => (
+    <Dropdown align="end">
+      <Dropdown.Toggle 
+        variant="outline-secondary" 
+        size="sm"
+        className="border-0"
+        id={`dropdown-${item.id}`}
+      >
+        <MoreVertical size={16} />
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item onClick={() => onView(item)}>
+          <Eye size={14} className="me-2" />
+          View Details
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => onEdit(item)}>
+          <Edit size={14} className="me-2" />
+          Edit
+        </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item 
+          onClick={() => setShowDeleteModal(item.id)}
+          className="text-danger"
+        >
+          <Trash size={14} className="me-2" />
+          Delete
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  )
+
+  if (loading) {
+    return (
+      <div className="text-center p-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-2 text-muted">Loading data...</p>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <Card className="shadow-sm">
+        <Card.Header className="bg-white border-bottom-0 pb-0">
+          <Row className="align-items-center">
+            <Col>
+              <h5 className="card-title mb-0">Data Management</h5>
+              <small className="text-muted">
+                {filteredData.length} items total
+              </small>
+            </Col>
+            <Col xs="auto">
+              <Button 
+                variant="outline-primary" 
+                size="sm" 
+                onClick={onExport}
+                className="me-2"
+              >
+                <Download size={16} className="me-1" />
+                Export
+              </Button>
+              <Button variant="primary" size="sm">
+                <Plus size={16} className="me-1" />
+                Add New
+              </Button>
+            </Col>
+          </Row>
+        </Card.Header>
+
+        <Card.Body>
+          {/* ✅ Search and filter controls */}
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <div className="position-relative">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search by name or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="ps-5"
+                  />
+                  <Search 
+                    size={16} 
+                    className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+                  />
+                </div>
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="pending">Pending</option>
+              </Form.Select>
+            </Col>
+            <Col md={3}>
+              {selectedItems.length > 0 && (
+                <Alert variant="info" className="mb-0 py-2">
+                  {selectedItems.length} items selected
+                  <Button 
+                    variant="outline-danger" 
+                    size="sm" 
+                    className="ms-2"
+                    onClick={() => setSelectedItems([])}
+                  >
+                    Clear
+                  </Button>
+                </Alert>
+              )}
+            </Col>
+          </Row>
+
+          {/* ✅ Data table */}
+          <div className="table-responsive">
+            <Table hover className="align-middle">
+              <thead className="table-light">
+                <tr>
+                  <th width="50">
+                    <Form.Check
+                      type="checkbox"
+                      checked={selectedItems.length === paginatedData.length && paginatedData.length > 0}
+                      onChange={(e) => handleSelectAll(e.target.checked)}
+                    />
+                  </th>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Last Login</th>
+                  <th width="100">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedData.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <Form.Check
+                        type="checkbox"
+                        checked={selectedItems.includes(item.id)}
+                        onChange={(e) => handleSelectItem(item.id, e.target.checked)}
+                      />
+                    </td>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <div 
+                          className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                          style={{ width: '40px', height: '40px', fontSize: '14px' }}
+                        >
+                          {item.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="fw-semibold">{item.name}</div>
+                          <small className="text-muted">{item.email}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <Badge 
+                        bg="secondary" 
+                        className="text-capitalize"
+                      >
+                        {item.role}
+                      </Badge>
+                    </td>
+                    <td>
+                      <StatusBadge status={item.status} />
+                    </td>
+                    <td>
+                      <small className="text-muted">
+                        {new Date(item.lastLogin).toLocaleDateString()}
+                      </small>
+                    </td>
+                    <td>
+                      <ActionDropdown item={item} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+
+          {/* ✅ Pagination */}
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-between align-items-center">
+              <small className="text-muted">
+                Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
+                {Math.min(currentPage * itemsPerPage, filteredData.length)} of{' '}
+                {filteredData.length} entries
+              </small>
+              <Pagination className="mb-0">
+                <Pagination.Prev 
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                />
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1
+                  if (
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <Pagination.Item
+                        key={page}
+                        active={page === currentPage}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Pagination.Item>
+                    )
+                  } else if (page === currentPage - 2 || page === currentPage + 2) {
+                    return <Pagination.Ellipsis key={page} />
+                  }
+                  return null
+                })}
+                <Pagination.Next 
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                />
+              </Pagination>
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+
+      {/* ✅ Delete confirmation modal */}
+      <Modal 
+        show={showDeleteModal !== null} 
+        onHide={() => setShowDeleteModal(null)}
+        size="sm"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this item? This action cannot be undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button 
+            variant="secondary" 
+            onClick={() => setShowDeleteModal(null)}
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={() => {
+              if (showDeleteModal) {
+                onDelete(showDeleteModal)
+                setShowDeleteModal(null)
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  )
+}
+```
+
+## Advanced Form Patterns
+
+**Complex form handling with validation and multi-step flows:**
+```tsx
+// ✅ Multi-step form with comprehensive validation
+interface FormData {
+  personalInfo: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+  }
+  accountInfo: {
+    username: string
+    password: string
+    confirmPassword: string
+  }
+  preferences: {
+    notifications: string[]
+    theme: string
+    language: string
+  }
+}
+
+export const MultiStepRegistrationForm: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [formData, setFormData] = useState<FormData>({
+    personalInfo: { firstName: '', lastName: '', email: '', phone: '' },
+    accountInfo: { username: '', password: '', confirmPassword: '' },
+    preferences: { notifications: [], theme: 'auto', language: 'en' }
+  })
+  const [validated, setValidated] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const steps = [
+    { title: 'Personal Info', description: 'Basic information' },
+    { title: 'Account Setup', description: 'Security details' },
+    { title: 'Preferences', description: 'Customize your experience' },
+    { title: 'Review', description: 'Confirm your details' }
+  ]
+
+  // ✅ Field validation functions
+  const validateEmail = (email: string): string | null => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email) return 'Email is required'
+    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    return null
+  }
+
+  const validatePassword = (password: string): string | null => {
+    if (!password) return 'Password is required'
+    if (password.length < 8) return 'Password must be at least 8 characters'
+    if (!/(?=.*[a-z])/.test(password)) return 'Password must contain a lowercase letter'
+    if (!/(?=.*[A-Z])/.test(password)) return 'Password must contain an uppercase letter'
+    if (!/(?=.*\d)/.test(password)) return 'Password must contain a number'
+    if (!/(?=.*[@$!%*?&])/.test(password)) return 'Password must contain a special character'
+    return null
+  }
+
+  const validateStep = (step: number): boolean => {
+    const newErrors: Record<string, string> = {}
+
+    switch (step) {
+      case 0:
+        if (!formData.personalInfo.firstName.trim()) {
+          newErrors.firstName = 'First name is required'
+        }
+        if (!formData.personalInfo.lastName.trim()) {
+          newErrors.lastName = 'Last name is required'
+        }
+        const emailError = validateEmail(formData.personalInfo.email)
+        if (emailError) newErrors.email = emailError
+        break
+
+      case 1:
+        if (!formData.accountInfo.username.trim()) {
+          newErrors.username = 'Username is required'
+        } else if (formData.accountInfo.username.length < 3) {
+          newErrors.username = 'Username must be at least 3 characters'
+        }
+        
+        const passwordError = validatePassword(formData.accountInfo.password)
+        if (passwordError) newErrors.password = passwordError
+        
+        if (formData.accountInfo.password !== formData.accountInfo.confirmPassword) {
+          newErrors.confirmPassword = 'Passwords do not match'
+        }
+        break
+
+      case 2:
+        // Preferences are optional
+        break
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
+    } else {
+      setValidated(true)
+    }
+  }
+
+  const handlePrev = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 0))
+  }
+
+  const handleSubmit = async () => {
+    if (validateStep(0) && validateStep(1) && validateStep(2)) {
+      setLoading(true)
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
+        // Success handling
+        alert('Registration successful!')
+        
+      } catch (error) {
+        setErrors({ submit: 'Registration failed. Please try again.' })
+      } finally {
+        setLoading(false)
+      }
+    }
+  }
+
+  // ✅ Step content renderers
+  const renderPersonalInfoStep = () => (
+    <Row>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>First Name *</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter your first name"
+            value={formData.personalInfo.firstName}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              personalInfo: { ...prev.personalInfo, firstName: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.firstName}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.firstName}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Last Name *</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter your last name"
+            value={formData.personalInfo.lastName}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              personalInfo: { ...prev.personalInfo, lastName: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.lastName}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.lastName}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Email Address *</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter your email"
+            value={formData.personalInfo.email}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              personalInfo: { ...prev.personalInfo, email: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.email}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Phone Number</Form.Label>
+          <Form.Control
+            type="tel"
+            placeholder="Enter your phone number"
+            value={formData.personalInfo.phone}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              personalInfo: { ...prev.personalInfo, phone: e.target.value }
+            }))}
+          />
+        </Form.Group>
+      </Col>
+    </Row>
+  )
+
+  const renderAccountInfoStep = () => (
+    <Row>
+      <Col md={12}>
+        <Form.Group className="mb-3">
+          <Form.Label>Username *</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Choose a username"
+            value={formData.accountInfo.username}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              accountInfo: { ...prev.accountInfo, username: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.username}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.username}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Password *</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Create a strong password"
+            value={formData.accountInfo.password}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              accountInfo: { ...prev.accountInfo, password: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.password}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.password}
+          </Form.Control.Feedback>
+          <Form.Text className="text-muted">
+            Must be 8+ characters with uppercase, lowercase, number, and special character.
+          </Form.Text>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Confirm Password *</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Confirm your password"
+            value={formData.accountInfo.confirmPassword}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              accountInfo: { ...prev.accountInfo, confirmPassword: e.target.value }
+            }))}
+            isInvalid={validated && !!errors.confirmPassword}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.confirmPassword}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Col>
+    </Row>
+  )
+
+  const renderPreferencesStep = () => (
+    <Row>
+      <Col md={12}>
+        <Form.Group className="mb-3">
+          <Form.Label>Email Notifications</Form.Label>
+          {['Product Updates', 'Security Alerts', 'Marketing', 'Newsletter'].map(option => (
+            <Form.Check
+              key={option}
+              type="checkbox"
+              id={`notification-${option}`}
+              label={option}
+              checked={formData.preferences.notifications.includes(option)}
+              onChange={(e) => {
+                const notifications = e.target.checked
+                  ? [...formData.preferences.notifications, option]
+                  : formData.preferences.notifications.filter(n => n !== option)
+                setFormData(prev => ({
+                  ...prev,
+                  preferences: { ...prev.preferences, notifications }
+                }))
+              }}
+            />
+          ))}
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Theme Preference</Form.Label>
+          <Form.Select
+            value={formData.preferences.theme}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              preferences: { ...prev.preferences, theme: e.target.value }
+            }))}
+          >
+            <option value="auto">Auto (System)</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </Form.Select>
+        </Form.Group>
+      </Col>
+      <Col md={6}>
+        <Form.Group className="mb-3">
+          <Form.Label>Language</Form.Label>
+          <Form.Select
+            value={formData.preferences.language}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              preferences: { ...prev.preferences, language: e.target.value }
+            }))}
+          >
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </Form.Select>
+        </Form.Group>
+      </Col>
+    </Row>
+  )
+
+  const renderReviewStep = () => (
+    <div>
+      <h6>Personal Information</h6>
+      <p><strong>Name:</strong> {formData.personalInfo.firstName} {formData.personalInfo.lastName}</p>
+      <p><strong>Email:</strong> {formData.personalInfo.email}</p>
+      {formData.personalInfo.phone && <p><strong>Phone:</strong> {formData.personalInfo.phone}</p>}
+      
+      <hr />
+      
+      <h6>Account Information</h6>
+      <p><strong>Username:</strong> {formData.accountInfo.username}</p>
+      
+      <hr />
+      
+      <h6>Preferences</h6>
+      <p><strong>Theme:</strong> {formData.preferences.theme}</p>
+      <p><strong>Language:</strong> {formData.preferences.language}</p>
+      {formData.preferences.notifications.length > 0 && (
+        <p><strong>Notifications:</strong> {formData.preferences.notifications.join(', ')}</p>
+      )}
+    </div>
+  )
+
+  return (
+    <Container className="py-5">
+      <Row className="justify-content-center">
+        <Col lg={8}>
+          <Card className="card-elevated">
+            <Card.Header className="bg-primary text-white">
+              <h4 className="mb-0">Create Account</h4>
+            </Card.Header>
+            
+            <Card.Body>
+              {/* ✅ Progress indicator */}
+              <div className="mb-4">
+                <ProgressBar 
+                  now={((currentStep + 1) / steps.length) * 100} 
+                  className="mb-3"
+                />
+                <div className="d-flex justify-content-between">
+                  {steps.map((step, index) => (
+                    <div 
+                      key={index}
+                      className={`text-center ${index <= currentStep ? 'text-primary' : 'text-muted'}`}
+                    >
+                      <div 
+                        className={`rounded-circle d-inline-flex align-items-center justify-content-center mb-1 ${
+                          index <= currentStep ? 'bg-primary text-white' : 'bg-light'
+                        }`}
+                        style={{ width: '30px', height: '30px', fontSize: '14px' }}
+                      >
+                        {index + 1}
+                      </div>
+                      <div style={{ fontSize: '12px' }}>{step.title}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ✅ Step content */}
+              <Form noValidate validated={validated}>
+                {currentStep === 0 && renderPersonalInfoStep()}
+                {currentStep === 1 && renderAccountInfoStep()}
+                {currentStep === 2 && renderPreferencesStep()}
+                {currentStep === 3 && renderReviewStep()}
+              </Form>
+
+              {/* ✅ Error display */}
+              {errors.submit && (
+                <Alert variant="danger" className="mt-3">
+                  {errors.submit}
+                </Alert>
+              )}
+            </Card.Body>
+
+            {/* ✅ Navigation buttons */}
+            <Card.Footer className="bg-light">
+              <div className="d-flex justify-content-between">
+                <Button 
+                  variant="outline-secondary"
+                  onClick={handlePrev}
+                  disabled={currentStep === 0}
+                >
+                  Previous
+                </Button>
+                
+                {currentStep < steps.length - 1 ? (
+                  <Button 
+                    variant="primary"
+                    onClick={handleNext}
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="success"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                  >
+                    {loading && (
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        className="me-2"
+                      />
+                    )}
+                    {loading ? 'Creating Account...' : 'Create Account'}
+                  </Button>
+                )}
+              </div>
+            </Card.Footer>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  )
+}
+``` 
+## Responsive Layout System
+
+**Advanced responsive patterns and navigation components:**
+```tsx
+// ✅ Responsive dashboard layout with mobile-first design
+import { 
+  Container, 
+  Row, 
+  Col, 
+  Navbar, 
+  Nav, 
+  Offcanvas, 
+  Button,
+  Dropdown
+} from 'react-bootstrap'
+import { Menu, Bell, User, Search, Settings } from 'react-feather'
+
+interface DashboardLayoutProps {
+  children: React.ReactNode
+  user: {
+    name: string
+    email: string
+    avatar?: string
+  }
+  onLogout: () => void
+}
+
+export const ResponsiveDashboardLayout: React.FC<DashboardLayoutProps> = ({
+  children,
+  user,
+  onLogout
+}) => {
+  const [showSidebar, setShowSidebar] = useState(false)
+  const [notifications, setNotifications] = useState(3)
+
+  // ✅ Navigation items with responsive behavior
+  const navigationItems = [
+    { label: 'Dashboard', href: '/dashboard', icon: '📊' },
+    { label: 'Analytics', href: '/analytics', icon: '📈' },
+    { label: 'Users', href: '/users', icon: '👥' },
+    { label: 'Settings', href: '/settings', icon: '⚙️' },
+  ]
+
+  const SidebarContent = () => (
+    <div className="h-100 d-flex flex-column">
+      {/* ✅ Brand logo */}
+      <div className="p-3 border-bottom">
+        <h5 className="mb-0">Admin Panel</h5>
+      </div>
+      
+      {/* ✅ Navigation menu */}
+      <Nav className="flex-column p-3 flex-grow-1">
+        {navigationItems.map((item) => (
+          <Nav.Link 
+            key={item.href}
+            href={item.href} 
+            className="py-2 px-3 mb-1 rounded text-decoration-none"
+            style={{ color: 'inherit' }}
+          >
+            <span className="me-2">{item.icon}</span>
+            {item.label}
+          </Nav.Link>
+        ))}
+      </Nav>
+      
+      {/* ✅ User info in sidebar */}
+      <div className="p-3 border-top">
+        <div className="d-flex align-items-center">
+          <div 
+            className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+            style={{ width: '40px', height: '40px' }}
+          >
+            {user.name.charAt(0)}
+          </div>
+          <div className="flex-grow-1 text-truncate">
+            <div className="fw-semibold">{user.name}</div>
+            <small className="text-muted">{user.email}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="min-vh-100 bg-light">
+      {/* ✅ Top navigation bar */}
+      <Navbar bg="white" className="border-bottom shadow-sm sticky-top">
+        <Container fluid>
+          {/* ✅ Mobile menu toggle */}
+          <Button
+            variant="outline-secondary"
+            className="d-lg-none me-2"
+            onClick={() => setShowSidebar(true)}
+          >
+            <Menu size={20} />
+          </Button>
+
+          <Navbar.Brand className="d-lg-none">Admin Panel</Navbar.Brand>
+
+          {/* ✅ Search bar - responsive */}
+          <div className="flex-grow-1 mx-3 d-none d-md-block" style={{ maxWidth: '400px' }}>
+            <div className="position-relative">
+              <Form.Control
+                type="search"
+                placeholder="Search..."
+                className="ps-5"
+              />
+              <Search 
+                size={16} 
+                className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              />
+            </div>
+          </div>
+
+          {/* ✅ Header actions */}
+          <Nav className="align-items-center">
+            {/* ✅ Search toggle for mobile */}
+            <Button variant="outline-secondary" className="d-md-none me-2">
+              <Search size={18} />
+            </Button>
+
+            {/* ✅ Notifications */}
+            <Button variant="outline-secondary" className="position-relative me-2">
+              <Bell size={18} />
+              {notifications > 0 && (
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {notifications}
+                </span>
+              )}
+            </Button>
+
+            {/* ✅ User dropdown */}
+            <Dropdown align="end">
+              <Dropdown.Toggle 
+                variant="outline-secondary" 
+                className="d-flex align-items-center"
+              >
+                <div 
+                  className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                  style={{ width: '32px', height: '32px', fontSize: '14px' }}
+                >
+                  {user.name.charAt(0)}
+                </div>
+                <span className="ms-2 d-none d-sm-inline">{user.name}</span>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="/profile">
+                  <User size={16} className="me-2" />
+                  Profile
+                </Dropdown.Item>
+                <Dropdown.Item href="/settings">
+                  <Settings size={16} className="me-2" />
+                  Settings
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={onLogout}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Nav>
+        </Container>
+      </Navbar>
+
+      <div className="d-flex">
+        {/* ✅ Desktop sidebar */}
+        <div className="d-none d-lg-block bg-white border-end" style={{ width: '280px' }}>
+          <div className="position-sticky" style={{ top: '76px' }}>
+            <SidebarContent />
+          </div>
+        </div>
+
+        {/* ✅ Mobile sidebar */}
+        <Offcanvas 
+          show={showSidebar} 
+          onHide={() => setShowSidebar(false)}
+          placement="start"
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Navigation</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body className="p-0">
+            <SidebarContent />
+          </Offcanvas.Body>
+        </Offcanvas>
+
+        {/* ✅ Main content area */}
+        <main className="flex-grow-1">
+          <Container fluid className="p-4">
+            {children}
+          </Container>
+        </main>
+      </div>
+    </div>
+  )
+}
+```
+
+## Performance & Custom Hooks
+
+**Bootstrap-specific utilities and performance optimizations:**
+```tsx
+import { useEffect, useState, useMemo, useCallback } from 'react'
+import { Toast, ToastContainer } from 'react-bootstrap'
+
+// ✅ Bootstrap breakpoint hook
+export const useBootstrapBreakpoint = () => {
+  const [breakpoint, setBreakpoint] = useState<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'>('md')
+  
+  useEffect(() => {
+    const updateBreakpoint = () => {
+      const width = window.innerWidth
+      if (width < 576) setBreakpoint('xs')
+      else if (width < 768) setBreakpoint('sm')
+      else if (width < 992) setBreakpoint('md')
+      else if (width < 1200) setBreakpoint('lg')
+      else if (width < 1400) setBreakpoint('xl')
+      else setBreakpoint('xxl')
+    }
+
+    updateBreakpoint()
+    window.addEventListener('resize', updateBreakpoint)
+    return () => window.removeEventListener('resize', updateBreakpoint)
+  }, [])
+
+  const isMobile = breakpoint === 'xs' || breakpoint === 'sm'
+  const isTablet = breakpoint === 'md'
+  const isDesktop = breakpoint === 'lg' || breakpoint === 'xl' || breakpoint === 'xxl'
+
+  return { breakpoint, isMobile, isTablet, isDesktop }
+}
+
+// ✅ Toast notification system
+interface Toast {
+  id: string
+  title: string
+  message: string
+  variant: 'primary' | 'success' | 'danger' | 'warning' | 'info'
+  duration?: number
+}
+
+export const useToastManager = () => {
+  const [toasts, setToasts] = useState<Toast[]>([])
+
+  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).substr(2, 9)
+    const newToast = { ...toast, id }
+    
+    setToasts(prev => [...prev, newToast])
+    
+    // Auto remove after duration
+    const duration = toast.duration || 5000
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id))
+    }, duration)
+  }, [])
+
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id))
+  }, [])
+
+  const ToastProvider = useCallback(() => (
+    <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+      {toasts.map(toast => (
+        <Toast
+          key={toast.id}
+          onClose={() => removeToast(toast.id)}
+          show={true}
+          delay={toast.duration || 5000}
+          autohide
+          bg={toast.variant}
+        >
+          <Toast.Header>
+            <strong className="me-auto">{toast.title}</strong>
+          </Toast.Header>
+          <Toast.Body className={toast.variant === 'danger' ? 'text-white' : ''}>
+            {toast.message}
+          </Toast.Body>
+        </Toast>
+      ))}
+    </ToastContainer>
+  ), [toasts, removeToast])
+
+  return { addToast, removeToast, ToastProvider }
+}
+
+// ✅ Form validation hook
+interface ValidationRules {
+  [field: string]: {
+    required?: boolean
+    minLength?: number
+    maxLength?: number
+    pattern?: RegExp
+    custom?: (value: any) => string | null
+  }
+}
+
+export const useFormValidation = <T extends Record<string, any>>(
+  initialValues: T,
+  validationRules: ValidationRules
+) => {
+  const [values, setValues] = useState<T>(initialValues)
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
+  const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({})
+
+  const validateField = useCallback((name: keyof T, value: any) => {
+    const rules = validationRules[name as string]
+    if (!rules) return null
+
+    if (rules.required && (!value || value.toString().trim() === '')) {
+      return `${String(name)} is required`
+    }
+
+    if (rules.minLength && value.length < rules.minLength) {
+      return `${String(name)} must be at least ${rules.minLength} characters`
+    }
+
+    if (rules.maxLength && value.length > rules.maxLength) {
+      return `${String(name)} cannot exceed ${rules.maxLength} characters`
+    }
+
+    if (rules.pattern && !rules.pattern.test(value)) {
+      return `${String(name)} format is invalid`
+    }
+
+    if (rules.custom) {
+      return rules.custom(value)
+    }
+
+    return null
+  }, [validationRules])
+
+  const setValue = useCallback((name: keyof T, value: any) => {
+    setValues(prev => ({ ...prev, [name]: value }))
+    
+    // Validate on change if field has been touched
+    if (touched[name]) {
+      const error = validateField(name, value)
+      setErrors(prev => ({ ...prev, [name]: error }))
+    }
+  }, [validateField, touched])
+
+  const setTouched = useCallback((name: keyof T) => {
+    setTouched(prev => ({ ...prev, [name]: true }))
+    const error = validateField(name, values[name])
+    setErrors(prev => ({ ...prev, [name]: error }))
+  }, [validateField, values])
+
+  const validateAll = useCallback(() => {
+    const newErrors: Partial<Record<keyof T, string>> = {}
+    let isValid = true
+
+    Object.keys(validationRules).forEach(field => {
+      const error = validateField(field as keyof T, values[field as keyof T])
+      if (error) {
+        newErrors[field as keyof T] = error
+        isValid = false
+      }
+    })
+
+    setErrors(newErrors)
+    setTouched(Object.keys(validationRules).reduce((acc, key) => ({
+      ...acc,
+      [key]: true
+    }), {}))
+
+    return isValid
+  }, [validationRules, validateField, values])
+
+  const reset = useCallback(() => {
+    setValues(initialValues)
+    setErrors({})
+    setTouched({})
+  }, [initialValues])
+
+  return {
+    values,
+    errors,
+    touched,
+    setValue,
+    setTouched,
+    validateAll,
+    reset,
+    isValid: Object.keys(errors).length === 0
+  }
+}
+
+// ✅ Local storage hook with Bootstrap theme support
+export const useBootstrapLocalStorage = <T>(key: string, initialValue: T) => {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
+    } catch (error) {
+      console.warn(`Error reading localStorage key "${key}":`, error)
+      return initialValue
+    }
+  })
+
+  const setValue = useCallback((value: T | ((val: T) => T)) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value
+      setStoredValue(valueToStore)
+      window.localStorage.setItem(key, JSON.stringify(valueToStore))
+      
+      // Emit custom event for theme changes
+      if (key === 'bs-theme') {
+        window.dispatchEvent(new CustomEvent('themeChange', { detail: valueToStore }))
+      }
+    } catch (error) {
+      console.warn(`Error setting localStorage key "${key}":`, error)
+    }
+  }, [key, storedValue])
+
+  return [storedValue, setValue] as const
+}
+
+// ✅ Debounced search hook
+export const useDebouncedSearch = <T>(
+  items: T[],
+  searchFields: (keyof T)[],
+  delay: number = 300
+) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedTerm, setDebouncedTerm] = useState('')
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedTerm(searchTerm)
+    }, delay)
+
+    return () => clearTimeout(handler)
+  }, [searchTerm, delay])
+
+  const filteredItems = useMemo(() => {
+    if (!debouncedTerm) return items
+
+    return items.filter(item =>
+      searchFields.some(field => {
+        const value = item[field]
+        return value && 
+               value.toString().toLowerCase().includes(debouncedTerm.toLowerCase())
+      })
+    )
+  }, [items, searchFields, debouncedTerm])
+
+  return {
+    searchTerm,
+    setSearchTerm,
+    filteredItems,
+    isSearching: searchTerm !== debouncedTerm
+  }
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for professional Bootstrap applications:**
+
+1. **Theme System**: Implement comprehensive theme management with CSS custom properties and dark mode support.
+
+2. **Responsive Design**: Use Bootstrap's grid system effectively with mobile-first approach and responsive utilities.
+
+3. **Component Architecture**: Build reusable components with proper prop interfaces and TypeScript support.
+
+4. **Performance**: Implement debouncing, memoization, and virtual scrolling for large datasets.
+
+5. **Form Management**: Use comprehensive validation with real-time feedback and proper error handling.
+
+6. **Navigation**: Create flexible navigation systems that work across all device sizes.
+
+7. **State Management**: Use custom hooks for local storage, form validation, and UI state management.
+
+8. **Accessibility**: Ensure proper ARIA labels, keyboard navigation, and semantic HTML structure.
+
+9. **User Experience**: Implement loading states, error boundaries, and smooth transitions.
+
+10. **Code Organization**: Structure components by feature, use TypeScript interfaces, and maintain consistent naming conventions.
+
+Always prioritize accessibility, performance, and maintainability when building Bootstrap applications. Leverage Bootstrap's utility classes while extending with custom CSS for unique design requirements. 

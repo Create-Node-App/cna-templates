@@ -1,38 +1,1575 @@
 ---
-description: Specific guidelines for implementing and managing state with Jotai in React applications.
+description: Comprehensive patterns and best practices for implementing enterprise-grade atomic state management with Jotai in React applications.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Jotai Rules
+# Jotai Advanced Implementation Patterns
 
-## State Management
+## Core Atomic Architecture
 
-1. Use consistent atom naming
-2. Implement proper atom composition
-3. Use TypeScript for atom types
-4. Handle derived state properly
-5. Implement proper error handling
+**Bottom-up atomic state design with derived atoms:**
+```tsx
+import { atom, useAtom, useAtomValue, useSetAtom, atomFamily, splitAtom } from 'jotai'
+import { atomWithImmer, atomWithReset, RESET } from 'jotai/immer'
+import { atomWithStorage, createJSONStorage } from 'jotai/storage'
+import { focusAtom } from 'jotai/optics'
+import { loadable } from 'jotai/loadable'
 
-## Atom Implementation
+// ✅ Domain entity types
+export interface User {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar?: string
+  isActive: boolean
+  roles: string[]
+  lastLoginAt?: Date
+  preferences: {
+    theme: 'light' | 'dark'
+    language: string
+    notifications: boolean
+  }
+  createdAt: Date
+  updatedAt: Date
+}
 
-1. Use proper atom creation
-2. Implement proper atom splitting
-3. Use appropriate atom families
-4. Handle async atoms properly
-5. Follow Jotai best practices
+export interface UserFilters {
+  search: string
+  status: 'all' | 'active' | 'inactive'
+  role: string
+  sortBy: keyof User
+  sortOrder: 'asc' | 'desc'
+  dateRange?: {
+    start: Date
+    end: Date
+  }
+}
 
-## Best Practices
+// ✅ Base atoms with TypeScript
+export const usersAtom = atom<User[]>([])
+export const userFiltersAtom = atomWithReset<UserFilters>({
+  search: '',
+  status: 'all',
+  role: 'all',
+  sortBy: 'firstName',
+  sortOrder: 'asc',
+})
 
-1. Use proper state organization
-2. Implement proper state persistence
-3. Use appropriate selectors
-4. Handle state updates properly
-5. Follow atomic state patterns
+export const userPaginationAtom = atomWithStorage('userPagination', {
+  page: 1,
+  pageSize: 20,
+  total: 0,
+}, createJSONStorage(() => localStorage))
 
-## Performance
+export const currentUserIdAtom = atom<string | null>(null)
+export const userLoadingAtom = atom(false)
+export const userErrorAtom = atom<string | null>(null)
 
-1. Use proper atom optimization
-2. Implement proper memoization
-3. Use appropriate atom splitting
-4. Handle large state properly
-5. Optimize atom updates 
+// ✅ Atom families for dynamic state
+export const userByIdAtomFamily = atomFamily<string, User | null>((id: string) =>
+  atom((get) => {
+    const users = get(usersAtom)
+    return users.find(user => user.id === id) || null
+  })
+)
+
+export const userFormAtomFamily = atomFamily<string, Partial<User>>((id: string) =>
+  atomWithImmer<Partial<User>>(() => {
+    if (id === 'new') {
+      return {
+        firstName: '',
+        lastName: '',
+        email: '',
+        isActive: true,
+        roles: ['user'],
+        preferences: {
+          theme: 'light',
+          language: 'en',
+          notifications: true,
+        },
+      }
+    }
+    
+    // Return existing user data for editing
+    return {}
+  })
+)
+
+// ✅ Split atoms for array manipulation
+export const userAtomsAtom = splitAtom(usersAtom)
+
+export const userSelectedIdsAtom = atom<Set<string>>(new Set())
+export const userBulkActionsAtom = atom<{
+  action: 'delete' | 'activate' | 'deactivate' | 'updateRole' | null
+  targetIds: string[]
+}>({
+  action: null,
+  targetIds: [],
+})
+
+// ✅ Derived atoms (computed state)
+export const filteredUsersAtom = atom<User[]>((get) => {
+  const users = get(usersAtom)
+  const filters = get(userFiltersAtom)
+
+  let filtered = users
+
+  // Search filter
+  if (filters.search) {
+    const search = filters.search.toLowerCase()
+    filtered = filtered.filter(user =>
+      user.firstName.toLowerCase().includes(search) ||
+      user.lastName.toLowerCase().includes(search) ||
+      user.email.toLowerCase().includes(search)
+    )
+  }
+
+  // Status filter
+  if (filters.status !== 'all') {
+    filtered = filtered.filter(user =>
+      filters.status === 'active' ? user.isActive : !user.isActive
+    )
+  }
+
+  // Role filter
+  if (filters.role !== 'all') {
+    filtered = filtered.filter(user => user.roles.includes(filters.role))
+  }
+
+  // Date range filter
+  if (filters.dateRange) {
+    filtered = filtered.filter(user => {
+      const createdAt = user.createdAt.getTime()
+      return createdAt >= filters.dateRange!.start.getTime() && 
+             createdAt <= filters.dateRange!.end.getTime()
+    })
+  }
+
+  // Sorting
+  filtered.sort((a, b) => {
+    const aValue = a[filters.sortBy]
+    const bValue = b[filters.sortBy]
+
+    if (aValue instanceof Date && bValue instanceof Date) {
+      const comparison = aValue.getTime() - bValue.getTime()
+      return filters.sortOrder === 'desc' ? -comparison : comparison
+    }
+
+    const comparison = String(aValue || '').localeCompare(String(bValue || ''))
+    return filters.sortOrder === 'desc' ? -comparison : comparison
+  })
+
+  return filtered
+})
+
+export const paginatedUsersAtom = atom<User[]>((get) => {
+  const filtered = get(filteredUsersAtom)
+  const pagination = get(userPaginationAtom)
+
+  const startIndex = (pagination.page - 1) * pagination.pageSize
+  const endIndex = startIndex + pagination.pageSize
+
+  return filtered.slice(startIndex, endIndex)
+})
+
+export const userStatsAtom = atom((get) => {
+  const users = get(usersAtom)
+  const filtered = get(filteredUsersAtom)
+
+  const active = users.filter(u => u.isActive)
+  const online = users.filter(u => 
+    u.lastLoginAt && Date.now() - u.lastLoginAt.getTime() < 5 * 60 * 1000
+  )
+
+  const roleStats = users.reduce((acc, user) => {
+    user.roles.forEach(role => {
+      acc[role] = (acc[role] || 0) + 1
+    })
+    return acc
+  }, {} as Record<string, number>)
+
+  const themeStats = users.reduce((acc, user) => {
+    acc[user.preferences.theme] = (acc[user.preferences.theme] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
+  return {
+    total: users.length,
+    active: active.length,
+    inactive: users.length - active.length,
+    online: online.length,
+    filtered: filtered.length,
+    roleDistribution: roleStats,
+    themeDistribution: themeStats,
+    averageRolesPerUser: users.length > 0 
+      ? users.reduce((sum, user) => sum + user.roles.length, 0) / users.length
+      : 0,
+  }
+})
+
+export const selectedUsersAtom = atom((get) => {
+  const selectedIds = get(userSelectedIdsAtom)
+  const users = get(usersAtom)
+  
+  return users.filter(user => selectedIds.has(user.id))
+})
+
+// ✅ Current user derived atom
+export const currentUserAtom = atom<User | null>((get) => {
+  const currentUserId = get(currentUserIdAtom)
+  if (!currentUserId) return null
+  
+  const users = get(usersAtom)
+  return users.find(user => user.id === currentUserId) || null
+})
+
+// ✅ Focus atoms for nested state management
+export const currentUserPreferencesAtom = focusAtom(currentUserAtom, (optic) =>
+  optic.optional().prop('preferences')
+)
+
+export const userSearchAtom = focusAtom(userFiltersAtom, (optic) =>
+  optic.prop('search')
+)
+
+// ✅ Async atoms for data fetching
+export const userAsyncAtom = atom<Promise<User[]>>(async (get) => {
+  const loading = get(userLoadingAtom)
+  
+  if (loading) {
+    throw new Promise((resolve) => {
+      const checkLoading = () => {
+        setTimeout(() => {
+          if (!get.peek(userLoadingAtom)) {
+            resolve([])
+          } else {
+            checkLoading()
+          }
+        }, 100)
+      }
+      checkLoading()
+    })
+  }
+
+  try {
+    const response = await fetch('/api/users')
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users: ${response.statusText}`)
+    }
+    const users: User[] = await response.json()
+    return users
+  } catch (error) {
+    console.error('Error fetching users:', error)
+    throw error
+  }
+})
+
+// ✅ Loadable atoms for better async handling
+export const userLoadableAtom = loadable(userAsyncAtom)
+
+// ✅ Write-only atoms for actions
+export const addUserAtom = atom<null, [User], void>(
+  null,
+  (get, set, newUser) => {
+    const currentUsers = get(usersAtom)
+    set(usersAtom, [...currentUsers, newUser])
+    
+    // Update pagination total
+    const pagination = get(userPaginationAtom)
+    set(userPaginationAtom, {
+      ...pagination,
+      total: pagination.total + 1,
+    })
+  }
+)
+
+export const updateUserAtom = atom<null, [string, Partial<User>], void>(
+  null,
+  (get, set, userId, updates) => {
+    const currentUsers = get(usersAtom)
+    const updatedUsers = currentUsers.map(user =>
+      user.id === userId
+        ? { ...user, ...updates, updatedAt: new Date() }
+        : user
+    )
+    set(usersAtom, updatedUsers)
+  }
+)
+
+export const deleteUserAtom = atom<null, [string], void>(
+  null,
+  (get, set, userId) => {
+    const currentUsers = get(usersAtom)
+    const filteredUsers = currentUsers.filter(user => user.id !== userId)
+    set(usersAtom, filteredUsers)
+    
+    // Update pagination
+    const pagination = get(userPaginationAtom)
+    const newTotal = Math.max(0, pagination.total - 1)
+    const maxPage = Math.ceil(newTotal / pagination.pageSize) || 1
+    
+    set(userPaginationAtom, {
+      ...pagination,
+      total: newTotal,
+      page: Math.min(pagination.page, maxPage),
+    })
+    
+    // Remove from selected if selected
+    const selectedIds = get(userSelectedIdsAtom)
+    if (selectedIds.has(userId)) {
+      const newSelected = new Set(selectedIds)
+      newSelected.delete(userId)
+      set(userSelectedIdsAtom, newSelected)
+    }
+  }
+)
+
+export const bulkDeleteUsersAtom = atom<null, [string[]], void>(
+  null,
+  (get, set, userIds) => {
+    const currentUsers = get(usersAtom)
+    const idsToDelete = new Set(userIds)
+    const remainingUsers = currentUsers.filter(user => !idsToDelete.has(user.id))
+    
+    set(usersAtom, remainingUsers)
+    
+    // Clear selections
+    set(userSelectedIdsAtom, new Set())
+    
+    // Update pagination
+    const pagination = get(userPaginationAtom)
+    const newTotal = remainingUsers.length
+    const maxPage = Math.ceil(newTotal / pagination.pageSize) || 1
+    
+    set(userPaginationAtom, {
+      ...pagination,
+      total: newTotal,
+      page: Math.min(pagination.page, maxPage),
+    })
+  }
+)
+
+export const resetFiltersAtom = atom<null, [], void>(
+  null,
+  (get, set) => {
+    set(userFiltersAtom, RESET)
+    const pagination = get(userPaginationAtom)
+    set(userPaginationAtom, { ...pagination, page: 1 })
+  }
+)
+```
+
+## Advanced React Integration
+
+**Optimized components with Jotai hooks and suspense:**
+```tsx
+import React, { Suspense, useCallback, useMemo, useState, useTransition } from 'react'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { ErrorBoundary } from 'react-error-boundary'
+
+// ✅ Provider setup (Jotai works without providers, but useful for scoping)
+import { Provider as JotaiProvider, createStore } from 'jotai'
+
+const userStore = createStore()
+
+export const AppWithJotai: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <JotaiProvider store={userStore}>
+      <ErrorBoundary
+        FallbackComponent={({ error, resetErrorBoundary }) => (
+          <div className="error-boundary">
+            <h2>Something went wrong with user state:</h2>
+            <pre>{error.message}</pre>
+            <button onClick={resetErrorBoundary}>Reset</button>
+          </div>
+        )}
+      >
+        <Suspense fallback={<div className="app-loading">Loading users...</div>}>
+          {children}
+        </Suspense>
+      </ErrorBoundary>
+    </JotaiProvider>
+  )
+}
+
+// ✅ Main user list component with suspense
+const UserList: React.FC = () => {
+  const users = useAtomValue(paginatedUsersAtom)
+  const stats = useAtomValue(userStatsAtom)
+  const loadableUsers = useAtomValue(userLoadableAtom)
+  const [isPending, startTransition] = useTransition()
+
+  if (loadableUsers.state === 'loading') {
+    return (
+      <div className="loading-container">
+        <div className="spinner" />
+        <p>Loading users...</p>
+      </div>
+    )
+  }
+
+  if (loadableUsers.state === 'hasError') {
+    return (
+      <div className="error-container">
+        <h3>Failed to load users</h3>
+        <p>{loadableUsers.error.message}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="user-list-container">
+      <UserListHeader stats={stats} />
+      
+      <div className={`user-list-content ${isPending ? 'updating' : ''}`}>
+        <UserFilters onFilterChange={() => startTransition(() => {})} />
+        
+        <div className="user-grid">
+          {users.length === 0 ? (
+            <EmptyUserState />
+          ) : (
+            users.map(user => (
+              <UserCard key={user.id} userId={user.id} />
+            ))
+          )}
+        </div>
+        
+        <UserPagination />
+      </div>
+      
+      <BulkActions />
+    </div>
+  )
+}
+
+// ✅ Individual user card component
+const UserCard: React.FC<{ userId: string }> = React.memo(({ userId }) => {
+  const user = useAtomValue(userByIdAtomFamily(userId))
+  const updateUser = useSetAtom(updateUserAtom)
+  const deleteUser = useSetAtom(deleteUserAtom)
+  const [selectedIds, setSelectedIds] = useAtom(userSelectedIdsAtom)
+  const [showDetails, setShowDetails] = useState(false)
+
+  const isSelected = selectedIds.has(userId)
+
+  const handleToggleSelect = useCallback(() => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(userId)) {
+        newSet.delete(userId)
+      } else {
+        newSet.add(userId)
+      }
+      return newSet
+    })
+  }, [userId, setSelectedIds])
+
+  const handleToggleStatus = useCallback(() => {
+    if (user) {
+      updateUser(userId, { isActive: !user.isActive })
+    }
+  }, [userId, user, updateUser])
+
+  const handleDelete = useCallback(() => {
+    if (user && window.confirm(`Delete ${user.firstName} ${user.lastName}?`)) {
+      deleteUser(userId)
+    }
+  }, [userId, user, deleteUser])
+
+  if (!user) return null
+
+  return (
+    <div className={`user-card ${user.isActive ? 'active' : 'inactive'} ${isSelected ? 'selected' : ''}`}>
+      <div className="user-card-header">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={handleToggleSelect}
+          className="user-select-checkbox"
+        />
+        
+        <div className="user-avatar" onClick={() => setShowDetails(!showDetails)}>
+          {user.avatar ? (
+            <img src={user.avatar} alt={`${user.firstName} ${user.lastName}`} />
+          ) : (
+            <div className="avatar-placeholder">
+              {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+            </div>
+          )}
+          {user.lastLoginAt && Date.now() - user.lastLoginAt.getTime() < 5 * 60 * 1000 && (
+            <div className="online-indicator" />
+          )}
+        </div>
+      </div>
+      
+      <div className="user-card-body">
+        <h4>{user.firstName} {user.lastName}</h4>
+        <p className="user-email">{user.email}</p>
+        
+        <div className="user-roles">
+          {user.roles.map(role => (
+            <span key={role} className={`role-badge role-${role}`}>
+              {role}
+            </span>
+          ))}
+        </div>
+        
+        {showDetails && (
+          <UserDetailsExpanded user={user} />
+        )}
+      </div>
+      
+      <div className="user-card-actions">
+        <button
+          className={`toggle-status ${user.isActive ? 'deactivate' : 'activate'}`}
+          onClick={handleToggleStatus}
+          title={user.isActive ? 'Deactivate user' : 'Activate user'}
+        >
+          {user.isActive ? '⏸️' : '▶️'}
+        </button>
+        
+        <button
+          className="delete-user"
+          onClick={handleDelete}
+          title="Delete user"
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+  )
+})
+
+// ✅ Enhanced filters component with focus atoms
+const UserFilters: React.FC<{ onFilterChange?: () => void }> = ({ onFilterChange }) => {
+  const [filters, setFilters] = useAtom(userFiltersAtom)
+  const search = useAtomValue(userSearchAtom)
+  const setSearch = useSetAtom(focusAtom(userFiltersAtom, (optic) => optic.prop('search')))
+  const stats = useAtomValue(userStatsAtom)
+  const resetFilters = useSetAtom(resetFiltersAtom)
+
+  const roleOptions = useMemo(() =>
+    Object.entries(stats.roleDistribution).map(([role, count]) => ({
+      value: role,
+      label: `${role} (${count})`,
+    }))
+  , [stats.roleDistribution])
+
+  const handleQuickFilter = useCallback((preset: Partial<UserFilters>) => {
+    setFilters(prev => ({ ...prev, ...preset, page: 1 }))
+    onFilterChange?.()
+  }, [setFilters, onFilterChange])
+
+  return (
+    <div className="user-filters">
+      <div className="filter-row">
+        <div className="search-group">
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
+        
+        <div className="filter-selects">
+          <select 
+            value={filters.status} 
+            onChange={(e) => setFilters(prev => ({ 
+              ...prev, 
+              status: e.target.value as UserFilters['status'] 
+            }))}
+          >
+            <option value="all">All Status ({stats.total})</option>
+            <option value="active">Active ({stats.active})</option>
+            <option value="inactive">Inactive ({stats.inactive})</option>
+          </select>
+          
+          <select 
+            value={filters.role} 
+            onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
+          >
+            <option value="all">All Roles</option>
+            {roleOptions.map(({ value, label }) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+          
+          <select 
+            value={`${filters.sortBy}-${filters.sortOrder}`}
+            onChange={(e) => {
+              const [sortBy, sortOrder] = e.target.value.split('-') as [keyof User, 'asc' | 'desc']
+              setFilters(prev => ({ ...prev, sortBy, sortOrder }))
+            }}
+          >
+            <option value="firstName-asc">First Name A-Z</option>
+            <option value="firstName-desc">First Name Z-A</option>
+            <option value="lastName-asc">Last Name A-Z</option>
+            <option value="lastName-desc">Last Name Z-A</option>
+            <option value="email-asc">Email A-Z</option>
+            <option value="email-desc">Email Z-A</option>
+            <option value="createdAt-desc">Newest First</option>
+            <option value="createdAt-asc">Oldest First</option>
+          </select>
+        </div>
+        
+        <button className="reset-filters" onClick={resetFilters}>
+          Reset Filters
+        </button>
+      </div>
+      
+      <div className="quick-filters">
+        <span>Quick filters:</span>
+        <button onClick={() => handleQuickFilter({ status: 'active', role: 'admin' })}>
+          Active Admins
+        </button>
+        <button onClick={() => handleQuickFilter({ status: 'inactive' })}>
+          Inactive Users
+        </button>
+        <button onClick={() => handleQuickFilter({ 
+          dateRange: { 
+            start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
+            end: new Date() 
+          } 
+        })}>
+          Recent (7 days)
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ✅ Bulk actions component
+const BulkActions: React.FC = () => {
+  const selectedIds = useAtomValue(userSelectedIdsAtom)
+  const selectedUsers = useAtomValue(selectedUsersAtom)
+  const bulkDelete = useSetAtom(bulkDeleteUsersAtom)
+  const updateUser = useSetAtom(updateUserAtom)
+  const setSelectedIds = useSetAtom(userSelectedIdsAtom)
+
+  const selectedCount = selectedIds.size
+
+  const handleBulkActivate = useCallback(() => {
+    Array.from(selectedIds).forEach(id => {
+      updateUser(id, { isActive: true })
+    })
+    setSelectedIds(new Set())
+  }, [selectedIds, updateUser, setSelectedIds])
+
+  const handleBulkDeactivate = useCallback(() => {
+    Array.from(selectedIds).forEach(id => {
+      updateUser(id, { isActive: false })
+    })
+    setSelectedIds(new Set())
+  }, [selectedIds, updateUser, setSelectedIds])
+
+  const handleBulkDelete = useCallback(() => {
+    if (window.confirm(`Delete ${selectedCount} selected users?`)) {
+      bulkDelete(Array.from(selectedIds))
+    }
+  }, [selectedCount, selectedIds, bulkDelete])
+
+  if (selectedCount === 0) return null
+
+  return (
+    <div className="bulk-actions">
+      <div className="bulk-info">
+        {selectedCount} user{selectedCount !== 1 ? 's' : ''} selected
+      </div>
+      
+      <div className="bulk-buttons">
+        <button onClick={handleBulkActivate} className="bulk-activate">
+          Activate All
+        </button>
+        <button onClick={handleBulkDeactivate} className="bulk-deactivate">
+          Deactivate All
+        </button>
+        <button onClick={handleBulkDelete} className="bulk-delete">
+          Delete All
+        </button>
+        <button onClick={() => setSelectedIds(new Set())} className="bulk-clear">
+          Clear Selection
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ✅ Pagination component
+const UserPagination: React.FC = () => {
+  const [pagination, setPagination] = useAtom(userPaginationAtom)
+  const filteredCount = useAtomValue(filteredUsersAtom).length
+
+  const totalPages = Math.ceil(filteredCount / pagination.pageSize)
+  const showPagination = totalPages > 1
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPagination(prev => ({ ...prev, page: newPage }))
+  }, [setPagination])
+
+  const handlePageSizeChange = useCallback((newPageSize: number) => {
+    setPagination(prev => ({
+      ...prev,
+      pageSize: newPageSize,
+      page: Math.min(prev.page, Math.ceil(filteredCount / newPageSize) || 1),
+    }))
+  }, [setPagination, filteredCount])
+
+  if (!showPagination) return null
+
+  const startItem = (pagination.page - 1) * pagination.pageSize + 1
+  const endItem = Math.min(pagination.page * pagination.pageSize, filteredCount)
+
+  return (
+    <div className="user-pagination">
+      <div className="pagination-info">
+        Showing {startItem}-{endItem} of {filteredCount} users
+      </div>
+      
+      <div className="pagination-controls">
+        <button
+          disabled={pagination.page <= 1}
+          onClick={() => handlePageChange(pagination.page - 1)}
+          className="page-button"
+        >
+          ← Previous
+        </button>
+        
+        <div className="page-numbers">
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const pageNum = Math.max(1, pagination.page - 2) + i
+            if (pageNum > totalPages) return null
+            
+            return (
+              <button
+                key={pageNum}
+                className={`page-number ${pageNum === pagination.page ? 'active' : ''}`}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </button>
+            )
+          })}
+        </div>
+        
+        <button
+          disabled={pagination.page >= totalPages}
+          onClick={() => handlePageChange(pagination.page + 1)}
+          className="page-button"
+        >
+          Next →
+        </button>
+      </div>
+      
+      <div className="page-size-controls">
+        <label>Show:</label>
+        {[10, 20, 50, 100].map(size => (
+          <button
+            key={size}
+            className={pagination.pageSize === size ? 'active' : ''}
+            onClick={() => handlePageSizeChange(size)}
+          >
+            {size}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+## Custom Hooks & Utilities
+
+**Reusable patterns for Jotai state management:**
+```tsx
+import { useCallback, useEffect, useMemo } from 'react'
+import { useAtom, useAtomValue, useSetAtom, atom } from 'jotai'
+import { atomWithStorage } from 'jotai/storage'
+
+// ✅ Custom hooks for complex operations
+export const useUserOperations = () => {
+  const addUser = useSetAtom(addUserAtom)
+  const updateUser = useSetAtom(updateUserAtom)
+  const deleteUser = useSetAtom(deleteUserAtom)
+  const bulkDelete = useSetAtom(bulkDeleteUsersAtom)
+  const [loading, setLoading] = useAtom(userLoadingAtom)
+  const [error, setError] = useAtom(userErrorAtom)
+
+  const createUser = useCallback(async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to create user: ${response.statusText}`)
+      }
+
+      const newUser: User = await response.json()
+      addUser(newUser)
+      return newUser
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create user'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [addUser, setLoading, setError])
+
+  const updateUserData = useCallback(async (userId: string, updates: Partial<User>) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to update user: ${response.statusText}`)
+      }
+
+      const updatedUser: User = await response.json()
+      updateUser(userId, updatedUser)
+      return updatedUser
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update user'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [updateUser, setLoading, setError])
+
+  const deleteUserData = useCallback(async (userId: string) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.statusText}`)
+      }
+
+      deleteUser(userId)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete user'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [deleteUser, setLoading, setError])
+
+  return {
+    createUser,
+    updateUser: updateUserData,
+    deleteUser: deleteUserData,
+    bulkDelete,
+    loading,
+    error,
+  }
+}
+
+// ✅ Hook for managing user form state with validation
+export const useUserForm = (userId?: string) => {
+  const [formData, setFormData] = useAtom(
+    useMemo(() => userFormAtomFamily(userId || 'new'), [userId])
+  )
+  const { createUser, updateUser } = useUserOperations()
+  
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+
+  const validateField = useCallback((field: string, value: any): string | null => {
+    switch (field) {
+      case 'firstName':
+      case 'lastName':
+        return !value?.trim() ? `${field} is required` : null
+      case 'email':
+        if (!value?.trim()) return 'Email is required'
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return !emailRegex.test(value) ? 'Invalid email format' : null
+      case 'roles':
+        return !value?.length ? 'At least one role is required' : null
+      default:
+        return null
+    }
+  }, [])
+
+  const validateForm = useCallback(() => {
+    const errors: Record<string, string> = {}
+    
+    Object.keys(formData).forEach(field => {
+      const error = validateField(field, formData[field as keyof typeof formData])
+      if (error) errors[field] = error
+    })
+    
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
+  }, [formData, validateField])
+
+  const updateField = useCallback(<K extends keyof Partial<User>>(
+    field: K,
+    value: Partial<User>[K]
+  ) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    setTouched(prev => ({ ...prev, [field]: true }))
+    
+    // Real-time validation
+    const error = validateField(field as string, value)
+    setValidationErrors(prev => ({
+      ...prev,
+      [field]: error || undefined,
+    }))
+  }, [setFormData, validateField])
+
+  const resetForm = useCallback(() => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      isActive: true,
+      roles: ['user'],
+      preferences: {
+        theme: 'light',
+        language: 'en',
+        notifications: true,
+      },
+    })
+    setValidationErrors({})
+    setTouched({})
+  }, [setFormData])
+
+  const submitForm = useCallback(async () => {
+    const isValid = validateForm()
+    if (!isValid) return false
+
+    try {
+      if (userId && userId !== 'new') {
+        await updateUser(userId, formData)
+      } else {
+        await createUser(formData as Omit<User, 'id' | 'createdAt' | 'updatedAt'>)
+        resetForm()
+      }
+      return true
+    } catch (error) {
+      console.error('Form submission failed:', error)
+      return false
+    }
+  }, [validateForm, userId, updateUser, createUser, formData, resetForm])
+
+  const fieldProps = useCallback((field: keyof Partial<User>) => ({
+    value: formData[field] ?? '',
+    onChange: (value: any) => updateField(field, value),
+    error: touched[field] ? validationErrors[field] : undefined,
+    touched: touched[field],
+  }), [formData, updateField, validationErrors, touched])
+
+  return {
+    formData,
+    validationErrors,
+    touched,
+    updateField,
+    resetForm,
+    submitForm,
+    fieldProps,
+    isValid: Object.keys(validationErrors).length === 0,
+    isDirty: Object.keys(touched).length > 0,
+  }
+}
+
+// ✅ Hook for managing selections
+export const useUserSelection = () => {
+  const [selectedIds, setSelectedIds] = useAtom(userSelectedIdsAtom)
+  const selectedUsers = useAtomValue(selectedUsersAtom)
+  const filteredUsers = useAtomValue(filteredUsersAtom)
+
+  const toggleSelection = useCallback((userId: string) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(userId)) {
+        newSet.delete(userId)
+      } else {
+        newSet.add(userId)
+      }
+      return newSet
+    })
+  }, [setSelectedIds])
+
+  const selectAll = useCallback(() => {
+    const allIds = new Set(filteredUsers.map(user => user.id))
+    setSelectedIds(allIds)
+  }, [filteredUsers, setSelectedIds])
+
+  const selectNone = useCallback(() => {
+    setSelectedIds(new Set())
+  }, [setSelectedIds])
+
+  const selectByStatus = useCallback((isActive: boolean) => {
+    const userIds = new Set(
+      filteredUsers
+        .filter(user => user.isActive === isActive)
+        .map(user => user.id)
+    )
+    setSelectedIds(userIds)
+  }, [filteredUsers, setSelectedIds])
+
+  const toggleSelectAll = useCallback(() => {
+    if (selectedIds.size === filteredUsers.length) {
+      selectNone()
+    } else {
+      selectAll()
+    }
+  }, [selectedIds.size, filteredUsers.length, selectAll, selectNone])
+
+  return {
+    selectedIds,
+    selectedUsers,
+    selectedCount: selectedIds.size,
+    isAllSelected: selectedIds.size === filteredUsers.length && filteredUsers.length > 0,
+    isNoneSelected: selectedIds.size === 0,
+    toggleSelection,
+    selectAll,
+    selectNone,
+    selectByStatus,
+    toggleSelectAll,
+  }
+}
+
+// ✅ Hook for search with debouncing
+export const useUserSearch = (debounceMs = 300) => {
+  const searchAtom = useMemo(() => focusAtom(userFiltersAtom, (optic) => optic.prop('search')), [])
+  const [query, setQuery] = useAtom(searchAtom)
+  const [debouncedQuery, setDebouncedQuery] = useState(query)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query)
+    }, debounceMs)
+
+    return () => clearTimeout(timer)
+  }, [query, debounceMs])
+
+  const searchResults = useAtomValue(
+    useMemo(() => atom(get => {
+      const users = get(usersAtom)
+      if (!debouncedQuery) return users
+      
+      const search = debouncedQuery.toLowerCase()
+      return users.filter(user =>
+        user.firstName.toLowerCase().includes(search) ||
+        user.lastName.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search)
+      )
+    }), [debouncedQuery])
+  )
+
+  return {
+    query,
+    debouncedQuery,
+    results: searchResults,
+    setQuery,
+    isSearching: query !== debouncedQuery,
+  }
+}
+
+// ✅ Hook for persistent preferences
+export const useUserPreferences = () => {
+  const preferencesAtom = useMemo(() => atomWithStorage('userPreferences', {
+    theme: 'light' as 'light' | 'dark',
+    language: 'en',
+    pageSize: 20,
+    autoRefresh: true,
+    showAvatars: true,
+    showLastLogin: true,
+  }), [])
+
+  const [preferences, setPreferences] = useAtom(preferencesAtom)
+
+  const updatePreference = useCallback(<K extends keyof typeof preferences>(
+    key: K,
+    value: typeof preferences[K]
+  ) => {
+    setPreferences(prev => ({ ...prev, [key]: value }))
+  }, [setPreferences])
+
+  const resetPreferences = useCallback(() => {
+    setPreferences({
+      theme: 'light',
+      language: 'en',
+      pageSize: 20,
+      autoRefresh: true,
+      showAvatars: true,
+      showLastLogin: true,
+    })
+  }, [setPreferences])
+
+  return {
+    preferences,
+    updatePreference,
+    resetPreferences,
+  }
+}
+
+// ✅ Hook for real-time updates
+export const useRealTimeUpdates = () => {
+  const setUsers = useSetAtom(usersAtom)
+  const { preferences } = useUserPreferences()
+
+  useEffect(() => {
+    if (!preferences.autoRefresh) return
+
+    const eventSource = new EventSource('/api/users/stream')
+    
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data)
+        
+        switch (data.type) {
+          case 'user_created':
+            setUsers(prev => [...prev, data.user])
+            break
+          case 'user_updated':
+            setUsers(prev => prev.map(user => 
+              user.id === data.user.id ? { ...user, ...data.user } : user
+            ))
+            break
+          case 'user_deleted':
+            setUsers(prev => prev.filter(user => user.id !== data.userId))
+            break
+          case 'users_sync':
+            setUsers(data.users)
+            break
+        }
+      } catch (error) {
+        console.error('Error parsing SSE data:', error)
+      }
+    }
+
+    eventSource.onerror = () => {
+      console.warn('SSE connection error, retrying...')
+      eventSource.close()
+    }
+
+    return () => eventSource.close()
+  }, [setUsers, preferences.autoRefresh])
+}
+```
+
+## Advanced Patterns & Performance
+
+**Complex atom compositions and optimization techniques:**
+```tsx
+import { atom, atomFamily } from 'jotai'
+import { atomWithReducer } from 'jotai/vanilla/utils'
+import { atomWithMachine } from 'jotai/xstate'
+import { createMachine } from 'xstate'
+
+// ✅ Atom with reducer for complex state logic
+type UserListAction = 
+  | { type: 'SORT'; payload: { field: keyof User; direction: 'asc' | 'desc' } }
+  | { type: 'FILTER'; payload: Partial<UserFilters> }
+  | { type: 'PAGINATE'; payload: { page: number; pageSize: number } }
+  | { type: 'RESET' }
+
+const userListReducer = (
+  state: { filters: UserFilters; pagination: { page: number; pageSize: number } },
+  action: UserListAction
+) => {
+  switch (action.type) {
+    case 'SORT':
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          sortBy: action.payload.field,
+          sortOrder: action.payload.direction,
+        },
+        pagination: { ...state.pagination, page: 1 },
+      }
+    case 'FILTER':
+      return {
+        ...state,
+        filters: { ...state.filters, ...action.payload },
+        pagination: { ...state.pagination, page: 1 },
+      }
+    case 'PAGINATE':
+      return {
+        ...state,
+        pagination: action.payload,
+      }
+    case 'RESET':
+      return {
+        filters: {
+          search: '',
+          status: 'all',
+          role: 'all',
+          sortBy: 'firstName',
+          sortOrder: 'asc',
+        },
+        pagination: { page: 1, pageSize: 20 },
+      }
+    default:
+      return state
+  }
+}
+
+export const userListStateAtom = atomWithReducer(
+  {
+    filters: {
+      search: '',
+      status: 'all' as const,
+      role: 'all',
+      sortBy: 'firstName' as keyof User,
+      sortOrder: 'asc' as const,
+    },
+    pagination: { page: 1, pageSize: 20 },
+  },
+  userListReducer
+)
+
+// ✅ State machine atom for user editing workflow
+const userEditMachine = createMachine({
+  id: 'userEdit',
+  initial: 'idle',
+  states: {
+    idle: {
+      on: {
+        EDIT: 'editing',
+        CREATE: 'creating',
+      },
+    },
+    editing: {
+      initial: 'loading',
+      states: {
+        loading: {
+          on: {
+            LOADED: 'form',
+            ERROR: 'error',
+          },
+        },
+        form: {
+          on: {
+            SAVE: 'saving',
+            CANCEL: '#userEdit.idle',
+            VALIDATE: 'validating',
+          },
+        },
+        validating: {
+          on: {
+            VALID: 'form',
+            INVALID: 'form',
+          },
+        },
+        saving: {
+          on: {
+            SUCCESS: '#userEdit.idle',
+            ERROR: 'error',
+          },
+        },
+        error: {
+          on: {
+            RETRY: 'form',
+            CANCEL: '#userEdit.idle',
+          },
+        },
+      },
+    },
+    creating: {
+      initial: 'form',
+      states: {
+        form: {
+          on: {
+            SAVE: 'saving',
+            CANCEL: '#userEdit.idle',
+          },
+        },
+        saving: {
+          on: {
+            SUCCESS: '#userEdit.idle',
+            ERROR: 'error',
+          },
+        },
+        error: {
+          on: {
+            RETRY: 'form',
+            CANCEL: '#userEdit.idle',
+          },
+        },
+      },
+    },
+  },
+})
+
+export const userEditMachineAtom = atomWithMachine(() => userEditMachine)
+
+// ✅ Computed atom with memoization
+export const expensiveUserAnalyticsAtom = atom((get) => {
+  const users = get(usersAtom)
+  
+  // Expensive computations that benefit from memoization
+  console.log('Computing expensive analytics...')
+  
+  const analytics = users.reduce((acc, user) => {
+    // Complex scoring algorithm
+    const baseScore = user.roles.length * 10
+    const activityBonus = user.isActive ? 20 : 0
+    const recentLoginBonus = user.lastLoginAt && 
+      Date.now() - user.lastLoginAt.getTime() < 7 * 24 * 60 * 60 * 1000 ? 15 : 0
+    
+    const totalScore = baseScore + activityBonus + recentLoginBonus
+    
+    acc.userScores[user.id] = totalScore
+    acc.totalScore += totalScore
+    acc.avgScore = acc.totalScore / users.length
+    
+    // Track role distribution
+    user.roles.forEach(role => {
+      acc.roleAnalytics[role] = (acc.roleAnalytics[role] || 0) + 1
+    })
+    
+    // Track activity patterns
+    if (user.lastLoginAt) {
+      const dayOfWeek = user.lastLoginAt.getDay()
+      acc.activityByDay[dayOfWeek] = (acc.activityByDay[dayOfWeek] || 0) + 1
+    }
+    
+    return acc
+  }, {
+    userScores: {} as Record<string, number>,
+    totalScore: 0,
+    avgScore: 0,
+    roleAnalytics: {} as Record<string, number>,
+    activityByDay: {} as Record<number, number>,
+    computedAt: new Date(),
+  })
+  
+  return analytics
+})
+
+// ✅ Optimized family with cleanup
+export const userCacheAtomFamily = atomFamily<string, User | null>(
+  (userId: string) => atom<User | null>(null),
+  (a, b) => a === b, // Custom equality check
+)
+
+// Cleanup function for unused atoms
+export const cleanupUserCache = () => {
+  // This would typically be called on unmount or when users are no longer needed
+  // Implementation depends on your specific cleanup strategy
+}
+
+// ✅ Atom with side effects
+export const userNotificationAtom = atom<string | null>(null)
+
+export const userOperationWithNotificationAtom = atom(
+  null,
+  (get, set, operation: { type: 'create' | 'update' | 'delete'; user: User }) => {
+    // Perform the operation
+    const currentUsers = get(usersAtom)
+    
+    switch (operation.type) {
+      case 'create':
+        set(usersAtom, [...currentUsers, operation.user])
+        set(userNotificationAtom, `User ${operation.user.firstName} ${operation.user.lastName} created`)
+        break
+      case 'update':
+        set(usersAtom, currentUsers.map(u => 
+          u.id === operation.user.id ? operation.user : u
+        ))
+        set(userNotificationAtom, `User ${operation.user.firstName} ${operation.user.lastName} updated`)
+        break
+      case 'delete':
+        set(usersAtom, currentUsers.filter(u => u.id !== operation.user.id))
+        set(userNotificationAtom, `User ${operation.user.firstName} ${operation.user.lastName} deleted`)
+        break
+    }
+    
+    // Clear notification after 3 seconds
+    setTimeout(() => {
+      set(userNotificationAtom, null)
+    }, 3000)
+  }
+)
+```
+
+## Testing Patterns
+
+**Comprehensive testing strategies for Jotai applications:**
+```tsx
+import { createStore } from 'jotai'
+import { renderHook, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+
+// ✅ Test utilities
+export const createTestStore = () => createStore()
+
+export const mockUsers: User[] = [
+  {
+    id: '1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    isActive: true,
+    roles: ['user', 'admin'],
+    lastLoginAt: new Date(),
+    preferences: { theme: 'light', language: 'en', notifications: true },
+    createdAt: new Date('2023-01-01'),
+    updatedAt: new Date(),
+  },
+  {
+    id: '2',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    email: 'jane@example.com',
+    isActive: true,
+    roles: ['user'],
+    lastLoginAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    preferences: { theme: 'dark', language: 'en', notifications: false },
+    createdAt: new Date('2023-02-01'),
+    updatedAt: new Date(),
+  },
+]
+
+// ✅ Atom testing
+describe('User Atoms', () => {
+  let store: ReturnType<typeof createStore>
+
+  beforeEach(() => {
+    store = createTestStore()
+  })
+
+  test('usersAtom stores and retrieves users', () => {
+    store.set(usersAtom, mockUsers)
+    const users = store.get(usersAtom)
+    
+    expect(users).toHaveLength(2)
+    expect(users[0].firstName).toBe('John')
+  })
+
+  test('filteredUsersAtom applies filters correctly', () => {
+    store.set(usersAtom, mockUsers)
+    store.set(userFiltersAtom, {
+      search: 'john',
+      status: 'all',
+      role: 'all',
+      sortBy: 'firstName',
+      sortOrder: 'asc',
+    })
+
+    const filtered = store.get(filteredUsersAtom)
+    expect(filtered).toHaveLength(1)
+    expect(filtered[0].firstName).toBe('John')
+  })
+
+  test('userStatsAtom computes statistics correctly', () => {
+    store.set(usersAtom, mockUsers)
+    const stats = store.get(userStatsAtom)
+
+    expect(stats.total).toBe(2)
+    expect(stats.active).toBe(2)
+    expect(stats.roleDistribution.user).toBe(2)
+    expect(stats.roleDistribution.admin).toBe(1)
+  })
+})
+
+// ✅ Component integration testing
+describe('UserList Integration', () => {
+  test('renders users and handles interactions', async () => {
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+      <JotaiProvider store={createTestStore()}>
+        {children}
+      </JotaiProvider>
+    )
+
+    const TestComponent = () => {
+      const setUsers = useSetAtom(usersAtom)
+      
+      useEffect(() => {
+        setUsers(mockUsers)
+      }, [setUsers])
+
+      return <UserList />
+    }
+
+    render(<TestComponent />, { wrapper: TestWrapper })
+
+    await waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument()
+      expect(screen.getByText('Jane Smith')).toBeInTheDocument()
+    })
+  })
+})
+
+// ✅ Custom hook testing
+describe('useUserOperations', () => {
+  test('creates user successfully', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ...mockUsers[0], id: '3' }),
+    })
+
+    const store = createTestStore()
+    const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+      <JotaiProvider store={store}>{children}</JotaiProvider>
+    )
+
+    const { result } = renderHook(() => useUserOperations(), {
+      wrapper: TestWrapper,
+    })
+
+    await act(async () => {
+      await result.current.createUser({
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'test@example.com',
+        isActive: true,
+        roles: ['user'],
+        preferences: { theme: 'light', language: 'en', notifications: true },
+      })
+    })
+
+    const users = store.get(usersAtom)
+    expect(users).toHaveLength(1)
+    expect(users[0].firstName).toBe('John')
+  })
+})
+```
+
+## Best Practices Summary
+
+**Key patterns for enterprise Jotai applications:**
+
+1. **Atomic Design**: Use bottom-up composition, create focused atoms for single concerns, leverage derived atoms for computed state.
+
+2. **Performance**: Utilize atom families for dynamic state, implement proper memoization, use split atoms for array operations.
+
+3. **Type Safety**: Define strict TypeScript interfaces, use atom families with proper typing, implement runtime validation.
+
+4. **State Management**: Use write-only atoms for actions, implement proper error handling, leverage focus atoms for nested updates.
+
+5. **Testing**: Create isolated test stores, test atoms independently, use proper mocking for async operations.
+
+6. **Advanced Patterns**: Use atom effects for side effects, implement state machines for complex workflows, create custom atom utilities.
+
+7. **Architecture**: Organize atoms by domain, use composition over inheritance, implement proper cleanup strategies.
+
+8. **Integration**: Leverage suspense for async atoms, implement proper error boundaries, use loadable atoms for better UX.
+
+Always prioritize atomic composition, maintain clear data flow, and leverage Jotai's bottom-up reactive system for optimal performance and developer experience.
+``` 

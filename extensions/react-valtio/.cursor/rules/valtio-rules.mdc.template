@@ -1,38 +1,1899 @@
 ---
-description: Specific guidelines for implementing and managing state with Valtio's proxy-based state management.
+description: Comprehensive patterns and best practices for implementing enterprise-grade proxy-based state management with Valtio in React applications.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Valtio Rules
+# Valtio Advanced Implementation Patterns
 
-## Proxy State Management
+## Core Proxy State Architecture
 
-1. Use consistent state object structure
-2. Implement proper state immutability patterns
-3. Use TypeScript for state types
-4. Handle nested state updates properly
-5. Implement proper state subscriptions
+**Mutable proxy state with immutable snapshots:**
+```tsx
+import { proxy, useSnapshot, snapshot, subscribe, ref, proxyMap, proxySet } from 'valtio'
+import { subscribeKey, watch } from 'valtio/utils'
+import { derive } from 'valtio/derive'
+import { persist } from 'valtio/persist'
 
-## State Updates
+// ✅ Domain entity types
+export interface User {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar?: string
+  isActive: boolean
+  roles: string[]
+  lastLoginAt?: Date
+  preferences: {
+    theme: 'light' | 'dark'
+    language: string
+    notifications: boolean
+    autoRefresh: boolean
+  }
+  metadata: {
+    createdAt: Date
+    updatedAt: Date
+    loginCount: number
+    failedLoginAttempts: number
+  }
+}
 
-1. Use proper state mutation patterns
-2. Implement proper state snapshots
-3. Use appropriate state subscriptions
-4. Handle async state updates properly
-5. Follow Valtio's proxy patterns
+export interface UserFilters {
+  search: string
+  status: 'all' | 'active' | 'inactive'
+  role: string
+  sortBy: keyof User
+  sortOrder: 'asc' | 'desc'
+  dateRange?: {
+    start: Date
+    end: Date
+  }
+}
 
-## Performance
+export interface UserUIState {
+  loading: boolean
+  error: string | null
+  selectedIds: Set<string>
+  bulkActionInProgress: boolean
+  currentView: 'grid' | 'list' | 'table'
+  showFilters: boolean
+  showBulkActions: boolean
+}
 
-1. Use proper state splitting
-2. Implement proper state memoization
-3. Use appropriate state subscriptions
-4. Handle large state objects properly
-5. Optimize proxy performance
+// ✅ Core proxy states
+export const userState = proxy<{
+  users: Map<string, User>
+  filters: UserFilters
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+  }
+  ui: UserUIState
+  cache: {
+    lastFetch: Date | null
+    searchCache: Map<string, string[]>
+    preferencesCache: Map<string, any>
+  }
+}>({
+  users: proxyMap<string, User>(),
+  filters: {
+    search: '',
+    status: 'all',
+    role: 'all',
+    sortBy: 'firstName',
+    sortOrder: 'asc',
+  },
+  pagination: {
+    page: 1,
+    pageSize: 20,
+    total: 0,
+  },
+  ui: {
+    loading: false,
+    error: null,
+    selectedIds: proxySet<string>(),
+    bulkActionInProgress: false,
+    currentView: 'grid',
+    showFilters: true,
+    showBulkActions: false,
+  },
+  cache: {
+    lastFetch: null,
+    searchCache: proxyMap<string, string[]>(),
+    preferencesCache: proxyMap<string, any>(),
+  },
+})
 
-## Best Practices
+// ✅ Persistent state with localStorage
+export const userPreferencesState = proxy(
+  persist(
+    {
+      theme: 'light' as 'light' | 'dark',
+      language: 'en',
+      defaultPageSize: 20,
+      autoRefresh: true,
+      refreshInterval: 30000,
+      showAvatars: true,
+      showLastLogin: true,
+      compactView: false,
+      savedFilters: [] as Array<{
+        name: string
+        filters: UserFilters
+      }>,
+    },
+    {
+      name: 'user-preferences',
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // Migration logic for older versions
+          return {
+            ...persistedState,
+            autoRefresh: true,
+            refreshInterval: 30000,
+          }
+        }
+        return persistedState
+      },
+    }
+  )
+)
 
-1. Use proper state organization
-2. Implement proper state persistence
-3. Use appropriate state selectors
-4. Handle state updates properly
-5. Follow Valtio best practices 
+// ✅ Application-wide state
+export const appState = proxy({
+  initialized: false,
+  currentUser: null as User | null,
+  permissions: [] as string[],
+  environment: process.env.NODE_ENV as 'development' | 'production' | 'test',
+  apiBaseUrl: process.env.REACT_APP_API_URL || '/api',
+  features: {
+    bulkOperations: true,
+    realTimeUpdates: true,
+    advancedSearch: true,
+    exportData: true,
+  } as Record<string, boolean>,
+})
+
+// ✅ Derived state with automatic updates
+export const derivedUserState = derive({
+  // Filtered users based on current filters
+  filteredUsers: (get) => {
+    const { users, filters } = get(userState)
+    const usersArray = Array.from(users.values())
+
+    let filtered = usersArray
+
+    // Search filter
+    if (filters.search) {
+      const search = filters.search.toLowerCase()
+      filtered = filtered.filter(user =>
+        user.firstName.toLowerCase().includes(search) ||
+        user.lastName.toLowerCase().includes(search) ||
+        user.email.toLowerCase().includes(search)
+      )
+    }
+
+    // Status filter
+    if (filters.status !== 'all') {
+      filtered = filtered.filter(user =>
+        filters.status === 'active' ? user.isActive : !user.isActive
+      )
+    }
+
+    // Role filter
+    if (filters.role !== 'all') {
+      filtered = filtered.filter(user => user.roles.includes(filters.role))
+    }
+
+    // Date range filter
+    if (filters.dateRange) {
+      filtered = filtered.filter(user => {
+        const createdAt = user.metadata.createdAt.getTime()
+        return createdAt >= filters.dateRange!.start.getTime() && 
+               createdAt <= filters.dateRange!.end.getTime()
+      })
+    }
+
+    // Sorting
+    filtered.sort((a, b) => {
+      const aValue = a[filters.sortBy]
+      const bValue = b[filters.sortBy]
+
+      if (aValue instanceof Date && bValue instanceof Date) {
+        const comparison = aValue.getTime() - bValue.getTime()
+        return filters.sortOrder === 'desc' ? -comparison : comparison
+      }
+
+      const comparison = String(aValue || '').localeCompare(String(bValue || ''))
+      return filters.sortOrder === 'desc' ? -comparison : comparison
+    })
+
+    return filtered
+  },
+
+  // Paginated users for current view
+  paginatedUsers: (get) => {
+    const filtered = get(derivedUserState).filteredUsers
+    const { page, pageSize } = get(userState).pagination
+
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize
+
+    return filtered.slice(startIndex, endIndex)
+  },
+
+  // User statistics
+  userStats: (get) => {
+    const users = Array.from(get(userState).users.values())
+    const filtered = get(derivedUserState).filteredUsers
+
+    const stats = {
+      total: users.length,
+      active: users.filter(u => u.isActive).length,
+      inactive: users.filter(u => !u.isActive).length,
+      online: users.filter(u => 
+        u.lastLoginAt && Date.now() - u.lastLoginAt.getTime() < 5 * 60 * 1000
+      ).length,
+      filtered: filtered.length,
+      roleDistribution: {} as Record<string, number>,
+      themeDistribution: {} as Record<string, number>,
+      averageLoginCount: 0,
+      totalLoginCount: 0,
+    }
+
+    // Compute distributions and aggregates
+    users.forEach(user => {
+      // Role distribution
+      user.roles.forEach(role => {
+        stats.roleDistribution[role] = (stats.roleDistribution[role] || 0) + 1
+      })
+
+      // Theme distribution
+      stats.themeDistribution[user.preferences.theme] = 
+        (stats.themeDistribution[user.preferences.theme] || 0) + 1
+
+      // Login statistics
+      stats.totalLoginCount += user.metadata.loginCount
+    })
+
+    stats.averageLoginCount = users.length > 0 ? stats.totalLoginCount / users.length : 0
+
+    return stats
+  },
+
+  // Selected users for bulk operations
+  selectedUsers: (get) => {
+    const selectedIds = get(userState).ui.selectedIds
+    const users = get(userState).users
+    
+    return Array.from(selectedIds).map(id => users.get(id)).filter(Boolean) as User[]
+  },
+
+  // Search suggestions based on history
+  searchSuggestions: (get) => {
+    const cache = get(userState).cache.searchCache
+    const currentSearch = get(userState).filters.search
+    
+    if (!currentSearch) return []
+
+    // Get cached searches that start with current input
+    const suggestions = Array.from(cache.values())
+      .flat()
+      .filter(term => term.toLowerCase().startsWith(currentSearch.toLowerCase()))
+      .filter(term => term !== currentSearch)
+      .slice(0, 5)
+
+    return Array.from(new Set(suggestions))
+  },
+})
+
+// ✅ Action functions for state mutations
+export const userActions = {
+  // User CRUD operations
+  addUser: (user: User) => {
+    userState.users.set(user.id, user)
+    userState.pagination.total++
+  },
+
+  updateUser: (id: string, updates: Partial<User>) => {
+    const user = userState.users.get(id)
+    if (user) {
+      Object.assign(user, updates)
+      user.metadata.updatedAt = new Date()
+    }
+  },
+
+  deleteUser: (id: string) => {
+    if (userState.users.delete(id)) {
+      userState.pagination.total = Math.max(0, userState.pagination.total - 1)
+      userState.ui.selectedIds.delete(id)
+      
+      // Adjust current page if needed
+      const maxPage = Math.ceil(userState.pagination.total / userState.pagination.pageSize) || 1
+      if (userState.pagination.page > maxPage) {
+        userState.pagination.page = maxPage
+      }
+    }
+  },
+
+  bulkDeleteUsers: (ids: string[]) => {
+    ids.forEach(id => {
+      userState.users.delete(id)
+      userState.ui.selectedIds.delete(id)
+    })
+    
+    userState.pagination.total = Math.max(0, userState.pagination.total - ids.length)
+    
+    // Adjust pagination
+    const maxPage = Math.ceil(userState.pagination.total / userState.pagination.pageSize) || 1
+    if (userState.pagination.page > maxPage) {
+      userState.pagination.page = maxPage
+    }
+  },
+
+  bulkUpdateUsers: (ids: string[], updates: Partial<User>) => {
+    ids.forEach(id => {
+      const user = userState.users.get(id)
+      if (user) {
+        Object.assign(user, updates)
+        user.metadata.updatedAt = new Date()
+      }
+    })
+  },
+
+  // Filter operations
+  setFilters: (filters: Partial<UserFilters>) => {
+    Object.assign(userState.filters, filters)
+    userState.pagination.page = 1 // Reset to first page
+    
+    // Cache search query if it's not empty
+    if (filters.search && filters.search.trim()) {
+      const cached = userState.cache.searchCache.get('recent') || []
+      cached.unshift(filters.search)
+      userState.cache.searchCache.set('recent', cached.slice(0, 10)) // Keep last 10 searches
+    }
+  },
+
+  resetFilters: () => {
+    userState.filters = {
+      search: '',
+      status: 'all',
+      role: 'all',
+      sortBy: 'firstName',
+      sortOrder: 'asc',
+    }
+    userState.pagination.page = 1
+  },
+
+  // Pagination operations
+  setPage: (page: number) => {
+    userState.pagination.page = page
+  },
+
+  setPageSize: (pageSize: number) => {
+    const oldPageSize = userState.pagination.pageSize
+    const currentFirstItem = (userState.pagination.page - 1) * oldPageSize
+
+    userState.pagination.pageSize = pageSize
+    userState.pagination.page = Math.floor(currentFirstItem / pageSize) + 1
+  },
+
+  // Selection operations
+  toggleUserSelection: (id: string) => {
+    if (userState.ui.selectedIds.has(id)) {
+      userState.ui.selectedIds.delete(id)
+    } else {
+      userState.ui.selectedIds.add(id)
+    }
+  },
+
+  selectAllVisible: () => {
+    const snap = snapshot(derivedUserState)
+    snap.paginatedUsers.forEach(user => {
+      userState.ui.selectedIds.add(user.id)
+    })
+  },
+
+  selectNone: () => {
+    userState.ui.selectedIds.clear()
+  },
+
+  selectByStatus: (isActive: boolean) => {
+    userState.ui.selectedIds.clear()
+    const snap = snapshot(derivedUserState)
+    snap.filteredUsers
+      .filter(user => user.isActive === isActive)
+      .forEach(user => userState.ui.selectedIds.add(user.id))
+  },
+
+  // UI operations
+  setLoading: (loading: boolean) => {
+    userState.ui.loading = loading
+  },
+
+  setError: (error: string | null) => {
+    userState.ui.error = error
+  },
+
+  setView: (view: 'grid' | 'list' | 'table') => {
+    userState.ui.currentView = view
+  },
+
+  toggleFilters: () => {
+    userState.ui.showFilters = !userState.ui.showFilters
+  },
+
+  // Cache operations
+  updateSearchCache: (query: string, results: string[]) => {
+    userState.cache.searchCache.set(query, results)
+  },
+
+  clearCache: () => {
+    userState.cache.searchCache.clear()
+    userState.cache.preferencesCache.clear()
+    userState.cache.lastFetch = null
+  },
+}
+
+// ✅ Async operations with proper state management
+export const userAsyncActions = {
+  fetchUsers: async () => {
+    userActions.setLoading(true)
+    userActions.setError(null)
+
+    try {
+      const response = await fetch(`${appState.apiBaseUrl}/users`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.statusText}`)
+      }
+
+      const users: User[] = await response.json()
+      
+      // Clear existing users and add new ones
+      userState.users.clear()
+      users.forEach(user => userState.users.set(user.id, user))
+      
+      userState.pagination.total = users.length
+      userState.cache.lastFetch = new Date()
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch users'
+      userActions.setError(errorMessage)
+      throw error
+    } finally {
+      userActions.setLoading(false)
+    }
+  },
+
+  createUser: async (userData: Omit<User, 'id' | 'metadata'>) => {
+    userActions.setLoading(true)
+    userActions.setError(null)
+
+    try {
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        ...userData,
+        metadata: {
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          loginCount: 0,
+          failedLoginAttempts: 0,
+        },
+      }
+
+      const response = await fetch(`${appState.apiBaseUrl}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to create user: ${response.statusText}`)
+      }
+
+      const createdUser: User = await response.json()
+      userActions.addUser(createdUser)
+      
+      return createdUser
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create user'
+      userActions.setError(errorMessage)
+      throw error
+    } finally {
+      userActions.setLoading(false)
+    }
+  },
+
+  updateUser: async (id: string, updates: Partial<User>) => {
+    userActions.setLoading(true)
+    userActions.setError(null)
+
+    try {
+      const response = await fetch(`${appState.apiBaseUrl}/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to update user: ${response.statusText}`)
+      }
+
+      const updatedUser: User = await response.json()
+      userActions.updateUser(id, updatedUser)
+      
+      return updatedUser
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update user'
+      userActions.setError(errorMessage)
+      throw error
+    } finally {
+      userActions.setLoading(false)
+    }
+  },
+
+  deleteUser: async (id: string) => {
+    userActions.setLoading(true)
+    userActions.setError(null)
+
+    try {
+      const response = await fetch(`${appState.apiBaseUrl}/users/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.statusText}`)
+      }
+
+      userActions.deleteUser(id)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete user'
+      userActions.setError(errorMessage)
+      throw error
+    } finally {
+      userActions.setLoading(false)
+    }
+  },
+
+  searchUsers: async (query: string) => {
+    if (!query.trim()) return
+
+    try {
+      const response = await fetch(`${appState.apiBaseUrl}/users/search?q=${encodeURIComponent(query)}`)
+      
+      if (!response.ok) {
+        throw new Error(`Search failed: ${response.statusText}`)
+      }
+
+      const results: User[] = await response.json()
+      const userIds = results.map(user => user.id)
+      
+      // Cache search results
+      userActions.updateSearchCache(query, userIds)
+      
+      return results
+    } catch (error) {
+      console.error('Search failed:', error)
+      return []
+    }
+  },
+}
+```
+
+## Advanced React Integration
+
+**Optimized components with proxy snapshots and subscriptions:**
+```tsx
+import React, { useCallback, useMemo, useEffect, useState, useTransition } from 'react'
+import { useSnapshot } from 'valtio'
+
+// ✅ Main user list component with reactive updates
+const UserList: React.FC = () => {
+  const snap = useSnapshot(userState)
+  const derivedSnap = useSnapshot(derivedUserState)
+  const prefsSnap = useSnapshot(userPreferencesState)
+  const [isPending, startTransition] = useTransition()
+
+  // Subscribe to specific state changes for optimizations
+  useEffect(() => {
+    const unsubscribe = subscribe(userState.ui, (ops) => {
+      console.log('UI state changed:', ops)
+    })
+    return unsubscribe
+  }, [])
+
+  if (snap.ui.loading) {
+    return <UserListSkeleton />
+  }
+
+  if (snap.ui.error) {
+    return <UserErrorState error={snap.ui.error} />
+  }
+
+  return (
+    <div className={`user-list-container ${snap.ui.currentView} ${prefsSnap.compactView ? 'compact' : ''}`}>
+      <UserListHeader stats={derivedSnap.userStats} />
+      
+      <div className={`user-list-content ${isPending ? 'updating' : ''}`}>
+        {snap.ui.showFilters && (
+          <UserFilters
+            onFilterChange={() => startTransition(() => {})}
+          />
+        )}
+        
+        <UserListControls />
+        
+        <div className="user-grid">
+          {derivedSnap.paginatedUsers.length === 0 ? (
+            <EmptyUserState />
+          ) : (
+            derivedSnap.paginatedUsers.map(user => (
+              <UserCard 
+                key={user.id} 
+                user={user}
+                isSelected={snap.ui.selectedIds.has(user.id)}
+              />
+            ))
+          )}
+        </div>
+        
+        <UserPagination />
+      </div>
+      
+      {snap.ui.selectedIds.size > 0 && <BulkActionsPanel />}
+    </div>
+  )
+}
+
+// ✅ Individual user card with granular updates
+const UserCard: React.FC<{ 
+  user: User
+  isSelected: boolean 
+}> = React.memo(({ user, isSelected }) => {
+  const prefsSnap = useSnapshot(userPreferencesState)
+  const [showDetails, setShowDetails] = useState(false)
+
+  const handleToggleSelect = useCallback(() => {
+    userActions.toggleUserSelection(user.id)
+  }, [user.id])
+
+  const handleToggleStatus = useCallback(() => {
+    userActions.updateUser(user.id, { isActive: !user.isActive })
+  }, [user.id, user.isActive])
+
+  const handleDelete = useCallback(() => {
+    if (window.confirm(`Delete ${user.firstName} ${user.lastName}?`)) {
+      userAsyncActions.deleteUser(user.id)
+    }
+  }, [user.id, user.firstName, user.lastName])
+
+  const isOnline = user.lastLoginAt && 
+    Date.now() - user.lastLoginAt.getTime() < 5 * 60 * 1000
+
+  return (
+    <div className={`user-card ${user.isActive ? 'active' : 'inactive'} ${isSelected ? 'selected' : ''}`}>
+      <div className="user-card-header">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={handleToggleSelect}
+          className="user-select-checkbox"
+        />
+        
+        {prefsSnap.showAvatars && (
+          <div className="user-avatar" onClick={() => setShowDetails(!showDetails)}>
+            {user.avatar ? (
+              <img src={user.avatar} alt={`${user.firstName} ${user.lastName}`} />
+            ) : (
+              <div className="avatar-placeholder">
+                {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+              </div>
+            )}
+            {isOnline && <div className="online-indicator" />}
+          </div>
+        )}
+      </div>
+      
+      <div className="user-card-body">
+        <h4>{user.firstName} {user.lastName}</h4>
+        <p className="user-email">{user.email}</p>
+        
+        <div className="user-roles">
+          {user.roles.map(role => (
+            <span key={role} className={`role-badge role-${role}`}>
+              {role}
+            </span>
+          ))}
+        </div>
+        
+        {prefsSnap.showLastLogin && user.lastLoginAt && (
+          <p className="last-login">
+            Last login: {user.lastLoginAt.toLocaleString()}
+          </p>
+        )}
+        
+        <div className="user-metadata">
+          <span className="login-count">Logins: {user.metadata.loginCount}</span>
+          <span className="created-date">
+            Created: {user.metadata.createdAt.toLocaleDateString()}
+          </span>
+        </div>
+        
+        {showDetails && <UserDetailsExpanded user={user} />}
+      </div>
+      
+      <div className="user-card-actions">
+        <button
+          className={`toggle-status ${user.isActive ? 'deactivate' : 'activate'}`}
+          onClick={handleToggleStatus}
+          title={user.isActive ? 'Deactivate user' : 'Activate user'}
+        >
+          {user.isActive ? '⏸️' : '▶️'}
+        </button>
+        
+        <UserQuickActions user={user} />
+        
+        <button
+          className="delete-user"
+          onClick={handleDelete}
+          title="Delete user"
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+  )
+})
+
+// ✅ Advanced filters with reactive search suggestions
+const UserFilters: React.FC<{ onFilterChange?: () => void }> = ({ onFilterChange }) => {
+  const snap = useSnapshot(userState)
+  const derivedSnap = useSnapshot(derivedUserState)
+  const prefsSnap = useSnapshot(userPreferencesState)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    userActions.setFilters({ search: query })
+    setShowSuggestions(query.length > 0)
+    onFilterChange?.()
+  }, [onFilterChange])
+
+  const handleQuickFilter = useCallback((preset: Partial<UserFilters>) => {
+    userActions.setFilters(preset)
+    onFilterChange?.()
+  }, [onFilterChange])
+
+  const handleSavedFilter = useCallback((savedFilter: typeof prefsSnap.savedFilters[0]) => {
+    userActions.setFilters(savedFilter.filters)
+    onFilterChange?.()
+  }, [onFilterChange])
+
+  const roleOptions = useMemo(() =>
+    Object.entries(derivedSnap.userStats.roleDistribution).map(([role, count]) => ({
+      value: role,
+      label: `${role} (${count})`,
+    }))
+  , [derivedSnap.userStats.roleDistribution])
+
+  return (
+    <div className="user-filters">
+      <div className="filter-row primary">
+        <div className="search-group">
+          <div className="search-input-wrapper">
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={snap.filters.search}
+              onChange={handleSearchChange}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              className="search-input"
+            />
+            {showSuggestions && derivedSnap.searchSuggestions.length > 0 && (
+              <div className="search-suggestions">
+                {derivedSnap.searchSuggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    className="suggestion-item"
+                    onClick={() => userActions.setFilters({ search: suggestion })}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="filter-selects">
+          <select 
+            value={snap.filters.status} 
+            onChange={(e) => userActions.setFilters({ 
+              status: e.target.value as UserFilters['status'] 
+            })}
+          >
+            <option value="all">All Status ({derivedSnap.userStats.total})</option>
+            <option value="active">Active ({derivedSnap.userStats.active})</option>
+            <option value="inactive">Inactive ({derivedSnap.userStats.inactive})</option>
+          </select>
+          
+          <select 
+            value={snap.filters.role} 
+            onChange={(e) => userActions.setFilters({ role: e.target.value })}
+          >
+            <option value="all">All Roles</option>
+            {roleOptions.map(({ value, label }) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+          
+          <select 
+            value={`${snap.filters.sortBy}-${snap.filters.sortOrder}`}
+            onChange={(e) => {
+              const [sortBy, sortOrder] = e.target.value.split('-') as [keyof User, 'asc' | 'desc']
+              userActions.setFilters({ sortBy, sortOrder })
+            }}
+          >
+            <option value="firstName-asc">First Name A-Z</option>
+            <option value="firstName-desc">First Name Z-A</option>
+            <option value="lastName-asc">Last Name A-Z</option>
+            <option value="lastName-desc">Last Name Z-A</option>
+            <option value="email-asc">Email A-Z</option>
+            <option value="email-desc">Email Z-A</option>
+            <option value="metadata.createdAt-desc">Newest First</option>
+            <option value="metadata.createdAt-asc">Oldest First</option>
+            <option value="metadata.loginCount-desc">Most Active</option>
+          </select>
+        </div>
+        
+        <button className="reset-filters" onClick={userActions.resetFilters}>
+          Reset All
+        </button>
+      </div>
+      
+      <div className="filter-row secondary">
+        <div className="quick-filters">
+          <span>Quick filters:</span>
+          <button onClick={() => handleQuickFilter({ status: 'active', role: 'admin' })}>
+            Active Admins
+          </button>
+          <button onClick={() => handleQuickFilter({ status: 'inactive' })}>
+            Inactive Users
+          </button>
+          <button onClick={() => handleQuickFilter({
+            dateRange: { 
+              start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
+              end: new Date() 
+            } 
+          })}>
+            Recent (7 days)
+          </button>
+          <button onClick={() => handleQuickFilter({
+            sortBy: 'metadata.loginCount',
+            sortOrder: 'desc',
+          })}>
+            Most Active
+          </button>
+        </div>
+        
+        {prefsSnap.savedFilters.length > 0 && (
+          <div className="saved-filters">
+            <span>Saved:</span>
+            {prefsSnap.savedFilters.map((filter, index) => (
+              <button 
+                key={index}
+                className="saved-filter"
+                onClick={() => handleSavedFilter(filter)}
+              >
+                {filter.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <div className="filter-stats">
+        <span>
+          Showing {derivedSnap.filteredUsers.length} of {derivedSnap.userStats.total} users
+        </span>
+        {snap.filters.search && (
+          <span className="search-results">
+            • Search results for "{snap.filters.search}"
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ✅ Bulk actions panel with reactive updates
+const BulkActionsPanel: React.FC = () => {
+  const snap = useSnapshot(userState)
+  const selectedSnap = useSnapshot(derivedUserState)
+  
+  const selectedCount = snap.ui.selectedIds.size
+  const selectedUsers = selectedSnap.selectedUsers
+
+  const handleBulkAction = useCallback(async (action: string) => {
+    const selectedIds = Array.from(snap.ui.selectedIds)
+    userState.ui.bulkActionInProgress = true
+
+    try {
+      switch (action) {
+        case 'activate':
+          userActions.bulkUpdateUsers(selectedIds, { isActive: true })
+          break
+        case 'deactivate':
+          userActions.bulkUpdateUsers(selectedIds, { isActive: false })
+          break
+        case 'delete':
+          if (window.confirm(`Delete ${selectedCount} selected users?`)) {
+            userActions.bulkDeleteUsers(selectedIds)
+          }
+          break
+        case 'export':
+          exportSelectedUsers(selectedUsers)
+          break
+      }
+      
+      userActions.selectNone()
+    } catch (error) {
+      console.error(`Bulk ${action} failed:`, error)
+    } finally {
+      userState.ui.bulkActionInProgress = false
+    }
+  }, [selectedCount, selectedUsers, snap.ui.selectedIds])
+
+  const exportSelectedUsers = useCallback((users: User[]) => {
+    const csv = generateUserCSV(users)
+    downloadCSV(csv, `selected-users-${new Date().toISOString().split('T')[0]}.csv`)
+  }, [])
+
+  return (
+    <div className="bulk-actions-panel">
+      <div className="bulk-info">
+        <span className="count">{selectedCount}</span>
+        <span className="label">user{selectedCount !== 1 ? 's' : ''} selected</span>
+      </div>
+      
+      <div className="bulk-actions">
+        <button 
+          onClick={() => handleBulkAction('activate')}
+          disabled={snap.ui.bulkActionInProgress}
+          className="bulk-activate"
+        >
+          Activate All
+        </button>
+        
+        <button 
+          onClick={() => handleBulkAction('deactivate')}
+          disabled={snap.ui.bulkActionInProgress}
+          className="bulk-deactivate"
+        >
+          Deactivate All
+        </button>
+        
+        <button 
+          onClick={() => handleBulkAction('export')}
+          disabled={snap.ui.bulkActionInProgress}
+          className="bulk-export"
+        >
+          Export CSV
+        </button>
+        
+        <button 
+          onClick={() => handleBulkAction('delete')}
+          disabled={snap.ui.bulkActionInProgress}
+          className="bulk-delete"
+        >
+          Delete All
+        </button>
+      </div>
+      
+      <button 
+        onClick={userActions.selectNone}
+        className="clear-selection"
+        title="Clear selection"
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
+```
+
+## Custom Hooks & Utilities
+
+**Advanced patterns for proxy state management:**
+```tsx
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { subscribe, subscribeKey, watch } from 'valtio/utils'
+import { useSnapshot, snapshot } from 'valtio'
+
+// ✅ Custom hooks for Valtio state management
+export const useUserOperations = () => {
+  const snap = useSnapshot(userState)
+
+  const operations = useMemo(() => ({
+    // Create operations
+    createUser: userAsyncActions.createUser,
+    
+    // Update operations
+    updateUser: userAsyncActions.updateUser,
+    updateUserField: (id: string, field: keyof User, value: any) => {
+      userActions.updateUser(id, { [field]: value } as Partial<User>)
+    },
+    
+    // Delete operations
+    deleteUser: userAsyncActions.deleteUser,
+    bulkDeleteUsers: userActions.bulkDeleteUsers,
+    
+    // Status operations
+    toggleUserStatus: (id: string) => {
+      const user = snap.users.get(id)
+      if (user) {
+        userActions.updateUser(id, { isActive: !user.isActive })
+      }
+    },
+    
+    activateUsers: (ids: string[]) => {
+      userActions.bulkUpdateUsers(ids, { isActive: true })
+    },
+    
+    deactivateUsers: (ids: string[]) => {
+      userActions.bulkUpdateUsers(ids, { isActive: false })
+    },
+  }), [snap.users])
+
+  return {
+    ...operations,
+    loading: snap.ui.loading,
+    error: snap.ui.error,
+  }
+}
+
+// ✅ Hook for managing user selections with advanced operations
+export const useUserSelection = () => {
+  const snap = useSnapshot(userState)
+  const derivedSnap = useSnapshot(derivedUserState)
+
+  const selectionOperations = useMemo(() => ({
+    toggleSelection: userActions.toggleUserSelection,
+    selectAll: userActions.selectAllVisible,
+    selectNone: userActions.selectNone,
+    selectByStatus: userActions.selectByStatus,
+    
+    selectByRole: (role: string) => {
+      userActions.selectNone()
+      derivedSnap.filteredUsers
+        .filter(user => user.roles.includes(role))
+        .forEach(user => userState.ui.selectedIds.add(user.id))
+    },
+    
+    selectByLoginActivity: (days: number) => {
+      userActions.selectNone()
+      const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000)
+      derivedSnap.filteredUsers
+        .filter(user => user.lastLoginAt && user.lastLoginAt.getTime() > cutoff)
+        .forEach(user => userState.ui.selectedIds.add(user.id))
+    },
+    
+    toggleSelectAll: () => {
+      if (snap.ui.selectedIds.size === derivedSnap.paginatedUsers.length) {
+        userActions.selectNone()
+      } else {
+        userActions.selectAllVisible()
+      }
+    },
+    
+    invertSelection: () => {
+      const currentSelected = new Set(snap.ui.selectedIds)
+      userActions.selectNone()
+      derivedSnap.paginatedUsers
+        .filter(user => !currentSelected.has(user.id))
+        .forEach(user => userState.ui.selectedIds.add(user.id))
+    },
+  }), [snap.ui.selectedIds, derivedSnap.filteredUsers, derivedSnap.paginatedUsers])
+
+  return {
+    selectedIds: snap.ui.selectedIds,
+    selectedUsers: derivedSnap.selectedUsers,
+    selectedCount: snap.ui.selectedIds.size,
+    isAllSelected: snap.ui.selectedIds.size === derivedSnap.paginatedUsers.length && derivedSnap.paginatedUsers.length > 0,
+    isNoneSelected: snap.ui.selectedIds.size === 0,
+    ...selectionOperations,
+  }
+}
+
+// ✅ Hook for advanced filtering with debouncing and caching
+export const useUserFilters = (debounceMs = 300) => {
+  const snap = useSnapshot(userState)
+  const derivedSnap = useSnapshot(derivedUserState)
+  const [debouncedSearch, setDebouncedSearch] = useState(snap.filters.search)
+
+  // Debounce search updates
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(snap.filters.search)
+    }, debounceMs)
+
+    return () => clearTimeout(timer)
+  }, [snap.filters.search, debounceMs])
+
+  const filterOperations = useMemo(() => ({
+    setFilters: userActions.setFilters,
+    resetFilters: userActions.resetFilters,
+    
+    setSearch: (query: string) => {
+      userActions.setFilters({ search: query })
+    },
+    
+    setStatus: (status: UserFilters['status']) => {
+      userActions.setFilters({ status })
+    },
+    
+    setRole: (role: string) => {
+      userActions.setFilters({ role })
+    },
+    
+    setSorting: (sortBy: keyof User, sortOrder: 'asc' | 'desc') => {
+      userActions.setFilters({ sortBy, sortOrder })
+    },
+    
+    setDateRange: (start: Date, end: Date) => {
+      userActions.setFilters({ dateRange: { start, end } })
+    },
+    
+    clearDateRange: () => {
+      const { dateRange, ...filters } = snap.filters
+      userState.filters = filters
+    },
+    
+    saveCurrentFilter: (name: string) => {
+      const newFilter = {
+        name,
+        filters: { ...snap.filters }
+      }
+      userPreferencesState.savedFilters.push(newFilter)
+    },
+    
+    deleteSavedFilter: (index: number) => {
+      userPreferencesState.savedFilters.splice(index, 1)
+    },
+  }), [snap.filters])
+
+  return {
+    filters: snap.filters,
+    debouncedSearch,
+    filteredCount: derivedSnap.filteredUsers.length,
+    searchSuggestions: derivedSnap.searchSuggestions,
+    isSearching: snap.filters.search !== debouncedSearch,
+    ...filterOperations,
+  }
+}
+
+// ✅ Hook for state persistence and synchronization
+export const useStatePersistence = () => {
+  const snap = useSnapshot(userState)
+  
+  // Save state to localStorage periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const stateToSave = {
+        filters: snap.filters,
+        pagination: snap.pagination,
+        ui: {
+          currentView: snap.ui.currentView,
+          showFilters: snap.ui.showFilters,
+        },
+      }
+      localStorage.setItem('user-state-backup', JSON.stringify(stateToSave))
+    }, 30000) // Save every 30 seconds
+
+    return () => clearInterval(interval)
+  }, [snap.filters, snap.pagination, snap.ui])
+
+  // Restore state from localStorage on mount
+  useEffect(() => {
+    const savedState = localStorage.getItem('user-state-backup')
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState)
+        Object.assign(userState.filters, parsed.filters || {})
+        Object.assign(userState.pagination, parsed.pagination || {})
+        Object.assign(userState.ui, parsed.ui || {})
+      } catch (error) {
+        console.warn('Failed to restore state:', error)
+      }
+    }
+  }, [])
+
+  const exportState = useCallback(() => {
+    const exportData = {
+      users: Array.from(snap.users.entries()),
+      filters: snap.filters,
+      pagination: snap.pagination,
+      preferences: snapshot(userPreferencesState),
+      timestamp: new Date().toISOString(),
+    }
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: 'application/json'
+    })
+    
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `user-state-${new Date().toISOString().split('T')[0]}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [snap])
+
+  const importState = useCallback((file: File) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string)
+        
+        // Import users
+        userState.users.clear()
+        data.users.forEach(([id, user]: [string, User]) => {
+          userState.users.set(id, user)
+        })
+        
+        // Import filters and pagination
+        Object.assign(userState.filters, data.filters || {})
+        Object.assign(userState.pagination, data.pagination || {})
+        
+        // Import preferences
+        if (data.preferences) {
+          Object.assign(userPreferencesState, data.preferences)
+        }
+        
+        console.log('State imported successfully')
+      } catch (error) {
+        console.error('Failed to import state:', error)
+        userActions.setError('Failed to import state file')
+      }
+    }
+    reader.readAsText(file)
+  }, [])
+
+  return {
+    exportState,
+    importState,
+    clearCache: userActions.clearCache,
+  }
+}
+
+// ✅ Hook for real-time updates with WebSocket integration
+export const useRealTimeUpdates = () => {
+  const prefsSnap = useSnapshot(userPreferencesState)
+  const wsRef = useRef<WebSocket | null>(null)
+
+  useEffect(() => {
+    if (!prefsSnap.autoRefresh) return
+
+    const connectWebSocket = () => {
+      const ws = new WebSocket(`${process.env.REACT_APP_WS_URL || 'ws://localhost:8080'}/users`)
+      wsRef.current = ws
+
+      ws.onopen = () => {
+        console.log('WebSocket connected')
+      }
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          
+          switch (data.type) {
+            case 'user_created':
+              userActions.addUser(data.user)
+              break
+              
+            case 'user_updated':
+              userActions.updateUser(data.user.id, data.user)
+              break
+              
+            case 'user_deleted':
+              userActions.deleteUser(data.userId)
+              break
+              
+            case 'bulk_update':
+              data.users.forEach((user: User) => {
+                userActions.updateUser(user.id, user)
+              })
+              break
+              
+            case 'user_count':
+              userState.pagination.total = data.count
+              break
+          }
+        } catch (error) {
+          console.error('Error processing WebSocket message:', error)
+        }
+      }
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error)
+      }
+
+      ws.onclose = () => {
+        console.log('WebSocket disconnected, attempting to reconnect...')
+        setTimeout(connectWebSocket, 3000)
+      }
+    }
+
+    connectWebSocket()
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close()
+      }
+    }
+  }, [prefsSnap.autoRefresh])
+
+  // Periodic refresh fallback
+  useEffect(() => {
+    if (!prefsSnap.autoRefresh) return
+
+    const interval = setInterval(() => {
+      if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+        userAsyncActions.fetchUsers()
+      }
+    }, prefsSnap.refreshInterval)
+
+    return () => clearInterval(interval)
+  }, [prefsSnap.autoRefresh, prefsSnap.refreshInterval])
+}
+
+// ✅ Hook for performance monitoring
+export const usePerformanceMonitoring = () => {
+  const renderCount = useRef(0)
+  const lastRenderTime = useRef(Date.now())
+
+  useEffect(() => {
+    renderCount.current++
+    const now = Date.now()
+    const timeSinceLastRender = now - lastRenderTime.current
+    lastRenderTime.current = now
+
+    if (timeSinceLastRender < 16 && renderCount.current % 10 === 0) {
+      console.warn(`High render frequency detected: ${renderCount.current} renders`)
+    }
+  })
+
+  // Monitor state changes
+  useEffect(() => {
+    const unsubscribe = subscribe(userState, (ops) => {
+      const operationCount = ops.length
+      if (operationCount > 10) {
+        console.warn(`Large state update: ${operationCount} operations`)
+      }
+    })
+
+    return unsubscribe
+  }, [])
+
+  // Monitor memory usage
+  useEffect(() => {
+    const checkMemory = () => {
+      if ('memory' in performance) {
+        const memory = (performance as any).memory
+        if (memory.usedJSHeapSize > 50 * 1024 * 1024) { // 50MB
+          console.warn(`High memory usage: ${Math.round(memory.usedJSHeapSize / 1024 / 1024)}MB`)
+        }
+      }
+    }
+
+    const interval = setInterval(checkMemory, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return {
+    renderCount: renderCount.current,
+  }
+}
+
+// ✅ Utility functions
+export const generateUserCSV = (users: User[]): string => {
+  const headers = [
+    'ID', 'First Name', 'Last Name', 'Email', 'Status', 'Roles', 
+    'Last Login', 'Login Count', 'Created', 'Updated'
+  ]
+  
+  const rows = users.map(user => [
+    user.id,
+    user.firstName,
+    user.lastName,
+    user.email,
+    user.isActive ? 'Active' : 'Inactive',
+    user.roles.join('; '),
+    user.lastLoginAt?.toISOString() || '',
+    user.metadata.loginCount.toString(),
+    user.metadata.createdAt.toISOString(),
+    user.metadata.updatedAt.toISOString(),
+  ])
+  
+  return [headers, ...rows]
+    .map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+}
+
+export const downloadCSV = (csv: string, filename: string): void => {
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+```
+
+## Advanced Patterns & Performance
+
+**Subscriptions, watchers, and optimization techniques:**
+```tsx
+import { subscribe, subscribeKey, watch } from 'valtio/utils'
+import { derive } from 'valtio/derive'
+import { proxyMap, proxySet, ref } from 'valtio'
+
+// ✅ Advanced subscription patterns
+export const setupAdvancedSubscriptions = () => {
+  // Subscribe to specific state changes
+  const unsubscribeUsers = subscribeKey(userState, 'users', (users) => {
+    console.log('Users changed:', users.size)
+    
+    // Trigger analytics when user count changes significantly
+    if (users.size % 100 === 0) {
+      analytics.track('milestone_users', { count: users.size })
+    }
+  })
+
+  // Subscribe to filter changes for caching
+  const unsubscribeFilters = subscribeKey(userState, 'filters', (filters) => {
+    // Cache search queries for suggestions
+    if (filters.search && filters.search.length > 2) {
+      const cached = userState.cache.searchCache.get('recent') || []
+      if (!cached.includes(filters.search)) {
+        cached.unshift(filters.search)
+        userState.cache.searchCache.set('recent', cached.slice(0, 20))
+      }
+    }
+  })
+
+  // Watch for complex state patterns
+  const unsubscribeComplexWatch = watch((get) => {
+    const selectedCount = get(userState).ui.selectedIds.size
+    const totalVisible = get(derivedUserState).paginatedUsers.length
+    
+    return { selectedCount, totalVisible, ratio: selectedCount / totalVisible }
+  }, ({ selectedCount, totalVisible, ratio }) => {
+    // Auto-show bulk actions when significant selection
+    userState.ui.showBulkActions = ratio > 0.1 && selectedCount > 1
+  })
+
+  // Subscribe to error states for logging
+  const unsubscribeErrors = subscribeKey(userState.ui, 'error', (error) => {
+    if (error) {
+      console.error('User state error:', error)
+      // Send to error reporting service
+      if (typeof window !== 'undefined' && window.Sentry) {
+        window.Sentry.captureMessage(`User State Error: ${error}`)
+      }
+    }
+  })
+
+  // Return cleanup function
+  return () => {
+    unsubscribeUsers()
+    unsubscribeFilters()
+    unsubscribeComplexWatch()
+    unsubscribeErrors()
+  }
+}
+
+// ✅ Performance optimized derived state with ref
+export const optimizedUserStats = derive({
+  expensiveStats: (get) => {
+    const users = get(userState).users
+    
+    // Use ref to prevent deep watching of large objects
+    const statsData = ref({
+      usersByCountry: new Map<string, number>(),
+      averageAgeByRole: new Map<string, number>(),
+      activityHeatmap: new Array(24).fill(0).map(() => new Array(7).fill(0)),
+      conversionFunnel: {
+        registered: 0,
+        activated: 0,
+        engaged: 0,
+        retained: 0,
+      },
+    })
+
+    // Expensive computations
+    Array.from(users.values()).forEach(user => {
+      // Country distribution
+      const country = (user as any).country || 'Unknown'
+      statsData.usersByCountry.set(
+        country,
+        (statsData.usersByCountry.get(country) || 0) + 1
+      )
+
+      // Activity heatmap (hour vs day of week)
+      if (user.lastLoginAt) {
+        const hour = user.lastLoginAt.getHours()
+        const day = user.lastLoginAt.getDay()
+        statsData.activityHeatmap[hour][day]++
+      }
+
+      // Conversion funnel
+      statsData.conversionFunnel.registered++
+      if (user.isActive) statsData.conversionFunnel.activated++
+      if (user.metadata.loginCount > 5) statsData.conversionFunnel.engaged++
+      if (user.metadata.loginCount > 20) statsData.conversionFunnel.retained++
+    })
+
+    return statsData
+  },
+})
+
+// ✅ State machine pattern with Valtio
+export const userEditStateMachine = proxy({
+  current: 'idle' as 'idle' | 'loading' | 'editing' | 'saving' | 'error',
+  context: {
+    userId: null as string | null,
+    originalData: null as User | null,
+    formData: null as Partial<User> | null,
+    error: null as string | null,
+  },
+  
+  transition: (event: string, payload?: any) => {
+    const { current, context } = userEditStateMachine
+    
+    switch (current) {
+      case 'idle':
+        if (event === 'EDIT') {
+          userEditStateMachine.current = 'loading'
+          userEditStateMachine.context.userId = payload.userId
+        }
+        break
+        
+      case 'loading':
+        if (event === 'LOADED') {
+          userEditStateMachine.current = 'editing'
+          userEditStateMachine.context.originalData = payload.user
+          userEditStateMachine.context.formData = { ...payload.user }
+        } else if (event === 'ERROR') {
+          userEditStateMachine.current = 'error'
+          userEditStateMachine.context.error = payload.error
+        }
+        break
+        
+      case 'editing':
+        if (event === 'SAVE') {
+          userEditStateMachine.current = 'saving'
+        } else if (event === 'CANCEL') {
+          userEditStateMachine.current = 'idle'
+          userEditStateMachine.context = {
+            userId: null,
+            originalData: null,
+            formData: null,
+            error: null,
+          }
+        }
+        break
+        
+      case 'saving':
+        if (event === 'SUCCESS') {
+          userEditStateMachine.current = 'idle'
+          userEditStateMachine.context = {
+            userId: null,
+            originalData: null,
+            formData: null,
+            error: null,
+          }
+        } else if (event === 'ERROR') {
+          userEditStateMachine.current = 'error'
+          userEditStateMachine.context.error = payload.error
+        }
+        break
+        
+      case 'error':
+        if (event === 'RETRY') {
+          userEditStateMachine.current = 'editing'
+          userEditStateMachine.context.error = null
+        } else if (event === 'CANCEL') {
+          userEditStateMachine.current = 'idle'
+          userEditStateMachine.context = {
+            userId: null,
+            originalData: null,
+            formData: null,
+            error: null,
+          }
+        }
+        break
+    }
+  },
+})
+
+// ✅ Advanced proxy collections with cleanup
+export class ProxyUserCollection {
+  users = proxyMap<string, User>()
+  indices = {
+    byEmail: proxyMap<string, string>(),
+    byRole: proxyMap<string, Set<string>>(),
+    byStatus: proxyMap<boolean, Set<string>>(),
+  }
+  
+  add(user: User) {
+    this.users.set(user.id, user)
+    this.updateIndices(user)
+  }
+  
+  update(id: string, updates: Partial<User>) {
+    const existing = this.users.get(id)
+    if (!existing) return
+    
+    // Remove from old indices
+    this.removeFromIndices(existing)
+    
+    // Update user
+    Object.assign(existing, updates)
+    existing.metadata.updatedAt = new Date()
+    
+    // Add to new indices
+    this.updateIndices(existing)
+  }
+  
+  delete(id: string) {
+    const user = this.users.get(id)
+    if (user) {
+      this.removeFromIndices(user)
+      this.users.delete(id)
+    }
+  }
+  
+  private updateIndices(user: User) {
+    // Email index
+    this.indices.byEmail.set(user.email, user.id)
+    
+    // Role index
+    user.roles.forEach(role => {
+      if (!this.indices.byRole.has(role)) {
+        this.indices.byRole.set(role, proxySet<string>())
+      }
+      this.indices.byRole.get(role)!.add(user.id)
+    })
+    
+    // Status index
+    if (!this.indices.byStatus.has(user.isActive)) {
+      this.indices.byStatus.set(user.isActive, proxySet<string>())
+    }
+    this.indices.byStatus.get(user.isActive)!.add(user.id)
+  }
+  
+  private removeFromIndices(user: User) {
+    // Email index
+    this.indices.byEmail.delete(user.email)
+    
+    // Role index
+    user.roles.forEach(role => {
+      this.indices.byRole.get(role)?.delete(user.id)
+    })
+    
+    // Status index
+    this.indices.byStatus.get(user.isActive)?.delete(user.id)
+  }
+  
+  findByEmail(email: string): User | undefined {
+    const id = this.indices.byEmail.get(email)
+    return id ? this.users.get(id) : undefined
+  }
+  
+  findByRole(role: string): User[] {
+    const ids = this.indices.byRole.get(role)
+    if (!ids) return []
+    
+    return Array.from(ids)
+      .map(id => this.users.get(id))
+      .filter(Boolean) as User[]
+  }
+  
+  findByStatus(isActive: boolean): User[] {
+    const ids = this.indices.byStatus.get(isActive)
+    if (!ids) return []
+    
+    return Array.from(ids)
+      .map(id => this.users.get(id))
+      .filter(Boolean) as User[]
+  }
+}
+```
+
+## Testing Patterns
+
+**Comprehensive testing strategies for Valtio applications:**
+```tsx
+import { proxy, snapshot } from 'valtio'
+
+// ✅ Test utilities
+export const createTestUserState = () => {
+  return proxy({
+    users: proxyMap<string, User>(),
+    filters: {
+      search: '',
+      status: 'all' as const,
+      role: 'all',
+      sortBy: 'firstName' as keyof User,
+      sortOrder: 'asc' as const,
+    },
+    pagination: { page: 1, pageSize: 20, total: 0 },
+    ui: {
+      loading: false,
+      error: null,
+      selectedIds: proxySet<string>(),
+      bulkActionInProgress: false,
+      currentView: 'grid' as const,
+      showFilters: true,
+      showBulkActions: false,
+    },
+    cache: {
+      lastFetch: null,
+      searchCache: proxyMap<string, string[]>(),
+      preferencesCache: proxyMap<string, any>(),
+    },
+  })
+}
+
+export const mockUsers: User[] = [
+  {
+    id: '1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    isActive: true,
+    roles: ['user', 'admin'],
+    lastLoginAt: new Date(),
+    preferences: { theme: 'light', language: 'en', notifications: true, autoRefresh: true },
+    metadata: {
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date(),
+      loginCount: 15,
+      failedLoginAttempts: 0,
+    },
+  },
+  // ... more mock users
+]
+
+// ✅ State testing
+describe('User State Management', () => {
+  let testState: ReturnType<typeof createTestUserState>
+
+  beforeEach(() => {
+    testState = createTestUserState()
+    mockUsers.forEach(user => testState.users.set(user.id, user))
+  })
+
+  test('updates user state correctly', () => {
+    const user = testState.users.get('1')!
+    const originalName = user.firstName
+
+    // Update user
+    user.firstName = 'Updated Name'
+    
+    // Verify change
+    expect(testState.users.get('1')!.firstName).toBe('Updated Name')
+    expect(testState.users.get('1')!.firstName).not.toBe(originalName)
+  })
+
+  test('filters users correctly', () => {
+    testState.filters.search = 'john'
+    
+    const snap = snapshot(testState)
+    const users = Array.from(snap.users.values())
+    const filtered = users.filter(user =>
+      user.firstName.toLowerCase().includes(snap.filters.search.toLowerCase())
+    )
+    
+    expect(filtered).toHaveLength(1)
+    expect(filtered[0].firstName).toBe('John')
+  })
+
+  test('manages selections properly', () => {
+    testState.ui.selectedIds.add('1')
+    testState.ui.selectedIds.add('2')
+    
+    expect(testState.ui.selectedIds.size).toBe(2)
+    expect(testState.ui.selectedIds.has('1')).toBe(true)
+    
+    testState.ui.selectedIds.delete('1')
+    expect(testState.ui.selectedIds.size).toBe(1)
+  })
+})
+
+// ✅ Subscription testing
+describe('State Subscriptions', () => {
+  test('subscribes to state changes', () => {
+    const testState = createTestUserState()
+    const callback = jest.fn()
+    
+    const unsubscribe = subscribe(testState, callback)
+    
+    testState.users.set('test', mockUsers[0])
+    
+    expect(callback).toHaveBeenCalled()
+    unsubscribe()
+  })
+
+  test('watches derived values', () => {
+    const testState = createTestUserState()
+    const watchCallback = jest.fn()
+    
+    const unwatch = watch((get) => {
+      return get(testState).users.size
+    }, watchCallback)
+    
+    testState.users.set('1', mockUsers[0])
+    testState.users.set('2', mockUsers[1])
+    
+    expect(watchCallback).toHaveBeenCalledWith(2, 1)
+    unwatch()
+  })
+})
+
+// ✅ Performance testing
+describe('Performance Tests', () => {
+  test('handles large datasets efficiently', () => {
+    const testState = createTestUserState()
+    const startTime = performance.now()
+    
+    // Add many users
+    for (let i = 0; i < 1000; i++) {
+      testState.users.set(`user-${i}`, {
+        ...mockUsers[0],
+        id: `user-${i}`,
+        email: `user${i}@example.com`,
+      })
+    }
+    
+    const addTime = performance.now() - startTime
+    expect(addTime).toBeLessThan(100) // Should be fast
+    
+    // Test snapshot performance
+    const snapshotStart = performance.now()
+    const snap = snapshot(testState)
+    const snapshotTime = performance.now() - snapshotStart
+    
+    expect(snapshotTime).toBeLessThan(50)
+    expect(snap.users.size).toBe(1000)
+  })
+})
+```
+
+## Best Practices Summary
+
+**Key patterns for enterprise Valtio applications:**
+
+1. **Proxy Architecture**: Use mutable proxies for state, immutable snapshots for React, organize state logically with clear boundaries.
+
+2. **Performance**: Leverage derived state for computed values, use ref() for non-reactive data, implement granular subscriptions.
+
+3. **Type Safety**: Define strict TypeScript interfaces, use proper typing for proxy collections, implement runtime validation.
+
+4. **State Management**: Use clear action patterns for mutations, implement proper error handling, maintain state consistency.
+
+5. **Testing**: Test proxy mutations directly, verify snapshots for React integration, monitor subscription behavior.
+
+6. **Advanced Patterns**: Use subscriptions for side effects, implement state persistence, create derived computed state.
+
+7. **Architecture**: Organize by domain boundaries, use composition patterns, implement proper cleanup strategies.
+
+8. **Integration**: Combine with React hooks effectively, handle async operations properly, implement real-time updates.
+
+Always prioritize direct mutations with proxy objects, maintain reactive subscriptions efficiently, and leverage Valtio's simplicity while building robust state management systems for enterprise applications.
+``` 

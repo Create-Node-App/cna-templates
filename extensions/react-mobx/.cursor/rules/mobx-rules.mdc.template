@@ -1,38 +1,1296 @@
 ---
-description: Specific guidelines for implementing and managing state with MobX in React applications.
+description: Advanced MobX patterns for reactive state management, complex store architectures, performance optimization, and enterprise-scale applications.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# MobX Rules
+# Advanced MobX Patterns
 
-## State Management
+## Enterprise Store Architecture
 
-1. Use consistent store naming
-2. Implement proper store structure
-3. Use TypeScript for store types
-4. Handle computed values properly
-5. Implement proper error handling
+**Scalable store design with domain-driven architecture:**
+```tsx
+import { makeAutoObservable, runInAction, reaction, when, flow, configure } from 'mobx'
+import { observer } from 'mobx-react-lite'
+import { enableStaticRendering } from 'mobx-react-lite'
 
-## Store Implementation
+// ✅ Configure MobX for production
+configure({
+  enforceActions: 'always',
+  computedRequiresReaction: true,
+  reactionRequiresObservable: true,
+  observableRequiresReaction: true,
+  disableErrorBoundaries: true,
+  safeDescriptors: true,
+})
 
-1. Use proper store creation
-2. Implement proper actions
-3. Use appropriate observables
-4. Handle async operations properly
-5. Follow MobX best practices
+// Enable static rendering for SSR
+if (typeof window === 'undefined') {
+  enableStaticRendering(true)
+}
 
-## Best Practices
+// ✅ Domain entities with computed properties
+class User {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar?: string
+  lastLoginAt?: Date
+  isActive: boolean = true
+  roles: string[] = []
 
-1. Use proper state organization
-2. Implement proper state persistence
-3. Use appropriate reactions
-4. Handle state updates properly
-5. Follow reactive patterns
+  constructor(data: Partial<User>) {
+    makeAutoObservable(this, {}, { autoBind: true })
+    Object.assign(this, data)
+  }
 
-## Performance
+  // ✅ Computed properties for derived state
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`.trim()
+  }
 
-1. Use proper store optimization
-2. Implement proper memoization
-3. Use appropriate reactions
-4. Handle large state properly
-5. Optimize store updates 
+  get displayName() {
+    return this.fullName || this.email
+  }
+
+  get initials() {
+    return this.firstName?.charAt(0)?.toUpperCase() + 
+           this.lastName?.charAt(0)?.toUpperCase() || 
+           this.email.charAt(0).toUpperCase()
+  }
+
+  get isOnline() {
+    return this.lastLoginAt && 
+           Date.now() - this.lastLoginAt.getTime() < 5 * 60 * 1000 // 5 minutes
+  }
+
+  get hasRole() {
+    return (role: string) => this.roles.includes(role)
+  }
+
+  get isAdmin() {
+    return this.hasRole('admin')
+  }
+
+  // ✅ Actions for state mutations
+  updateProfile(data: Partial<Pick<User, 'firstName' | 'lastName' | 'avatar'>>) {
+    Object.assign(this, data)
+  }
+
+  updateLastLogin() {
+    this.lastLoginAt = new Date()
+  }
+
+  toggleActive() {
+    this.isActive = !this.isActive
+  }
+
+  addRole(role: string) {
+    if (!this.roles.includes(role)) {
+      this.roles.push(role)
+    }
+  }
+
+  removeRole(role: string) {
+    const index = this.roles.indexOf(role)
+    if (index > -1) {
+      this.roles.splice(index, 1)
+    }
+  }
+}
+
+// ✅ Complex store with async operations and error handling
+class UserStore {
+  users = new Map<string, User>()
+  currentUser: User | null = null
+  loading = false
+  error: string | null = null
+  searchQuery = ''
+  filters = {
+    status: 'all' as 'all' | 'active' | 'inactive',
+    role: 'all' as string,
+  }
+  pagination = {
+    page: 1,
+    pageSize: 20,
+    total: 0,
+  }
+
+  constructor() {
+    makeAutoObservable(this, {
+      // ✅ Exclude certain properties from observability
+      fetchUsers: false,
+      createUser: false,
+      updateUser: false,
+      deleteUser: false,
+    }, { autoBind: true })
+
+    // ✅ Reactions for side effects
+    this.setupReactions()
+  }
+
+  private setupReactions() {
+    // ✅ Auto-fetch when filters change
+    reaction(
+      () => ({
+        query: this.searchQuery,
+        filters: this.filters,
+        page: this.pagination.page,
+      }),
+      () => {
+        this.fetchUsers()
+      },
+      { delay: 300 } // Debounce
+    )
+
+    // ✅ Cleanup inactive users
+    reaction(
+      () => Array.from(this.users.values()).filter(u => !u.isActive),
+      (inactiveUsers) => {
+        if (inactiveUsers.length > 100) {
+          console.warn(`${inactiveUsers.length} inactive users detected`)
+        }
+      }
+    )
+  }
+
+  // ✅ Computed values for filtered and sorted data
+  get filteredUsers() {
+    let filtered = Array.from(this.users.values())
+
+    // Apply search filter
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase()
+      filtered = filtered.filter(user =>
+        user.fullName.toLowerCase().includes(query) ||
+        user.email.toLowerCase().includes(query)
+      )
+    }
+
+    // Apply status filter
+    if (this.filters.status !== 'all') {
+      filtered = filtered.filter(user =>
+        this.filters.status === 'active' ? user.isActive : !user.isActive
+      )
+    }
+
+    // Apply role filter
+    if (this.filters.role !== 'all') {
+      filtered = filtered.filter(user =>
+        user.hasRole(this.filters.role)
+      )
+    }
+
+    return filtered
+  }
+
+  get sortedUsers() {
+    return this.filteredUsers.slice().sort((a, b) => {
+      // Sort by online status first, then by name
+      if (a.isOnline !== b.isOnline) {
+        return a.isOnline ? -1 : 1
+      }
+      return a.fullName.localeCompare(b.fullName)
+    })
+  }
+
+  get paginatedUsers() {
+    const start = (this.pagination.page - 1) * this.pagination.pageSize
+    const end = start + this.pagination.pageSize
+    return this.sortedUsers.slice(start, end)
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredUsers.length / this.pagination.pageSize)
+  }
+
+  get hasNextPage() {
+    return this.pagination.page < this.totalPages
+  }
+
+  get hasPreviousPage() {
+    return this.pagination.page > 1
+  }
+
+  get activeUsersCount() {
+    return Array.from(this.users.values()).filter(u => u.isActive).length
+  }
+
+  get onlineUsersCount() {
+    return Array.from(this.users.values()).filter(u => u.isOnline).length
+  }
+
+  get roleDistribution() {
+    const distribution = new Map<string, number>()
+    Array.from(this.users.values()).forEach(user => {
+      user.roles.forEach(role => {
+        distribution.set(role, (distribution.get(role) || 0) + 1)
+      })
+    })
+    return distribution
+  }
+
+  // ✅ Actions for state mutations
+  setSearchQuery(query: string) {
+    this.searchQuery = query
+    this.pagination.page = 1 // Reset to first page
+  }
+
+  setFilter(key: keyof typeof this.filters, value: any) {
+    this.filters[key] = value
+    this.pagination.page = 1 // Reset to first page
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pagination.page = page
+    }
+  }
+
+  nextPage() {
+    if (this.hasNextPage) {
+      this.pagination.page++
+    }
+  }
+
+  previousPage() {
+    if (this.hasPreviousPage) {
+      this.pagination.page--
+    }
+  }
+
+  clearError() {
+    this.error = null
+  }
+
+  // ✅ Async actions using flow
+  fetchUsers = flow(function* (this: UserStore) {
+    this.loading = true
+    this.error = null
+    
+    try {
+      // Simulate API call with delay
+      const response: any = yield new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate occasional errors
+          if (Math.random() < 0.1) {
+            reject(new Error('Failed to fetch users'))
+            return
+          }
+          
+          // Mock data generation
+          const mockUsers = Array.from({ length: 50 }, (_, i) => ({
+            id: `user-${i}`,
+            firstName: `User${i}`,
+            lastName: `LastName${i}`,
+            email: `user${i}@example.com`,
+            lastLoginAt: Math.random() > 0.3 ? new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000) : undefined,
+            isActive: Math.random() > 0.2,
+            roles: Math.random() > 0.5 ? ['user'] : ['user', 'admin'],
+          }))
+          
+          resolve({ users: mockUsers, total: mockUsers.length })
+        }, 1000)
+      })
+
+      // ✅ Use runInAction for batch updates
+      runInAction(() => {
+        this.users.clear()
+        response.users.forEach((userData: any) => {
+          const user = new User(userData)
+          this.users.set(user.id, user)
+        })
+        this.pagination.total = response.total
+      })
+    } catch (error) {
+      runInAction(() => {
+        this.error = error instanceof Error ? error.message : 'Unknown error occurred'
+      })
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  createUser = flow(function* (this: UserStore, userData: Partial<User>) {
+    this.loading = true
+    this.error = null
+    
+    try {
+      const response: User = yield new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() < 0.1) {
+            reject(new Error('Failed to create user'))
+            return
+          }
+          resolve(new User({ id: `user-${Date.now()}`, ...userData }))
+        }, 500)
+      })
+
+      runInAction(() => {
+        this.users.set(response.id, response)
+        this.pagination.total++
+      })
+
+      return response
+    } catch (error) {
+      runInAction(() => {
+        this.error = error instanceof Error ? error.message : 'Failed to create user'
+      })
+      throw error
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  updateUser = flow(function* (this: UserStore, userId: string, updates: Partial<User>) {
+    const user = this.users.get(userId)
+    if (!user) throw new Error('User not found')
+
+    this.loading = true
+    this.error = null
+    
+    try {
+      // Simulate API call
+      yield new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() < 0.1) {
+            reject(new Error('Failed to update user'))
+            return
+          }
+          resolve(updates)
+        }, 500)
+      })
+
+      runInAction(() => {
+        Object.assign(user, updates)
+      })
+
+      return user
+    } catch (error) {
+      runInAction(() => {
+        this.error = error instanceof Error ? error.message : 'Failed to update user'
+      })
+      throw error
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  deleteUser = flow(function* (this: UserStore, userId: string) {
+    this.loading = true
+    this.error = null
+    
+    try {
+      yield new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() < 0.1) {
+            reject(new Error('Failed to delete user'))
+            return
+          }
+          resolve(true)
+        }, 500)
+      })
+
+      runInAction(() => {
+        this.users.delete(userId)
+        this.pagination.total--
+        
+        // Adjust current page if needed
+        if (this.paginatedUsers.length === 0 && this.pagination.page > 1) {
+          this.pagination.page--
+        }
+      })
+    } catch (error) {
+      runInAction(() => {
+        this.error = error instanceof Error ? error.message : 'Failed to delete user'
+      })
+      throw error
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  // ✅ Bulk operations
+  bulkUpdateUsers = flow(function* (this: UserStore, userIds: string[], updates: Partial<User>) {
+    this.loading = true
+    this.error = null
+    
+    try {
+      yield new Promise(resolve => setTimeout(resolve, 1000))
+
+      runInAction(() => {
+        userIds.forEach(id => {
+          const user = this.users.get(id)
+          if (user) {
+            Object.assign(user, updates)
+          }
+        })
+      })
+    } catch (error) {
+      runInAction(() => {
+        this.error = error instanceof Error ? error.message : 'Bulk update failed'
+      })
+      throw error
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  // ✅ Utility methods
+  getUserById(id: string): User | undefined {
+    return this.users.get(id)
+  }
+
+  getUsersByRole(role: string): User[] {
+    return Array.from(this.users.values()).filter(user => user.hasRole(role))
+  }
+
+  searchUsers(query: string): User[] {
+    const normalizedQuery = query.toLowerCase()
+    return Array.from(this.users.values()).filter(user =>
+      user.fullName.toLowerCase().includes(normalizedQuery) ||
+      user.email.toLowerCase().includes(normalizedQuery)
+    )
+  }
+
+  // ✅ Cleanup method
+  dispose() {
+    // MobX will automatically dispose reactions when store is garbage collected
+    // But you can manually dispose if needed
+    this.users.clear()
+  }
+}
+```
+
+## Advanced React Integration
+
+**Observer patterns and optimized React components:**
+```tsx
+import { observer } from 'mobx-react-lite'
+import { useContext, createContext, useMemo, useCallback } from 'react'
+import { when } from 'mobx'
+
+// ✅ Store context for dependency injection
+const StoreContext = createContext<{
+  userStore: UserStore
+  // Add other stores here
+} | null>(null)
+
+export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const stores = useMemo(() => ({
+    userStore: new UserStore(),
+  }), [])
+
+  return (
+    <StoreContext.Provider value={stores}>
+      {children}
+    </StoreContext.Provider>
+  )
+}
+
+export const useStores = () => {
+  const context = useContext(StoreContext)
+  if (!context) {
+    throw new Error('useStores must be used within a StoreProvider')
+  }
+  return context
+}
+
+// ✅ Granular observer components for optimal re-rendering
+const UserListItem = observer<{ userId: string }>(({ userId }) => {
+  const { userStore } = useStores()
+  const user = userStore.getUserById(userId)
+
+  if (!user) return null
+
+  return (
+    <div className="user-item">
+      <div className="user-avatar">
+        {user.avatar ? (
+          <img src={user.avatar} alt={user.displayName} />
+        ) : (
+          <span className="initials">{user.initials}</span>
+        )}
+        {user.isOnline && <div className="online-indicator" />}
+      </div>
+      
+      <div className="user-info">
+        <h4>{user.fullName}</h4>
+        <p>{user.email}</p>
+        <div className="user-roles">
+          {user.roles.map(role => (
+            <span key={role} className="role-badge">
+              {role}
+            </span>
+          ))}
+        </div>
+      </div>
+      
+      <div className="user-actions">
+        <button onClick={() => userStore.updateUser(user.id, { isActive: !user.isActive })}>
+          {user.isActive ? 'Deactivate' : 'Activate'}
+        </button>
+      </div>
+    </div>
+  )
+})
+
+// ✅ Complex component with multiple computed values
+const UserDashboard = observer(() => {
+  const { userStore } = useStores()
+
+  // ✅ Local computed values for component-specific logic
+  const stats = useMemo(() => ({
+    totalUsers: userStore.users.size,
+    activeUsers: userStore.activeUsersCount,
+    onlineUsers: userStore.onlineUsersCount,
+    inactiveUsers: userStore.users.size - userStore.activeUsersCount,
+  }), [userStore.users.size, userStore.activeUsersCount, userStore.onlineUsersCount])
+
+  const roleChartData = useMemo(() => {
+    const distribution = userStore.roleDistribution
+    return Array.from(distribution.entries()).map(([role, count]) => ({
+      role,
+      count,
+      percentage: (count / userStore.users.size) * 100,
+    }))
+  }, [userStore.roleDistribution, userStore.users.size])
+
+  return (
+    <div className="dashboard">
+      <header className="dashboard-header">
+        <h1>User Management Dashboard</h1>
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Total Users</h3>
+            <span className="stat-value">{stats.totalUsers}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Active Users</h3>
+            <span className="stat-value">{stats.activeUsers}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Online Now</h3>
+            <span className="stat-value online">{stats.onlineUsers}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Inactive Users</h3>
+            <span className="stat-value inactive">{stats.inactiveUsers}</span>
+          </div>
+        </div>
+      </header>
+
+      <div className="dashboard-content">
+        <UserFilters />
+        <UserList />
+        <UserPagination />
+      </div>
+    </div>
+  )
+})
+
+// ✅ Smart filters component with debounced updates
+const UserFilters = observer(() => {
+  const { userStore } = useStores()
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    userStore.setSearchQuery(e.target.value)
+  }, [userStore])
+
+  const handleStatusChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    userStore.setFilter('status', e.target.value as any)
+  }, [userStore])
+
+  const handleRoleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    userStore.setFilter('role', e.target.value)
+  }, [userStore])
+
+  return (
+    <div className="filters">
+      <div className="search-box">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={userStore.searchQuery}
+          onChange={handleSearchChange}
+        />
+      </div>
+      
+      <div className="filter-selects">
+        <select value={userStore.filters.status} onChange={handleStatusChange}>
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        
+        <select value={userStore.filters.role} onChange={handleRoleChange}>
+          <option value="all">All Roles</option>
+          {Array.from(userStore.roleDistribution.keys()).map(role => (
+            <option key={role} value={role}>
+              {role} ({userStore.roleDistribution.get(role)})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {userStore.error && (
+        <div className="error-message">
+          {userStore.error}
+          <button onClick={userStore.clearError}>×</button>
+        </div>
+      )}
+    </div>
+  )
+})
+
+// ✅ Virtualized list for performance with large datasets
+const UserList = observer(() => {
+  const { userStore } = useStores()
+
+  if (userStore.loading) {
+    return (
+      <div className="loading">
+        <div className="spinner" />
+        <p>Loading users...</p>
+      </div>
+    )
+  }
+
+  if (userStore.filteredUsers.length === 0) {
+    return (
+      <div className="empty-state">
+        <h3>No users found</h3>
+        <p>Try adjusting your search or filters</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="user-list">
+      {userStore.paginatedUsers.map(user => (
+        <UserListItem key={user.id} userId={user.id} />
+      ))}
+    </div>
+  )
+})
+
+// ✅ Pagination component with computed navigation state
+const UserPagination = observer(() => {
+  const { userStore } = useStores()
+
+  if (userStore.totalPages <= 1) return null
+
+  return (
+    <div className="pagination">
+      <button
+        disabled={!userStore.hasPreviousPage}
+        onClick={userStore.previousPage}
+      >
+        Previous
+      </button>
+      
+      <span className="page-info">
+        Page {userStore.pagination.page} of {userStore.totalPages}
+      </span>
+      
+      <button
+        disabled={!userStore.hasNextPage}
+        onClick={userStore.nextPage}
+      >
+        Next
+      </button>
+      
+      <span className="results-info">
+        Showing {userStore.paginatedUsers.length} of {userStore.filteredUsers.length} users
+      </span>
+    </div>
+  )
+})
+
+// ✅ Form component with MobX integration
+const UserForm = observer<{
+  userId?: string
+  onSave: () => void
+  onCancel: () => void
+}>(({ userId, onSave, onCancel }) => {
+  const { userStore } = useStores()
+  const [formData, setFormData] = useState(() => {
+    const user = userId ? userStore.getUserById(userId) : null
+    return {
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+      roles: user?.roles || ['user'],
+    }
+  })
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      if (userId) {
+        await userStore.updateUser(userId, formData)
+      } else {
+        await userStore.createUser(formData)
+      }
+      onSave()
+    } catch (error) {
+      console.error('Failed to save user:', error)
+    }
+  }, [userId, formData, userStore, onSave])
+
+  return (
+    <form onSubmit={handleSubmit} className="user-form">
+      <div className="form-group">
+        <label>First Name</label>
+        <input
+          type="text"
+          value={formData.firstName}
+          onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label>Last Name</label>
+        <input
+          type="text"
+          value={formData.lastName}
+          onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+          required
+        />
+      </div>
+      
+      <div className="form-actions">
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
+        <button type="submit" disabled={userStore.loading}>
+          {userStore.loading ? 'Saving...' : userId ? 'Update' : 'Create'}
+        </button>
+      </div>
+    </form>
+  )
+})
+
+// ✅ Custom hooks for MobX integration
+export const useUserSearch = (initialQuery = '') => {
+  const { userStore } = useStores()
+  
+  useEffect(() => {
+    userStore.setSearchQuery(initialQuery)
+    return () => userStore.setSearchQuery('')
+  }, [userStore, initialQuery])
+
+  return {
+    query: userStore.searchQuery,
+    results: userStore.filteredUsers,
+    setQuery: userStore.setSearchQuery,
+    loading: userStore.loading,
+    error: userStore.error,
+  }
+}
+
+export const useUserById = (userId: string) => {
+  const { userStore } = useStores()
+  
+  const user = userStore.getUserById(userId)
+  
+  useEffect(() => {
+    if (!user && userId) {
+      // Could trigger a fetch for specific user if not in store
+      console.log('User not found in store:', userId)
+    }
+  }, [user, userId])
+
+  return user
+}
+
+// ✅ Performance optimization utilities
+export const useWhenLoaded = (predicate: () => boolean, callback: () => void, deps: any[] = []) => {
+  useEffect(() => {
+    const disposer = when(predicate, callback)
+    return disposer
+  }, deps)
+}
+```
+
+## Advanced Patterns & Performance
+
+**Complex reactions, middleware, and optimization techniques:**
+```tsx
+import { reaction, when, autorun, trace, observe, intercept, isObservableArray } from 'mobx'
+
+// ✅ Advanced middleware and interceptors
+class AuditStore {
+  auditLog: Array<{
+    timestamp: Date
+    action: string
+    target: string
+    oldValue: any
+    newValue: any
+    userId?: string
+  }> = []
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  addEntry(entry: Omit<typeof this.auditLog[0], 'timestamp'>) {
+    this.auditLog.unshift({
+      ...entry,
+      timestamp: new Date(),
+    })
+    
+    // Keep only last 1000 entries
+    if (this.auditLog.length > 1000) {
+      this.auditLog.splice(1000)
+    }
+  }
+
+  getEntriesForTarget(target: string) {
+    return this.auditLog.filter(entry => entry.target === target)
+  }
+
+  getEntriesForUser(userId: string) {
+    return this.auditLog.filter(entry => entry.userId === userId)
+  }
+}
+
+// ✅ Store with advanced interceptors and middleware
+class EnhancedUserStore extends UserStore {
+  private auditStore: AuditStore
+  private disposers: Array<() => void> = []
+
+  constructor(auditStore: AuditStore) {
+    super()
+    this.auditStore = auditStore
+    this.setupInterceptors()
+    this.setupAdvancedReactions()
+  }
+
+  private setupInterceptors() {
+    // ✅ Intercept all user modifications
+    this.users.forEach((user, userId) => {
+      const disposer = intercept(user, (change) => {
+        this.auditStore.addEntry({
+          action: `user.${change.name}`,
+          target: userId,
+          oldValue: (change as any).oldValue,
+          newValue: (change as any).newValue,
+          userId: this.currentUser?.id,
+        })
+        return change // Allow the change
+      })
+      this.disposers.push(disposer)
+    })
+
+    // ✅ Intercept user collection changes
+    const collectionDisposer = intercept(this.users, (change) => {
+      if (change.type === 'add') {
+        this.auditStore.addEntry({
+          action: 'user.created',
+          target: change.name,
+          oldValue: null,
+          newValue: change.newValue,
+          userId: this.currentUser?.id,
+        })
+      } else if (change.type === 'delete') {
+        this.auditStore.addEntry({
+          action: 'user.deleted',
+          target: change.name,
+          oldValue: change.oldValue,
+          newValue: null,
+          userId: this.currentUser?.id,
+        })
+      }
+      return change
+    })
+    this.disposers.push(collectionDisposer)
+  }
+
+  private setupAdvancedReactions() {
+    // ✅ Reaction with cleanup and error handling
+    const searchReactionDisposer = reaction(
+      () => this.searchQuery,
+      (searchQuery, previousSearchQuery) => {
+        // Analytics tracking
+        if (searchQuery && searchQuery !== previousSearchQuery) {
+          this.trackSearchQuery(searchQuery)
+        }
+      },
+      {
+        delay: 500,
+        fireImmediately: false,
+      }
+    )
+    this.disposers.push(searchReactionDisposer)
+
+    // ✅ When-based reactions for specific conditions
+    const criticalUserCountDisposer = when(
+      () => this.activeUsersCount < 5,
+      () => {
+        console.warn('Critical: Less than 5 active users!')
+        // Could trigger notifications, alerts, etc.
+      }
+    )
+    this.disposers.push(criticalUserCountDisposer)
+
+    // ✅ Autorun for side effects that should always stay in sync
+    const localStorageDisposer = autorun(() => {
+      const preferences = {
+        searchQuery: this.searchQuery,
+        filters: this.filters,
+        pagination: { pageSize: this.pagination.pageSize },
+      }
+      localStorage.setItem('userStorePreferences', JSON.stringify(preferences))
+    })
+    this.disposers.push(localStorageDisposer)
+  }
+
+  private trackSearchQuery(query: string) {
+    // Simulate analytics tracking
+    console.log('Analytics: Search query:', query)
+  }
+
+  // ✅ Load preferences from storage
+  loadPreferences() {
+    try {
+      const saved = localStorage.getItem('userStorePreferences')
+      if (saved) {
+        const preferences = JSON.parse(saved)
+        runInAction(() => {
+          this.searchQuery = preferences.searchQuery || ''
+          Object.assign(this.filters, preferences.filters || {})
+          this.pagination.pageSize = preferences.pagination?.pageSize || 20
+        })
+      }
+    } catch (error) {
+      console.warn('Failed to load preferences:', error)
+    }
+  }
+
+  // ✅ Advanced computed with dependencies tracking
+  get userAnalytics() {
+    return {
+      totalUsers: this.users.size,
+      activeUsers: this.activeUsersCount,
+      onlineUsers: this.onlineUsersCount,
+      averageRolesPerUser: this.users.size > 0 
+        ? Array.from(this.users.values()).reduce((sum, user) => sum + user.roles.length, 0) / this.users.size
+        : 0,
+      mostCommonRole: (() => {
+        const roleDistribution = this.roleDistribution
+        let maxCount = 0
+        let mostCommon = ''
+        roleDistribution.forEach((count, role) => {
+          if (count > maxCount) {
+            maxCount = count
+            mostCommon = role
+          }
+        })
+        return mostCommon
+      })(),
+      recentlyActive: Array.from(this.users.values())
+        .filter(user => user.lastLoginAt && Date.now() - user.lastLoginAt.getTime() < 24 * 60 * 60 * 1000)
+        .length,
+    }
+  }
+
+  // ✅ Batch operations with transaction-like behavior
+  batchUserUpdates = flow(function* (this: EnhancedUserStore, operations: Array<{
+    type: 'update' | 'delete' | 'create'
+    userId?: string
+    data?: any
+  }>) {
+    this.loading = true
+    const results: any[] = []
+    const errors: any[] = []
+
+    try {
+      for (const operation of operations) {
+        try {
+          let result
+          switch (operation.type) {
+            case 'create':
+              result = yield this.createUser(operation.data)
+              break
+            case 'update':
+              result = yield this.updateUser(operation.userId!, operation.data)
+              break
+            case 'delete':
+              result = yield this.deleteUser(operation.userId!)
+              break
+          }
+          results.push(result)
+        } catch (error) {
+          errors.push({ operation, error })
+        }
+      }
+
+      if (errors.length > 0) {
+        runInAction(() => {
+          this.error = `${errors.length} operations failed`
+        })
+      }
+
+      return { results, errors }
+    } finally {
+      runInAction(() => {
+        this.loading = false
+      })
+    }
+  })
+
+  // ✅ Cleanup method
+  dispose() {
+    super.dispose()
+    this.disposers.forEach(disposer => disposer())
+    this.disposers.length = 0
+  }
+}
+
+// ✅ Performance monitoring utilities
+export class MobXPerformanceMonitor {
+  private reactionTimes: Map<string, number> = new Map()
+  private renderCounts: Map<string, number> = new Map()
+
+  measureReactionTime<T>(name: string, fn: () => T): T {
+    const start = performance.now()
+    const result = fn()
+    const duration = performance.now() - start
+    
+    this.reactionTimes.set(name, (this.reactionTimes.get(name) || 0) + duration)
+    
+    if (duration > 16) { // More than one frame
+      console.warn(`Slow reaction "${name}": ${duration.toFixed(2)}ms`)
+    }
+    
+    return result
+  }
+
+  trackRender(componentName: string) {
+    this.renderCounts.set(componentName, (this.renderCounts.get(componentName) || 0) + 1)
+    
+    const count = this.renderCounts.get(componentName)!
+    if (count % 100 === 0) {
+      console.log(`Component "${componentName}" has rendered ${count} times`)
+    }
+  }
+
+  getStats() {
+    return {
+      reactionTimes: Object.fromEntries(this.reactionTimes),
+      renderCounts: Object.fromEntries(this.renderCounts),
+    }
+  }
+
+  reset() {
+    this.reactionTimes.clear()
+    this.renderCounts.clear()
+  }
+}
+
+// ✅ Higher-order component for performance monitoring
+export function withPerformanceMonitoring<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+  componentName: string
+) {
+  const monitor = new MobXPerformanceMonitor()
+
+  return observer((props: P) => {
+    monitor.trackRender(componentName)
+    
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const stats = monitor.getStats()
+        if (stats.renderCounts[componentName] > 0) {
+          console.log(`${componentName} performance:`, stats)
+        }
+      }, 10000)
+
+      return () => clearInterval(interval)
+    }, [])
+
+    return <WrappedComponent {...props} />
+  })
+}
+```
+
+## Testing Patterns
+
+**Comprehensive testing strategies for MobX stores:**
+```tsx
+import { runInAction } from 'mobx'
+
+// ✅ Store testing utilities
+export class MockUserStore extends UserStore {
+  constructor() {
+    super()
+    this.setupMockData()
+  }
+
+  private setupMockData() {
+    const mockUsers = [
+      new User({
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        isActive: true,
+        roles: ['user', 'admin'],
+        lastLoginAt: new Date(),
+      }),
+      new User({
+        id: '2',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        email: 'jane@example.com',
+        isActive: true,
+        roles: ['user'],
+        lastLoginAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      }),
+      new User({
+        id: '3',
+        firstName: 'Inactive',
+        lastName: 'User',
+        email: 'inactive@example.com',
+        isActive: false,
+        roles: ['user'],
+      }),
+    ]
+
+    runInAction(() => {
+      mockUsers.forEach(user => {
+        this.users.set(user.id, user)
+      })
+      this.pagination.total = mockUsers.length
+    })
+  }
+
+  // Override async methods for testing
+  fetchUsers = flow(function* (this: MockUserStore) {
+    this.loading = true
+    yield new Promise(resolve => setTimeout(resolve, 100)) // Minimal delay
+    this.loading = false
+  })
+
+  createUser = flow(function* (this: MockUserStore, userData: Partial<User>) {
+    const user = new User({ id: `mock-${Date.now()}`, ...userData })
+    runInAction(() => {
+      this.users.set(user.id, user)
+      this.pagination.total++
+    })
+    return user
+  })
+}
+
+// ✅ Test utilities and helpers
+export const createTestStore = () => new MockUserStore()
+
+export const waitForStoreUpdate = (store: UserStore, predicate: () => boolean, timeout = 5000) => {
+  return new Promise<void>((resolve, reject) => {
+    const disposer = autorun(() => {
+      if (predicate()) {
+        disposer()
+        resolve()
+      }
+    })
+
+    setTimeout(() => {
+      disposer()
+      reject(new Error('Store update timeout'))
+    }, timeout)
+  })
+}
+
+// ✅ Example test scenarios
+describe('UserStore', () => {
+  let store: MockUserStore
+
+  beforeEach(() => {
+    store = createTestStore()
+  })
+
+  afterEach(() => {
+    store.dispose()
+  })
+
+  test('computed values update correctly', () => {
+    expect(store.activeUsersCount).toBe(2)
+    expect(store.onlineUsersCount).toBe(1)
+    
+    // Modify user state
+    const user = store.getUserById('2')!
+    runInAction(() => {
+      user.isActive = false
+    })
+    
+    expect(store.activeUsersCount).toBe(1)
+  })
+
+  test('search filtering works', () => {
+    store.setSearchQuery('john')
+    expect(store.filteredUsers).toHaveLength(1)
+    expect(store.filteredUsers[0].firstName).toBe('John')
+    
+    store.setSearchQuery('')
+    expect(store.filteredUsers).toHaveLength(3)
+  })
+
+  test('async operations handle errors', async () => {
+    // Mock fetch to fail
+    store.fetchUsers = flow(function* () {
+      this.loading = true
+      throw new Error('Network error')
+    })
+
+    await expect(store.fetchUsers()).rejects.toThrow('Network error')
+    expect(store.error).toBeTruthy()
+    expect(store.loading).toBe(false)
+  })
+})
+```
+
+## Best Practices Summary
+
+**Key patterns for professional MobX applications:**
+
+1. **Store Architecture**: Use domain-driven design with clear separation of concerns. Create focused stores for specific business domains.
+
+2. **State Organization**: Leverage computed values for derived state, use proper action methods for mutations, implement flow for async operations.
+
+3. **Performance**: Use granular observers, implement proper memoization, avoid deep object observations when unnecessary.
+
+4. **React Integration**: Use observer HOC selectively, create focused components that observe only necessary state changes.
+
+5. **Error Handling**: Implement proper error boundaries, use try/catch in flows, provide user-friendly error messages.
+
+6. **Testing**: Create mock stores for testing, use autorun for testing reactions, implement proper cleanup in tests.
+
+7. **DevTools**: Use MobX DevTools for debugging, implement performance monitoring, track state changes with interceptors.
+
+8. **Advanced Patterns**: Use reactions for side effects, implement middleware with interceptors, create audit trails for state changes.
+
+Always prioritize predictable state updates, maintain clear data flow, and leverage MobX's reactive system for optimal performance and developer experience.
+``` 

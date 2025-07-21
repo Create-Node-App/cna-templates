@@ -1,147 +1,757 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and using Ant Design components in React applications.
+description: Advanced Ant Design patterns for enterprise React applications, custom theming, performance optimization, and complex UI compositions.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Ant Design Rules
+# Advanced Ant Design Patterns
 
-You are an expert in Ant Design and follow these guidelines:
+## Enterprise Theme Configuration
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create components with clear, descriptive names and organize them by feature/domain.
-3. Use Ant Design's theming system with proper TypeScript support.
-4. Leverage Ant Design's responsive utilities for mobile-first design.
-5. Use Ant Design's color system with proper dark mode support.
-6. Follow Ant Design's design principles for consistent UX.
-7. Document component behavior with JSDoc or TypeScript types.
-8. Implement proper error boundaries and loading states.
-9. Use proper component composition and avoid prop drilling.
-10. Follow accessibility best practices (WCAG 2.1).
-
-## Anti-Patterns to Avoid
-
-1. Never use Ant Design components without proper theming setup.
-2. Avoid using Ant Design components for complex, custom UI elements.
-3. Don't use Ant Design components for performance-critical UI elements.
-4. Avoid using Ant Design components for complex animations.
-5. Don't use Ant Design components for complex, custom layouts.
-
-## Example Implementation
-
+**Advanced theme customization and design tokens:**
 ```tsx
-import React from 'react';
-import { 
-  Card, 
-  Image, 
-  Typography, 
-  Button, 
-  Spin,
-  theme
-} from 'antd';
+import { ConfigProvider, theme } from 'antd'
+import type { ThemeConfig } from 'antd/es/config-provider/context'
+import { createContext, useContext, useState, useEffect } from 'react'
 
-const { Title, Text } = Typography;
+// ✅ Extended theme configuration with design tokens
+const createThemeConfig = (isDark: boolean): ThemeConfig => ({
+  algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+  token: {
+    // ✅ Brand colors with semantic meaning
+    colorPrimary: '#1677FF',
+    colorSuccess: '#52C41A',
+    colorWarning: '#FAAD14',
+    colorError: '#FF4D4F',
+    colorInfo: '#13C2C2',
+    colorTextBase: isDark ? '#FFFFFF' : '#000000',
+    colorBgBase: isDark ? '#141414' : '#FFFFFF',
+    
+    // ✅ Typography scale
+    fontSizeBase: 14,
+    fontSizeLG: 16,
+    fontSizeXL: 20,
+    fontSizeSM: 12,
+    fontSizeXS: 10,
+    
+    // ✅ Spacing system
+    sizeUnit: 4,
+    sizeStep: 4,
+    
+    // ✅ Border radius system
+    borderRadius: 6,
+    borderRadiusLG: 8,
+    borderRadiusSM: 4,
+    borderRadiusXS: 2,
+    
+    // ✅ Motion tokens
+    motionDurationFast: '0.1s',
+    motionDurationMid: '0.2s',
+    motionDurationSlow: '0.3s',
+    
+    // ✅ Z-index system
+    zIndexBase: 0,
+    zIndexPopupBase: 1000,
+    
+    // ✅ Layout tokens
+    screenXS: 480,
+    screenSM: 576,
+    screenMD: 768,
+    screenLG: 992,
+    screenXL: 1200,
+    screenXXL: 1600,
+  },
+  
+  components: {
+    // ✅ Button component customization
+    Button: {
+      primaryShadow: '0 2px 0 rgba(5, 145, 255, 0.1)',
+      defaultShadow: '0 2px 0 rgba(0, 0, 0, 0.02)',
+      borderRadius: 6,
+      controlHeight: 32,
+      controlHeightLG: 40,
+      controlHeightSM: 24,
+      paddingContentHorizontal: 16,
+    },
+    
+    // ✅ Form component customization
+    Form: {
+      labelFontSize: 14,
+      labelColor: isDark ? '#FFFFFF' : '#000000',
+      labelRequiredMarkColor: '#FF4D4F',
+      itemMarginBottom: 24,
+      verticalLabelPadding: '0 0 8px',
+    },
+    
+    // ✅ Table component customization
+    Table: {
+      headerBg: isDark ? '#1F1F1F' : '#FAFAFA',
+      headerColor: isDark ? '#FFFFFF' : '#000000',
+      rowHoverBg: isDark ? '#262626' : '#F5F5F5',
+      borderColor: isDark ? '#303030' : '#F0F0F0',
+    },
+  }
+})
 
-interface ProductCardProps {
-  product: Product;
-  onAddToCart: (product: Product) => void;
-  isLoading?: boolean;
+// ✅ Theme context for app-wide theme management
+interface ThemeContextType {
+  isDark: boolean
+  toggleTheme: () => void
+  themeConfig: ThemeConfig
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ 
-  product, 
-  onAddToCart,
-  isLoading = false 
-}) => {
-  const { token } = theme.useToken();
+const ThemeContext = createContext<ThemeContextType | null>(null)
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme-mode')
+    return saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  })
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const newValue = !prev
+      localStorage.setItem('theme-mode', newValue ? 'dark' : 'light')
+      return newValue
+    })
+  }
+
+  const themeConfig = createThemeConfig(isDark)
 
   return (
-    <Card
-      hoverable
-      cover={
-        <Image
-          alt={product.name}
-          src={product.image}
-          height={200}
-          preview={false}
-        />
-      }
-      style={{
-        maxWidth: 300,
-        transition: `box-shadow ${token.motionDurationMid}`,
-      }}
-    >
-      <Title level={4}>{product.name}</Title>
-      <Text type="secondary">{product.description}</Text>
-      <div style={{ marginTop: token.marginMD }}>
-        {isLoading ? (
-          <Spin size="small" />
-        ) : (
-          <Button 
-            type="primary" 
-            onClick={() => onAddToCart(product)}
-            aria-label={`Add ${product.name} to cart`}
-          >
-            Add to Cart
-          </Button>
-        )}
-      </div>
-    </Card>
-  );
-};
+    <ThemeContext.Provider value={{ isDark, toggleTheme, themeConfig }}>
+      <ConfigProvider theme={themeConfig}>
+        {children}
+      </ConfigProvider>
+    </ThemeContext.Provider>
+  )
+}
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider')
+  }
+  return context
+}
 ```
 
-## Component Usage
+## Advanced Component Patterns
 
-1. Use consistent component imports from antd
-2. Implement proper Form.Item validation rules
-3. Use TypeScript for component props and events
-4. Handle component states with proper hooks (useState, useRef)
-5. Implement proper error boundaries for component trees
+**Complex UI compositions and data handling:**
+```tsx
+import { 
+  Table, 
+  Form, 
+  Input, 
+  Button, 
+  Space, 
+  Tag, 
+  Avatar, 
+  Dropdown, 
+  Modal, 
+  Select,
+  Card,
+  Statistic,
+  Progress,
+  Typography,
+  Row,
+  Col,
+  message,
+  notification
+} from 'antd'
+import { 
+  SearchOutlined, 
+  EditOutlined,
+  DeleteOutlined,
+  MoreOutlined
+} from '@ant-design/icons'
+import type { ColumnsType } from 'antd/es/table'
 
-## Design System
+const { Text, Title } = Typography
 
-1. Use proper theme customization with ConfigProvider
-2. Implement consistent spacing using Ant Design's grid system
-3. Use appropriate typography scale and components
-4. Handle responsive design with Grid and Layout components
-5. Follow Ant Design's design tokens and variables
+// ✅ Advanced data table with comprehensive features
+interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'manager' | 'user'
+  status: 'active' | 'inactive' | 'suspended'
+  avatar: string
+  department: string
+  performance: number
+}
 
-## Form Handling
+interface UserTableProps {
+  users: User[]
+  loading?: boolean
+  onEdit: (user: User) => void
+  onDelete: (userId: string) => void
+}
 
-1. Use Form components with proper validation
-2. Implement proper form submission handling
-3. Use appropriate form controls (Input, Select, DatePicker)
-4. Handle form state with Form.useForm()
-5. Follow Ant Design's form patterns
+export const UserManagementTable: React.FC<UserTableProps> = ({
+  users,
+  loading,
+  onEdit,
+  onDelete
+}) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([])
+  const [searchText, setSearchText] = useState('')
 
-## Data Display
+  // ✅ Advanced table columns with custom renderers
+  const columns: ColumnsType<User> = [
+    {
+      title: 'User',
+      dataIndex: 'name',
+      key: 'name',
+      render: (name: string, record: User) => (
+        <Space size="middle">
+          <Avatar src={record.avatar} size={40}>
+            {name.charAt(0).toUpperCase()}
+          </Avatar>
+          <div>
+            <Text strong>{name}</Text>
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                {record.email}
+              </Text>
+            </div>
+          </div>
+        </Space>
+      ),
+      filteredValue: searchText ? [searchText] : null,
+      onFilter: (value, record) => 
+        record.name.toLowerCase().includes(value as string) ||
+        record.email.toLowerCase().includes(value as string),
+    },
+    
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
+      filters: [
+        { text: 'Admin', value: 'admin' },
+        { text: 'Manager', value: 'manager' },
+        { text: 'User', value: 'user' },
+      ],
+      onFilter: (value, record) => record.role === value,
+      render: (role: string) => {
+        const colors = { admin: 'red', manager: 'orange', user: 'blue' }
+        return <Tag color={colors[role as keyof typeof colors]}>{role.toUpperCase()}</Tag>
+      },
+    },
+    
+    {
+      title: 'Performance',
+      dataIndex: 'performance',
+      key: 'performance',
+      sorter: (a, b) => a.performance - b.performance,
+      render: (performance: number) => (
+        <div style={{ width: 120 }}>
+          <Progress
+            percent={performance}
+            size="small"
+            status={performance >= 80 ? 'success' : performance >= 60 ? 'normal' : 'exception'}
+          />
+        </div>
+      ),
+    },
+    
+    {
+      title: 'Actions',
+      key: 'actions',
+      width: 120,
+      render: (_, record: User) => (
+        <Space size="small">
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => onEdit(record)}
+            size="small"
+          />
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'delete',
+                  label: 'Delete User',
+                  icon: <DeleteOutlined />,
+                  danger: true,
+                  onClick: () => handleDeleteConfirm(record.id)
+                }
+              ]
+            }}
+            trigger={['click']}
+          >
+            <Button type="text" icon={<MoreOutlined />} size="small" />
+          </Dropdown>
+        </Space>
+      ),
+    },
+  ]
 
-1. Use Table component with proper pagination
-2. Implement proper data loading states
-3. Use appropriate data visualization components
-4. Handle large datasets with virtual scrolling
-5. Follow Ant Design's data display patterns
+  const handleDeleteConfirm = (userId: string) => {
+    Modal.confirm({
+      title: 'Delete User',
+      content: 'Are you sure you want to delete this user?',
+      okType: 'danger',
+      onOk: () => onDelete(userId)
+    })
+  }
 
-## Styling
+  const handleSearch = (value: string) => {
+    setSearchText(value.toLowerCase())
+  }
 
-1. Use proper theme configuration
-2. Implement consistent styling
-3. Use appropriate CSS-in-JS
-4. Handle responsive design properly
-5. Follow Ant Design design system
+  return (
+    <Card>
+      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={12} md={6}>
+          <Statistic title="Total Users" value={users.length} />
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Statistic 
+            title="Active Users" 
+            value={users.filter(u => u.status === 'active').length} 
+          />
+        </Col>
+      </Row>
 
-## Best Practices
+      <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
+        <Col>
+          <Input.Search
+            placeholder="Search users..."
+            onSearch={handleSearch}
+            style={{ width: 250 }}
+            prefix={<SearchOutlined />}
+          />
+        </Col>
+        <Col>
+          <Button type="primary">Add User</Button>
+        </Col>
+      </Row>
 
-1. Use proper component composition
-2. Implement proper form handling
-3. Use appropriate data display
-4. Handle loading states properly
-5. Follow Ant Design best practices
+      <Table<User>
+        columns={columns}
+        dataSource={users}
+        rowKey="id"
+        loading={loading}
+        pagination={{
+          total: users.length,
+          pageSize: 10,
+          showSizeChanger: true,
+        }}
+        scroll={{ x: 1200 }}
+      />
+    </Card>
+  )
+}
+```
 
-## Performance
+## Form Patterns & Validation
 
-1. Use proper component optimization
-2. Implement proper lazy loading
-3. Use appropriate component caching
-4. Handle large data sets properly
-5. Optimize component rendering 
+**Advanced form handling with complex validation:**
+```tsx
+// ✅ Multi-step form with comprehensive validation
+export const UserRegistrationForm: React.FC = () => {
+  const [form] = Form.useForm()
+  const [currentStep, setCurrentStep] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  // ✅ Dynamic validation rules
+  const validationRules = {
+    email: [
+      { required: true, message: 'Email is required' },
+      { type: 'email' as const, message: 'Please enter a valid email' },
+      {
+        validator: async (_, value) => {
+          if (value) {
+            const exists = await checkEmailExists(value)
+            if (exists) {
+              throw new Error('Email already exists')
+            }
+          }
+        }
+      }
+    ],
+    
+    password: [
+      { required: true, message: 'Password is required' },
+      { min: 8, message: 'Password must be at least 8 characters' },
+      {
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+        message: 'Password must contain uppercase, lowercase, number and special character'
+      }
+    ],
+    
+    confirmPassword: [
+      { required: true, message: 'Please confirm your password' },
+      ({ getFieldValue }) => ({
+        validator(_, value) {
+          if (!value || getFieldValue('password') === value) {
+            return Promise.resolve()
+          }
+          return Promise.reject(new Error('Passwords do not match'))
+        }
+      })
+    ]
+  }
+
+  // ✅ Form submission with optimistic updates
+  const handleSubmit = async () => {
+    try {
+      setLoading(true)
+      const values = await form.validateFields()
+      
+      notification.success({
+        message: 'Registration Submitted',
+        description: 'Your account is being created...',
+      })
+
+      await registerUser(values)
+      
+      notification.success({
+        message: 'Registration Complete',
+        description: 'Welcome to the platform!',
+      })
+      
+      form.resetFields()
+      setCurrentStep(0)
+      
+    } catch (error: any) {
+      notification.error({
+        message: 'Registration Failed',
+        description: error.message || 'Please try again later',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Card style={{ maxWidth: 600, margin: '0 auto' }}>
+      <Form
+        form={form}
+        layout="vertical"
+        size="large"
+        onFinish={handleSubmit}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
+              <Input placeholder="Enter your first name" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
+              <Input placeholder="Enter your last name" />
+            </Form.Item>
+          </Col>
+        </Row>
+        
+        <Form.Item name="email" label="Email" rules={validationRules.email}>
+          <Input placeholder="Enter your email" />
+        </Form.Item>
+        
+        <Form.Item name="password" label="Password" rules={validationRules.password}>
+          <Input.Password placeholder="Create a strong password" />
+        </Form.Item>
+        
+        <Form.Item 
+          name="confirmPassword" 
+          label="Confirm Password" 
+          rules={validationRules.confirmPassword}
+        >
+          <Input.Password placeholder="Confirm your password" />
+        </Form.Item>
+        
+        <Form.Item name="department" label="Department" rules={[{ required: true }]}>
+          <Select placeholder="Select your department">
+            <Select.Option value="engineering">Engineering</Select.Option>
+            <Select.Option value="design">Design</Select.Option>
+            <Select.Option value="marketing">Marketing</Select.Option>
+          </Select>
+        </Form.Item>
+        
+        <Form.Item>
+          <Button 
+            type="primary" 
+            htmlType="submit" 
+            loading={loading}
+            size="large"
+            block
+          >
+            Register
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
+  )
+}
+```
+
+## Performance & Layout Patterns
+
+**Responsive layouts and performance optimization:**
+```tsx
+// ✅ Responsive dashboard layout
+import { Layout, Menu, Avatar, Dropdown, Button, Drawer, Grid } from 'antd'
+import { MenuOutlined, UserOutlined } from '@ant-design/icons'
+
+const { Header, Sider, Content } = Layout
+const { useBreakpoint } = Grid
+
+export const DashboardLayout: React.FC<{
+  children: React.ReactNode
+  user: User
+  onLogout: () => void
+}> = ({ children, user, onLogout }) => {
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileDrawerVisible, setMobileDrawerVisible] = useState(false)
+  const { token } = theme.useToken()
+  const screens = useBreakpoint()
+  const isMobile = !screens.md
+
+  const menuItems = [
+    { key: '1', icon: <UserOutlined />, label: 'Dashboard' },
+    { key: '2', icon: <UserOutlined />, label: 'Users' },
+    { key: '3', icon: <UserOutlined />, label: 'Settings' },
+  ]
+
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      {!isMobile && (
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}
+        >
+          <Menu theme="dark" mode="inline" items={menuItems} />
+        </Sider>
+      )}
+      
+      <Layout style={{ marginLeft: isMobile ? 0 : collapsed ? 80 : 200 }}>
+        <Header style={{ background: token.colorBgContainer, padding: 0 }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            height: '100%', 
+            padding: '0 16px' 
+          }}>
+            {isMobile && (
+              <Button
+                type="text"
+                icon={<MenuOutlined />}
+                onClick={() => setMobileDrawerVisible(true)}
+              />
+            )}
+            <Dropdown
+              menu={{
+                items: [
+                  { key: 'profile', label: 'Profile' },
+                  { key: 'logout', label: 'Logout', onClick: onLogout },
+                ],
+              }}
+            >
+              <Avatar src={user.avatar}>{user.name[0]}</Avatar>
+            </Dropdown>
+          </div>
+        </Header>
+        
+        <Content style={{ margin: '24px 16px 0' }}>
+          <div style={{ 
+            padding: 24, 
+            background: token.colorBgContainer, 
+            minHeight: 360,
+            borderRadius: token.borderRadius
+          }}>
+            {children}
+          </div>
+        </Content>
+      </Layout>
+      
+      <Drawer
+        placement="left"
+        onClose={() => setMobileDrawerVisible(false)}
+        open={mobileDrawerVisible}
+        width={250}
+      >
+        <Menu mode="inline" items={menuItems} />
+      </Drawer>
+    </Layout>
+  )
+}
+
+// ✅ Performance optimized list component
+import { List, Avatar, Button, Skeleton } from 'antd'
+import { FixedSizeList as VirtualList } from 'react-window'
+
+export const OptimizedUserList: React.FC<{ 
+  users: User[]
+  loading: boolean
+  onUserClick: (user: User) => void 
+}> = ({ users, loading, onUserClick }) => {
+  const renderItem = useCallback(({ index, style }: any) => {
+    const user = users[index]
+    
+    return (
+      <div style={style}>
+        <List.Item
+          actions={[
+            <Button key="view" type="link" onClick={() => onUserClick(user)}>
+              View
+            </Button>
+          ]}
+        >
+          <List.Item.Meta
+            avatar={<Avatar src={user.avatar}>{user.name[0]}</Avatar>}
+            title={user.name}
+            description={user.email}
+          />
+        </List.Item>
+      </div>
+    )
+  }, [users, onUserClick])
+
+  if (loading) {
+    return (
+      <List>
+        {Array.from({ length: 8 }).map((_, index) => (
+          <List.Item key={index}>
+            <Skeleton avatar title={false} loading active>
+              <List.Item.Meta
+                avatar={<Avatar />}
+                title="Loading..."
+                description="Loading user data..."
+              />
+            </Skeleton>
+          </List.Item>
+        ))}
+      </List>
+    )
+  }
+
+  return (
+    <VirtualList
+      height={400}
+      itemCount={users.length}
+      itemSize={73}
+      width="100%"
+    >
+      {renderItem}
+    </VirtualList>
+  )
+}
+```
+
+## Advanced Custom Hooks
+
+**Ant Design integration utilities:**
+```tsx
+import { useCallback, useMemo, useEffect, useState } from 'react'
+import { theme, message, notification } from 'antd'
+
+// ✅ Theme token hook with responsive breakpoints
+export const useAntTheme = () => {
+  const { token } = theme.useToken()
+  const [screenSize, setScreenSize] = useState<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'>('md')
+  
+  useEffect(() => {
+    const updateScreenSize = () => {
+      const width = window.innerWidth
+      if (width < token.screenSM) setScreenSize('xs')
+      else if (width < token.screenMD) setScreenSize('sm')
+      else if (width < token.screenLG) setScreenSize('md')
+      else if (width < token.screenXL) setScreenSize('lg')
+      else if (width < token.screenXXL) setScreenSize('xl')
+      else setScreenSize('xxl')
+    }
+
+    updateScreenSize()
+    window.addEventListener('resize', updateScreenSize)
+    return () => window.removeEventListener('resize', updateScreenSize)
+  }, [token])
+
+  const responsive = useMemo(() => ({
+    isMobile: screenSize === 'xs',
+    isTablet: screenSize === 'sm' || screenSize === 'md',
+    isDesktop: screenSize === 'lg' || screenSize === 'xl' || screenSize === 'xxl',
+    screenSize,
+  }), [screenSize])
+
+  return { token, responsive }
+}
+
+// ✅ Advanced notification system
+export const useNotifications = () => {
+  const { token } = theme.useToken()
+
+  const showSuccess = useCallback((title: string, description?: string) => {
+    notification.success({
+      message: title,
+      description,
+      placement: 'topRight',
+      style: { borderLeft: `4px solid ${token.colorSuccess}` },
+    })
+  }, [token.colorSuccess])
+
+  const showError = useCallback((title: string, description?: string) => {
+    notification.error({
+      message: title,
+      description,
+      placement: 'topRight',
+      style: { borderLeft: `4px solid ${token.colorError}` },
+    })
+  }, [token.colorError])
+
+  return { showSuccess, showError }
+}
+
+// ✅ Table data management hook
+export const useTableData = <T extends Record<string, any>>(initialData: T[]) => {
+  const [data, setData] = useState<T[]>(initialData)
+  const [loading, setLoading] = useState(false)
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: initialData.length,
+  })
+
+  const refresh = useCallback(async (newData?: T[]) => {
+    setLoading(true)
+    try {
+      if (newData) {
+        setData(newData)
+        setPagination(prev => ({ ...prev, total: newData.length }))
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  return { data, loading, pagination, refresh, setData }
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for professional Ant Design applications:**
+
+1. **Theme Architecture**: Use centralized theme configuration with design tokens and consistent color systems.
+
+2. **Component Composition**: Build complex UIs with compound components and proper TypeScript interfaces.
+
+3. **Performance**: Implement virtualization for large datasets and lazy loading for heavy components.
+
+4. **Accessibility**: Provide proper ARIA labels and keyboard navigation support.
+
+5. **Responsive Design**: Use Ant Design's Grid system and breakpoint utilities effectively.
+
+6. **Form Management**: Implement comprehensive validation with real-time feedback.
+
+7. **State Management**: Use proper loading states and error handling patterns.
+
+8. **Layout Systems**: Create flexible, responsive layouts with proper navigation patterns.
+
+Always prioritize user experience and leverage Ant Design's comprehensive ecosystem for rapid development.
