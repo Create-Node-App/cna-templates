@@ -1,38 +1,768 @@
 ---
-description: Specific guidelines for implementing and using React Hook Form in projects.
+description: Advanced React Hook Form patterns for complex validation, dynamic forms, performance optimization, and type-safe form management.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# React Hook Form Rules
+# Advanced React Hook Form Patterns
 
-## Form Implementation
+## Type-Safe Form Implementation
 
-1. Use TypeScript for form schemas
-2. Implement proper form validation
-3. Use controlled components when necessary
-4. Handle form submission properly
-5. Implement proper error handling
+**Schema-driven form validation:**
+```tsx
+import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
-## Best Practices
+// ✅ Define comprehensive schema with validation
+const userProfileSchema = z.object({
+  personalInfo: z.object({
+    firstName: z.string()
+      .min(2, 'First name must be at least 2 characters')
+      .max(50, 'First name must not exceed 50 characters'),
+    lastName: z.string()
+      .min(2, 'Last name must be at least 2 characters')
+      .max(50, 'Last name must not exceed 50 characters'),
+    email: z.string()
+      .email('Please enter a valid email address')
+      .refine(async (email) => {
+        // ✅ Async validation
+        const response = await fetch(`/api/check-email?email=${email}`)
+        const data = await response.json()
+        return !data.exists
+      }, 'Email already exists'),
+    dateOfBirth: z.date()
+      .refine((date) => {
+        const age = new Date().getFullYear() - date.getFullYear()
+        return age >= 18
+      }, 'Must be at least 18 years old'),
+  }),
+  
+  addresses: z.array(z.object({
+    type: z.enum(['home', 'work', 'billing']),
+    street: z.string().min(5, 'Street address is required'),
+    city: z.string().min(2, 'City is required'),
+    zipCode: z.string()
+      .regex(/^\d{5}(-\d{4})?$/, 'Invalid zip code format'),
+    isDefault: z.boolean().default(false)
+  })).min(1, 'At least one address is required'),
+  
+  preferences: z.object({
+    newsletter: z.boolean().default(false),
+    notifications: z.object({
+      email: z.boolean().default(true),
+      sms: z.boolean().default(false),
+      push: z.boolean().default(true)
+    }),
+    theme: z.enum(['light', 'dark', 'auto']).default('auto')
+  })
+})
 
-1. Use form context for complex forms
-2. Implement proper form state management
-3. Use appropriate validation methods
-4. Handle form reset properly
-5. Implement proper form submission handling
+type UserProfileForm = z.infer<typeof userProfileSchema>
 
-## Performance
+// ✅ Advanced form component with complex validation
+export const UserProfileForm: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    trigger,
+    formState: { errors, isSubmitting, isValid, touchedFields, dirtyFields },
+    reset,
+    setError,
+    clearErrors
+  } = useForm<UserProfileForm>({
+    resolver: zodResolver(userProfileSchema),
+    mode: 'onBlur', // Validate on blur for better UX
+    reValidateMode: 'onChange',
+    defaultValues: {
+      personalInfo: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        dateOfBirth: undefined
+      },
+      addresses: [{
+        type: 'home',
+        street: '',
+        city: '',
+        zipCode: '',
+        isDefault: true
+      }],
+      preferences: {
+        newsletter: false,
+        notifications: {
+          email: true,
+          sms: false,
+          push: true
+        },
+        theme: 'auto'
+      }
+    }
+  })
 
-1. Use proper form optimization techniques
-2. Implement proper form memoization
-3. Use appropriate form state updates
-4. Handle form re-renders properly
-5. Use proper form validation strategies
+  // ✅ Dynamic field array management
+  const { 
+    fields: addressFields, 
+    append: addAddress, 
+    remove: removeAddress,
+    move: moveAddress
+  } = useFieldArray({
+    control,
+    name: 'addresses'
+  })
 
-## Accessibility
+  // ✅ Watch specific fields for conditional logic
+  const watchedEmail = watch('personalInfo.email')
+  const watchedAddresses = watch('addresses')
+  const watchedNotifications = watch('preferences.notifications')
 
-1. Implement proper form labels
-2. Use appropriate ARIA attributes
-3. Handle form errors properly
-4. Implement proper form focus management
-5. Use proper form validation feedback 
+  // ✅ Advanced submission handler with error recovery
+  const onSubmit: SubmitHandler<UserProfileForm> = async (data) => {
+    try {
+      // ✅ Pre-submission validation
+      await trigger()
+      
+      // ✅ Ensure only one default address
+      const defaultAddresses = data.addresses.filter(addr => addr.isDefault)
+      if (defaultAddresses.length !== 1) {
+        setError('addresses', {
+          type: 'manual',
+          message: 'Please select exactly one default address'
+        })
+        return
+      }
+
+      // ✅ Submit with optimistic UI updates
+      const response = await fetch('/api/user-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        
+        // ✅ Handle field-specific server errors
+        if (errorData.fieldErrors) {
+          Object.entries(errorData.fieldErrors).forEach(([field, message]) => {
+            setError(field as keyof UserProfileForm, {
+              type: 'server',
+              message: message as string
+            })
+          })
+        } else {
+          throw new Error(errorData.message || 'Submission failed')
+        }
+        return
+      }
+
+      // ✅ Success handling
+      toast.success('Profile updated successfully!')
+      reset(data) // Update form's default values
+      
+    } catch (error) {
+      console.error('Form submission error:', error)
+      toast.error('Failed to update profile. Please try again.')
+    }
+  }
+
+  // ✅ Handle default address selection
+  const handleDefaultAddressChange = (selectedIndex: number) => {
+    watchedAddresses.forEach((_, index) => {
+      setValue(`addresses.${index}.isDefault`, index === selectedIndex, {
+        shouldDirty: true,
+        shouldTouch: true
+      })
+    })
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="user-profile-form">
+      {/* ✅ Personal Information Section */}
+      <FormSection title="Personal Information">
+        <FormField
+          label="First Name"
+          error={errors.personalInfo?.firstName}
+          required
+        >
+          <input
+            {...register('personalInfo.firstName')}
+            type="text"
+            className={cn('form-input', {
+              'error': errors.personalInfo?.firstName,
+              'touched': touchedFields.personalInfo?.firstName
+            })}
+            placeholder="Enter your first name"
+            aria-invalid={!!errors.personalInfo?.firstName}
+            aria-describedby={errors.personalInfo?.firstName ? 'firstName-error' : undefined}
+          />
+        </FormField>
+
+        <FormField
+          label="Last Name"
+          error={errors.personalInfo?.lastName}
+          required
+        >
+          <input
+            {...register('personalInfo.lastName')}
+            type="text"
+            className={cn('form-input', {
+              'error': errors.personalInfo?.lastName,
+              'touched': touchedFields.personalInfo?.lastName
+            })}
+            placeholder="Enter your last name"
+          />
+        </FormField>
+
+        <FormField
+          label="Email Address"
+          error={errors.personalInfo?.email}
+          required
+        >
+          <input
+            {...register('personalInfo.email')}
+            type="email"
+            className={cn('form-input', {
+              'error': errors.personalInfo?.email,
+              'checking': isValidating?.personalInfo?.email
+            })}
+            placeholder="Enter your email address"
+            autoComplete="email"
+          />
+          {isValidating?.personalInfo?.email && (
+            <div className="validation-spinner">Checking email availability...</div>
+          )}
+        </FormField>
+
+        <FormField
+          label="Date of Birth"
+          error={errors.personalInfo?.dateOfBirth}
+          required
+        >
+          <input
+            {...register('personalInfo.dateOfBirth', {
+              valueAsDate: true
+            })}
+            type="date"
+            className="form-input"
+            max={new Date().toISOString().split('T')[0]}
+          />
+        </FormField>
+      </FormSection>
+
+      {/* ✅ Dynamic Address Section */}
+      <FormSection title="Addresses">
+        {addressFields.map((field, index) => (
+          <div key={field.id} className="address-group">
+            <div className="address-header">
+              <h4>Address {index + 1}</h4>
+              <div className="address-actions">
+                <button
+                  type="button"
+                  onClick={() => handleDefaultAddressChange(index)}
+                  className={cn('btn-toggle', {
+                    'active': watchedAddresses[index]?.isDefault
+                  })}
+                >
+                  Default
+                </button>
+                {addressFields.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAddress(index)}
+                    className="btn-danger"
+                    aria-label={`Remove address ${index + 1}`}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="address-fields">
+              <FormField label="Address Type" error={errors.addresses?.[index]?.type}>
+                <select
+                  {...register(`addresses.${index}.type`)}
+                  className="form-select"
+                >
+                  <option value="home">Home</option>
+                  <option value="work">Work</option>
+                  <option value="billing">Billing</option>
+                </select>
+              </FormField>
+
+              <FormField label="Street Address" error={errors.addresses?.[index]?.street} required>
+                <input
+                  {...register(`addresses.${index}.street`)}
+                  type="text"
+                  className="form-input"
+                  placeholder="123 Main Street"
+                  autoComplete="address-line1"
+                />
+              </FormField>
+
+              <div className="form-row">
+                <FormField label="City" error={errors.addresses?.[index]?.city} required>
+                  <input
+                    {...register(`addresses.${index}.city`)}
+                    type="text"
+                    className="form-input"
+                    placeholder="City"
+                    autoComplete="address-level2"
+                  />
+                </FormField>
+
+                <FormField label="Zip Code" error={errors.addresses?.[index]?.zipCode} required>
+                  <input
+                    {...register(`addresses.${index}.zipCode`)}
+                    type="text"
+                    className="form-input"
+                    placeholder="12345"
+                    autoComplete="postal-code"
+                  />
+                </FormField>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={() => addAddress({
+            type: 'home',
+            street: '',
+            city: '',
+            zipCode: '',
+            isDefault: false
+          })}
+          className="btn-secondary"
+        >
+          Add Another Address
+        </button>
+      </FormSection>
+
+      {/* ✅ Preferences Section */}
+      <FormSection title="Preferences">
+        <FormField label="Newsletter Subscription">
+          <label className="checkbox-label">
+            <input
+              {...register('preferences.newsletter')}
+              type="checkbox"
+              className="form-checkbox"
+            />
+            Subscribe to our newsletter
+          </label>
+        </FormField>
+
+        <FormField label="Notification Settings">
+          <div className="notification-options">
+            <label className="checkbox-label">
+              <input
+                {...register('preferences.notifications.email')}
+                type="checkbox"
+                className="form-checkbox"
+              />
+              Email notifications
+            </label>
+
+            <label className="checkbox-label">
+              <input
+                {...register('preferences.notifications.sms')}
+                type="checkbox"
+                className="form-checkbox"
+              />
+              SMS notifications
+            </label>
+
+            <label className="checkbox-label">
+              <input
+                {...register('preferences.notifications.push')}
+                type="checkbox"
+                className="form-checkbox"
+              />
+              Push notifications
+            </label>
+          </div>
+        </FormField>
+
+        <FormField label="Theme Preference" error={errors.preferences?.theme}>
+          <select
+            {...register('preferences.theme')}
+            className="form-select"
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="auto">Auto</option>
+          </select>
+        </FormField>
+      </FormSection>
+
+      {/* ✅ Form Actions */}
+      <div className="form-actions">
+        <button
+          type="button"
+          onClick={() => reset()}
+          className="btn-secondary"
+          disabled={isSubmitting}
+        >
+          Reset Form
+        </button>
+        
+        <button
+          type="submit"
+          className="btn-primary"
+          disabled={isSubmitting || !isValid}
+        >
+          {isSubmitting ? (
+            <>
+              <Spinner size="sm" />
+              Saving...
+            </>
+          ) : (
+            'Save Profile'
+          )}
+        </button>
+      </div>
+
+      {/* ✅ Form Debug Panel (Development only) */}
+      {process.env.NODE_ENV === 'development' && (
+        <FormDebugPanel
+          formState={{ errors, touchedFields, dirtyFields }}
+          watchedValues={{ watchedEmail, watchedAddresses, watchedNotifications }}
+        />
+      )}
+    </form>
+  )
+}
+```
+
+## Performance Optimization Patterns
+
+**Advanced optimization techniques:**
+```tsx
+// ✅ Form component with intelligent re-rendering
+const OptimizedForm = memo(() => {
+  const form = useForm<FormData>({
+    mode: 'onBlur',
+    // ✅ Optimize re-renders by avoiding unnecessary updates
+    shouldFocusError: false,
+    shouldUseNativeValidation: false,
+    criteriaMode: 'firstError'
+  })
+
+  // ✅ Memoized validation functions
+  const validateEmail = useCallback(
+    debounce(async (email: string) => {
+      const response = await fetch(`/api/validate-email?email=${email}`)
+      return response.ok
+    }, 300),
+    []
+  )
+
+  // ✅ Optimized field component that only re-renders when necessary
+  const OptimizedField = memo(({ 
+    name, 
+    label, 
+    validation 
+  }: {
+    name: string
+    label: string
+    validation?: RegisterOptions
+  }) => {
+    const {
+      field: { onChange, onBlur, value, ref },
+      fieldState: { error, isTouched, isDirty },
+      formState: { isSubmitting }
+    } = useController({
+      name,
+      control: form.control,
+      rules: validation
+    })
+
+    return (
+      <FormField label={label} error={error}>
+        <input
+          ref={ref}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          disabled={isSubmitting}
+          className={cn('form-input', {
+            'error': error,
+            'touched': isTouched,
+            'dirty': isDirty
+          })}
+        />
+      </FormField>
+    )
+  })
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <OptimizedField
+        name="email"
+        label="Email"
+        validation={{
+          required: 'Email is required',
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address'
+          },
+          validate: validateEmail
+        }}
+      />
+    </form>
+  )
+})
+
+// ✅ Custom hook for form performance monitoring
+function useFormPerformance() {
+  const renderCount = useRef(0)
+  const startTime = useRef(Date.now())
+  
+  useEffect(() => {
+    renderCount.current++
+    console.log(`Form render count: ${renderCount.current}`)
+  })
+
+  const logSubmissionTime = useCallback(() => {
+    const endTime = Date.now()
+    const duration = endTime - startTime.current
+    console.log(`Form submission took: ${duration}ms`)
+  }, [])
+
+  return { renderCount: renderCount.current, logSubmissionTime }
+}
+```
+
+## Advanced Validation Patterns
+
+**Complex cross-field validation:**
+```tsx
+// ✅ Multi-step form with cross-field validation
+const MultiStepForm = () => {
+  const [currentStep, setCurrentStep] = useState(0)
+  
+  const form = useForm<MultiStepFormData>({
+    mode: 'onBlur',
+    resolver: zodResolver(multiStepSchema)
+  })
+
+  // ✅ Step-specific validation
+  const validateStep = async (step: number): Promise<boolean> => {
+    const stepFields = getFieldsForStep(step)
+    const result = await form.trigger(stepFields)
+    return result
+  }
+
+  const nextStep = async () => {
+    const isValid = await validateStep(currentStep)
+    if (isValid) {
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
+    }
+  }
+
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 0))
+  }
+
+  // ✅ Cross-field validation
+  const passwordMatchValidation = {
+    validate: (value: string) => {
+      const password = form.getValues('password')
+      return value === password || 'Passwords do not match'
+    }
+  }
+
+  const conditionalRequiredValidation = (dependentField: string) => ({
+    validate: (value: string) => {
+      const dependentValue = form.getValues(dependentField)
+      if (dependentValue && !value) {
+        return 'This field is required when the dependent field is filled'
+      }
+      return true
+    }
+  })
+
+  // ✅ Dynamic validation based on other fields
+  const businessHoursValidation = {
+    validate: (value: string) => {
+      const businessType = form.getValues('businessType')
+      if (businessType === 'restaurant') {
+        const hours = parseInt(value)
+        return hours >= 6 && hours <= 23 || 'Restaurant hours must be between 6 AM and 11 PM'
+      }
+      return true
+    }
+  }
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <ProgressIndicator currentStep={currentStep} totalSteps={steps.length} />
+      
+      {currentStep === 0 && (
+        <PersonalInfoStep 
+          register={form.register}
+          errors={form.formState.errors}
+          watch={form.watch}
+        />
+      )}
+      
+      {currentStep === 1 && (
+        <BusinessInfoStep 
+          register={form.register}
+          errors={form.formState.errors}
+          control={form.control}
+          businessHoursValidation={businessHoursValidation}
+        />
+      )}
+      
+      {currentStep === 2 && (
+        <SecurityStep 
+          register={form.register}
+          errors={form.formState.errors}
+          passwordMatchValidation={passwordMatchValidation}
+        />
+      )}
+
+      <div className="form-navigation">
+        <button
+          type="button"
+          onClick={prevStep}
+          disabled={currentStep === 0}
+          className="btn-secondary"
+        >
+          Previous
+        </button>
+        
+        {currentStep < steps.length - 1 ? (
+          <button
+            type="button"
+            onClick={nextStep}
+            className="btn-primary"
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="btn-primary"
+          >
+            Submit
+          </button>
+        )}
+      </div>
+    </form>
+  )
+}
+```
+
+## Custom Hooks & Utilities
+
+**Reusable form logic:**
+```tsx
+// ✅ Custom hook for form persistence
+function useFormPersistence<T>(
+  formKey: string,
+  form: UseFormReturn<T>,
+  options: {
+    debounceMs?: number
+    excludeFields?: (keyof T)[]
+  } = {}
+) {
+  const { debounceMs = 1000, excludeFields = [] } = options
+  const watchedValues = form.watch()
+  
+  // ✅ Save to localStorage with debouncing
+  const debouncedSave = useMemo(
+    () => debounce((values: T) => {
+      const filteredValues = Object.entries(values as any).reduce((acc, [key, value]) => {
+        if (!excludeFields.includes(key as keyof T)) {
+          acc[key] = value
+        }
+        return acc
+      }, {} as any)
+      
+      localStorage.setItem(`form-${formKey}`, JSON.stringify(filteredValues))
+    }, debounceMs),
+    [formKey, debounceMs, excludeFields]
+  )
+
+  // ✅ Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`form-${formKey}`)
+      if (saved) {
+        const parsedValues = JSON.parse(saved)
+        form.reset(parsedValues)
+      }
+    } catch (error) {
+      console.warn('Failed to load form data from localStorage:', error)
+    }
+  }, [formKey, form])
+
+  // ✅ Save on changes
+  useEffect(() => {
+    debouncedSave(watchedValues)
+  }, [watchedValues, debouncedSave])
+
+  // ✅ Clear saved data
+  const clearSavedData = useCallback(() => {
+    localStorage.removeItem(`form-${formKey}`)
+  }, [formKey])
+
+  return { clearSavedData }
+}
+
+// ✅ Custom hook for form analytics
+function useFormAnalytics(formName: string) {
+  const startTime = useRef<Date>()
+  const fieldInteractions = useRef<Record<string, number>>({})
+
+  const trackFieldInteraction = useCallback((fieldName: string) => {
+    fieldInteractions.current[fieldName] = 
+      (fieldInteractions.current[fieldName] || 0) + 1
+  }, [])
+
+  const trackFormStart = useCallback(() => {
+    startTime.current = new Date()
+    analytics.track('Form Started', { formName })
+  }, [formName])
+
+  const trackFormSubmit = useCallback((success: boolean, errors?: any) => {
+    const duration = startTime.current 
+      ? Date.now() - startTime.current.getTime() 
+      : 0
+
+    analytics.track('Form Submitted', {
+      formName,
+      success,
+      duration,
+      fieldInteractions: fieldInteractions.current,
+      errors: errors ? Object.keys(errors) : []
+    })
+  }, [formName])
+
+  const trackFormAbandon = useCallback(() => {
+    const duration = startTime.current 
+      ? Date.now() - startTime.current.getTime() 
+      : 0
+
+    analytics.track('Form Abandoned', {
+      formName,
+      duration,
+      fieldInteractions: fieldInteractions.current
+    })
+  }, [formName])
+
+  return {
+    trackFieldInteraction,
+    trackFormStart,
+    trackFormSubmit,
+    trackFormAbandon
+  }
+}
+``` 

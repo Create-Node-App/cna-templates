@@ -1,1 +1,550 @@
- 
+---
+description: Advanced Redux Saga patterns for complex async flows, side effects management, cancellation, racing, and testing strategies.
+globs: '**/*.{saga,sagas}.{ts,js}', '**/store/**/*.{ts,js}', '**/redux/**/*.{ts,js}'
+---
+
+# Advanced Redux Saga Patterns
+
+## Saga Architecture & Organization
+
+**Structured saga management:**
+```typescript
+// ✅ Saga organization pattern
+// store/sagas/index.ts
+import { all, fork } from 'redux-saga/effects'
+import { userSagas } from './userSagas'
+import { authSagas } from './authSagas'
+import { notificationSagas } from './notificationSagas'
+
+export function* rootSaga() {
+  yield all([
+    fork(userSagas),
+    fork(authSagas),
+    fork(notificationSagas)
+  ])
+}
+
+// store/sagas/userSagas.ts
+import { 
+  takeEvery, 
+  takeLatest, 
+  take, 
+  put, 
+  call, 
+  select, 
+  race,
+  delay,
+  cancel,
+  fork,
+  cancelled
+} from 'redux-saga/effects'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { userActions } from '../slices/userSlice'
+import { notificationActions } from '../slices/notificationSlice'
+import { UserService } from '../../services/userService'
+
+// ✅ Typed saga with error handling
+function* fetchUser(action: PayloadAction<{ userId: string }>) {
+  try {
+    yield put(userActions.setLoading(true))
+    
+    // ✅ Call external service
+    const user: User = yield call(UserService.getUser, action.payload.userId)
+    
+    // ✅ Update state
+    yield put(userActions.setUser(user))
+    
+    // ✅ Side effect: update recent views
+    yield put(userActions.addToRecentViews(user.id))
+    
+  } catch (error) {
+    yield put(userActions.setError(error.message))
+    
+    // ✅ Global error handling
+    yield put(notificationActions.addError({
+      message: `Failed to load user: ${error.message}`,
+      duration: 5000
+    }))
+  } finally {
+    yield put(userActions.setLoading(false))
+  }
+}
+
+// ✅ Watcher sagas with different strategies
+export function* userSagas() {
+  // Latest request wins (cancels previous)
+  yield takeLatest(userActions.fetchUser.type, fetchUser)
+  
+  // Process all requests
+  yield takeEvery(userActions.updateUser.type, updateUser)
+  
+  // Custom pattern matching
+  yield takeEvery(
+    (action: PayloadAction) => action.type.startsWith('user/'),
+    logUserAction
+  )
+}
+```
+
+## Advanced Async Flow Patterns
+
+**Complex async orchestration:**
+```typescript
+// ✅ Sequential async operations
+function* createUserWithProfile(action: PayloadAction<CreateUserRequest>) {
+  try {
+    // Step 1: Create user account
+    const user: User = yield call(UserService.createUser, action.payload.userData)
+    yield put(userActions.setUser(user))
+    
+    // Step 2: Upload profile image if provided
+    if (action.payload.profileImage) {
+      const imageUrl: string = yield call(
+        FileService.uploadImage, 
+        action.payload.profileImage,
+        `users/${user.id}`
+      )
+      
+      yield call(UserService.updateProfile, user.id, { imageUrl })
+    }
+    
+    // Step 3: Send welcome email
+    yield fork(sendWelcomeEmail, user.email)
+    
+    // Step 4: Initialize user preferences
+    yield call(UserService.initializePreferences, user.id)
+    
+    yield put(notificationActions.addSuccess({
+      message: 'Account created successfully!',
+      duration: 3000
+    }))
+    
+  } catch (error) {
+    // ✅ Rollback on failure
+    if (user?.id) {
+      yield fork(cleanupFailedUserCreation, user.id)
+    }
+    
+    yield put(userActions.setError(error.message))
+  }
+}
+
+// ✅ Parallel async operations with race conditions
+function* loadDashboardData() {
+  try {
+    yield put(dashboardActions.setLoading(true))
+    
+    // ✅ Race between data loading and timeout
+    const { success, timeout } = yield race({
+      success: call(loadDashboardDataSaga),
+      timeout: delay(30000) // 30 second timeout
+    })
+    
+    if (timeout) {
+      yield put(notificationActions.addWarning({
+        message: 'Dashboard is taking longer than expected to load',
+        duration: 5000
+      }))
+    }
+    
+  } catch (error) {
+    yield put(dashboardActions.setError(error.message))
+  }
+}
+
+function* loadDashboardDataSaga() {
+  // ✅ Load multiple data sources in parallel
+  const { users, projects, analytics } = yield all({
+    users: call(UserService.getUsers, { limit: 10 }),
+    projects: call(ProjectService.getProjects, { status: 'active' }),
+    analytics: call(AnalyticsService.getDashboardData, { 
+      period: 'last-30-days' 
+    })
+  })
+  
+  yield all([
+    put(userActions.setUsers(users)),
+    put(projectActions.setProjects(projects)),
+    put(analyticsActions.setDashboardData(analytics))
+  ])
+}
+
+// ✅ Infinite scroll pattern
+function* infiniteScrollSaga() {
+  let page = 1
+  let hasMore = true
+  
+  while (hasMore) {
+    try {
+      const { data, hasNextPage } = yield call(
+        UserService.getUsers, 
+        { page, limit: 20 }
+      )
+      
+      yield put(userActions.appendUsers(data))
+      
+      hasMore = hasNextPage
+      page++
+      
+      // ✅ Wait for next scroll trigger
+      yield take(userActions.loadMoreUsers.type)
+      
+    } catch (error) {
+      yield put(userActions.setError(error.message))
+      break
+    }
+  }
+}
+```
+
+## Cancellation & Resource Management
+
+**Proper cleanup and cancellation:**
+```typescript
+// ✅ Cancellable long-running operations
+function* uploadWithProgress(action: PayloadAction<UploadRequest>) {
+  const uploadTask = yield fork(performUpload, action.payload)
+  
+  try {
+    // ✅ Wait for either completion or cancellation
+    const { success, cancelled } = yield race({
+      success: take(uploadActions.uploadComplete.type),
+      cancelled: take(uploadActions.cancelUpload.type)
+    })
+    
+    if (cancelled) {
+      yield cancel(uploadTask)
+      yield put(uploadActions.uploadCancelled())
+    }
+    
+  } finally {
+    // ✅ Cleanup resources
+    if (yield cancelled()) {
+      yield call(FileService.cleanupTempFiles)
+      yield put(notificationActions.addInfo({
+        message: 'Upload cancelled',
+        duration: 2000
+      }))
+    }
+  }
+}
+
+// ✅ Auto-save with debouncing
+function* autoSaveDocumentSaga() {
+  let saveTask: Task | null = null
+  
+  while (true) {
+    const action: PayloadAction<DocumentChange> = yield take(
+      documentActions.contentChanged.type
+    )
+    
+    // ✅ Cancel previous save task
+    if (saveTask) {
+      yield cancel(saveTask)
+    }
+    
+    // ✅ Start new debounced save
+    saveTask = yield fork(debouncedSave, action.payload)
+  }
+}
+
+function* debouncedSave(change: DocumentChange) {
+  try {
+    // ✅ Wait 2 seconds for more changes
+    yield delay(2000)
+    
+    // ✅ Get current document state
+    const document: Document = yield select(getDocument)
+    
+    // ✅ Save to server
+    yield call(DocumentService.save, document)
+    
+    yield put(documentActions.saveSuccess())
+    
+  } catch (error) {
+    yield put(documentActions.saveError(error.message))
+  }
+}
+```
+
+## Event Channels & Real-time Data
+
+**WebSocket and EventSource integration:**
+```typescript
+import { eventChannel, EventChannel } from 'redux-saga'
+
+// ✅ WebSocket channel
+function createWebSocketChannel(url: string) {
+  return eventChannel<WebSocketMessage>((emit) => {
+    const ws = new WebSocket(url)
+    
+    ws.onopen = () => {
+      emit({ type: 'CONNECTED' })
+    }
+    
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data)
+      emit({ type: 'MESSAGE', payload: message })
+    }
+    
+    ws.onerror = (error) => {
+      emit({ type: 'ERROR', payload: error })
+    }
+    
+    ws.onclose = () => {
+      emit({ type: 'DISCONNECTED' })
+    }
+    
+    // ✅ Cleanup function
+    return () => {
+      ws.close()
+    }
+  })
+}
+
+function* watchWebSocketSaga() {
+  let channel: EventChannel<WebSocketMessage> | null = null
+  
+  try {
+    // ✅ Create WebSocket connection
+    channel = yield call(createWebSocketChannel, process.env.WS_URL!)
+    
+    while (true) {
+      const message: WebSocketMessage = yield take(channel)
+      
+      switch (message.type) {
+        case 'CONNECTED':
+          yield put(websocketActions.connected())
+          break
+          
+        case 'MESSAGE':
+          yield put(websocketActions.messageReceived(message.payload))
+          
+          // ✅ Handle different message types
+          if (message.payload.type === 'user_update') {
+            yield put(userActions.updateUser(message.payload.user))
+          }
+          break
+          
+        case 'ERROR':
+          yield put(websocketActions.error(message.payload))
+          break
+          
+        case 'DISCONNECTED':
+          yield put(websocketActions.disconnected())
+          // ✅ Attempt reconnection
+          yield delay(5000)
+          yield call(watchWebSocketSaga) // Recursive reconnect
+          break
+      }
+    }
+    
+  } catch (error) {
+    yield put(websocketActions.error(error.message))
+  } finally {
+    if (channel) {
+      channel.close()
+    }
+  }
+}
+```
+
+## State Synchronization Patterns
+
+**Complex state coordination:**
+```typescript
+// ✅ Optimistic updates with rollback
+function* optimisticUpdateSaga(action: PayloadAction<UpdateUserRequest>) {
+  const originalUser: User = yield select(getCurrentUser)
+  
+  try {
+    // ✅ Apply optimistic update
+    yield put(userActions.updateUserOptimistic(action.payload))
+    
+    // ✅ Send to server
+    const updatedUser: User = yield call(
+      UserService.updateUser, 
+      originalUser.id, 
+      action.payload
+    )
+    
+    // ✅ Confirm update
+    yield put(userActions.confirmUpdate(updatedUser))
+    
+  } catch (error) {
+    // ✅ Rollback on error
+    yield put(userActions.rollbackUpdate(originalUser))
+    yield put(userActions.setError(error.message))
+  }
+}
+
+// ✅ Background sync with conflict resolution
+function* backgroundSyncSaga() {
+  while (true) {
+    try {
+      yield delay(30000) // Sync every 30 seconds
+      
+      const localChanges: Change[] = yield select(getLocalChanges)
+      
+      if (localChanges.length > 0) {
+        const { conflicts, resolved } = yield call(
+          SyncService.syncChanges, 
+          localChanges
+        )
+        
+        // ✅ Handle conflicts
+        if (conflicts.length > 0) {
+          yield put(syncActions.conflictsDetected(conflicts))
+          
+          // ✅ Wait for user resolution
+          const resolution: ConflictResolution = yield take(
+            syncActions.resolveConflicts.type
+          )
+          
+          yield call(SyncService.resolveConflicts, resolution.payload)
+        }
+        
+        yield put(syncActions.syncCompleted(resolved))
+      }
+      
+    } catch (error) {
+      yield put(syncActions.syncError(error.message))
+    }
+  }
+}
+```
+
+## Testing Saga Patterns
+
+**Comprehensive saga testing:**
+```typescript
+import { runSaga, Task } from 'redux-saga'
+import { expectSaga } from 'redux-saga-test-plan'
+import * as matchers from 'redux-saga-test-plan/matchers'
+import { throwError } from 'redux-saga-test-plan/providers'
+
+describe('User Sagas', () => {
+  // ✅ Integration testing with expectSaga
+  it('handles successful user fetch', () => {
+    const user = { id: '1', name: 'John Doe' }
+    
+    return expectSaga(fetchUser, userActions.fetchUser({ userId: '1' }))
+      .provide([
+        [matchers.call.fn(UserService.getUser), user]
+      ])
+      .put(userActions.setLoading(true))
+      .call(UserService.getUser, '1')
+      .put(userActions.setUser(user))
+      .put(userActions.setLoading(false))
+      .run()
+  })
+  
+  // ✅ Error handling testing
+  it('handles user fetch error', () => {
+    const error = new Error('Network error')
+    
+    return expectSaga(fetchUser, userActions.fetchUser({ userId: '1' }))
+      .provide([
+        [matchers.call.fn(UserService.getUser), throwError(error)]
+      ])
+      .put(userActions.setLoading(true))
+      .put(userActions.setError('Network error'))
+      .put(userActions.setLoading(false))
+      .run()
+  })
+  
+  // ✅ Testing cancellation
+  it('cancels ongoing requests when new one starts', async () => {
+    const dispatched: any[] = []
+    const task = runSaga(
+      {
+        dispatch: (action) => dispatched.push(action),
+        getState: () => ({}),
+      },
+      userSagas
+    )
+    
+    // First request
+    task.dispatch(userActions.fetchUser({ userId: '1' }))
+    
+    // Second request (should cancel first)
+    task.dispatch(userActions.fetchUser({ userId: '2' }))
+    
+    await delay(100)
+    task.cancel()
+    
+    // ✅ Should handle cancellation gracefully
+    expect(dispatched).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: 'user/setLoading' })
+      ])
+    )
+  })
+})
+```
+
+## Performance Optimization
+
+**Efficient saga patterns:**
+```typescript
+// ✅ Debounced API calls
+function* debounceApiCall(action: PayloadAction<SearchRequest>) {
+  yield delay(300) // Wait 300ms
+  
+  try {
+    const results: SearchResult[] = yield call(
+      SearchService.search,
+      action.payload.query
+    )
+    
+    yield put(searchActions.setResults(results))
+  } catch (error) {
+    // ✅ Handle search errors gracefully
+    yield put(searchActions.setError(error.message))
+  }
+}
+
+// ✅ Batch processing
+function* batchUpdateSaga() {
+  const batchBuffer: PayloadAction[] = []
+  
+  while (true) {
+    // ✅ Collect actions for batching
+    const action: PayloadAction = yield take(userActions.batchUpdate.type)
+    batchBuffer.push(action)
+    
+    // ✅ Process batch when full or after delay
+    const { batch, timeout } = yield race({
+      batch: take(userActions.processBatch.type),
+      timeout: delay(1000)
+    })
+    
+    if (batchBuffer.length > 0) {
+      yield call(processBatch, [...batchBuffer])
+      batchBuffer.length = 0 // Clear buffer
+    }
+  }
+}
+
+// ✅ Memory-efficient infinite scroll
+function* efficientInfiniteScroll() {
+  const CACHE_SIZE = 1000
+  let allData: any[] = []
+  
+  while (true) {
+    yield take(userActions.loadMore.type)
+    
+    const page = Math.floor(allData.length / 20) + 1
+    const newData: any[] = yield call(DataService.getData, { page })
+    
+    allData = [...allData, ...newData]
+    
+    // ✅ Trim cache to prevent memory leaks
+    if (allData.length > CACHE_SIZE) {
+      allData = allData.slice(-CACHE_SIZE)
+    }
+    
+    yield put(dataActions.appendData(newData))
+  }
+}
+```
