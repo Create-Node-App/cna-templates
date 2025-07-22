@@ -1,0 +1,77 @@
+# GitHub Copilot Instructions for WebdriverIO Testing Project
+
+## Core Guidelines
+
+1. **Check Documentation First**
+   - Always reference the `docs/` folder for technology-specific guides and patterns
+   - Follow the README.md for setup, testing, and development instructions
+   - Consult official documentation when uncertain
+
+2. **Code Quality**
+   - Run `npm run format` to format code automatically
+   - Run `npm run lint:fix` to fix linting issues
+   - Keep code clean, typed, and well-structured
+   - Use TypeScript properly and avoid `any` types
+
+3. **Project Structure**
+   - Follow the established Page Object Model architecture
+   - Check `docs/PROJECT_STRUCTURE.md` for organization patterns
+   - Keep test files, page objects, and utilities organized
+   - Separate test data and configuration appropriately
+
+4. **Development Workflow**
+   - Test changes using the commands in README.md
+   - Follow the project's established patterns and conventions
+   - Reference existing code for consistency
+   - Use proper test reporting and debugging tools
+
+5. **Best Practices**
+   - Write clean, readable, and maintainable tests
+   - Use proper error handling and assertions
+   - Follow WebdriverIO and testing best practices
+   - Implement proper test isolation and cleanup
+
+## When Suggesting Code
+
+1. **Test Creation**
+   - Check if similar test patterns exist in the codebase
+   - Look for relevant guides in the `docs/` folder
+   - Follow established test structure and naming conventions
+   - Use proper describe/it blocks and test organization
+   - Implement appropriate setup and teardown
+
+2. **Page Objects**
+   - Follow established Page Object Model patterns
+   - Create reusable page object classes
+   - Use proper element selectors and wait strategies
+   - Implement method chaining where appropriate
+   - Use TypeScript interfaces for page object contracts
+
+3. **Test Data Management**
+   - Follow established patterns for test data
+   - Use proper data fixtures and factories
+   - Implement environment-specific configurations
+   - Handle sensitive data appropriately
+
+4. **Element Interaction**
+   - Use proper WebdriverIO selectors and methods
+   - Implement robust wait strategies
+   - Handle dynamic content and async operations
+   - Use appropriate assertions and expectations
+
+5. **Test Organization**
+   - Group related tests appropriately
+   - Use proper tags and categorization
+   - Implement parallel execution patterns
+   - Follow established naming conventions
+
+## WebdriverIO Specific
+
+- Use WebdriverIO's built-in waiting mechanisms
+- Implement proper browser and device configurations
+- Use WebdriverIO's assertion library effectively
+- Handle multiple browser contexts when needed
+- Implement proper screenshot and video capture
+- Use WebdriverIO's debugging capabilities
+- Follow cross-browser testing best practices
+- Implement proper test reporting and analytics 

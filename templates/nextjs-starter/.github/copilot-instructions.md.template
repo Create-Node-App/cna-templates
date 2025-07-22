@@ -1,0 +1,75 @@
+# GitHub Copilot Instructions for Next.js Project
+
+## Core Guidelines
+
+1. **Check Documentation First**
+   - Always reference the `docs/` folder for technology-specific guides and patterns
+   - Follow the README.md for setup, testing, and development instructions
+   - Consult official documentation when uncertain
+
+2. **Code Quality**
+   - Run `npm run format` to format code automatically
+   - Run `npm run lint:fix` to fix linting issues
+   - Keep code clean, typed, and well-structured
+   - Use TypeScript properly and avoid `any` types
+
+3. **Project Structure**
+   - Follow the established Feature-Based Architecture adapted for Next.js
+   - Check `docs/PROJECT_STRUCTURE.md` for organization patterns
+   - Keep features self-contained and modular
+   - Use Next.js App Router conventions properly
+
+4. **Development Workflow**
+   - Test changes using the commands in README.md
+   - Follow the project's established patterns and conventions
+   - Reference existing code for consistency
+   - Leverage Next.js development tools and debugging
+
+5. **Best Practices**
+   - Write clean, readable, and maintainable code
+   - Use proper error handling and validation
+   - Follow React, Next.js, and TypeScript best practices
+   - Implement proper loading and error states
+   - Use Server Components when appropriate
+
+## When Suggesting Code
+
+1. **Component Creation**
+   - Check if similar components exist in the codebase
+   - Look for relevant guides in the `docs/` folder
+   - Distinguish between Server and Client Components properly
+   - Use TypeScript interfaces for props
+   - Follow Next.js naming conventions
+
+2. **Routing & Navigation**
+   - Use Next.js App Router patterns
+   - Implement proper page layouts and templates
+   - Use Next.js Link component for navigation
+   - Follow established routing patterns in the project
+
+3. **Data Fetching**
+   - Use Server Components for data fetching when possible
+   - Implement proper loading and error states
+   - Follow established patterns for API routes
+   - Use React Suspense appropriately
+
+4. **Styling**
+   - Check `docs/` for styling approach used in the project
+   - Follow established CSS/styling patterns
+   - Use CSS Modules or styled-components as configured
+   - Implement responsive design patterns
+
+5. **Performance**
+   - Reference `docs/PERFORMANCE.md` for optimization guidelines
+   - Use Next.js Image component for optimized images
+   - Implement proper metadata for SEO
+   - Use dynamic imports for code splitting
+
+## Next.js Specific
+
+- Leverage Server Components for better performance
+- Use proper metadata API for SEO
+- Implement proper error boundaries and not-found pages
+- Follow Next.js file conventions for special files
+- Use Next.js built-in optimizations (Image, Font, etc.)
+- Implement proper caching strategies

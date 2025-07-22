@@ -1,0 +1,76 @@
+# GitHub Copilot Instructions for NestJS Project
+
+## Core Guidelines
+
+1. **Check Documentation First**
+   - Always reference the `docs/` folder for technology-specific guides and patterns
+   - Follow the README.md for setup, testing, and development instructions
+   - Consult official documentation when uncertain
+
+2. **Code Quality**
+   - Run `npm run format` to format code automatically
+   - Run `npm run lint:fix` to fix linting issues
+   - Keep code clean, typed, and well-structured
+   - Use TypeScript properly and avoid `any` types
+
+3. **Project Structure**
+   - Follow NestJS module-based architecture
+   - Use proper dependency injection patterns
+   - Keep services, controllers, and modules organized
+   - Follow NestJS best practices for scalability
+
+4. **Development Workflow**
+   - Test changes using the commands in README.md
+   - Follow the project's established patterns and conventions
+   - Reference existing code for consistency
+   - Use proper error handling and validation
+
+5. **Best Practices**
+   - Write clean, readable, and maintainable code
+   - Use proper DTOs for data validation
+   - Follow REST API and GraphQL conventions
+   - Implement proper error responses and logging
+
+## When Suggesting Code
+
+1. **Module Creation**
+   - Check if similar modules exist in the codebase
+   - Look for relevant guides in the `docs/` folder
+   - Follow NestJS module structure patterns
+   - Use proper dependency injection
+   - Implement appropriate guards, interceptors, and pipes
+
+2. **API Design**
+   - Use proper HTTP methods and status codes
+   - Implement comprehensive DTOs with validation
+   - Follow established API patterns in the project
+   - Use OpenAPI/Swagger decorators if configured
+   - Implement proper error handling
+
+3. **Database Integration**
+   - Reference `docs/` for ORM/database patterns used in the project
+   - Follow established entity and repository patterns
+   - Use proper transaction handling
+   - Implement data validation and sanitization
+
+4. **Authentication & Authorization**
+   - Follow established security patterns
+   - Use proper JWT handling if implemented
+   - Implement role-based access control appropriately
+   - Follow security best practices
+
+5. **Testing**
+   - Suggest appropriate unit and integration tests
+   - Follow testing patterns established in the project
+   - Mock dependencies properly
+   - Test both success and error scenarios
+
+## NestJS Specific
+
+- Use decorators appropriately (@Injectable, @Controller, etc.)
+- Implement proper exception filters
+- Use NestJS built-in validation with class-validator
+- Follow dependency injection best practices
+- Implement proper logging with NestJS logger
+- Use configuration management properly
+- Implement health checks and monitoring 
