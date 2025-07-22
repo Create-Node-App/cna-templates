@@ -1,38 +1,1070 @@
 ---
-description: Specific guidelines for implementing and managing SQLite database with Drizzle in NestJS applications.
-globs: '**/*.{ts,js}, drizzle.config.ts'
+description: Advanced NestJS Drizzle ORM patterns for SQLite integration, embedded database management, query optimization, and lightweight application architecture.
+globs: '**/*.{ts,js}', '**/drizzle.config.{ts,js}', '**/migrations/**/*', '**/schemas/**/*', '**/*.db', '**/*.sqlite'
 ---
 
-# Drizzle SQLite Rules
+# Advanced NestJS Drizzle SQLite Integration
 
-## Database Schema
+## Enterprise SQLite Configuration
 
-1. Use consistent table naming
-2. Implement proper schema structure
-3. Use TypeScript for schema types
-4. Handle migrations properly
-5. Implement proper error handling
+**Advanced Drizzle SQLite configuration with performance optimizations:**
+```typescript
+// drizzle.config.ts
+import { defineConfig } from 'drizzle-kit'
+import { Config } from '@drizzle-team/brocli'
+import path from 'path'
+import dotenv from 'dotenv'
 
-## Query Building
+dotenv.config()
 
-1. Use proper query builders
-2. Implement proper query optimization
-3. Use appropriate query patterns
-4. Handle complex queries properly
-5. Follow Drizzle best practices
+const config: Config = {
+  schema: './src/database/schemas/*.ts',
+  out: './drizzle/migrations',
+  driver: 'better-sqlite3',
+  dbCredentials: {
+    url: process.env.DATABASE_URL || './data/database.db'
+  },
+  
+  // Migration configuration
+  migrations: {
+    table: 'drizzle_migrations'
+  },
+  
+  // SQLite specific optimizations
+  introspect: {
+    casing: 'snake_case'
+  },
+  
+  // Development settings
+  breakpoints: true,
+  strict: true,
+  verbose: process.env.NODE_ENV === 'development'
+}
 
-## Performance
+export default config
+```
 
-1. Use proper indexing
-2. Implement proper query caching
-3. Use appropriate connection pooling
-4. Handle large datasets properly
-5. Optimize query performance
+**Advanced SQLite database module configuration:**
+```typescript
+// src/database/database.module.ts
+import { Module, Global } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
+import Database from 'better-sqlite3'
+import * as schema from './schemas'
+import { DATABASE_CONNECTION } from './database.constants'
+import { DatabaseService } from './database.service'
+import { DatabaseHealthIndicator } from './database-health.indicator'
+import path from 'path'
+import fs from 'fs'
 
-## Best Practices
+@Global()
+@Module({
+  imports: [ConfigModule],
+  providers: [
+    {
+      provide: DATABASE_CONNECTION,
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL', './data/database.db')
+        const isInMemory = databaseUrl === ':memory:'
+        
+        // Ensure database directory exists for file-based databases
+        if (!isInMemory) {
+          const dbDir = path.dirname(databaseUrl)
+          if (!fs.existsSync(dbDir)) {
+            fs.mkdirSync(dbDir, { recursive: true })
+          }
+        }
+        
+        // SQLite connection configuration
+        const sqlite = new Database(databaseUrl, {
+          // Performance optimizations
+          readonly: configService.get<boolean>('DB_READONLY', false),
+          fileMustExist: false,
+          timeout: configService.get<number>('DB_TIMEOUT', 5000),
+          verbose: configService.get<string>('NODE_ENV') === 'development' 
+            ? console.log 
+            : undefined
+        })
+        
+        // SQLite pragma settings for performance
+        sqlite.pragma('journal_mode = WAL') // Write-Ahead Logging
+        sqlite.pragma('synchronous = NORMAL') // Balance between performance and safety
+        sqlite.pragma('cache_size = -64000') // 64MB cache
+        sqlite.pragma('temp_store = MEMORY') // Use memory for temporary tables
+        sqlite.pragma('mmap_size = 268435456') // 256MB memory-mapped size
+        sqlite.pragma('page_size = 4096') // Optimal page size
+        sqlite.pragma('busy_timeout = 30000') // 30 second busy timeout
+        
+        // Enable foreign key constraints
+        sqlite.pragma('foreign_keys = ON')
+        
+        // Initialize Drizzle
+        const db = drizzle(sqlite, { 
+          schema,
+          logger: configService.get<string>('NODE_ENV') === 'development'
+        })
+        
+        // Auto-migrate
+        try {
+          await migrate(db, { migrationsFolder: './drizzle/migrations' })
+          console.log('SQLite database migrations completed successfully')
+        } catch (error) {
+          console.error('SQLite database migration failed:', error)
+          throw error
+        }
+        
+        // Setup graceful shutdown
+        process.on('SIGINT', () => {
+          sqlite.close()
+          process.exit(0)
+        })
+        
+        process.on('SIGTERM', () => {
+          sqlite.close()
+          process.exit(0)
+        })
+        
+        return db
+      }
+    },
+    DatabaseService,
+    DatabaseHealthIndicator
+  ],
+  exports: [DATABASE_CONNECTION, DatabaseService]
+})
+export class DatabaseModule {}
+```
 
-1. Use proper schema organization
-2. Implement proper migration strategy
-3. Use appropriate query tools
-4. Handle database updates properly
-5. Follow SQLite best practices 
+## Advanced SQLite Schema Design
+
+**Comprehensive SQLite schemas optimized for embedded databases:**
+```typescript
+// src/database/schemas/core.schema.ts
+import { 
+  sqliteTable, 
+  text, 
+  integer, 
+  real, 
+  blob,
+  primaryKey,
+  uniqueIndex,
+  index
+} from 'drizzle-orm/sqlite-core'
+import { relations, sql } from 'drizzle-orm'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import { z } from 'zod'
+
+// Users table optimized for SQLite
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  email: text('email').notNull(),
+  username: text('username').notNull(),
+  firstName: text('first_name'),
+  lastName: text('last_name'),
+  avatar: text('avatar'),
+  bio: text('bio'),
+  
+  // Authentication
+  passwordHash: text('password_hash').notNull(),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
+  emailVerificationToken: text('email_verification_token'),
+  resetPasswordToken: text('reset_password_token'),
+  resetPasswordExpires: integer('reset_password_expires', { mode: 'timestamp' }),
+  
+  // User status and role (stored as text in SQLite)
+  status: text('status', { enum: ['active', 'inactive', 'suspended', 'deleted'] }).default('active'),
+  role: text('role', { enum: ['admin', 'moderator', 'user', 'guest'] }).default('user'),
+  
+  // JSON metadata stored as text
+  metadata: text('metadata', { mode: 'json' }).$type<{
+    preferences?: {
+      theme?: 'light' | 'dark'
+      language?: string
+      notifications?: boolean
+      newsletter?: boolean
+    }
+    profile?: {
+      company?: string
+      website?: string
+      location?: string
+      timezone?: string
+    }
+    security?: {
+      twoFactorEnabled?: boolean
+      lastPasswordChange?: string
+      loginAttempts?: number
+      lockedUntil?: string
+    }
+  }>(),
+  
+  // Audit fields (SQLite doesn't have native timestamp type)
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
+  
+  // Soft delete
+  deletedAt: integer('deleted_at', { mode: 'timestamp' })
+}, (table) => ({
+  // Unique indexes
+  emailIdx: uniqueIndex('users_email_idx').on(table.email),
+  usernameIdx: uniqueIndex('users_username_idx').on(table.username),
+  
+  // Performance indexes
+  statusIdx: index('users_status_idx').on(table.status),
+  roleIdx: index('users_role_idx').on(table.role),
+  createdAtIdx: index('users_created_at_idx').on(table.createdAt),
+  deletedAtIdx: index('users_deleted_at_idx').on(table.deletedAt)
+}))
+
+// Posts table
+export const posts = sqliteTable('posts', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text('title').notNull(),
+  slug: text('slug').notNull(),
+  content: text('content').notNull(),
+  excerpt: text('excerpt'),
+  
+  // Author relationship
+  authorId: text('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  // Status and visibility
+  status: text('status', { enum: ['draft', 'published', 'archived'] }).default('draft'),
+  visibility: text('visibility', { enum: ['public', 'private', 'unlisted'] }).default('public'),
+  
+  // SEO and metadata stored as JSON
+  metadata: text('metadata', { mode: 'json' }).$type<{
+    metaTitle?: string
+    metaDescription?: string
+    tags?: string[]
+    categories?: string[]
+    featuredImage?: string
+  }>(),
+  
+  // Engagement metrics
+  viewCount: integer('view_count').default(0),
+  likeCount: integer('like_count').default(0),
+  shareCount: integer('share_count').default(0),
+  commentCount: integer('comment_count').default(0),
+  
+  // Content metadata
+  readTime: integer('read_time'), // in minutes
+  wordCount: integer('word_count'),
+  
+  // Publishing
+  publishedAt: integer('published_at', { mode: 'timestamp' }),
+  scheduledAt: integer('scheduled_at', { mode: 'timestamp' }),
+  
+  // Audit fields
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' })
+}, (table) => ({
+  // Unique indexes
+  slugIdx: uniqueIndex('posts_slug_idx').on(table.slug),
+  
+  // Performance indexes
+  authorIdx: index('posts_author_idx').on(table.authorId),
+  statusIdx: index('posts_status_idx').on(table.status),
+  publishedAtIdx: index('posts_published_at_idx').on(table.publishedAt),
+  createdAtIdx: index('posts_created_at_idx').on(table.createdAt),
+  
+  // Composite indexes for common queries
+  statusPublishedIdx: index('posts_status_published_idx').on(table.status, table.publishedAt),
+  authorStatusIdx: index('posts_author_status_idx').on(table.authorId, table.status)
+}))
+
+// Comments table
+export const comments = sqliteTable('comments', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  content: text('content').notNull(),
+  
+  // Relationships
+  postId: text('post_id').notNull().references(() => posts.id, { onDelete: 'cascade' }),
+  authorId: text('author_id').references(() => users.id, { onDelete: 'set null' }),
+  parentId: text('parent_id').references(() => comments.id, { onDelete: 'cascade' }), // For nested comments
+  
+  // Guest comments (when authorId is null)
+  guestName: text('guest_name'),
+  guestEmail: text('guest_email'),
+  
+  // Status and moderation
+  status: text('status', { enum: ['pending', 'approved', 'spam', 'deleted'] }).default('pending'),
+  moderatedBy: text('moderated_by').references(() => users.id),
+  moderatedAt: integer('moderated_at', { mode: 'timestamp' }),
+  
+  // Metrics
+  likeCount: integer('like_count').default(0),
+  replyCount: integer('reply_count').default(0),
+  
+  // Audit fields
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' })
+}, (table) => ({
+  // Performance indexes
+  postIdx: index('comments_post_idx').on(table.postId),
+  authorIdx: index('comments_author_idx').on(table.authorId),
+  parentIdx: index('comments_parent_idx').on(table.parentId),
+  statusIdx: index('comments_status_idx').on(table.status),
+  createdAtIdx: index('comments_created_at_idx').on(table.createdAt),
+  
+  // Composite indexes
+  postStatusIdx: index('comments_post_status_idx').on(table.postId, table.status)
+}))
+
+// File storage table (useful for SQLite applications)
+export const files = sqliteTable('files', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  filename: text('filename').notNull(),
+  originalName: text('original_name').notNull(),
+  mimeType: text('mime_type').notNull(),
+  size: integer('size').notNull(),
+  
+  // File path or base64 data for embedded storage
+  path: text('path'),
+  data: blob('data'), // For storing small files directly in database
+  
+  // Metadata
+  metadata: text('metadata', { mode: 'json' }).$type<{
+    width?: number
+    height?: number
+    duration?: number
+    thumbnail?: string
+    checksum?: string
+    tags?: string[]
+  }>(),
+  
+  // Access control
+  uploadedBy: text('uploaded_by').references(() => users.id),
+  isPublic: integer('is_public', { mode: 'boolean' }).default(false),
+  
+  // Audit fields
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' })
+}, (table) => ({
+  // Indexes
+  filenameIdx: index('files_filename_idx').on(table.filename),
+  uploaderIdx: index('files_uploader_idx').on(table.uploadedBy),
+  mimeTypeIdx: index('files_mime_type_idx').on(table.mimeType),
+  createdAtIdx: index('files_created_at_idx').on(table.createdAt)
+}))
+
+// Key-value store table (useful for caching and configuration)
+export const keyValueStore = sqliteTable('key_value_store', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  type: text('type', { enum: ['string', 'number', 'boolean', 'json'] }).default('string'),
+  
+  // Expiration for caching
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  
+  // Categorization
+  namespace: text('namespace').default('default'),
+  
+  // Audit fields
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+}, (table) => ({
+  // Indexes
+  namespaceIdx: index('kv_namespace_idx').on(table.namespace),
+  expiresAtIdx: index('kv_expires_at_idx').on(table.expiresAt),
+  typeIdx: index('kv_type_idx').on(table.type)
+}))
+
+// Application settings table
+export const settings = sqliteTable('settings', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  category: text('category').notNull(), // e.g., 'general', 'email', 'security'
+  key: text('key').notNull(),
+  value: text('value').notNull(),
+  type: text('type', { enum: ['string', 'number', 'boolean', 'json'] }).default('string'),
+  
+  // Metadata
+  description: text('description'),
+  isPublic: integer('is_public', { mode: 'boolean' }).default(false), // Can be exposed to frontend
+  isRequired: integer('is_required', { mode: 'boolean' }).default(false),
+  
+  // Validation
+  validationRules: text('validation_rules', { mode: 'json' }).$type<{
+    min?: number
+    max?: number
+    pattern?: string
+    enum?: string[]
+    required?: boolean
+  }>(),
+  
+  // Audit fields
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+}, (table) => ({
+  // Unique composite index
+  categoryKeyIdx: uniqueIndex('settings_category_key_idx').on(table.category, table.key),
+  
+  // Performance indexes
+  categoryIdx: index('settings_category_idx').on(table.category),
+  typeIdx: index('settings_type_idx').on(table.type),
+  isPublicIdx: index('settings_is_public_idx').on(table.isPublic)
+}))
+
+// Define relationships
+export const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
+  comments: many(comments),
+  uploadedFiles: many(files)
+}))
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  author: one(users, {
+    fields: [posts.authorId],
+    references: [users.id]
+  }),
+  comments: many(comments)
+}))
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  post: one(posts, {
+    fields: [comments.postId],
+    references: [posts.id]
+  }),
+  author: one(users, {
+    fields: [comments.authorId],
+    references: [users.id]
+  }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id],
+    relationName: 'parent'
+  }),
+  replies: many(comments, {
+    relationName: 'parent'
+  })
+}))
+
+export const filesRelations = relations(files, ({ one }) => ({
+  uploader: one(users, {
+    fields: [files.uploadedBy],
+    references: [users.id]
+  })
+}))
+
+// Zod schemas for validation
+export const insertUserSchema = createInsertSchema(users, {
+  email: z.string().email(),
+  username: z.string().min(3).max(100),
+  firstName: z.string().min(1).max(100).optional(),
+  lastName: z.string().min(1).max(100).optional(),
+  passwordHash: z.string().min(1)
+})
+
+export const selectUserSchema = createSelectSchema(users)
+
+export const insertPostSchema = createInsertSchema(posts, {
+  title: z.string().min(1).max(255),
+  slug: z.string().min(1).max(255),
+  content: z.string().min(1),
+  authorId: z.string().uuid()
+})
+
+export const selectPostSchema = createSelectSchema(posts)
+
+export const insertFileSchema = createInsertSchema(files, {
+  filename: z.string().min(1),
+  originalName: z.string().min(1),
+  mimeType: z.string().min(1),
+  size: z.number().min(0)
+})
+
+export const selectFileSchema = createSelectSchema(files)
+
+// Type exports
+export type User = typeof users.$inferSelect
+export type NewUser = typeof users.$inferInsert
+export type Post = typeof posts.$inferSelect
+export type NewPost = typeof posts.$inferInsert
+export type Comment = typeof comments.$inferSelect
+export type NewComment = typeof comments.$inferInsert
+export type File = typeof files.$inferSelect
+export type NewFile = typeof files.$inferInsert
+export type KeyValue = typeof keyValueStore.$inferSelect
+export type NewKeyValue = typeof keyValueStore.$inferInsert
+export type Setting = typeof settings.$inferSelect
+export type NewSetting = typeof settings.$inferInsert
+```
+
+## Advanced SQLite Database Service
+
+**Comprehensive SQLite service with embedded database optimizations:**
+```typescript
+// src/database/database.service.ts
+import { Injectable, Inject, Logger, OnModuleDestroy } from '@nestjs/common'
+import { eq, and, or, sql, desc, asc, like, inArray, isNull, isNotNull, gte, lte, count } from 'drizzle-orm'
+import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3'
+import { DATABASE_CONNECTION } from './database.constants'
+import * as schema from './schemas'
+import { 
+  User, 
+  NewUser, 
+  Post, 
+  NewPost, 
+  File,
+  NewFile,
+  KeyValue,
+  NewKeyValue,
+  Setting,
+  NewSetting,
+  insertUserSchema,
+  insertPostSchema,
+  insertFileSchema
+} from './schemas'
+import { createHash } from 'crypto'
+import { promises as fs } from 'fs'
+
+export interface SQLiteStats {
+  dbSize: number // in bytes
+  pageCount: number
+  pageSize: number
+  cacheSize: number
+  freePages: number
+  tables: {
+    name: string
+    rowCount: number
+  }[]
+}
+
+@Injectable()
+export class DatabaseService implements OnModuleDestroy {
+  private readonly logger = new Logger(DatabaseService.name)
+  
+  constructor(
+    @Inject(DATABASE_CONNECTION) 
+    private readonly db: BetterSQLite3Database<typeof schema>
+  ) {}
+  
+  async onModuleDestroy() {
+    try {
+      // Close SQLite database connection
+      this.db.$client.close()
+      this.logger.log('SQLite database connection closed')
+    } catch (error) {
+      this.logger.error('Error closing SQLite database:', error)
+    }
+  }
+  
+  // Transaction helper
+  async transaction<T>(
+    callback: (tx: BetterSQLite3Database<typeof schema>) => T
+  ): T {
+    return this.db.transaction(callback)
+  }
+  
+  // User methods optimized for SQLite
+  async createUser(userData: NewUser): Promise<User> {
+    try {
+      const validatedData = insertUserSchema.parse(userData)
+      
+      const [user] = await this.db
+        .insert(schema.users)
+        .values(validatedData)
+        .returning()
+      
+      this.logger.log(`User created: ${user.id}`)
+      return user
+    } catch (error) {
+      this.logger.error('Error creating user:', error)
+      throw error
+    }
+  }
+  
+  async getUserById(id: string, includeDeleted = false): Promise<User | null> {
+    try {
+      const conditions = [eq(schema.users.id, id)]
+      if (!includeDeleted) {
+        conditions.push(isNull(schema.users.deletedAt))
+      }
+      
+      const [user] = await this.db
+        .select()
+        .from(schema.users)
+        .where(and(...conditions))
+      
+      return user || null
+    } catch (error) {
+      this.logger.error('Error getting user by ID:', error)
+      throw error
+    }
+  }
+  
+  async searchUsers(query: string, limit = 10): Promise<User[]> {
+    try {
+      return await this.db
+        .select()
+        .from(schema.users)
+        .where(
+          and(
+            isNull(schema.users.deletedAt),
+            or(
+              like(schema.users.email, `%${query}%`),
+              like(schema.users.username, `%${query}%`),
+              like(schema.users.firstName, `%${query}%`),
+              like(schema.users.lastName, `%${query}%`)
+            )
+          )
+        )
+        .limit(limit)
+        .orderBy(asc(schema.users.username))
+    } catch (error) {
+      this.logger.error('Error searching users:', error)
+      throw error
+    }
+  }
+  
+  // File management (useful for embedded SQLite applications)
+  async storeFile(fileData: NewFile, buffer?: Buffer): Promise<File> {
+    try {
+      const validatedData = insertFileSchema.parse(fileData)
+      
+      // Store file data directly in database for small files
+      const finalData: NewFile = {
+        ...validatedData,
+        data: buffer && buffer.length <= 1024 * 1024 ? buffer : undefined, // Store files <= 1MB in DB
+        metadata: {
+          ...validatedData.metadata,
+          checksum: buffer ? createHash('sha256').update(buffer).digest('hex') : undefined
+        }
+      }
+      
+      const [file] = await this.db
+        .insert(schema.files)
+        .values(finalData)
+        .returning()
+      
+      this.logger.log(`File stored: ${file.id}`)
+      return file
+    } catch (error) {
+      this.logger.error('Error storing file:', error)
+      throw error
+    }
+  }
+  
+  async getFile(id: string): Promise<File | null> {
+    try {
+      const [file] = await this.db
+        .select()
+        .from(schema.files)
+        .where(and(
+          eq(schema.files.id, id),
+          isNull(schema.files.deletedAt)
+        ))
+      
+      return file || null
+    } catch (error) {
+      this.logger.error('Error getting file:', error)
+      throw error
+    }
+  }
+  
+  async getFileData(id: string): Promise<Buffer | null> {
+    try {
+      const [file] = await this.db
+        .select({ data: schema.files.data, path: schema.files.path })
+        .from(schema.files)
+        .where(and(
+          eq(schema.files.id, id),
+          isNull(schema.files.deletedAt)
+        ))
+      
+      if (!file) return null
+      
+      // Return data from database if stored there
+      if (file.data) {
+        return Buffer.from(file.data)
+      }
+      
+      // Otherwise read from file system
+      if (file.path) {
+        try {
+          return await fs.readFile(file.path)
+        } catch (error) {
+          this.logger.error(`File not found at path: ${file.path}`, error)
+          return null
+        }
+      }
+      
+      return null
+    } catch (error) {
+      this.logger.error('Error getting file data:', error)
+      throw error
+    }
+  }
+  
+  // Key-value store methods (useful for caching and configuration)
+  async setValue(key: string, value: any, namespace = 'default', expiresAt?: Date): Promise<void> {
+    try {
+      let serializedValue: string
+      let type: 'string' | 'number' | 'boolean' | 'json'
+      
+      if (typeof value === 'string') {
+        serializedValue = value
+        type = 'string'
+      } else if (typeof value === 'number') {
+        serializedValue = value.toString()
+        type = 'number'
+      } else if (typeof value === 'boolean') {
+        serializedValue = value.toString()
+        type = 'boolean'
+      } else {
+        serializedValue = JSON.stringify(value)
+        type = 'json'
+      }
+      
+      await this.db
+        .insert(schema.keyValueStore)
+        .values({
+          key,
+          value: serializedValue,
+          type,
+          namespace,
+          expiresAt
+        })
+        .onConflictDoUpdate({
+          target: schema.keyValueStore.key,
+          set: {
+            value: serializedValue,
+            type,
+            namespace,
+            expiresAt,
+            updatedAt: new Date()
+          }
+        })
+      
+    } catch (error) {
+      this.logger.error('Error setting key-value:', error)
+      throw error
+    }
+  }
+  
+  async getValue<T = any>(key: string, namespace = 'default'): Promise<T | null> {
+    try {
+      const [item] = await this.db
+        .select()
+        .from(schema.keyValueStore)
+        .where(and(
+          eq(schema.keyValueStore.key, key),
+          eq(schema.keyValueStore.namespace, namespace),
+          or(
+            isNull(schema.keyValueStore.expiresAt),
+            gte(schema.keyValueStore.expiresAt, new Date())
+          )
+        ))
+      
+      if (!item) return null
+      
+      // Parse value based on type
+      switch (item.type) {
+        case 'string':
+          return item.value as T
+        case 'number':
+          return Number(item.value) as T
+        case 'boolean':
+          return (item.value === 'true') as T
+        case 'json':
+          return JSON.parse(item.value) as T
+        default:
+          return item.value as T
+      }
+    } catch (error) {
+      this.logger.error('Error getting key-value:', error)
+      return null
+    }
+  }
+  
+  async deleteValue(key: string, namespace = 'default'): Promise<boolean> {
+    try {
+      const result = await this.db
+        .delete(schema.keyValueStore)
+        .where(and(
+          eq(schema.keyValueStore.key, key),
+          eq(schema.keyValueStore.namespace, namespace)
+        ))
+        .returning({ key: schema.keyValueStore.key })
+      
+      return result.length > 0
+    } catch (error) {
+      this.logger.error('Error deleting key-value:', error)
+      throw error
+    }
+  }
+  
+  // Settings management
+  async getSetting(category: string, key: string): Promise<any> {
+    try {
+      const [setting] = await this.db
+        .select()
+        .from(schema.settings)
+        .where(and(
+          eq(schema.settings.category, category),
+          eq(schema.settings.key, key)
+        ))
+      
+      if (!setting) return null
+      
+      // Parse value based on type
+      switch (setting.type) {
+        case 'string':
+          return setting.value
+        case 'number':
+          return Number(setting.value)
+        case 'boolean':
+          return setting.value === 'true'
+        case 'json':
+          return JSON.parse(setting.value)
+        default:
+          return setting.value
+      }
+    } catch (error) {
+      this.logger.error('Error getting setting:', error)
+      return null
+    }
+  }
+  
+  async setSetting(category: string, key: string, value: any, description?: string): Promise<void> {
+    try {
+      let serializedValue: string
+      let type: 'string' | 'number' | 'boolean' | 'json'
+      
+      if (typeof value === 'string') {
+        serializedValue = value
+        type = 'string'
+      } else if (typeof value === 'number') {
+        serializedValue = value.toString()
+        type = 'number'
+      } else if (typeof value === 'boolean') {
+        serializedValue = value.toString()
+        type = 'boolean'
+      } else {
+        serializedValue = JSON.stringify(value)
+        type = 'json'
+      }
+      
+      await this.db
+        .insert(schema.settings)
+        .values({
+          category,
+          key,
+          value: serializedValue,
+          type,
+          description
+        })
+        .onConflictDoUpdate({
+          target: [schema.settings.category, schema.settings.key],
+          set: {
+            value: serializedValue,
+            type,
+            description: description || schema.settings.description,
+            updatedAt: new Date()
+          }
+        })
+      
+    } catch (error) {
+      this.logger.error('Error setting configuration:', error)
+      throw error
+    }
+  }
+  
+  async getPublicSettings(): Promise<Record<string, any>> {
+    try {
+      const settings = await this.db
+        .select({
+          category: schema.settings.category,
+          key: schema.settings.key,
+          value: schema.settings.value,
+          type: schema.settings.type
+        })
+        .from(schema.settings)
+        .where(eq(schema.settings.isPublic, true))
+      
+      const result: Record<string, any> = {}
+      
+      for (const setting of settings) {
+        const categoryKey = `${setting.category}.${setting.key}`
+        
+        switch (setting.type) {
+          case 'string':
+            result[categoryKey] = setting.value
+            break
+          case 'number':
+            result[categoryKey] = Number(setting.value)
+            break
+          case 'boolean':
+            result[categoryKey] = setting.value === 'true'
+            break
+          case 'json':
+            result[categoryKey] = JSON.parse(setting.value)
+            break
+          default:
+            result[categoryKey] = setting.value
+        }
+      }
+      
+      return result
+    } catch (error) {
+      this.logger.error('Error getting public settings:', error)
+      return {}
+    }
+  }
+  
+  // Database maintenance and optimization
+  async optimizeDatabase(): Promise<void> {
+    try {
+      // Run VACUUM to rebuild the database file
+      await this.db.run(sql`VACUUM`)
+      
+      // Update table statistics
+      await this.db.run(sql`ANALYZE`)
+      
+      this.logger.log('Database optimization completed')
+    } catch (error) {
+      this.logger.error('Error optimizing database:', error)
+      throw error
+    }
+  }
+  
+  async getDatabaseStats(): Promise<SQLiteStats> {
+    try {
+      // Get basic database info
+      const [pageInfo] = await this.db.all(sql`PRAGMA page_count`)
+      const [pageSizeInfo] = await this.db.all(sql`PRAGMA page_size`)
+      const [cacheSizeInfo] = await this.db.all(sql`PRAGMA cache_size`)
+      const [freePageInfo] = await this.db.all(sql`PRAGMA freelist_count`)
+      
+      // Get table statistics
+      const tables = await this.db.all(sql`
+        SELECT name FROM sqlite_master 
+        WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name != 'drizzle_migrations'
+      `)
+      
+      const tableStats = []
+      for (const table of tables) {
+        const [countResult] = await this.db.all(sql.raw(`SELECT COUNT(*) as count FROM ${table.name}`))
+        tableStats.push({
+          name: table.name,
+          rowCount: countResult.count
+        })
+      }
+      
+      return {
+        dbSize: pageInfo.page_count * pageSizeInfo.page_size,
+        pageCount: pageInfo.page_count,
+        pageSize: pageSizeInfo.page_size,
+        cacheSize: Math.abs(cacheSizeInfo.cache_size),
+        freePages: freePageInfo.freelist_count,
+        tables: tableStats
+      }
+    } catch (error) {
+      this.logger.error('Error getting database stats:', error)
+      throw error
+    }
+  }
+  
+  // Backup and restore
+  async backupDatabase(backupPath: string): Promise<void> {
+    try {
+      await this.db.run(sql.raw(`BACKUP TO '${backupPath}'`))
+      this.logger.log(`Database backed up to: ${backupPath}`)
+    } catch (error) {
+      this.logger.error('Error backing up database:', error)
+      throw error
+    }
+  }
+  
+  // Full-text search setup (if needed)
+  async setupFullTextSearch(table: string, columns: string[]): Promise<void> {
+    try {
+      const ftsTableName = `${table}_fts`
+      const columnList = columns.join(', ')
+      
+      await this.db.run(sql.raw(`
+        CREATE VIRTUAL TABLE IF NOT EXISTS ${ftsTableName} 
+        USING fts5(${columnList}, content='${table}')
+      `))
+      
+      await this.db.run(sql.raw(`
+        INSERT INTO ${ftsTableName} 
+        SELECT ${columnList} FROM ${table}
+      `))
+      
+      this.logger.log(`Full-text search setup for table: ${table}`)
+    } catch (error) {
+      this.logger.error('Error setting up full-text search:', error)
+      throw error
+    }
+  }
+  
+  // Health check
+  async healthCheck(): Promise<{ status: string; stats: SQLiteStats }> {
+    try {
+      // Simple query test
+      await this.db.run(sql`SELECT 1`)
+      
+      const stats = await this.getDatabaseStats()
+      
+      return {
+        status: 'healthy',
+        stats
+      }
+    } catch (error) {
+      this.logger.error('Database health check failed:', error)
+      throw new Error('SQLite database connection failed')
+    }
+  }
+  
+  // Cleanup expired data
+  async cleanupExpiredData(): Promise<void> {
+    try {
+      const now = new Date()
+      
+      // Remove expired key-value pairs
+      const deleted = await this.db
+        .delete(schema.keyValueStore)
+        .where(and(
+          isNotNull(schema.keyValueStore.expiresAt),
+          lte(schema.keyValueStore.expiresAt, now)
+        ))
+        .returning({ key: schema.keyValueStore.key })
+      
+      if (deleted.length > 0) {
+        this.logger.log(`Cleaned up ${deleted.length} expired key-value pairs`)
+      }
+      
+      // Run optimization after cleanup
+      await this.optimizeDatabase()
+      
+    } catch (error) {
+      this.logger.error('Error cleaning up expired data:', error)
+      throw error
+    }
+  }
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced NestJS Drizzle SQLite integration:**
+
+1. **SQLite Optimization**: Configure proper pragmas for performance, use WAL mode for better concurrency, implement proper indexing strategies, leverage SQLite-specific features like JSON support.
+
+2. **Embedded Database Design**: Design schemas suitable for single-file databases, implement proper relationship handling, use text-based storage for enums and timestamps, optimize for read-heavy workloads.
+
+3. **File Management**: Store small files directly in database, implement proper file metadata tracking, provide both filesystem and database storage options, use checksums for data integrity.
+
+4. **Configuration Management**: Use key-value store for dynamic settings, implement proper expiration handling, provide public/private setting separation, support multiple data types with automatic serialization.
+
+5. **Maintenance Operations**: Implement database optimization routines, provide backup and restore functionality, monitor database statistics, clean up expired data automatically.
+
+Always optimize for SQLite's strengths, implement proper error handling, use transactions for data consistency, and consider the embedded nature of SQLite for deployment strategies. 

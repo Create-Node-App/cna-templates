@@ -1,38 +1,1721 @@
 ---
-description: Specific guidelines for implementing and managing mobile applications with Ionic and Capacitor.
-globs: '**/*.{ts,tsx,js,jsx}, capacitor.config.ts'
+description: Advanced React Ionic Capacitor patterns for cross-platform mobile development, native plugin integration, device API management, and enterprise mobile application architecture.
+globs: '**/*.{ts,tsx,js,jsx}', '**/capacitor.config.{ts,js}', '**/ionic.config.{json,js}', '**/android/**/*', '**/ios/**/*'
 ---
 
-# Ionic Capacitor Rules
+# Advanced React Ionic Capacitor Development
 
-## Mobile UI Patterns
+## Enterprise Capacitor Configuration
 
-1. Use consistent mobile-first design patterns
-2. Implement proper gesture handling
-3. Use appropriate mobile navigation
-4. Handle platform-specific UI properly
-5. Implement proper mobile animations
+**Advanced Capacitor configuration with platform-specific optimizations:**
+```typescript
+// capacitor.config.ts
+import { CapacitorConfig } from '@capacitor/cli'
 
-## Native Features
+const config: CapacitorConfig = {
+  appId: 'com.yourcompany.yourapp',
+  appName: 'Your Enterprise App',
+  webDir: 'dist',
+  bundledWebRuntime: false,
+  
+  // Server configuration for development
+  server: {
+    url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined,
+    cleartext: true,
+    allowNavigation: [
+      'https://*.yourapi.com',
+      'https://*.auth0.com',
+      'https://*.stripe.com',
+      'https://*.amazonaws.com'
+    ]
+  },
+  
+  // iOS specific configuration
+  ios: {
+    scheme: 'YourApp',
+    contentInset: 'automatic',
+    scrollEnabled: true,
+    backgroundColor: '#ffffff',
+    
+    // Background modes
+    backgroundModes: [
+      'background-fetch',
+      'background-processing',
+      'background-audio'
+    ],
+    
+    // Permissions
+    permissions: [
+      'NSCameraUsageDescription',
+      'NSLocationWhenInUseUsageDescription',
+      'NSLocationAlwaysAndWhenInUseUsageDescription',
+      'NSMicrophoneUsageDescription',
+      'NSPhotoLibraryUsageDescription',
+      'NSBluetoothAlwaysUsageDescription',
+      'NSContactsUsageDescription',
+      'NSCalendarsUsageDescription',
+      'NSRemindersUsageDescription',
+      'NSUserNotificationUsageDescription'
+    ],
+    
+    // Build configuration
+    buildConfiguration: {
+      'TARGETED_DEVICE_FAMILY': '1,2', // iPhone and iPad
+      'IPHONEOS_DEPLOYMENT_TARGET': '13.0',
+      'SWIFT_VERSION': '5.0',
+      'CODE_SIGN_STYLE': 'Automatic',
+      'DEVELOPMENT_TEAM': process.env.IOS_DEVELOPMENT_TEAM,
+      'PROVISIONING_PROFILE_SPECIFIER': process.env.IOS_PROVISIONING_PROFILE
+    }
+  },
+  
+  // Android specific configuration
+  android: {
+    minWebViewVersion: 60,
+    backgroundColor: '#ffffff',
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: process.env.NODE_ENV === 'development',
+    
+    // Gradle configuration
+    buildOptions: {
+      keystorePath: process.env.ANDROID_KEYSTORE_PATH,
+      keystorePassword: process.env.ANDROID_KEYSTORE_PASSWORD,
+      keystoreAlias: process.env.ANDROID_KEY_ALIAS,
+      keystoreAliasPassword: process.env.ANDROID_KEY_PASSWORD,
+      releaseType: 'release',
+      compileSdkVersion: 34,
+      targetSdkVersion: 34,
+      minSdkVersion: 22
+    }
+  },
+  
+  // Plugin configuration
+  plugins: {
+    // Camera plugin
+    Camera: {
+      permissions: ['camera', 'photos']
+    },
+    
+    // Geolocation plugin
+    Geolocation: {
+      permissions: ['location']
+    },
+    
+    // Push notifications
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert']
+    },
+    
+    // Local notifications
+    LocalNotifications: {
+      smallIcon: 'ic_stat_icon_config_sample',
+      iconColor: '#488AFF',
+      sound: 'beep.wav'
+    },
+    
+    // Status bar
+    StatusBar: {
+      style: 'default',
+      backgroundColor: '#3880ff',
+      overlay: false
+    },
+    
+    // Splash screen
+    SplashScreen: {
+      launchShowDuration: 3000,
+      launchAutoHide: true,
+      launchFadeOutDuration: 3000,
+      backgroundColor: '#ffffffff',
+      androidSplashResourceName: 'splash',
+      androidScaleType: 'CENTER_CROP',
+      iosSpinnerStyle: 'small',
+      showSpinner: false,
+      spinnerColor: '#999999'
+    },
+    
+    // HTTP plugin
+    CapacitorHttp: {
+      enabled: true
+    },
+    
+    // Cookies plugin
+    CapacitorCookies: {
+      enabled: true
+    },
+    
+    // Keyboard plugin
+    Keyboard: {
+      resize: 'body',
+      style: 'dark',
+      resizeOnFullScreen: true
+    },
+    
+    // App plugin
+    App: {
+      backgroundColor: '#ffffff'
+    },
+    
+    // Haptics plugin
+    Haptics: {
+      enabled: true
+    },
+    
+    // Device plugin
+    Device: {
+      enabled: true
+    },
+    
+    // Network plugin
+    Network: {
+      enabled: true
+    },
+    
+    // Storage plugin
+    Storage: {
+      enabled: true
+    },
+    
+    // Filesystem plugin
+    Filesystem: {
+      permissions: ['storage']
+    },
+    
+    // Share plugin
+    Share: {
+      enabled: true
+    }
+  },
+  
+  // Security configuration
+  security: {
+    contentSecurityPolicy: {
+      'default-src': ["'self'", 'https:', 'data:', 'blob:'],
+      'script-src': ["'self'", "'unsafe-eval'", "'unsafe-inline'", 'https:'],
+      'style-src': ["'self'", "'unsafe-inline'", 'https:'],
+      'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+      'font-src': ["'self'", 'data:', 'https:'],
+      'connect-src': ["'self'", 'https:', 'wss:'],
+      'media-src': ["'self'", 'data:', 'blob:', 'https:'],
+      'object-src': ["'none'"],
+      'base-uri': ["'self'"],
+      'form-action': ["'self'"]
+    }
+  }
+}
 
-1. Use proper Capacitor plugins
-2. Implement proper native API calls
-3. Use appropriate platform checks
-4. Handle permissions properly
-5. Follow mobile best practices
+export default config
+```
 
-## Performance
+**Advanced Ionic configuration:**
+```json
+{
+  "name": "enterprise-ionic-app",
+  "integrations": {
+    "capacitor": {
+      "minVersion": "5.0.0"
+    }
+  },
+  "type": "react",
+  "hooks": {
+    "build:before": "scripts/pre-build.sh",
+    "build:after": "scripts/post-build.sh"
+  },
+  "generators": [
+    {
+      "name": "page",
+      "baseDir": "src/pages",
+      "templateDir": "templates/page"
+    },
+    {
+      "name": "component",
+      "baseDir": "src/components",
+      "templateDir": "templates/component"
+    },
+    {
+      "name": "service",
+      "baseDir": "src/services",
+      "templateDir": "templates/service"
+    }
+  ]
+}
+```
 
-1. Use proper lazy loading
-2. Implement proper caching
-3. Use appropriate optimization
-4. Handle large applications properly
-5. Optimize mobile performance
+## Advanced Native Plugin Integration
 
-## Development
+**Comprehensive native plugin service with TypeScript:**
+```typescript
+// src/services/NativePluginService.ts
+import { 
+  Camera, 
+  CameraResultType, 
+  CameraSource, 
+  Photo 
+} from '@capacitor/camera'
+import { 
+  Geolocation, 
+  Position, 
+  GeolocationOptions 
+} from '@capacitor/geolocation'
+import { 
+  PushNotifications, 
+  Token, 
+  PushNotificationSchema, 
+  ActionPerformed 
+} from '@capacitor/push-notifications'
+import { 
+  LocalNotifications, 
+  LocalNotificationSchema,
+  ScheduleOptions
+} from '@capacitor/local-notifications'
+import { 
+  Device, 
+  DeviceInfo 
+} from '@capacitor/device'
+import { 
+  Network, 
+  NetworkStatus, 
+  ConnectionStatus 
+} from '@capacitor/network'
+import { 
+  Storage 
+} from '@capacitor/storage'
+import { 
+  Filesystem, 
+  Directory, 
+  Encoding,
+  FileInfo,
+  WriteFileResult,
+  ReadFileResult
+} from '@capacitor/filesystem'
+import { 
+  Share, 
+  ShareOptions 
+} from '@capacitor/share'
+import { 
+  Haptics, 
+  ImpactStyle 
+} from '@capacitor/haptics'
+import { 
+  StatusBar, 
+  Style 
+} from '@capacitor/status-bar'
+import { 
+  SplashScreen 
+} from '@capacitor/splash-screen'
+import { 
+  App, 
+  AppState 
+} from '@capacitor/app'
+import { 
+  Keyboard, 
+  KeyboardInfo 
+} from '@capacitor/keyboard'
+import { 
+  Preferences 
+} from '@capacitor/preferences'
+import { 
+  Toast 
+} from '@capacitor/toast'
+import { Capacitor } from '@capacitor/core'
 
-1. Use proper development tools
-2. Implement proper testing
-3. Use appropriate debugging
-4. Handle development workflow properly
-5. Follow mobile development guidelines 
+// Type definitions for enhanced functionality
+export interface CameraOptions {
+  quality?: number
+  allowEditing?: boolean
+  resultType?: CameraResultType
+  source?: CameraSource
+  saveToGallery?: boolean
+  width?: number
+  height?: number
+  correctOrientation?: boolean
+}
+
+export interface GeolocationTrackingOptions extends GeolocationOptions {
+  enableHighAccuracy?: boolean
+  timeout?: number
+  maximumAge?: number
+  background?: boolean
+  intervalMs?: number
+}
+
+export interface NotificationOptions extends LocalNotificationSchema {
+  scheduled?: boolean
+  repeat?: boolean
+  sound?: string
+  largeIcon?: string
+  smallIcon?: string
+  iconColor?: string
+  attachments?: Array<{
+    id: string
+    url: string
+    options?: any
+  }>
+  actionTypeId?: string
+  extra?: any
+}
+
+export interface FileOperationOptions {
+  path: string
+  directory?: Directory
+  encoding?: Encoding
+  data?: string | Uint8Array
+  recursive?: boolean
+}
+
+export interface StorageItem {
+  key: string
+  value: string
+  timestamp: number
+}
+
+export interface AppPerformanceMetrics {
+  memoryUsage: number
+  batteryLevel: number
+  networkType: string
+  isCharging: boolean
+  deviceModel: string
+  osVersion: string
+  appVersion: string
+  lastUpdated: string
+}
+
+class NativePluginService {
+  private static instance: NativePluginService
+  private deviceInfo: DeviceInfo | null = null
+  private networkStatus: NetworkStatus | null = null
+  private currentPosition: Position | null = null
+  private locationWatcher: string | null = null
+  private notificationListeners: Array<(notification: any) => void> = []
+  private performanceMetrics: AppPerformanceMetrics | null = null
+  
+  private constructor() {
+    this.initializePlugins()
+  }
+  
+  public static getInstance(): NativePluginService {
+    if (!NativePluginService.instance) {
+      NativePluginService.instance = new NativePluginService()
+    }
+    return NativePluginService.instance
+  }
+  
+  private async initializePlugins(): Promise<void> {
+    try {
+      // Initialize device info
+      this.deviceInfo = await Device.getInfo()
+      
+      // Initialize network status
+      this.networkStatus = await Network.getStatus()
+      
+      // Setup network listener
+      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
+        this.networkStatus = status
+        console.log('Network status changed:', status)
+      })
+      
+      // Setup app state listeners
+      App.addListener('appStateChange', (state: AppState) => {
+        console.log('App state changed:', state.isActive)
+        if (state.isActive) {
+          this.refreshPerformanceMetrics()
+        }
+      })
+      
+      // Setup push notification listeners
+      await this.initializePushNotifications()
+      
+      // Initialize performance metrics
+      await this.refreshPerformanceMetrics()
+      
+    } catch (error) {
+      console.error('Failed to initialize native plugins:', error)
+    }
+  }
+  
+  // Camera functionality
+  public async takePicture(options: CameraOptions = {}): Promise<Photo> {
+    const defaultOptions: CameraOptions = {
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Prompt,
+      saveToGallery: true,
+      correctOrientation: true
+    }
+    
+    const finalOptions = { ...defaultOptions, ...options }
+    
+    try {
+      const photo = await Camera.getPhoto(finalOptions)
+      
+      // Add metadata
+      const enhancedPhoto = {
+        ...photo,
+        timestamp: new Date().toISOString(),
+        deviceModel: this.deviceInfo?.model || 'Unknown',
+        location: this.currentPosition ? {
+          lat: this.currentPosition.coords.latitude,
+          lng: this.currentPosition.coords.longitude
+        } : null
+      }
+      
+      return enhancedPhoto
+    } catch (error) {
+      console.error('Camera error:', error)
+      throw new Error(`Failed to take picture: ${error.message}`)
+    }
+  }
+  
+  public async selectFromGallery(options: CameraOptions = {}): Promise<Photo> {
+    return this.takePicture({
+      ...options,
+      source: CameraSource.Photos
+    })
+  }
+  
+  // Geolocation functionality
+  public async getCurrentPosition(options: GeolocationOptions = {}): Promise<Position> {
+    const defaultOptions: GeolocationOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 60000
+    }
+    
+    const finalOptions = { ...defaultOptions, ...options }
+    
+    try {
+      const position = await Geolocation.getCurrentPosition(finalOptions)
+      this.currentPosition = position
+      
+      // Store location in preferences
+      await this.setPreference('lastKnownLocation', JSON.stringify({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        timestamp: position.timestamp
+      }))
+      
+      return position
+    } catch (error) {
+      console.error('Geolocation error:', error)
+      throw new Error(`Failed to get current position: ${error.message}`)
+    }
+  }
+  
+  public async startLocationTracking(
+    callback: (position: Position) => void,
+    options: GeolocationTrackingOptions = {}
+  ): Promise<string> {
+    const defaultOptions: GeolocationTrackingOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 60000
+    }
+    
+    const finalOptions = { ...defaultOptions, ...options }
+    
+    try {
+      this.locationWatcher = await Geolocation.watchPosition(finalOptions, (position, error) => {
+        if (error) {
+          console.error('Location tracking error:', error)
+          return
+        }
+        
+        if (position) {
+          this.currentPosition = position
+          callback(position)
+        }
+      })
+      
+      return this.locationWatcher
+    } catch (error) {
+      console.error('Failed to start location tracking:', error)
+      throw new Error(`Failed to start location tracking: ${error.message}`)
+    }
+  }
+  
+  public async stopLocationTracking(): Promise<void> {
+    if (this.locationWatcher) {
+      await Geolocation.clearWatch({ id: this.locationWatcher })
+      this.locationWatcher = null
+    }
+  }
+  
+  // Push Notifications
+  private async initializePushNotifications(): Promise<void> {
+    if (!Capacitor.isPluginAvailable('PushNotifications')) {
+      console.warn('Push notifications not available')
+      return
+    }
+    
+    try {
+      // Request permission
+      let permStatus = await PushNotifications.checkPermissions()
+      
+      if (permStatus.receive === 'prompt') {
+        permStatus = await PushNotifications.requestPermissions()
+      }
+      
+      if (permStatus.receive !== 'granted') {
+        console.warn('Push notification permission not granted')
+        return
+      }
+      
+      // Register for push notifications
+      await PushNotifications.register()
+      
+      // Setup listeners
+      PushNotifications.addListener('registration', (token: Token) => {
+        console.log('Push registration success, token:', token.value)
+        this.setPreference('pushToken', token.value)
+      })
+      
+      PushNotifications.addListener('registrationError', (error: any) => {
+        console.error('Push registration error:', error)
+      })
+      
+      PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
+        console.log('Push notification received:', notification)
+        this.notificationListeners.forEach(listener => listener(notification))
+      })
+      
+      PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
+        console.log('Push notification action performed:', notification)
+      })
+      
+    } catch (error) {
+      console.error('Failed to initialize push notifications:', error)
+    }
+  }
+  
+  public addNotificationListener(callback: (notification: any) => void): void {
+    this.notificationListeners.push(callback)
+  }
+  
+  public removeNotificationListener(callback: (notification: any) => void): void {
+    const index = this.notificationListeners.indexOf(callback)
+    if (index > -1) {
+      this.notificationListeners.splice(index, 1)
+    }
+  }
+  
+  // Local Notifications
+  public async scheduleLocalNotification(options: NotificationOptions): Promise<void> {
+    try {
+      // Request permission
+      let permStatus = await LocalNotifications.checkPermissions()
+      
+      if (permStatus.display === 'prompt') {
+        permStatus = await LocalNotifications.requestPermissions()
+      }
+      
+      if (permStatus.display !== 'granted') {
+        throw new Error('Local notification permission not granted')
+      }
+      
+      const notification: LocalNotificationSchema = {
+        title: options.title,
+        body: options.body,
+        id: options.id || Date.now(),
+        schedule: options.schedule,
+        sound: options.sound || 'default',
+        attachments: options.attachments || [],
+        actionTypeId: options.actionTypeId || '',
+        extra: options.extra || {}
+      }
+      
+      await LocalNotifications.schedule({
+        notifications: [notification]
+      })
+      
+    } catch (error) {
+      console.error('Failed to schedule local notification:', error)
+      throw new Error(`Failed to schedule notification: ${error.message}`)
+    }
+  }
+  
+  public async cancelLocalNotifications(ids: number[]): Promise<void> {
+    try {
+      await LocalNotifications.cancel({ notifications: ids.map(id => ({ id })) })
+    } catch (error) {
+      console.error('Failed to cancel notifications:', error)
+      throw new Error(`Failed to cancel notifications: ${error.message}`)
+    }
+  }
+  
+  public async getPendingNotifications(): Promise<any[]> {
+    try {
+      const result = await LocalNotifications.getPending()
+      return result.notifications
+    } catch (error) {
+      console.error('Failed to get pending notifications:', error)
+      return []
+    }
+  }
+  
+  // Storage & Preferences
+  public async setPreference(key: string, value: string): Promise<void> {
+    try {
+      await Preferences.set({ key, value })
+    } catch (error) {
+      console.error('Failed to set preference:', error)
+      throw new Error(`Failed to set preference ${key}: ${error.message}`)
+    }
+  }
+  
+  public async getPreference(key: string): Promise<string | null> {
+    try {
+      const result = await Preferences.get({ key })
+      return result.value
+    } catch (error) {
+      console.error('Failed to get preference:', error)
+      return null
+    }
+  }
+  
+  public async removePreference(key: string): Promise<void> {
+    try {
+      await Preferences.remove({ key })
+    } catch (error) {
+      console.error('Failed to remove preference:', error)
+      throw new Error(`Failed to remove preference ${key}: ${error.message}`)
+    }
+  }
+  
+  public async clearPreferences(): Promise<void> {
+    try {
+      await Preferences.clear()
+    } catch (error) {
+      console.error('Failed to clear preferences:', error)
+      throw new Error(`Failed to clear preferences: ${error.message}`)
+    }
+  }
+  
+  // File System Operations
+  public async writeFile(options: FileOperationOptions): Promise<WriteFileResult> {
+    try {
+      const result = await Filesystem.writeFile({
+        path: options.path,
+        data: options.data || '',
+        directory: options.directory || Directory.Documents,
+        encoding: options.encoding || Encoding.UTF8
+      })
+      
+      return result
+    } catch (error) {
+      console.error('Failed to write file:', error)
+      throw new Error(`Failed to write file ${options.path}: ${error.message}`)
+    }
+  }
+  
+  public async readFile(options: FileOperationOptions): Promise<ReadFileResult> {
+    try {
+      const result = await Filesystem.readFile({
+        path: options.path,
+        directory: options.directory || Directory.Documents,
+        encoding: options.encoding || Encoding.UTF8
+      })
+      
+      return result
+    } catch (error) {
+      console.error('Failed to read file:', error)
+      throw new Error(`Failed to read file ${options.path}: ${error.message}`)
+    }
+  }
+  
+  public async deleteFile(options: FileOperationOptions): Promise<void> {
+    try {
+      await Filesystem.deleteFile({
+        path: options.path,
+        directory: options.directory || Directory.Documents
+      })
+    } catch (error) {
+      console.error('Failed to delete file:', error)
+      throw new Error(`Failed to delete file ${options.path}: ${error.message}`)
+    }
+  }
+  
+  public async createDirectory(options: FileOperationOptions): Promise<void> {
+    try {
+      await Filesystem.mkdir({
+        path: options.path,
+        directory: options.directory || Directory.Documents,
+        recursive: options.recursive || false
+      })
+    } catch (error) {
+      console.error('Failed to create directory:', error)
+      throw new Error(`Failed to create directory ${options.path}: ${error.message}`)
+    }
+  }
+  
+  public async listFiles(options: FileOperationOptions): Promise<FileInfo[]> {
+    try {
+      const result = await Filesystem.readdir({
+        path: options.path || '',
+        directory: options.directory || Directory.Documents
+      })
+      
+      return result.files
+    } catch (error) {
+      console.error('Failed to list files:', error)
+      throw new Error(`Failed to list files in ${options.path}: ${error.message}`)
+    }
+  }
+  
+  // Device Information
+  public async getDeviceInfo(): Promise<DeviceInfo> {
+    if (!this.deviceInfo) {
+      this.deviceInfo = await Device.getInfo()
+    }
+    return this.deviceInfo
+  }
+  
+  public async getBatteryInfo(): Promise<any> {
+    try {
+      return await Device.getBatteryInfo()
+    } catch (error) {
+      console.error('Failed to get battery info:', error)
+      return null
+    }
+  }
+  
+  public async getLanguageCode(): Promise<string> {
+    try {
+      const result = await Device.getLanguageCode()
+      return result.value
+    } catch (error) {
+      console.error('Failed to get language code:', error)
+      return 'en'
+    }
+  }
+  
+  // Network Status
+  public async getNetworkStatus(): Promise<NetworkStatus> {
+    if (!this.networkStatus) {
+      this.networkStatus = await Network.getStatus()
+    }
+    return this.networkStatus
+  }
+  
+  public isOnline(): boolean {
+    return this.networkStatus?.connected || false
+  }
+  
+  public getConnectionType(): string {
+    return this.networkStatus?.connectionType || 'unknown'
+  }
+  
+  // Sharing
+  public async shareContent(options: ShareOptions): Promise<void> {
+    try {
+      await Share.share(options)
+    } catch (error) {
+      console.error('Failed to share content:', error)
+      throw new Error(`Failed to share content: ${error.message}`)
+    }
+  }
+  
+  public async shareFile(filePath: string, title?: string): Promise<void> {
+    try {
+      await Share.share({
+        title: title || 'Shared File',
+        url: filePath,
+        dialogTitle: 'Share File'
+      })
+    } catch (error) {
+      console.error('Failed to share file:', error)
+      throw new Error(`Failed to share file: ${error.message}`)
+    }
+  }
+  
+  // Haptic Feedback
+  public async vibrate(style: ImpactStyle = ImpactStyle.Medium): Promise<void> {
+    try {
+      await Haptics.impact({ style })
+    } catch (error) {
+      console.error('Failed to vibrate:', error)
+    }
+  }
+  
+  public async vibrateSelection(): Promise<void> {
+    try {
+      await Haptics.selectionChanged()
+    } catch (error) {
+      console.error('Failed to vibrate selection:', error)
+    }
+  }
+  
+  public async vibrateNotification(type: 'success' | 'warning' | 'error' = 'success'): Promise<void> {
+    try {
+      await Haptics.notification({ type: type as any })
+    } catch (error) {
+      console.error('Failed to vibrate notification:', error)
+    }
+  }
+  
+  // Status Bar
+  public async setStatusBarStyle(style: Style): Promise<void> {
+    try {
+      await StatusBar.setStyle({ style })
+    } catch (error) {
+      console.error('Failed to set status bar style:', error)
+    }
+  }
+  
+  public async setStatusBarBackgroundColor(color: string): Promise<void> {
+    try {
+      await StatusBar.setBackgroundColor({ color })
+    } catch (error) {
+      console.error('Failed to set status bar background color:', error)
+    }
+  }
+  
+  public async hideStatusBar(): Promise<void> {
+    try {
+      await StatusBar.hide()
+    } catch (error) {
+      console.error('Failed to hide status bar:', error)
+    }
+  }
+  
+  public async showStatusBar(): Promise<void> {
+    try {
+      await StatusBar.show()
+    } catch (error) {
+      console.error('Failed to show status bar:', error)
+    }
+  }
+  
+  // Splash Screen
+  public async hideSplashScreen(): Promise<void> {
+    try {
+      await SplashScreen.hide()
+    } catch (error) {
+      console.error('Failed to hide splash screen:', error)
+    }
+  }
+  
+  public async showSplashScreen(): Promise<void> {
+    try {
+      await SplashScreen.show()
+    } catch (error) {
+      console.error('Failed to show splash screen:', error)
+    }
+  }
+  
+  // Keyboard
+  public async showKeyboard(): Promise<void> {
+    try {
+      await Keyboard.show()
+    } catch (error) {
+      console.error('Failed to show keyboard:', error)
+    }
+  }
+  
+  public async hideKeyboard(): Promise<void> {
+    try {
+      await Keyboard.hide()
+    } catch (error) {
+      console.error('Failed to hide keyboard:', error)
+    }
+  }
+  
+  public async setKeyboardAccessoryBarVisible(visible: boolean): Promise<void> {
+    try {
+      await Keyboard.setAccessoryBarVisible({ isVisible: visible })
+    } catch (error) {
+      console.error('Failed to set keyboard accessory bar visibility:', error)
+    }
+  }
+  
+  // Toast Messages
+  public async showToast(text: string, duration: 'short' | 'long' = 'short'): Promise<void> {
+    try {
+      await Toast.show({
+        text,
+        duration: duration === 'short' ? 'short' : 'long',
+        position: 'bottom'
+      })
+    } catch (error) {
+      console.error('Failed to show toast:', error)
+    }
+  }
+  
+  // Performance Metrics
+  public async refreshPerformanceMetrics(): Promise<AppPerformanceMetrics> {
+    try {
+      const [deviceInfo, batteryInfo, networkStatus] = await Promise.all([
+        this.getDeviceInfo(),
+        this.getBatteryInfo(),
+        this.getNetworkStatus()
+      ])
+      
+      this.performanceMetrics = {
+        memoryUsage: (performance as any)?.memory?.usedJSHeapSize || 0,
+        batteryLevel: batteryInfo?.batteryLevel || 0,
+        networkType: networkStatus.connectionType || 'unknown',
+        isCharging: batteryInfo?.isCharging || false,
+        deviceModel: deviceInfo.model || 'Unknown',
+        osVersion: deviceInfo.osVersion || 'Unknown',
+        appVersion: deviceInfo.appVersion || 'Unknown',
+        lastUpdated: new Date().toISOString()
+      }
+      
+      return this.performanceMetrics
+    } catch (error) {
+      console.error('Failed to refresh performance metrics:', error)
+      throw new Error(`Failed to refresh performance metrics: ${error.message}`)
+    }
+  }
+  
+  public getPerformanceMetrics(): AppPerformanceMetrics | null {
+    return this.performanceMetrics
+  }
+  
+  // Cleanup
+  public async cleanup(): Promise<void> {
+    try {
+      await this.stopLocationTracking()
+      this.notificationListeners = []
+      Network.removeAllListeners()
+      App.removeAllListeners()
+      PushNotifications.removeAllListeners()
+    } catch (error) {
+      console.error('Failed to cleanup native plugin service:', error)
+    }
+  }
+}
+
+export default NativePluginService
+```
+
+## Ionic React Component Integration
+
+**Advanced mobile-optimized React component:**
+```tsx
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonAlert,
+  IonToast,
+  IonProgressBar,
+  IonRefresher,
+  IonRefresherContent,
+  IonFab,
+  IonFabButton,
+  IonBadge,
+  IonChip,
+  IonAvatar,
+  IonImg,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonLoading,
+  IonModal,
+  IonButtons,
+  IonBackButton,
+  IonMenuButton,
+  IonPopover,
+  IonActionSheet,
+  IonCheckbox,
+  IonRange,
+  IonToggle,
+  IonSelect,
+  IonSelectOption,
+  IonTextarea,
+  IonInput
+} from '@ionic/react'
+import {
+  camera,
+  location,
+  notifications,
+  share,
+  download,
+  refresh,
+  add,
+  chevronDown,
+  star,
+  heart,
+  bookmark,
+  person,
+  settings,
+  menu,
+  search,
+  filter,
+  map,
+  library,
+  cloud,
+  sync
+} from 'ionicons/icons'
+import { RefresherEventDetail } from '@ionic/core'
+import { usePhotoGallery } from '../hooks/usePhotoGallery'
+import { useGeolocation } from '../hooks/useGeolocation'
+import { useNativePlugin } from '../hooks/useNativePlugin'
+import NativePluginService from '../services/NativePluginService'
+import type { Photo } from '@capacitor/camera'
+import type { Position } from '@capacitor/geolocation'
+import './MobileApp.css'
+
+interface MediaItem {
+  id: string
+  title: string
+  description: string
+  imageUrl: string
+  location?: {
+    lat: number
+    lng: number
+    address?: string
+  }
+  createdAt: string
+  tags: string[]
+  likes: number
+  isLiked: boolean
+  isBookmarked: boolean
+  author: {
+    id: string
+    name: string
+    avatar: string
+  }
+}
+
+interface MobileAppProps {
+  initialItems?: MediaItem[]
+  enableGeolocation?: boolean
+  enableCamera?: boolean
+  enableNotifications?: boolean
+  onItemSelect?: (item: MediaItem) => void
+  onItemShare?: (item: MediaItem) => void
+  onItemLike?: (item: MediaItem) => void
+  onItemBookmark?: (item: MediaItem) => void
+}
+
+export const MobileApp: React.FC<MobileAppProps> = ({
+  initialItems = [],
+  enableGeolocation = true,
+  enableCamera = true,
+  enableNotifications = true,
+  onItemSelect,
+  onItemShare,
+  onItemLike,
+  onItemBookmark
+}) => {
+  // State management
+  const [items, setItems] = useState<MediaItem[]>(initialItems)
+  const [filteredItems, setFilteredItems] = useState<MediaItem[]>(initialItems)
+  const [isLoading, setIsLoading] = useState(false)
+  const [searchText, setSearchText] = useState('')
+  const [selectedSegment, setSelectedSegment] = useState<string>('all')
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null)
+  const [currentLocation, setCurrentLocation] = useState<Position | null>(null)
+  const [performanceMetrics, setPerformanceMetrics] = useState<any>(null)
+  const [showActionSheet, setShowActionSheet] = useState(false)
+  const [showImagePicker, setShowImagePicker] = useState(false)
+  
+  // Custom hooks
+  const { photos, takePhoto, deletePhoto, loading: photoLoading } = usePhotoGallery()
+  const { position, watchId, startWatching, stopWatching, getCurrentPosition } = useGeolocation()
+  const nativeService = useNativePlugin()
+  
+  // Load data on mount
+  useEffect(() => {
+    initializeApp()
+  }, [])
+  
+  // Update filtered items when search or segment changes
+  useEffect(() => {
+    filterItems()
+  }, [searchText, selectedSegment, items])
+  
+  // Initialize app with native features
+  const initializeApp = useCallback(async () => {
+    setIsLoading(true)
+    
+    try {
+      // Get device information
+      const deviceInfo = await nativeService.getDeviceInfo()
+      console.log('Device info:', deviceInfo)
+      
+      // Get current location if enabled
+      if (enableGeolocation) {
+        try {
+          const position = await getCurrentPosition()
+          setCurrentLocation(position)
+        } catch (error) {
+          console.warn('Geolocation not available:', error)
+        }
+      }
+      
+      // Initialize performance monitoring
+      const metrics = await nativeService.refreshPerformanceMetrics()
+      setPerformanceMetrics(metrics)
+      
+      // Setup notification listener if enabled
+      if (enableNotifications) {
+        nativeService.addNotificationListener((notification) => {
+          setToastMessage(`Notification: ${notification.title}`)
+          setShowToast(true)
+        })
+      }
+      
+      // Load initial data
+      await loadItems()
+      
+    } catch (error) {
+      console.error('App initialization failed:', error)
+      setAlertMessage(`Initialization failed: ${error.message}`)
+      setShowAlert(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [enableGeolocation, enableNotifications, nativeService, getCurrentPosition])
+  
+  // Load items from API or local storage
+  const loadItems = useCallback(async () => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // In a real app, you would fetch from an API
+      const sampleItems: MediaItem[] = [
+        {
+          id: '1',
+          title: 'Beautiful Sunset',
+          description: 'Amazing sunset captured at the beach',
+          imageUrl: 'https://picsum.photos/400/300?random=1',
+          location: currentLocation ? {
+            lat: currentLocation.coords.latitude,
+            lng: currentLocation.coords.longitude,
+            address: 'Beach Location'
+          } : undefined,
+          createdAt: new Date().toISOString(),
+          tags: ['sunset', 'beach', 'nature'],
+          likes: 42,
+          isLiked: false,
+          isBookmarked: false,
+          author: {
+            id: 'user1',
+            name: 'John Doe',
+            avatar: 'https://picsum.photos/60/60?random=100'
+          }
+        }
+        // Add more sample items...
+      ]
+      
+      setItems(prev => [...prev, ...sampleItems])
+      
+    } catch (error) {
+      console.error('Failed to load items:', error)
+      setAlertMessage('Failed to load items')
+      setShowAlert(true)
+    }
+  }, [currentLocation])
+  
+  // Filter items based on search and segment
+  const filterItems = useCallback(() => {
+    let filtered = items
+    
+    // Apply text search
+    if (searchText) {
+      filtered = filtered.filter(item =>
+        item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.tags.some(tag => tag.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    }
+    
+    // Apply segment filter
+    switch (selectedSegment) {
+      case 'liked':
+        filtered = filtered.filter(item => item.isLiked)
+        break
+      case 'bookmarked':
+        filtered = filtered.filter(item => item.isBookmarked)
+        break
+      case 'recent':
+        filtered = filtered.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ).slice(0, 10)
+        break
+      default:
+        // 'all' - no additional filtering
+        break
+    }
+    
+    setFilteredItems(filtered)
+  }, [items, searchText, selectedSegment])
+  
+  // Handle refresh
+  const handleRefresh = useCallback(async (event: CustomEvent<RefresherEventDetail>) => {
+    try {
+      await loadItems()
+      await nativeService.refreshPerformanceMetrics()
+    } finally {
+      event.detail.complete()
+    }
+  }, [loadItems, nativeService])
+  
+  // Handle infinite scroll
+  const handleInfiniteScroll = useCallback(async (event: CustomEvent<void>) => {
+    try {
+      // Simulate loading more items
+      await new Promise(resolve => setTimeout(resolve, 500))
+      await loadItems()
+    } finally {
+      (event.target as HTMLIonInfiniteScrollElement).complete()
+    }
+  }, [loadItems])
+  
+  // Handle item selection
+  const handleItemSelect = useCallback((item: MediaItem) => {
+    setSelectedItem(item)
+    setIsModalOpen(true)
+    onItemSelect?.(item)
+    
+    // Haptic feedback
+    nativeService.vibrateSelection()
+  }, [onItemSelect, nativeService])
+  
+  // Handle item actions
+  const handleItemLike = useCallback(async (item: MediaItem) => {
+    try {
+      const updatedItem = { ...item, isLiked: !item.isLiked, likes: item.isLiked ? item.likes - 1 : item.likes + 1 }
+      setItems(prev => prev.map(i => i.id === item.id ? updatedItem : i))
+      
+      // Haptic feedback
+      await nativeService.vibrateNotification(item.isLiked ? 'warning' : 'success')
+      
+      onItemLike?.(updatedItem)
+    } catch (error) {
+      console.error('Failed to like item:', error)
+    }
+  }, [onItemLike, nativeService])
+  
+  const handleItemBookmark = useCallback(async (item: MediaItem) => {
+    try {
+      const updatedItem = { ...item, isBookmarked: !item.isBookmarked }
+      setItems(prev => prev.map(i => i.id === item.id ? updatedItem : i))
+      
+      // Haptic feedback
+      await nativeService.vibrate()
+      
+      onItemBookmark?.(updatedItem)
+    } catch (error) {
+      console.error('Failed to bookmark item:', error)
+    }
+  }, [onItemBookmark, nativeService])
+  
+  const handleItemShare = useCallback(async (item: MediaItem) => {
+    try {
+      await nativeService.shareContent({
+        title: item.title,
+        text: item.description,
+        url: item.imageUrl,
+        dialogTitle: 'Share Item'
+      })
+      
+      onItemShare?.(item)
+    } catch (error) {
+      console.error('Failed to share item:', error)
+      setAlertMessage('Failed to share item')
+      setShowAlert(true)
+    }
+  }, [onItemShare, nativeService])
+  
+  // Handle camera
+  const handleTakePhoto = useCallback(async () => {
+    if (!enableCamera) return
+    
+    try {
+      setShowImagePicker(true)
+    } catch (error) {
+      console.error('Failed to open camera options:', error)
+    }
+  }, [enableCamera])
+  
+  const handleCameraAction = useCallback(async (source: 'camera' | 'gallery') => {
+    setShowImagePicker(false)
+    
+    try {
+      const photo = source === 'camera' 
+        ? await takePhoto()
+        : await nativeService.selectFromGallery()
+      
+      if (photo) {
+        // Create new item from photo
+        const newItem: MediaItem = {
+          id: Date.now().toString(),
+          title: `Photo ${new Date().toLocaleDateString()}`,
+          description: 'Captured with mobile app',
+          imageUrl: photo.webPath || '',
+          location: currentLocation ? {
+            lat: currentLocation.coords.latitude,
+            lng: currentLocation.coords.longitude
+          } : undefined,
+          createdAt: new Date().toISOString(),
+          tags: ['photo', 'mobile'],
+          likes: 0,
+          isLiked: false,
+          isBookmarked: false,
+          author: {
+            id: 'current-user',
+            name: 'You',
+            avatar: 'https://picsum.photos/60/60?random=200'
+          }
+        }
+        
+        setItems(prev => [newItem, ...prev])
+        setToastMessage('Photo added successfully!')
+        setShowToast(true)
+      }
+    } catch (error) {
+      console.error('Camera error:', error)
+      setAlertMessage(`Camera error: ${error.message}`)
+      setShowAlert(true)
+    }
+  }, [takePhoto, nativeService, currentLocation])
+  
+  // Render item card
+  const renderItemCard = useCallback((item: MediaItem) => (
+    <IonCard key={item.id} className="item-card" onClick={() => handleItemSelect(item)}>
+      <IonImg src={item.imageUrl} alt={item.title} className="item-image" />
+      
+      <IonCardHeader>
+        <IonCardTitle>{item.title}</IonCardTitle>
+        <div className="item-author">
+          <IonAvatar slot="start" className="author-avatar">
+            <IonImg src={item.author.avatar} alt={item.author.name} />
+          </IonAvatar>
+          <IonLabel>{item.author.name}</IonLabel>
+          <span className="item-date">{new Date(item.createdAt).toLocaleDateString()}</span>
+        </div>
+      </IonCardHeader>
+      
+      <IonCardContent>
+        <p className="item-description">{item.description}</p>
+        
+        <div className="item-tags">
+          {item.tags.map(tag => (
+            <IonChip key={tag} size="small" color="primary" outline>
+              {tag}
+            </IonChip>
+          ))}
+        </div>
+        
+        <div className="item-actions">
+          <IonButton
+            fill="clear"
+            size="small"
+            color={item.isLiked ? 'danger' : 'medium'}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleItemLike(item)
+            }}
+          >
+            <IonIcon icon={heart} slot="start" />
+            {item.likes}
+          </IonButton>
+          
+          <IonButton
+            fill="clear"
+            size="small"
+            color={item.isBookmarked ? 'warning' : 'medium'}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleItemBookmark(item)
+            }}
+          >
+            <IonIcon icon={bookmark} />
+          </IonButton>
+          
+          <IonButton
+            fill="clear"
+            size="small"
+            color="medium"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleItemShare(item)
+            }}
+          >
+            <IonIcon icon={share} />
+          </IonButton>
+        </div>
+      </IonCardContent>
+    </IonCard>
+  ), [handleItemSelect, handleItemLike, handleItemBookmark, handleItemShare])
+  
+  return (
+    <IonPage>
+      <IonHeader translucent>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
+          <IonTitle>Mobile App</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => setShowActionSheet(true)}>
+              <IonIcon icon={menu} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Mobile App</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+        
+        {/* Search and filters */}
+        <div className="search-container">
+          <IonSearchbar
+            value={searchText}
+            debounce={300}
+            onIonInput={(e) => setSearchText(e.detail.value!)}
+            placeholder="Search items..."
+          />
+          
+          <IonSegment
+            value={selectedSegment}
+            onIonChange={(e) => setSelectedSegment(e.detail.value!)}
+            className="filter-segment"
+          >
+            <IonSegmentButton value="all">
+              <IonLabel>All</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="liked">
+              <IonLabel>Liked</IonLabel>
+              <IonBadge color="danger">{items.filter(i => i.isLiked).length}</IonBadge>
+            </IonSegmentButton>
+            <IonSegmentButton value="bookmarked">
+              <IonLabel>Saved</IonLabel>
+              <IonBadge color="warning">{items.filter(i => i.isBookmarked).length}</IonBadge>
+            </IonSegmentButton>
+            <IonSegmentButton value="recent">
+              <IonLabel>Recent</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+        </div>
+        
+        {/* Performance metrics */}
+        {performanceMetrics && (
+          <IonCard className="metrics-card">
+            <IonCardHeader>
+              <IonCardTitle size="small">System Status</IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent>
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="6">
+                    <div className="metric">
+                      <IonLabel>Battery</IonLabel>
+                      <IonProgressBar
+                        value={performanceMetrics.batteryLevel / 100}
+                        color={performanceMetrics.batteryLevel < 20 ? 'danger' : 'success'}
+                      />
+                      <span>{performanceMetrics.batteryLevel}%</span>
+                    </div>
+                  </IonCol>
+                  <IonCol size="6">
+                    <div className="metric">
+                      <IonLabel>Network</IonLabel>
+                      <IonChip color={performanceMetrics.networkType === 'wifi' ? 'success' : 'warning'}>
+                        {performanceMetrics.networkType}
+                      </IonChip>
+                    </div>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonCardContent>
+          </IonCard>
+        )}
+        
+        {/* Loading state */}
+        {isLoading && (
+          <div className="loading-container">
+            <IonProgressBar type="indeterminate" />
+          </div>
+        )}
+        
+        {/* Items list */}
+        <div className="items-container">
+          {filteredItems.map(renderItemCard)}
+        </div>
+        
+        {/* Infinite scroll */}
+        <IonInfiniteScroll onIonInfinite={handleInfiniteScroll} threshold="100px" disabled={isLoading}>
+          <IonInfiniteScrollContent></IonInfiniteScrollContent>
+        </IonInfiniteScroll>
+        
+        {/* Floating Action Button */}
+        {enableCamera && (
+          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+            <IonFabButton onClick={handleTakePhoto}>
+              <IonIcon icon={camera} />
+            </IonFabButton>
+          </IonFab>
+        )}
+      </IonContent>
+      
+      {/* Modals and overlays */}
+      <IonModal isOpen={isModalOpen} onDidDismiss={() => setIsModalOpen(false)}>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>{selectedItem?.title}</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={() => setIsModalOpen(false)}>Close</IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          {selectedItem && (
+            <div className="modal-content">
+              <IonImg src={selectedItem.imageUrl} alt={selectedItem.title} />
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>{selectedItem.title}</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <p>{selectedItem.description}</p>
+                  {selectedItem.location && (
+                    <p>
+                      Location: {selectedItem.location.lat.toFixed(6)}, {selectedItem.location.lng.toFixed(6)}
+                    </p>
+                  )}
+                </IonCardContent>
+              </IonCard>
+            </div>
+          )}
+        </IonContent>
+      </IonModal>
+      
+      <IonAlert
+        isOpen={showAlert}
+        onDidDismiss={() => setShowAlert(false)}
+        header="Notice"
+        message={alertMessage}
+        buttons={['OK']}
+      />
+      
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={3000}
+        position="bottom"
+        buttons={[
+          {
+            text: 'Dismiss',
+            role: 'cancel'
+          }
+        ]}
+      />
+      
+      <IonActionSheet
+        isOpen={showActionSheet}
+        onDidDismiss={() => setShowActionSheet(false)}
+        header="Actions"
+        buttons={[
+          {
+            text: 'Settings',
+            icon: settings,
+            handler: () => {
+              console.log('Settings clicked')
+            }
+          },
+          {
+            text: 'Refresh Data',
+            icon: refresh,
+            handler: () => {
+              loadItems()
+            }
+          },
+          {
+            text: 'Share App',
+            icon: share,
+            handler: async () => {
+              await nativeService.shareContent({
+                title: 'Check out this app!',
+                url: 'https://yourapp.com'
+              })
+            }
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          }
+        ]}
+      />
+      
+      <IonActionSheet
+        isOpen={showImagePicker}
+        onDidDismiss={() => setShowImagePicker(false)}
+        header="Add Photo"
+        buttons={[
+          {
+            text: 'Take Photo',
+            icon: camera,
+            handler: () => handleCameraAction('camera')
+          },
+          {
+            text: 'Choose from Gallery',
+            icon: library,
+            handler: () => handleCameraAction('gallery')
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          }
+        ]}
+      />
+      
+      <IonLoading isOpen={photoLoading} message="Processing photo..." />
+    </IonPage>
+  )
+}
+
+export default MobileApp
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced React Ionic Capacitor development:**
+
+1. **Native Plugin Integration**: Create comprehensive service layer for native features, implement proper error handling and permissions, use TypeScript interfaces for type safety, provide graceful fallbacks for unavailable features.
+
+2. **Mobile-First Design**: Use Ionic components for consistent mobile UX, implement proper touch interactions and gestures, optimize for different screen sizes and orientations, provide haptic feedback for user actions.
+
+3. **Performance Optimization**: Monitor device performance metrics, implement lazy loading and infinite scroll, optimize image loading and caching, use proper memory management techniques.
+
+4. **Cross-Platform Configuration**: Configure platform-specific settings properly, handle iOS and Android differences gracefully, implement proper build configurations, manage permissions and security settings.
+
+5. **User Experience**: Implement proper loading states and error handling, provide offline functionality where possible, use native UI patterns and animations, ensure accessibility compliance.
+
+Always test on real devices, handle platform differences appropriately, implement proper error boundaries and fallbacks, and follow mobile development best practices for optimal user experience. 
