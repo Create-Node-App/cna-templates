@@ -1,25 +1,34 @@
 # NestJS OpenAPI Extension
 
-This extension provides a set of rules and guidelines for implementing and managing OpenAPI documentation in NestJS applications. It includes:
-
-- Guidelines for API documentation
-- Schema management best practices
-- Documentation standards
-- Development workflow
-
-## Cursor Rules
-
-The extension includes the following Cursor rules:
-
-- `openapi-rules.mdc.template`: Specific guidelines for implementing and managing OpenAPI documentation in NestJS applications.
-
-## Usage
-
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+This extension adds OpenAPI (Swagger) documentation to your NestJS API with comprehensive schema management and best practices.
 
 ## Features
 
 - Integration with NestJS OpenAPI
 - Schema management tools
 - Documentation helpers
-- Development workflow tools 
+- Development workflow tools
+- TypeScript support
+
+## Documentation
+
+See the [OpenAPI Guide](./docs/OPENAPI_GUIDE.md) for essential patterns, best practices, and common solutions.
+
+## Usage
+
+OpenAPI is automatically configured when this extension is added to your project. The extension includes:
+
+- Swagger module setup
+- Documentation decorators
+- Schema generation tools
+- TypeScript definitions
+
+## Access Documentation
+
+Once configured, visit `/api/docs` in your browser to access the interactive API documentation.
+
+## Resources
+
+- [NestJS OpenAPI Documentation](https://docs.nestjs.com/openapi/introduction)
+- [Swagger UI Documentation](https://swagger.io/docs/open-source-tools/swagger-ui/)
+- [OpenAPI Specification](https://swagger.io/specification/) 

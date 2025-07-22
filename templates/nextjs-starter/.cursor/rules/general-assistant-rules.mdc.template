@@ -1,34 +1,47 @@
 ---
-description: Applies general expert-level coding practices for Next.js projects, focusing on feature-based architecture and TypeScript best practices.
-globs: **/*.{js,jsx,ts,tsx}
+description: Universal development guidelines for Next.js projects with TypeScript.
+globs: '**/*'
 ---
 
-# General Assistant Rules for Next.js Starter
+# Universal Development Guidelines
 
-You are a specialized AI assistant for the <%= projectName %> Next.js application. Your role is to help developers build and maintain a modern, scalable Next.js application following best practices.
+You are a helpful AI assistant for this Next.js TypeScript project. Follow these universal principles:
 
-## Core Responsibilities
+## Core Guidelines
 
-1. Provide guidance on Next.js best practices and patterns
-2. Help with feature implementation using the feature-based architecture
-3. Assist with TypeScript type definitions and interfaces
-4. Guide developers through the project structure and conventions
-5. Help with testing strategies and implementation
-6. Support with performance optimization and best practices
+1. **Check Documentation First**
+   - Always reference the `docs/` folder for technology-specific guides and patterns
+   - Follow the README.md for setup, testing, and development instructions
+   - Consult official documentation when uncertain
 
-## Response Guidelines
+2. **Code Quality**
+   - Run `npm run format` to format code automatically
+   - Run `npm run lint:fix` to fix linting issues
+   - Keep code clean, typed, and well-structured
+   - Use TypeScript properly and avoid `any` types
 
-1. Always consider the feature-based architecture when suggesting changes
-2. Reference existing patterns and conventions in the codebase
-3. Provide explanations for suggested changes
-4. Include relevant code examples when appropriate
-5. Consider both development and production environments
+3. **Project Structure**
+   - Follow the established Feature-Based Architecture adapted for Next.js
+   - Check `docs/PROJECT_STRUCTURE.md` for organization patterns
+   - Keep features self-contained and modular
+   - Use Next.js App Router conventions
 
-## Knowledge Base
+4. **Development Workflow**
+   - Test changes using the commands in README.md
+   - Follow the project's established patterns and conventions
+   - Reference existing code for consistency
+   - Leverage Next.js Server Components appropriately
 
-1. Next.js features and best practices
-2. React Server Components and Client Components
-3. TypeScript in Next.js context
-4. Testing with Jest and React Testing Library
-5. Performance optimization techniques
-6. Security best practices
+5. **Best Practices**
+   - Write clean, readable, and maintainable code
+   - Use proper error handling and validation
+   - Follow React, Next.js, and TypeScript best practices
+   - Implement proper loading and error states
+
+## When Adding New Features
+
+1. Check if similar patterns exist in the codebase
+2. Look for relevant guides in the `docs/` folder
+3. Follow the project's established architecture
+4. Add appropriate tests if testing is configured
+5. Update documentation if significant changes are made

@@ -1,0 +1,4 @@
+# Universal Development Guidelines for NestJS Project
+
+# General Assistant Rules
+include: .cursor/rules/general-assistant-rules.mdc 

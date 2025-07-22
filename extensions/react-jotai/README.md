@@ -1,25 +1,30 @@
 # React Jotai Extension
 
-This extension provides a set of rules and guidelines for implementing and managing state with Jotai in React applications. It includes:
-
-- Guidelines for state management
-- Atom implementation best practices
-- Performance optimization techniques
-- Development standards
-
-## Cursor Rules
-
-The extension includes the following Cursor rules:
-
-- `jotai-rules.mdc.template`: Specific guidelines for implementing and managing state with Jotai in React applications.
-
-## Usage
-
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+This extension adds Jotai, a small and fast state management library for React with atomic state management capabilities.
 
 ## Features
 
 - Integration with Jotai
-- State management tools
+- Atomic state management
 - Performance optimization
-- Development workflow helpers 
+- Development workflow helpers
+- TypeScript support
+
+## Documentation
+
+See the [Jotai Guide](./docs/JOTAI_GUIDE.md) for essential patterns, best practices, and common solutions.
+
+## Usage
+
+Jotai is automatically configured when this extension is added to your project. The extension includes:
+
+- Jotai core library
+- Utility functions
+- TypeScript definitions
+- Development tools
+
+## Resources
+
+- [Jotai Documentation](https://jotai.org/)
+- [GitHub Repository](https://github.com/pmndrs/jotai)
+- [Examples](https://jotai.org/docs/introduction) 

@@ -1,11 +1,11 @@
 ---
-description: Universal development guidelines for Turborepo monorepo projects with TypeScript.
+description: Universal development guidelines for NestJS projects with TypeScript.
 globs: '**/*'
 ---
 
 # Universal Development Guidelines
 
-You are a helpful AI assistant for this Turborepo monorepo TypeScript project. Follow these universal principles:
+You are a helpful AI assistant for this NestJS TypeScript project. Follow these universal principles:
 
 ## Core Guidelines
 
@@ -20,23 +20,23 @@ You are a helpful AI assistant for this Turborepo monorepo TypeScript project. F
    - Keep code clean, typed, and well-structured
    - Use TypeScript properly and avoid `any` types
 
-3. **Monorepo Structure**
-   - Follow the established package organization in `apps/` and `packages/`
-   - Check `docs/PROJECT_STRUCTURE.md` for monorepo patterns
-   - Keep packages focused and well-defined
-   - Use workspace dependencies appropriately
+3. **Project Structure**
+   - Follow NestJS module-based architecture
+   - Use proper dependency injection patterns
+   - Keep services, controllers, and modules organized
+   - Follow NestJS best practices for scalability
 
 4. **Development Workflow**
    - Test changes using the commands in README.md
    - Follow the project's established patterns and conventions
    - Reference existing code for consistency
-   - Use Turborepo's caching and task orchestration
+   - Use proper error handling and validation
 
 5. **Best Practices**
    - Write clean, readable, and maintainable code
-   - Use proper error handling and validation
-   - Follow monorepo best practices for scalability
-   - Implement proper package dependencies
+   - Use proper DTOs for data validation
+   - Follow REST API and GraphQL conventions
+   - Implement proper error responses and logging
 
 ## When Adding New Features
 
@@ -44,4 +44,4 @@ You are a helpful AI assistant for this Turborepo monorepo TypeScript project. F
 2. Look for relevant guides in the `docs/` folder
 3. Follow the project's established architecture
 4. Add appropriate tests if testing is configured
-5. Update documentation if significant changes are made
+5. Update documentation if significant changes are made 

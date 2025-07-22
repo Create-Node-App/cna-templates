@@ -1,25 +1,50 @@
 # React Ionic Capacitor Extension
 
-This extension provides a set of rules and guidelines for implementing and managing mobile applications with Ionic and Capacitor in React. It includes:
-
-- Guidelines for mobile development
-- Capacitor integration best practices
-- Mobile UI and performance standards
-- Development workflow
-
-## Cursor Rules
-
-The extension includes the following Cursor rules:
-
-- `ionic-capacitor-rules.mdc.template`: Specific guidelines for implementing and managing mobile applications with Ionic and Capacitor in React.
-
-## Usage
-
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+This extension adds Ionic and Capacitor to your React application for building cross-platform mobile applications with native device capabilities.
 
 ## Features
 
 - Integration with Ionic and Capacitor
-- Mobile development tools
-- Native feature helpers
-- Performance optimization 
+- Cross-platform mobile development
+- Native device feature access
+- Mobile UI components
+- Performance optimization for mobile
+- Platform-specific builds
+
+## Usage
+
+Ionic and Capacitor are automatically configured when this extension is added to your project. The extension includes:
+
+- Ionic React components and styling
+- Capacitor native bridge setup
+- Platform configurations (iOS/Android)
+- Native plugin integrations
+- Mobile-optimized build process
+
+## Platform Support
+
+- **iOS**: Native iOS app with App Store distribution
+- **Android**: Native Android app with Play Store distribution
+- **Web**: Progressive Web App (PWA)
+
+## Native Features
+
+Access native device capabilities:
+- Camera and photo library
+- Geolocation and GPS
+- Device storage and file system
+- Push notifications
+- Biometric authentication
+- And many more...
+
+## Development
+
+- `ionic serve` - Development server with live reload
+- `ionic capacitor run ios` - Run on iOS simulator/device
+- `ionic capacitor run android` - Run on Android emulator/device
+
+## Resources
+
+- [Ionic Documentation](https://ionicframework.com/docs)
+- [Capacitor Documentation](https://capacitorjs.com/docs)
+- [Ionic React Documentation](https://ionicframework.com/docs/react) 

@@ -1,4 +1,4 @@
-# Universal Development Guidelines for Turborepo Monorepo
+# Universal Development Guidelines for WebExtension React Vite Project
 
 # General Assistant Rules
 include: .cursor/rules/general-assistant-rules.mdc

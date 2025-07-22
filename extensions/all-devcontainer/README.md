@@ -1,17 +1,33 @@
 # DevContainer Extension
 
-This extension provides a set of rules and guidelines for using DevContainer in projects. It includes:
+This extension sets up a development container with Docker and VSCode for consistent development environments across different machines and team members.
 
-- Guidelines for AI assistant responses
-- Code style and best practices
-- Documentation standards
+## Features
 
-## Cursor Rules
-
-The extension includes the following Cursor rules:
-
-- `devcontainer-specific-rules.mdc.template`: Specific guidelines for configuring and using DevContainer in projects.
+- Docker development container configuration
+- VSCode integration with Dev Containers
+- Consistent environment setup
+- Isolated development dependencies
+- Cross-platform compatibility
 
 ## Usage
 
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+DevContainer is automatically configured when this extension is added to your project. The extension includes:
+
+- `.devcontainer/devcontainer.json` configuration
+- Docker container setup
+- VSCode extensions and settings
+- Development environment consistency
+
+## Benefits
+
+- **Consistency**: Same environment for all team members
+- **Isolation**: Dependencies contained within the container
+- **Portability**: Works across different operating systems
+- **Quick Setup**: New developers can start immediately
+
+## Resources
+
+- [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
+- [Dev Containers Specification](https://containers.dev/)
+- [Docker Documentation](https://docs.docker.com/)

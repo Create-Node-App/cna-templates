@@ -1,25 +1,29 @@
 # React Query Extension
 
-This extension provides a set of rules and guidelines for implementing and managing data fetching and caching in React applications. It includes:
-
-- Guidelines for query implementation
-- Cache management best practices
-- Performance optimization techniques
-- Development standards
-
-## Cursor Rules
-
-The extension includes the following Cursor rules:
-
-- `react-query-rules.mdc.template`: Specific guidelines for implementing and managing data fetching and caching using React Query.
-
-## Usage
-
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+This extension provides integration with TanStack React Query for efficient data fetching, caching, and state management in React applications.
 
 ## Features
 
 - Integration with React Query
 - Cache management tools
 - Performance optimization
-- Development workflow helpers 
+- Development workflow helpers
+- TypeScript support
+
+## Documentation
+
+See the [React Query Guide](./docs/REACT_QUERY_GUIDE.md) for essential patterns, best practices, and common solutions.
+
+## Usage
+
+React Query is automatically configured when this extension is added to your project. The extension includes:
+
+- TanStack Query setup
+- Query client configuration
+- TypeScript definitions
+- Development tools
+
+## Resources
+
+- [TanStack Query Documentation](https://tanstack.com/query/latest)
+- [React Query Migration Guide](https://tanstack.com/query/v4/docs/react/guides/migrating-to-react-query-4) 

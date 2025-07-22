@@ -1,1 +1,2 @@
 - [Postgres + PGAdmin4](./COMPOSE_POSTGRES.md) - Documentation on how to run Postgres and PGAdmin4 using Docker Compose
+- [Drizzle PostgreSQL Guide](./DRIZZLE_POSTGRES_GUIDE.md) - Essential patterns and best practices for Drizzle ORM with PostgreSQL

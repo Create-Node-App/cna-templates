@@ -1,25 +1,4 @@
-# Cursor Rules for Next.js Starter Template
+# Universal Development Guidelines for Next.js Project
 
 # General Assistant Rules
 include: .cursor/rules/general-assistant-rules.mdc
-
-# Coding Style Rules
-include: .cursor/rules/coding-style-rules.mdc
-
-# Coding Process Rules
-include: .cursor/rules/coding-process-rules.mdc
-
-# Frontend Stack Rules
-include: .cursor/rules/frontend-stack-rules.mdc
-
-# Backend Stack Rules
-include: .cursor/rules/backend-stack-rules.mdc
-
-# Editing Code Rules
-include: .cursor/rules/editing-code-rules.mdc
-
-# History and Next Task Rules
-include: .cursor/rules/history-and-next-task-rules.mdc
-
-# Assistant Response Rules
-include: .cursor/rules/assistant-response-rules.mdc

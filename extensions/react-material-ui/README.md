@@ -1,17 +1,30 @@
 # React Material UI Extension
 
-This extension provides a set of rules and guidelines for using Material UI in React projects. It includes:
+This extension adds Material UI components and theming capabilities to your React application with TypeScript support and best practices.
 
-- Guidelines for AI assistant responses
-- Code style and best practices
-- Documentation standards
+## Features
 
-## Cursor Rules
+- Integration with Material UI v5
+- Component management tools
+- Theming helpers
+- TypeScript support
+- Performance optimization
 
-The extension includes the following Cursor rules:
+## Documentation
 
-- `material-ui-rules.mdc.template`: Best practices and advanced guidelines for using Material UI in React projects.
+See the [Material UI Guide](./docs/MATERIAL_UI_GUIDE.md) for essential patterns, best practices, and common solutions.
 
 ## Usage
 
-To use this extension, include the Cursor rules in your project's `.cursor/rules` directory.
+Material UI is automatically configured when this extension is added to your project. The extension includes:
+
+- Material UI core components
+- Theming setup
+- Icon components
+- TypeScript definitions
+
+## Resources
+
+- [Material UI Documentation](https://mui.com/)
+- [Component Demos](https://mui.com/components/)
+- [Theming Guide](https://mui.com/customization/theming/)
