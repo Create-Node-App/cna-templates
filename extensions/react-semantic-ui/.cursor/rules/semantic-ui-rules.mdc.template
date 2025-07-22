@@ -1,34 +1,1337 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and using Semantic UI React components in React applications.
-globs: '**/*.{ts,tsx,js,jsx}'
+description: Advanced React Semantic UI patterns for component composition, theming, accessibility, and enterprise-grade design systems with performance optimization.
+globs: '**/*.{ts,tsx,js,jsx,css,less}'
 ---
 
-# Semantic UI React Rules
+# Advanced React Semantic UI Implementation
 
-You are an expert in Semantic UI React and follow these guidelines:
+## Enterprise Component Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create components with clear, descriptive names and organize them by feature/domain.
-3. Use Semantic UI's built-in theming system for consistent styling.
-4. Leverage Semantic UI's responsive utilities for mobile-first design.
-5. Use Semantic UI's color system for consistent branding.
-6. Follow Semantic UI's design patterns for consistent UX.
-7. Document component behavior with JSDoc or TypeScript types.
-8. Implement proper error boundaries and loading states.
-9. Use proper component composition and avoid prop drilling.
-10. Follow accessibility best practices.
-
-## Anti-Patterns to Avoid
-
-1. Never use Semantic UI components for server-side rendering without proper hydration.
-2. Avoid using Semantic UI components for complex, custom UI elements.
-3. Don't use Semantic UI components for performance-critical UI elements.
-4. Avoid using Semantic UI components for complex animations.
-5. Don't use Semantic UI components for complex, custom layouts.
-
-## Example Implementation
-
+**Comprehensive Semantic UI React implementation with advanced patterns:**
 ```tsx
+import React, { useCallback, useMemo, useRef, useEffect, useState, createContext, useContext } from 'react'
+import {
+  Button,
+  Card,
+  Container,
+  Dimmer,
+  Dropdown,
+  Form,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  Input,
+  Label,
+  List,
+  Loader,
+  Menu,
+  Message,
+  Modal,
+  Pagination,
+  Progress,
+  Search,
+  Segment,
+  Table,
+  Transition,
+  Step,
+  Tab,
+  Checkbox,
+  Radio,
+  Rating,
+  Statistic,
+  SemanticCOLORS,
+  SemanticSIZES,
+  SemanticWIDTHS
+} from 'semantic-ui-react'
+import { SemanticToastContainer, toast } from 'react-semantic-toasts'
+import 'react-semantic-toasts/styles/react-semantic-alert.css'
+
+// ✅ Advanced theme configuration system
+interface ThemeConfig {
+  primaryColor: SemanticCOLORS
+  secondaryColor: SemanticCOLORS
+  accentColor: SemanticCOLORS
+  errorColor: SemanticCOLORS
+  warningColor: SemanticCOLORS
+  successColor: SemanticCOLORS
+  infoColor: SemanticCOLORS
+  sizes: {
+    mini: SemanticSIZES
+    tiny: SemanticSIZES
+    small: SemanticSIZES
+    medium: SemanticSIZES
+    large: SemanticSIZES
+    big: SemanticSIZES
+    huge: SemanticSIZES
+    massive: SemanticSIZES
+  }
+  spacing: {
+    xs: string
+    sm: string
+    md: string
+    lg: string
+    xl: string
+    xxl: string
+  }
+  borderRadius: {
+    none: string
+    sm: string
+    md: string
+    lg: string
+    full: string
+  }
+  shadows: {
+    none: string
+    sm: string
+    md: string
+    lg: string
+    xl: string
+  }
+  transitions: {
+    fast: number
+    medium: number
+    slow: number
+  }
+  breakpoints: {
+    mobile: number
+    tablet: number
+    computer: number
+    largeScreen: number
+    widescreen: number
+  }
+}
+
+const defaultTheme: ThemeConfig = {
+  primaryColor: 'blue',
+  secondaryColor: 'teal',
+  accentColor: 'purple',
+  errorColor: 'red',
+  warningColor: 'orange',
+  successColor: 'green',
+  infoColor: 'blue',
+  sizes: {
+    mini: 'mini',
+    tiny: 'tiny',
+    small: 'small',
+    medium: 'medium',
+    large: 'large',
+    big: 'big',
+    huge: 'huge',
+    massive: 'massive'
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    xxl: '3rem'
+  },
+  borderRadius: {
+    none: '0',
+    sm: '0.125rem',
+    md: '0.25rem',
+    lg: '0.375rem',
+    full: '9999px'
+  },
+  shadows: {
+    none: 'none',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+  },
+  transitions: {
+    fast: 150,
+    medium: 300,
+    slow: 500
+  },
+  breakpoints: {
+    mobile: 320,
+    tablet: 768,
+    computer: 992,
+    largeScreen: 1200,
+    widescreen: 1920
+  }
+}
+
+// ✅ Theme provider context
+const ThemeContext = createContext<ThemeConfig>(defaultTheme)
+
+export const SemanticThemeProvider: React.FC<{
+  theme?: Partial<ThemeConfig>
+  children: React.ReactNode
+}> = ({ theme = {}, children }) => {
+  const mergedTheme = useMemo(() => ({
+    ...defaultTheme,
+    ...theme
+  }), [theme])
+  
+  // Apply CSS variables for dynamic theming
+  useEffect(() => {
+    const root = document.documentElement
+    
+    root.style.setProperty('--primary-color', mergedTheme.primaryColor)
+    root.style.setProperty('--secondary-color', mergedTheme.secondaryColor)
+    root.style.setProperty('--accent-color', mergedTheme.accentColor)
+    root.style.setProperty('--error-color', mergedTheme.errorColor)
+    root.style.setProperty('--warning-color', mergedTheme.warningColor)
+    root.style.setProperty('--success-color', mergedTheme.successColor)
+    root.style.setProperty('--info-color', mergedTheme.infoColor)
+    
+    // Spacing variables
+    Object.entries(mergedTheme.spacing).forEach(([key, value]) => {
+      root.style.setProperty(`--spacing-${key}`, value)
+    })
+    
+    // Border radius variables
+    Object.entries(mergedTheme.borderRadius).forEach(([key, value]) => {
+      root.style.setProperty(`--border-radius-${key}`, value)
+    })
+    
+    // Shadow variables
+    Object.entries(mergedTheme.shadows).forEach(([key, value]) => {
+      root.style.setProperty(`--shadow-${key}`, value)
+    })
+    
+    // Transition variables
+    Object.entries(mergedTheme.transitions).forEach(([key, value]) => {
+      root.style.setProperty(`--transition-${key}`, `${value}ms`)
+    })
+  }, [mergedTheme])
+  
+  return (
+    <ThemeContext.Provider value={mergedTheme}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export const useSemanticTheme = () => useContext(ThemeContext)
+
+// ✅ Advanced user management interface with Semantic UI
+interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  role: 'admin' | 'user' | 'moderator' | 'guest'
+  status: 'active' | 'inactive' | 'suspended' | 'pending'
+  department: string
+  joinDate: Date
+  lastActive: Date
+  permissions: string[]
+  profile: {
+    bio: string
+    location: string
+    phone?: string
+    website?: string
+    skills: string[]
+    languages: Array<{
+      language: string
+      proficiency: 'basic' | 'intermediate' | 'advanced' | 'native'
+    }>
+    socialLinks: {
+      linkedin?: string
+      twitter?: string
+      github?: string
+    }
+  }
+  preferences: {
+    theme: 'light' | 'dark' | 'auto'
+    notifications: {
+      email: boolean
+      push: boolean
+      desktop: boolean
+    }
+    privacy: {
+      profileVisible: boolean
+      activityVisible: boolean
+      contactInfoVisible: boolean
+    }
+  }
+  statistics: {
+    projectsCompleted: number
+    tasksCompleted: number
+    teamCollaborations: number
+    averageRating: number
+    totalWorkHours: number
+  }
+}
+
+// ✅ Advanced data table with Semantic UI
+export const UserDataTable: React.FC<{
+  users: User[]
+  loading?: boolean
+  onUserSelect?: (user: User) => void
+  onUserEdit?: (user: User) => void
+  onUserDelete?: (user: User) => void
+  onBulkAction?: (action: string, users: User[]) => void
+}> = ({
+  users,
+  loading = false,
+  onUserSelect,
+  onUserEdit,
+  onUserDelete,
+  onBulkAction
+}) => {
+  const theme = useSemanticTheme()
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
+  const [sortColumn, setSortColumn] = useState<keyof User>('name')
+  const [sortDirection, setSortDirection] = useState<'ascending' | 'descending'>('ascending')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [filterRole, setFilterRole] = useState<string>('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  
+  // Filtered and sorted users
+  const processedUsers = useMemo(() => {
+    let filtered = users
+    
+    // Apply filters
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(user => user.status === filterStatus)
+    }
+    
+    if (filterRole !== 'all') {
+      filtered = filtered.filter(user => user.role === filterRole)
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aValue = a[sortColumn]
+      let bValue = b[sortColumn]
+      
+      // Handle date sorting
+      if (aValue instanceof Date && bValue instanceof Date) {
+        aValue = aValue.getTime() as any
+        bValue = bValue.getTime() as any
+      }
+      
+      // Handle string sorting
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase() as any
+        bValue = bValue.toLowerCase() as any
+      }
+      
+      if (sortDirection === 'ascending') {
+        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0
+      } else {
+        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0
+      }
+    })
+    
+    return filtered
+  }, [users, filterStatus, filterRole, sortColumn, sortDirection])
+  
+  // Paginated users
+  const paginatedUsers = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    return processedUsers.slice(startIndex, endIndex)
+  }, [processedUsers, currentPage, pageSize])
+  
+  const totalPages = Math.ceil(processedUsers.length / pageSize)
+  
+  // Handle column sorting
+  const handleSort = useCallback((column: keyof User) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === 'ascending' ? 'descending' : 'ascending')
+    } else {
+      setSortColumn(column)
+      setSortDirection('ascending')
+    }
+  }, [sortColumn, sortDirection])
+  
+  // Handle row selection
+  const handleRowSelect = useCallback((userId: string, selected: boolean) => {
+    setSelectedUsers(prev => {
+      const newSet = new Set(prev)
+      if (selected) {
+        newSet.add(userId)
+      } else {
+        newSet.delete(userId)
+      }
+      return newSet
+    })
+  }, [])
+  
+  // Handle select all
+  const handleSelectAll = useCallback((selected: boolean) => {
+    if (selected) {
+      setSelectedUsers(new Set(paginatedUsers.map(user => user.id)))
+    } else {
+      setSelectedUsers(new Set())
+    }
+  }, [paginatedUsers])
+  
+  // Bulk action handlers
+  const handleBulkAction = useCallback((action: string) => {
+    const selectedUsersList = paginatedUsers.filter(user => selectedUsers.has(user.id))
+    if (selectedUsersList.length > 0 && onBulkAction) {
+      onBulkAction(action, selectedUsersList)
+      setSelectedUsers(new Set()) // Clear selection after action
+    }
+  }, [paginatedUsers, selectedUsers, onBulkAction])
+  
+  // Status color mapping
+  const getStatusColor = (status: User['status']): SemanticCOLORS => {
+    switch (status) {
+      case 'active': return 'green'
+      case 'inactive': return 'grey'
+      case 'suspended': return 'red'
+      case 'pending': return 'yellow'
+      default: return 'grey'
+    }
+  }
+  
+  // Role color mapping
+  const getRoleColor = (role: User['role']): SemanticCOLORS => {
+    switch (role) {
+      case 'admin': return 'red'
+      case 'moderator': return 'orange'
+      case 'user': return 'blue'
+      case 'guest': return 'grey'
+      default: return 'grey'
+    }
+  }
+  
+  return (
+    <Segment loading={loading} style={{ minHeight: '400px' }}>
+      {/* Filter Controls */}
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={4}>
+            <Dropdown
+              placeholder="Filter by Status"
+              selection
+              options={[
+                { key: 'all', value: 'all', text: 'All Statuses' },
+                { key: 'active', value: 'active', text: 'Active' },
+                { key: 'inactive', value: 'inactive', text: 'Inactive' },
+                { key: 'suspended', value: 'suspended', text: 'Suspended' },
+                { key: 'pending', value: 'pending', text: 'Pending' }
+              ]}
+              value={filterStatus}
+              onChange={(_, { value }) => setFilterStatus(value as string)}
+            />
+          </Grid.Column>
+          
+          <Grid.Column width={4}>
+            <Dropdown
+              placeholder="Filter by Role"
+              selection
+              options={[
+                { key: 'all', value: 'all', text: 'All Roles' },
+                { key: 'admin', value: 'admin', text: 'Admin' },
+                { key: 'moderator', value: 'moderator', text: 'Moderator' },
+                { key: 'user', value: 'user', text: 'User' },
+                { key: 'guest', value: 'guest', text: 'Guest' }
+              ]}
+              value={filterRole}
+              onChange={(_, { value }) => setFilterRole(value as string)}
+            />
+          </Grid.Column>
+          
+          <Grid.Column width={4}>
+            <Dropdown
+              placeholder="Items per page"
+              selection
+              options={[
+                { key: 5, value: 5, text: '5 per page' },
+                { key: 10, value: 10, text: '10 per page' },
+                { key: 25, value: 25, text: '25 per page' },
+                { key: 50, value: 50, text: '50 per page' }
+              ]}
+              value={pageSize}
+              onChange={(_, { value }) => {
+                setPageSize(value as number)
+                setCurrentPage(1)
+              }}
+            />
+          </Grid.Column>
+          
+          <Grid.Column width={4} textAlign="right">
+            {selectedUsers.size > 0 && (
+              <Dropdown
+                trigger={
+                  <Button primary>
+                    Bulk Actions ({selectedUsers.size})
+                    <Icon name="dropdown" />
+                  </Button>
+                }
+                pointing="top right"
+                icon={null}
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    text="Activate Selected"
+                    icon="check circle"
+                    onClick={() => handleBulkAction('activate')}
+                  />
+                  <Dropdown.Item
+                    text="Deactivate Selected"
+                    icon="ban"
+                    onClick={() => handleBulkAction('deactivate')}
+                  />
+                  <Dropdown.Divider />
+                  <Dropdown.Item
+                    text="Delete Selected"
+                    icon="trash"
+                    onClick={() => handleBulkAction('delete')}
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      
+      {/* Data Table */}
+      <Table celled selectable sortable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell width={1}>
+              <Checkbox
+                checked={selectedUsers.size === paginatedUsers.length && paginatedUsers.length > 0}
+                indeterminate={selectedUsers.size > 0 && selectedUsers.size < paginatedUsers.length}
+                onChange={(_, { checked }) => handleSelectAll(checked || false)}
+              />
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'name' ? sortDirection : undefined}
+              onClick={() => handleSort('name')}
+            >
+              Name
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'email' ? sortDirection : undefined}
+              onClick={() => handleSort('email')}
+            >
+              Email
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'role' ? sortDirection : undefined}
+              onClick={() => handleSort('role')}
+            >
+              Role
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'status' ? sortDirection : undefined}
+              onClick={() => handleSort('status')}
+            >
+              Status
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'department' ? sortDirection : undefined}
+              onClick={() => handleSort('department')}
+            >
+              Department
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell
+              sorted={sortColumn === 'lastActive' ? sortDirection : undefined}
+              onClick={() => handleSort('lastActive')}
+            >
+              Last Active
+            </Table.HeaderCell>
+            
+            <Table.HeaderCell width={2}>
+              Actions
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        
+        <Table.Body>
+          {paginatedUsers.map(user => (
+            <Table.Row
+              key={user.id}
+              active={selectedUsers.has(user.id)}
+            >
+              <Table.Cell>
+                <Checkbox
+                  checked={selectedUsers.has(user.id)}
+                  onChange={(_, { checked }) => handleRowSelect(user.id, checked || false)}
+                />
+              </Table.Cell>
+              
+              <Table.Cell>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Image
+                    src={user.avatar || '/default-avatar.png'}
+                    avatar
+                    size="mini"
+                    style={{ marginRight: theme.spacing.sm }}
+                  />
+                  <div>
+                    <div style={{ fontWeight: 'bold' }}>{user.name}</div>
+                    {user.profile.location && (
+                      <div style={{ fontSize: '0.8em', color: '#666' }}>
+                        <Icon name="marker" size="small" />
+                        {user.profile.location}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Table.Cell>
+              
+              <Table.Cell>
+                <div>{user.email}</div>
+                {user.profile.phone && (
+                  <div style={{ fontSize: '0.8em', color: '#666' }}>
+                    <Icon name="phone" size="small" />
+                    {user.profile.phone}
+                  </div>
+                )}
+              </Table.Cell>
+              
+              <Table.Cell>
+                <Label color={getRoleColor(user.role)} size="small">
+                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                </Label>
+              </Table.Cell>
+              
+              <Table.Cell>
+                <Label color={getStatusColor(user.status)} size="small">
+                  {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                </Label>
+              </Table.Cell>
+              
+              <Table.Cell>{user.department}</Table.Cell>
+              
+              <Table.Cell>
+                <div>{new Date(user.lastActive).toLocaleDateString()}</div>
+                <div style={{ fontSize: '0.8em', color: '#666' }}>
+                  {new Date(user.lastActive).toLocaleTimeString()}
+                </div>
+              </Table.Cell>
+              
+              <Table.Cell>
+                <Button.Group size="tiny">
+                  <Button
+                    icon="eye"
+                    onClick={() => onUserSelect?.(user)}
+                    title="View Details"
+                  />
+                  <Button
+                    icon="edit"
+                    onClick={() => onUserEdit?.(user)}
+                    title="Edit User"
+                  />
+                  <Button
+                    icon="trash"
+                    color="red"
+                    onClick={() => onUserDelete?.(user)}
+                    title="Delete User"
+                  />
+                </Button.Group>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+        
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan="8">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  Showing {((currentPage - 1) * pageSize) + 1} to{' '}
+                  {Math.min(currentPage * pageSize, processedUsers.length)} of{' '}
+                  {processedUsers.length} users
+                </div>
+                
+                <Pagination
+                  activePage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(_, { activePage }) => setCurrentPage(activePage as number)}
+                  size="mini"
+                />
+              </div>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+      
+      {processedUsers.length === 0 && (
+        <Segment placeholder>
+          <Header icon>
+            <Icon name="users" />
+            No users found
+          </Header>
+          <div>Try adjusting your filters to see more results.</div>
+        </Segment>
+      )}
+    </Segment>
+  )
+}
+
+// ✅ Advanced user profile modal with form validation
+export const UserProfileModal: React.FC<{
+  user: User | null
+  open: boolean
+  onClose: () => void
+  onSave: (user: User) => Promise<void>
+  mode: 'view' | 'edit' | 'create'
+}> = ({ user, open, onClose, onSave, mode }) => {
+  const theme = useSemanticTheme()
+  const [formData, setFormData] = useState<Partial<User>>({})
+  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [activeTab, setActiveTab] = useState(0)
+  
+  // Initialize form data
+  useEffect(() => {
+    if (user && open) {
+      setFormData(user)
+    } else if (mode === 'create' && open) {
+      setFormData({
+        name: '',
+        email: '',
+        role: 'user',
+        status: 'active',
+        department: '',
+        profile: {
+          bio: '',
+          location: '',
+          skills: [],
+          languages: [],
+          socialLinks: {}
+        },
+        preferences: {
+          theme: 'light',
+          notifications: {
+            email: true,
+            push: false,
+            desktop: false
+          },
+          privacy: {
+            profileVisible: true,
+            activityVisible: true,
+            contactInfoVisible: true
+          }
+        }
+      })
+    }
+  }, [user, open, mode])
+  
+  // Form validation
+  const validateForm = useCallback(() => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Name is required'
+    }
+    
+    if (!formData.email?.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format'
+    }
+    
+    if (!formData.department?.trim()) {
+      newErrors.department = 'Department is required'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }, [formData])
+  
+  // Handle form submission
+  const handleSubmit = useCallback(async () => {
+    if (!validateForm()) {
+      toast({
+        type: 'error',
+        title: 'Validation Error',
+        description: 'Please fix the errors before submitting.',
+        time: 4000
+      })
+      return
+    }
+    
+    setLoading(true)
+    try {
+      await onSave(formData as User)
+      
+      toast({
+        type: 'success',
+        title: mode === 'create' ? 'User Created' : 'User Updated',
+        description: `${formData.name} has been ${mode === 'create' ? 'created' : 'updated'} successfully.`,
+        time: 3000
+      })
+      
+      onClose()
+    } catch (error) {
+      toast({
+        type: 'error',
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'An error occurred',
+        time: 5000
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [formData, validateForm, onSave, onClose, mode])
+  
+  // Handle field changes
+  const handleFieldChange = useCallback((field: string, value: any) => {
+    setFormData(prev => {
+      const keys = field.split('.')
+      let updated = { ...prev }
+      let current: any = updated
+      
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (!(keys[i] in current)) {
+          current[keys[i]] = {}
+        }
+        current[keys[i]] = { ...current[keys[i]] }
+        current = current[keys[i]]
+      }
+      
+      current[keys[keys.length - 1]] = value
+      return updated
+    })
+    
+    // Clear error for this field
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      })
+    }
+  }, [errors])
+  
+  // Tab panes for the modal
+  const panes = [
+    {
+      menuItem: { key: 'basic', icon: 'user', content: 'Basic Info' },
+      render: () => (
+        <Tab.Pane>
+          <Form>
+            <Form.Group widths="equal">
+              <Form.Input
+                label="Full Name"
+                placeholder="Enter full name"
+                value={formData.name || ''}
+                onChange={(_, { value }) => handleFieldChange('name', value)}
+                error={errors.name}
+                disabled={mode === 'view'}
+                required
+              />
+              
+              <Form.Input
+                label="Email"
+                placeholder="Enter email address"
+                value={formData.email || ''}
+                onChange={(_, { value }) => handleFieldChange('email', value)}
+                error={errors.email}
+                disabled={mode === 'view'}
+                required
+              />
+            </Form.Group>
+            
+            <Form.Group widths="equal">
+              <Form.Select
+                label="Role"
+                placeholder="Select role"
+                options={[
+                  { key: 'user', value: 'user', text: 'User' },
+                  { key: 'moderator', value: 'moderator', text: 'Moderator' },
+                  { key: 'admin', value: 'admin', text: 'Admin' },
+                  { key: 'guest', value: 'guest', text: 'Guest' }
+                ]}
+                value={formData.role || 'user'}
+                onChange={(_, { value }) => handleFieldChange('role', value)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Select
+                label="Status"
+                placeholder="Select status"
+                options={[
+                  { key: 'active', value: 'active', text: 'Active' },
+                  { key: 'inactive', value: 'inactive', text: 'Inactive' },
+                  { key: 'suspended', value: 'suspended', text: 'Suspended' },
+                  { key: 'pending', value: 'pending', text: 'Pending' }
+                ]}
+                value={formData.status || 'active'}
+                onChange={(_, { value }) => handleFieldChange('status', value)}
+                disabled={mode === 'view'}
+              />
+            </Form.Group>
+            
+            <Form.Input
+              label="Department"
+              placeholder="Enter department"
+              value={formData.department || ''}
+              onChange={(_, { value }) => handleFieldChange('department', value)}
+              error={errors.department}
+              disabled={mode === 'view'}
+              required
+            />
+          </Form>
+        </Tab.Pane>
+      )
+    },
+    {
+      menuItem: { key: 'profile', icon: 'address card', content: 'Profile' },
+      render: () => (
+        <Tab.Pane>
+          <Form>
+            <Form.TextArea
+              label="Bio"
+              placeholder="Tell us about yourself"
+              value={formData.profile?.bio || ''}
+              onChange={(_, { value }) => handleFieldChange('profile.bio', value)}
+              disabled={mode === 'view'}
+            />
+            
+            <Form.Group widths="equal">
+              <Form.Input
+                label="Location"
+                placeholder="City, Country"
+                value={formData.profile?.location || ''}
+                onChange={(_, { value }) => handleFieldChange('profile.location', value)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Input
+                label="Phone"
+                placeholder="+1 (555) 123-4567"
+                value={formData.profile?.phone || ''}
+                onChange={(_, { value }) => handleFieldChange('profile.phone', value)}
+                disabled={mode === 'view'}
+              />
+            </Form.Group>
+            
+            <Form.Input
+              label="Website"
+              placeholder="https://example.com"
+              value={formData.profile?.website || ''}
+              onChange={(_, { value }) => handleFieldChange('profile.website', value)}
+              disabled={mode === 'view'}
+            />
+            
+            <Header as="h5">Social Links</Header>
+            <Form.Group widths="equal">
+              <Form.Input
+                label="LinkedIn"
+                placeholder="https://linkedin.com/in/username"
+                value={formData.profile?.socialLinks?.linkedin || ''}
+                onChange={(_, { value }) => handleFieldChange('profile.socialLinks.linkedin', value)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Input
+                label="GitHub"
+                placeholder="https://github.com/username"
+                value={formData.profile?.socialLinks?.github || ''}
+                onChange={(_, { value }) => handleFieldChange('profile.socialLinks.github', value)}
+                disabled={mode === 'view'}
+              />
+            </Form.Group>
+          </Form>
+        </Tab.Pane>
+      )
+    },
+    {
+      menuItem: { key: 'preferences', icon: 'settings', content: 'Preferences' },
+      render: () => (
+        <Tab.Pane>
+          <Form>
+            <Header as="h5">Theme</Header>
+            <Form.Group grouped>
+              {['light', 'dark', 'auto'].map(theme => (
+                <Form.Radio
+                  key={theme}
+                  label={theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  value={theme}
+                  checked={formData.preferences?.theme === theme}
+                  onChange={() => handleFieldChange('preferences.theme', theme)}
+                  disabled={mode === 'view'}
+                />
+              ))}
+            </Form.Group>
+            
+            <Header as="h5">Notifications</Header>
+            <Form.Group grouped>
+              <Form.Checkbox
+                label="Email notifications"
+                checked={formData.preferences?.notifications?.email || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.notifications.email', checked)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Checkbox
+                label="Push notifications"
+                checked={formData.preferences?.notifications?.push || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.notifications.push', checked)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Checkbox
+                label="Desktop notifications"
+                checked={formData.preferences?.notifications?.desktop || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.notifications.desktop', checked)}
+                disabled={mode === 'view'}
+              />
+            </Form.Group>
+            
+            <Header as="h5">Privacy</Header>
+            <Form.Group grouped>
+              <Form.Checkbox
+                label="Profile visible to others"
+                checked={formData.preferences?.privacy?.profileVisible || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.privacy.profileVisible', checked)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Checkbox
+                label="Activity visible to others"
+                checked={formData.preferences?.privacy?.activityVisible || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.privacy.activityVisible', checked)}
+                disabled={mode === 'view'}
+              />
+              
+              <Form.Checkbox
+                label="Contact info visible to others"
+                checked={formData.preferences?.privacy?.contactInfoVisible || false}
+                onChange={(_, { checked }) => handleFieldChange('preferences.privacy.contactInfoVisible', checked)}
+                disabled={mode === 'view'}
+              />
+            </Form.Group>
+          </Form>
+        </Tab.Pane>
+      )
+    }
+  ]
+  
+  if (mode === 'view' && user?.statistics) {
+    panes.push({
+      menuItem: { key: 'stats', icon: 'chart bar', content: 'Statistics' },
+      render: () => (
+        <Tab.Pane>
+          <Statistic.Group size="tiny" widths="three">
+            <Statistic>
+              <Statistic.Value>{user.statistics.projectsCompleted}</Statistic.Value>
+              <Statistic.Label>Projects</Statistic.Label>
+            </Statistic>
+            
+            <Statistic>
+              <Statistic.Value>{user.statistics.tasksCompleted}</Statistic.Value>
+              <Statistic.Label>Tasks</Statistic.Label>
+            </Statistic>
+            
+            <Statistic>
+              <Statistic.Value>{user.statistics.teamCollaborations}</Statistic.Value>
+              <Statistic.Label>Collaborations</Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+          
+          <div style={{ marginTop: theme.spacing.lg }}>
+            <Header as="h5">Performance Rating</Header>
+            <Rating
+              icon="star"
+              defaultRating={user.statistics.averageRating}
+              maxRating={5}
+              disabled
+            />
+            <div style={{ marginTop: theme.spacing.sm }}>
+              {user.statistics.averageRating.toFixed(1)} out of 5
+            </div>
+          </div>
+          
+          <div style={{ marginTop: theme.spacing.lg }}>
+            <Header as="h5">Work Hours</Header>
+            <Progress
+              value={user.statistics.totalWorkHours}
+              total={2000}
+              progress="ratio"
+              color="blue"
+            />
+            <div style={{ textAlign: 'center', marginTop: theme.spacing.sm }}>
+              {user.statistics.totalWorkHours} / 2000 hours this year
+            </div>
+          </div>
+        </Tab.Pane>
+      )
+    })
+  }
+  
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      size="large"
+      closeIcon
+    >
+      <Modal.Header>
+        <Icon name={mode === 'create' ? 'plus' : mode === 'edit' ? 'edit' : 'user'} />
+        {mode === 'create' ? 'Create New User' : 
+         mode === 'edit' ? `Edit ${user?.name}` : 
+         `User Profile - ${user?.name}`}
+      </Modal.Header>
+      
+      <Modal.Content>
+        <Tab
+          panes={panes}
+          activeIndex={activeTab}
+          onTabChange={(_, { activeIndex }) => setActiveTab(activeIndex as number)}
+        />
+      </Modal.Content>
+      
+      <Modal.Actions>
+        <Button onClick={onClose}>
+          {mode === 'view' ? 'Close' : 'Cancel'}
+        </Button>
+        
+        {mode !== 'view' && (
+          <Button
+            color={theme.primaryColor}
+            loading={loading}
+            onClick={handleSubmit}
+          >
+            <Icon name="checkmark" />
+            {mode === 'create' ? 'Create User' : 'Save Changes'}
+          </Button>
+        )}
+      </Modal.Actions>
+    </Modal>
+  )
+}
+
+// ✅ Advanced search component with debouncing
+export const AdvancedUserSearch: React.FC<{
+  users: User[]
+  onResultSelect: (user: User) => void
+  placeholder?: string
+}> = ({ users, onResultSelect, placeholder = "Search users..." }) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [results, setResults] = useState<User[]>([])
+  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  
+  // Debounced search function
+  const performSearch = useCallback((term: string) => {
+    if (!term.trim()) {
+      setResults([])
+      return
+    }
+    
+    setIsLoading(true)
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      const searchResults = users.filter(user => {
+        const searchLower = term.toLowerCase()
+        return (
+          user.name.toLowerCase().includes(searchLower) ||
+          user.email.toLowerCase().includes(searchLower) ||
+          user.department.toLowerCase().includes(searchLower) ||
+          user.profile.bio.toLowerCase().includes(searchLower) ||
+          user.profile.skills.some(skill => skill.toLowerCase().includes(searchLower))
+        )
+      }).slice(0, 10) // Limit results
+      
+      setResults(searchResults)
+      setIsLoading(false)
+    }, 300)
+  }, [users])
+  
+  // Handle search input change
+  const handleSearchChange = useCallback((_, { value }: { value: string }) => {
+    setSearchTerm(value)
+    
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(value)
+    }, 300)
+  }, [performSearch])
+  
+  // Handle result selection
+  const handleResultSelect = useCallback((_, { result }: { result: User }) => {
+    onResultSelect(result)
+    setSearchTerm('')
+    setResults([])
+  }, [onResultSelect])
+  
+  // Format results for Search component
+  const formattedResults = results.map(user => ({
+    title: user.name,
+    description: `${user.email} • ${user.department}`,
+    image: user.avatar || '/default-avatar.png',
+    user: user // Pass the full user object
+  }))
+  
+  return (
+    <Search
+      loading={isLoading}
+      onResultSelect={handleResultSelect}
+      onSearchChange={handleSearchChange}
+      results={formattedResults}
+      value={searchTerm}
+      placeholder={placeholder}
+      fluid
+      resultRenderer={({ title, description, image, user }) => (
+        <div style={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
+          <Image src={image} avatar size="mini" style={{ marginRight: '12px' }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 'bold' }}>{title}</div>
+            <div style={{ fontSize: '0.9em', color: '#666' }}>{description}</div>
+            <div style={{ display: 'flex', gap: '4px', marginTop: '4px' }}>
+              <Label size="mini" color="blue">{user.role}</Label>
+              <Label size="mini" color="green">{user.status}</Label>
+            </div>
+          </div>
+        </div>
+      )}
+    />
+  )
+}
+
+// ✅ Main application component demonstrating all patterns
+export const SemanticUIApp: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([])
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'create'>('view')
+  const [loading, setLoading] = useState(false)
+  
+  // Sample user data
+  useEffect(() => {
+    // Simulate loading users
+    setLoading(true)
+    setTimeout(() => {
+      setUsers([
+        // Sample user data would go here
+      ])
+      setLoading(false)
+    }, 1000)
+  }, [])
+  
+  const handleUserSelect = useCallback((user: User) => {
+    setSelectedUser(user)
+    setModalMode('view')
+    setModalOpen(true)
+  }, [])
+  
+  const handleUserEdit = useCallback((user: User) => {
+    setSelectedUser(user)
+    setModalMode('edit')
+    setModalOpen(true)
+  }, [])
+  
+  const handleUserCreate = useCallback(() => {
+    setSelectedUser(null)
+    setModalMode('create')
+    setModalOpen(true)
+  }, [])
+  
+  const handleUserSave = useCallback(async (user: User) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    if (modalMode === 'create') {
+      setUsers(prev => [...prev, { ...user, id: Date.now().toString() }])
+    } else {
+      setUsers(prev => prev.map(u => u.id === user.id ? user : u))
+    }
+  }, [modalMode])
+  
+  const handleBulkAction = useCallback(async (action: string, selectedUsers: User[]) => {
+    // Simulate bulk action
+    console.log(`Performing ${action} on`, selectedUsers)
+    
+    toast({
+      type: 'info',
+      title: 'Bulk Action',
+      description: `${action} performed on ${selectedUsers.length} users`,
+      time: 3000
+    })
+  }, [])
+  
+  return (
+    <SemanticThemeProvider>
+      <Container fluid style={{ padding: '20px' }}>
+        <Header as="h1">
+          <Icon name="users" />
+          User Management System
+        </Header>
+        
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={12}>
+              <AdvancedUserSearch
+                users={users}
+                onResultSelect={handleUserSelect}
+                placeholder="Search for users by name, email, department, or skills..."
+              />
+            </Grid.Column>
+            
+            <Grid.Column width={4} textAlign="right">
+              <Button
+                primary
+                icon="plus"
+                content="Add New User"
+                onClick={handleUserCreate}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        
+        <UserDataTable
+          users={users}
+          loading={loading}
+          onUserSelect={handleUserSelect}
+          onUserEdit={handleUserEdit}
+          onBulkAction={handleBulkAction}
+        />
+        
+        <UserProfileModal
+          user={selectedUser}
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSave={handleUserSave}
+          mode={modalMode}
+        />
+        
+        <SemanticToastContainer position="top-right" />
+      </Container>
+    </SemanticThemeProvider>
+  )
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced Semantic UI React implementation:**
+
+1. **Theme System**: Implement comprehensive theming with CSS variables, context providers, and responsive design patterns for consistent brand identity.
+
+2. **Component Composition**: Build complex interfaces using Semantic UI's component composition patterns, leverage prop-driven styling, implement proper component hierarchies.
+
+3. **Data Management**: Use advanced table patterns with filtering, sorting, pagination, and bulk operations, implement proper loading and error states.
+
+4. **Form Handling**: Create comprehensive forms with validation, multi-step processes, dynamic field generation, and proper accessibility support.
+
+5. **Search & Navigation**: Implement advanced search with debouncing, result formatting, and contextual actions, use proper navigation patterns.
+
+6. **Performance**: Optimize rendering with proper memoization, lazy loading, virtualization for large datasets, and efficient re-render patterns.
+
+7. **Accessibility**: Follow WCAG guidelines, implement proper ARIA attributes, keyboard navigation, screen reader support, and focus management.
+
+8. **Responsive Design**: Use Semantic UI's grid system effectively, implement mobile-first patterns, handle breakpoint-specific behavior.
+
+Always prioritize semantic HTML, leverage Semantic UI's built-in accessibility features, implement proper error boundaries, and maintain consistent design patterns across your application for professional user experiences.tsx
 import React from 'react';
 import { Card, Image, Button, Loader } from 'semantic-ui-react';
 

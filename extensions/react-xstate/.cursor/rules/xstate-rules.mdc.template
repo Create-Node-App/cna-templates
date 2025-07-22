@@ -1,53 +1,2021 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and managing state machines with XState in React applications.
+description: Advanced XState patterns for state machines, hierarchical states, actor model implementation, and enterprise-scale stateful application architecture.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# XState Rules
+# Advanced XState State Machines
 
-You are an expert in XState state management and follow these guidelines:
+## Enterprise State Machine Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create state machines with clear, descriptive names and organize them by feature/domain.
-3. Use the `createMachine` function with proper typing and avoid direct state mutations.
-4. Implement guards and actions for complex transitions.
-5. Handle async operations using services and proper error handling.
-6. Use visualization tools (XState Viz) for state machine design and debugging.
-7. Follow the single responsibility principle for each state machine.
-8. Document state machine behavior with JSDoc or TypeScript types.
-9. Implement proper error states and recovery transitions.
-10. Use proper state splitting to avoid unnecessary complexity.
+**Complex state machines with hierarchical states, guards, and services:**
+```tsx
+import { 
+  createMachine, 
+  assign, 
+  send, 
+  sendParent, 
+  spawn, 
+  interpret,
+  StateMachine,
+  Interpreter,
+  InterpreterFrom,
+  ActorRef,
+  StateFrom
+} from 'xstate'
+import { useMachine, useActor, useSelector } from '@xstate/react'
+import { createModel } from 'xstate/lib/model'
 
-## Anti-Patterns to Avoid
-
-1. Never use XState for simple, local component state.
-2. Avoid over-engineering with too many states or transitions.
-3. Don't mix imperative and declarative state management.
-4. Avoid storing large, frequently-changing data in the state machine context.
-5. Don't use XState for server state (use React Query or SWR instead).
-
-## Example Implementation
-
-```ts
-import { createMachine, assign } from 'xstate';
-import { useMachine } from '@xstate/react';
-
-interface AuthContext {
-  user: User | null;
-  error: string | null;
+// ✅ Complex user management state machine with hierarchical states
+interface UserContext {
+  users: User[]
+  selectedUser: User | null
+  filters: {
+    search: string
+    status: 'all' | 'active' | 'inactive'
+    role: string
+  }
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+  }
+  error: string | null
+  retryCount: number
+  cache: Map<string, any>
+  notifications: Notification[]
 }
 
-type AuthEvent = 
-  | { type: 'LOGIN'; user: User }
-  | { type: 'LOGOUT' }
-  | { type: 'ERROR'; error: string };
+type UserEvent = 
+  | { type: 'FETCH_USERS' }
+  | { type: 'FETCH_SUCCESS'; users: User[]; total: number }
+  | { type: 'FETCH_ERROR'; error: string }
+  | { type: 'SELECT_USER'; user: User }
+  | { type: 'EDIT_USER'; user: User }
+  | { type: 'SAVE_USER'; userData: Partial<User> }
+  | { type: 'DELETE_USER'; userId: string }
+  | { type: 'CANCEL_EDIT' }
+  | { type: 'CLEAR_ERROR' }
+  | { type: 'RETRY' }
+  | { type: 'SEARCH'; query: string }
+  | { type: 'FILTER'; filters: Partial<UserContext['filters']> }
+  | { type: 'PAGINATE'; page: number }
+  | { type: 'REFRESH' }
+  | { type: 'BULK_ACTION'; action: string; userIds: string[] }
+  | { type: 'SHOW_NOTIFICATION'; notification: Notification }
+  | { type: 'DISMISS_NOTIFICATION'; id: string }
 
-export const authMachine = createMachine<AuthContext, AuthEvent>({
-  id: 'auth',
+interface User {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar?: string
+  isActive: boolean
+  roles: string[]
+  lastLoginAt?: Date
+  createdAt: Date
+  updatedAt: Date
+}
+
+interface Notification {
+  id: string
+  type: 'success' | 'error' | 'warning' | 'info'
+  message: string
+  duration?: number
+}
+
+// ✅ Advanced user management machine with nested states
+export const userManagementMachine = createMachine<UserContext, UserEvent>({
+  id: 'userManagement',
+  initial: 'loading',
+  context: {
+    users: [],
+    selectedUser: null,
+    filters: {
+      search: '',
+      status: 'all',
+      role: 'all',
+    },
+    pagination: {
+      page: 1,
+      pageSize: 20,
+      total: 0,
+    },
+    error: null,
+    retryCount: 0,
+    cache: new Map(),
+    notifications: [],
+  },
+  states: {
+    loading: {
+      entry: ['clearError'],
+      invoke: {
+        id: 'fetchUsers',
+        src: 'fetchUsersService',
+        onDone: {
+          target: 'idle',
+          actions: ['setUsersData', 'cacheResults', 'showSuccessNotification'],
+        },
+        onError: [
+          {
+            target: 'error',
+            cond: 'maxRetriesReached',
+            actions: ['setError', 'showErrorNotification'],
+          },
+          {
+            target: 'retrying',
+            actions: ['incrementRetryCount'],
+          },
+        ],
+      },
+    },
+
+    retrying: {
+      entry: ['showRetryNotification'],
+      after: {
+        2000: 'loading', // Retry after 2 seconds
+      },
+    },
+
+    idle: {
+      type: 'parallel',
+      states: {
+        // ✅ Data management sub-state
+        dataManagement: {
+          initial: 'viewing',
+          states: {
+            viewing: {
+              on: {
+                SELECT_USER: {
+                  actions: 'setSelectedUser',
+                },
+                EDIT_USER: {
+                  target: 'editing',
+                  actions: 'setSelectedUser',
+                },
+                DELETE_USER: {
+                  target: 'deleting',
+                },
+              },
+            },
+
+            editing: {
+              initial: 'form',
+              states: {
+                form: {
+                  on: {
+                    SAVE_USER: {
+                      target: 'saving',
+                    },
+                    CANCEL_EDIT: {
+                      target: '#userManagement.idle.dataManagement.viewing',
+                      actions: 'clearSelectedUser',
+                    },
+                  },
+                },
+
+                saving: {
+                  invoke: {
+                    id: 'saveUser',
+                    src: 'saveUserService',
+                    onDone: {
+                      target: '#userManagement.idle.dataManagement.viewing',
+                      actions: ['updateUserInList', 'clearSelectedUser', 'showSaveSuccessNotification'],
+                    },
+                    onError: {
+                      target: 'form',
+                      actions: ['setError', 'showSaveErrorNotification'],
+                    },
+                  },
+                },
+              },
+            },
+
+            deleting: {
+              invoke: {
+                id: 'deleteUser',
+                src: 'deleteUserService',
+                onDone: {
+                  target: 'viewing',
+                  actions: ['removeUserFromList', 'showDeleteSuccessNotification'],
+                },
+                onError: {
+                  target: 'viewing',
+                  actions: ['setError', 'showDeleteErrorNotification'],
+                },
+              },
+            },
+
+            bulkOperations: {
+              invoke: {
+                id: 'bulkAction',
+                src: 'bulkActionService',
+                onDone: {
+                  target: 'viewing',
+                  actions: ['updateBulkUsers', 'showBulkSuccessNotification'],
+                },
+                onError: {
+                  target: 'viewing',
+                  actions: ['setError', 'showBulkErrorNotification'],
+                },
+              },
+            },
+          },
+
+          on: {
+            BULK_ACTION: {
+              target: '.bulkOperations',
+            },
+          },
+        },
+
+        // ✅ Filtering and search sub-state
+        filtering: {
+          initial: 'active',
+          states: {
+            active: {},
+            debouncing: {
+              after: {
+                300: {
+                  target: 'active',
+                  actions: 'applyFilters',
+                },
+              },
+            },
+          },
+
+          on: {
+            SEARCH: {
+              target: '.debouncing',
+              actions: 'setSearchQuery',
+            },
+            FILTER: {
+              actions: 'setFilters',
+            },
+          },
+        },
+
+        // ✅ Pagination sub-state
+        pagination: {
+          initial: 'ready',
+          states: {
+            ready: {},
+            navigating: {
+              invoke: {
+                id: 'fetchPage',
+                src: 'fetchPageService',
+                onDone: {
+                  target: 'ready',
+                  actions: 'setUsersData',
+                },
+                onError: {
+                  target: 'ready',
+                  actions: 'setError',
+                },
+              },
+            },
+          },
+
+          on: {
+            PAGINATE: {
+              target: '.navigating',
+              actions: 'setPage',
+            },
+          },
+        },
+
+        // ✅ Notification management sub-state
+        notifications: {
+          initial: 'idle',
+          states: {
+            idle: {},
+            showing: {
+              after: {
+                5000: {
+                  target: 'idle',
+                  actions: 'autoRemoveNotification',
+                },
+              },
+            },
+          },
+
+          on: {
+            SHOW_NOTIFICATION: {
+              target: '.showing',
+              actions: 'addNotification',
+            },
+            DISMISS_NOTIFICATION: {
+              actions: 'removeNotification',
+            },
+          },
+        },
+      },
+
+      on: {
+        FETCH_USERS: 'loading',
+        REFRESH: 'loading',
+      },
+    },
+
+    error: {
+      on: {
+        RETRY: 'loading',
+        CLEAR_ERROR: {
+          target: 'idle',
+          actions: 'clearError',
+        },
+      },
+    },
+  },
+
+  on: {
+    // Global event handlers
+    CLEAR_ERROR: {
+      actions: 'clearError',
+    },
+  },
+}, {
+  actions: {
+    // ✅ Context update actions
+    setUsersData: assign({
+      users: (_, event: any) => event.data.users || event.users,
+      pagination: (context, event: any) => ({
+        ...context.pagination,
+        total: event.data.total || event.total,
+      }),
+      retryCount: 0,
+    }),
+
+    setSelectedUser: assign({
+      selectedUser: (_, event: any) => event.user,
+    }),
+
+    clearSelectedUser: assign({
+      selectedUser: null,
+    }),
+
+    setError: assign({
+      error: (_, event: any) => event.error || event.data?.message || 'An error occurred',
+    }),
+
+    clearError: assign({
+      error: null,
+      retryCount: 0,
+    }),
+
+    incrementRetryCount: assign({
+      retryCount: (context) => context.retryCount + 1,
+    }),
+
+    setSearchQuery: assign({
+      filters: (context, event: any) => ({
+        ...context.filters,
+        search: event.query,
+      }),
+      pagination: (context) => ({
+        ...context.pagination,
+        page: 1,
+      }),
+    }),
+
+    setFilters: assign({
+      filters: (context, event: any) => ({
+        ...context.filters,
+        ...event.filters,
+      }),
+      pagination: (context) => ({
+        ...context.pagination,
+        page: 1,
+      }),
+    }),
+
+    setPage: assign({
+      pagination: (context, event: any) => ({
+        ...context.pagination,
+        page: event.page,
+      }),
+    }),
+
+    updateUserInList: assign({
+      users: (context, event: any) =>
+        context.users.map(user =>
+          user.id === event.data.id ? { ...user, ...event.data } : user
+        ),
+    }),
+
+    removeUserFromList: assign({
+      users: (context, event: any) =>
+        context.users.filter(user => user.id !== event.data.userId),
+    }),
+
+    updateBulkUsers: assign({
+      users: (context, event: any) =>
+        context.users.map(user =>
+          event.data.updatedIds.includes(user.id)
+            ? { ...user, ...event.data.updates }
+            : user
+        ),
+    }),
+
+    cacheResults: assign({
+      cache: (context, event: any) => {
+        const newCache = new Map(context.cache)
+        newCache.set('lastFetch', Date.now())
+        newCache.set('lastQuery', context.filters)
+        return newCache
+      },
+    }),
+
+    // ✅ Notification actions
+    addNotification: assign({
+      notifications: (context, event: any) => [
+        ...context.notifications,
+        {
+          id: `notification-${Date.now()}`,
+          ...event.notification,
+        },
+      ],
+    }),
+
+    removeNotification: assign({
+      notifications: (context, event: any) =>
+        context.notifications.filter(n => n.id !== event.id),
+    }),
+
+    autoRemoveNotification: assign({
+      notifications: (context) => context.notifications.slice(1),
+    }),
+
+    showSuccessNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'success' as const,
+        message: 'Users loaded successfully',
+      },
+    }),
+
+    showErrorNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'error' as const,
+        message: 'Failed to load users',
+      },
+    }),
+
+    showRetryNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'warning' as const,
+        message: 'Retrying request...',
+      },
+    }),
+
+    showSaveSuccessNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'success' as const,
+        message: 'User saved successfully',
+      },
+    }),
+
+    showSaveErrorNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'error' as const,
+        message: 'Failed to save user',
+      },
+    }),
+
+    showDeleteSuccessNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'success' as const,
+        message: 'User deleted successfully',
+      },
+    }),
+
+    showDeleteErrorNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'error' as const,
+        message: 'Failed to delete user',
+      },
+    }),
+
+    showBulkSuccessNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'success' as const,
+        message: 'Bulk operation completed',
+      },
+    }),
+
+    showBulkErrorNotification: send({
+      type: 'SHOW_NOTIFICATION',
+      notification: {
+        type: 'error' as const,
+        message: 'Bulk operation failed',
+      },
+    }),
+  },
+
+  guards: {
+    // ✅ Conditional logic guards
+    maxRetriesReached: (context) => context.retryCount >= 3,
+    
+    hasSelectedUser: (context) => context.selectedUser !== null,
+    
+    canDelete: (context, event: any) => {
+      const user = context.users.find(u => u.id === event.userId)
+      return user ? !user.roles.includes('admin') : false
+    },
+    
+    hasSearchQuery: (context) => context.filters.search.length > 0,
+    
+    isFirstPage: (context) => context.pagination.page === 1,
+    
+    hasNextPage: (context) => {
+      const totalPages = Math.ceil(context.pagination.total / context.pagination.pageSize)
+      return context.pagination.page < totalPages
+    },
+  },
+
+  services: {
+    // ✅ Async service implementations
+    fetchUsersService: async (context) => {
+      const { filters, pagination } = context
+      const params = new URLSearchParams({
+        page: pagination.page.toString(),
+        pageSize: pagination.pageSize.toString(),
+        search: filters.search,
+        status: filters.status,
+        role: filters.role,
+      })
+
+      const response = await fetch(`/api/users?${params}`)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      return {
+        users: data.users.map((user: any) => ({
+          ...user,
+          createdAt: new Date(user.createdAt),
+          updatedAt: new Date(user.updatedAt),
+          lastLoginAt: user.lastLoginAt ? new Date(user.lastLoginAt) : undefined,
+        })),
+        total: data.total,
+      }
+    },
+
+    saveUserService: async (context, event: any) => {
+      const response = await fetch(`/api/users/${context.selectedUser!.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event.userData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to save user: ${response.statusText}`)
+      }
+
+      return response.json()
+    },
+
+    deleteUserService: async (_, event: any) => {
+      const response = await fetch(`/api/users/${event.userId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.statusText}`)
+      }
+
+      return { userId: event.userId }
+    },
+
+    bulkActionService: async (_, event: any) => {
+      const response = await fetch('/api/users/bulk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: event.action,
+          userIds: event.userIds,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Bulk operation failed: ${response.statusText}`)
+      }
+
+      return response.json()
+    },
+
+    fetchPageService: async (context) => {
+      // Similar to fetchUsersService but optimized for pagination
+      return fetch(`/api/users?page=${context.pagination.page}&pageSize=${context.pagination.pageSize}`)
+        .then(res => res.json())
+    },
+  },
+})
+
+// ✅ Type-safe state machine types
+export type UserManagementService = InterpreterFrom<typeof userManagementMachine>
+export type UserManagementState = StateFrom<typeof userManagementMachine>
+export type UserManagementActor = ActorRef<UserEvent, UserManagementState>
+```
+
+## Actor Model Implementation
+
+**Multi-machine architecture with spawned actors:**
+```tsx
+import { spawn, sendTo } from 'xstate'
+
+// ✅ Child machine for individual user editing
+const userEditMachine = createMachine<
+  { user: User; formData: Partial<User>; validationErrors: Record<string, string> },
+  | { type: 'UPDATE_FIELD'; field: keyof User; value: any }
+  | { type: 'VALIDATE' }
+  | { type: 'SUBMIT' }
+  | { type: 'RESET' }
+  | { type: 'CANCEL' }
+>({
+  id: 'userEdit',
+  initial: 'editing',
+  context: {
+    user: {} as User,
+    formData: {},
+    validationErrors: {},
+  },
+  states: {
+    editing: {
+      on: {
+        UPDATE_FIELD: {
+          actions: assign({
+            formData: (context, event) => ({
+              ...context.formData,
+              [event.field]: event.value,
+            }),
+          }),
+        },
+        VALIDATE: {
+          actions: assign({
+            validationErrors: (context) => validateUserData(context.formData),
+          }),
+        },
+        SUBMIT: [
+          {
+            target: 'validating',
+            cond: 'isFormValid',
+          },
+          {
+            actions: 'showValidationErrors',
+          },
+        ],
+        RESET: {
+          actions: assign({
+            formData: (context) => ({ ...context.user }),
+            validationErrors: {},
+          }),
+        },
+        CANCEL: {
+          actions: sendParent({ type: 'EDIT_CANCELLED' }),
+        },
+      },
+    },
+    validating: {
+      invoke: {
+        id: 'validateUser',
+        src: 'validateUserService',
+        onDone: {
+          target: 'submitting',
+          actions: assign({
+            validationErrors: {},
+          }),
+        },
+        onError: {
+          target: 'editing',
+          actions: assign({
+            validationErrors: (_, event: any) => event.data.errors || {},
+          }),
+        },
+      },
+    },
+    submitting: {
+      invoke: {
+        id: 'submitUser',
+        src: 'submitUserService',
+        onDone: {
+          target: 'success',
+          actions: sendParent({ 
+            type: 'USER_UPDATED', 
+            user: (_, event: any) => event.data 
+          }),
+        },
+        onError: {
+          target: 'editing',
+          actions: assign({
+            validationErrors: (_, event: any) => ({ 
+              submit: event.data.message || 'Failed to save user' 
+            }),
+          }),
+        },
+      },
+    },
+    success: {
+      after: {
+        1000: {
+          actions: sendParent({ type: 'EDIT_COMPLETED' }),
+        },
+      },
+    },
+  },
+}, {
+  guards: {
+    isFormValid: (context) => Object.keys(validateUserData(context.formData)).length === 0,
+  },
+  services: {
+    validateUserService: async (context) => {
+      // Server-side validation
+      const response = await fetch('/api/users/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(context.formData),
+      })
+      
+      if (!response.ok) {
+        const errors = await response.json()
+        throw { errors }
+      }
+      
+      return response.json()
+    },
+    
+    submitUserService: async (context) => {
+      const response = await fetch(`/api/users/${context.user.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(context.formData),
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to update user')
+      }
+      
+      return response.json()
+    },
+  },
+})
+
+// ✅ Parent machine that spawns child actors
+const applicationMachine = createMachine<{
+  userManagement: ActorRef<any, any>
+  activeEditors: Map<string, ActorRef<any, any>>
+  notifications: ActorRef<any, any>
+}>({
+  id: 'application',
+  initial: 'initializing',
+  context: {
+    userManagement: {} as any,
+    activeEditors: new Map(),
+    notifications: {} as any,
+  },
+  states: {
+    initializing: {
+      entry: assign({
+        userManagement: () => spawn(userManagementMachine, 'userManagement'),
+        notifications: () => spawn(notificationMachine, 'notifications'),
+      }),
+      always: 'running',
+    },
+    running: {
+      on: {
+        EDIT_USER: {
+          actions: assign({
+            activeEditors: (context, event: any) => {
+              const newEditors = new Map(context.activeEditors)
+              const editorActor = spawn(
+                userEditMachine.withContext({
+                  user: event.user,
+                  formData: { ...event.user },
+                  validationErrors: {},
+                }),
+                `editor-${event.user.id}`
+              )
+              newEditors.set(event.user.id, editorActor)
+              return newEditors
+            },
+          }),
+        },
+        USER_UPDATED: {
+          actions: [
+            sendTo('userManagement', (_, event: any) => ({ 
+              type: 'UPDATE_USER_SUCCESS', 
+              user: event.user 
+            })),
+            assign({
+              activeEditors: (context, event: any) => {
+                const newEditors = new Map(context.activeEditors)
+                newEditors.delete(event.user.id)
+                return newEditors
+              },
+            }),
+          ],
+        },
+        EDIT_CANCELLED: {
+          actions: assign({
+            activeEditors: (context, event: any) => {
+              const newEditors = new Map(context.activeEditors)
+              // Find and remove the cancelled editor
+              for (const [userId, actor] of newEditors.entries()) {
+                if (actor.id === event.origin) {
+                  newEditors.delete(userId)
+                  break
+                }
+              }
+              return newEditors
+            },
+          }),
+        },
+      },
+    },
+  },
+})
+
+// ✅ Notification machine for centralized notification management
+const notificationMachine = createMachine<{
+  notifications: Array<{
+    id: string
+    type: 'success' | 'error' | 'warning' | 'info'
+    message: string
+    duration: number
+    timestamp: Date
+  }>
+  maxNotifications: number
+}>({
+  id: 'notifications',
   initial: 'idle',
   context: {
-    user: null,
-    error: null,
+    notifications: [],
+    maxNotifications: 5,
+  },
+  states: {
+    idle: {
+      on: {
+        SHOW: {
+          actions: ['addNotification', 'scheduleRemoval'],
+        },
+        DISMISS: {
+          actions: 'removeNotification',
+        },
+        CLEAR_ALL: {
+          actions: assign({
+            notifications: [],
+          }),
+        },
+      },
+    },
+  },
+}, {
+  actions: {
+    addNotification: assign({
+      notifications: (context, event: any) => {
+        const newNotification = {
+          id: `notification-${Date.now()}-${Math.random()}`,
+          type: event.type || 'info',
+          message: event.message,
+          duration: event.duration || 5000,
+          timestamp: new Date(),
+        }
+
+        const updated = [newNotification, ...context.notifications]
+        
+        // Keep only maxNotifications
+        return updated.slice(0, context.maxNotifications)
+      },
+    }),
+    
+    removeNotification: assign({
+      notifications: (context, event: any) =>
+        context.notifications.filter(n => n.id !== event.id),
+    }),
+    
+    scheduleRemoval: send(
+      (_, event: any) => ({ type: 'DISMISS', id: event.id }),
+      { delay: (_, event: any) => event.duration || 5000 }
+    ),
+  },
+})
+
+// ✅ Utility function for validation
+const validateUserData = (userData: Partial<User>): Record<string, string> => {
+  const errors: Record<string, string> = {}
+
+  if (!userData.firstName?.trim()) {
+    errors.firstName = 'First name is required'
+  }
+
+  if (!userData.lastName?.trim()) {
+    errors.lastName = 'Last name is required'
+  }
+
+  if (!userData.email?.trim()) {
+    errors.email = 'Email is required'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
+    errors.email = 'Invalid email format'
+  }
+
+  if (!userData.roles || userData.roles.length === 0) {
+    errors.roles = 'At least one role is required'
+  }
+
+  return errors
+}
+```
+
+## Advanced React Integration
+
+**Custom hooks and optimized React patterns with XState:**
+```tsx
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useInterpret, useSelector, useMachine } from '@xstate/react'
+
+// ✅ Custom hook for user management state machine
+export const useUserManagement = () => {
+  const [state, send] = useMachine(userManagementMachine)
+
+  const selectors = useMemo(() => ({
+    users: (state: UserManagementState) => state.context.users,
+    selectedUser: (state: UserManagementState) => state.context.selectedUser,
+    loading: (state: UserManagementState) => state.matches('loading') || state.matches({ idle: { dataManagement: 'deleting' } }),
+    error: (state: UserManagementState) => state.context.error,
+    filters: (state: UserManagementState) => state.context.filters,
+    pagination: (state: UserManagementState) => state.context.pagination,
+    isEditing: (state: UserManagementState) => state.matches({ idle: { dataManagement: 'editing' } }),
+    canRetry: (state: UserManagementState) => state.matches('error'),
+    notifications: (state: UserManagementState) => state.context.notifications,
+  }), [])
+
+  // ✅ Optimized selectors to prevent unnecessary re-renders
+  const users = useSelector(state, selectors.users)
+  const selectedUser = useSelector(state, selectors.selectedUser)
+  const loading = useSelector(state, selectors.loading)
+  const error = useSelector(state, selectors.error)
+  const filters = useSelector(state, selectors.filters)
+  const pagination = useSelector(state, selectors.pagination)
+  const isEditing = useSelector(state, selectors.isEditing)
+  const canRetry = useSelector(state, selectors.canRetry)
+  const notifications = useSelector(state, selectors.notifications)
+
+  // ✅ Action creators
+  const actions = useMemo(() => ({
+    fetchUsers: () => send({ type: 'FETCH_USERS' }),
+    selectUser: (user: User) => send({ type: 'SELECT_USER', user }),
+    editUser: (user: User) => send({ type: 'EDIT_USER', user }),
+    saveUser: (userData: Partial<User>) => send({ type: 'SAVE_USER', userData }),
+    deleteUser: (userId: string) => send({ type: 'DELETE_USER', userId }),
+    cancelEdit: () => send({ type: 'CANCEL_EDIT' }),
+    search: (query: string) => send({ type: 'SEARCH', query }),
+    filter: (filters: Partial<UserContext['filters']>) => send({ type: 'FILTER', filters }),
+    paginate: (page: number) => send({ type: 'PAGINATE', page }),
+    refresh: () => send({ type: 'REFRESH' }),
+    bulkAction: (action: string, userIds: string[]) => send({ type: 'BULK_ACTION', action, userIds }),
+    clearError: () => send({ type: 'CLEAR_ERROR' }),
+    retry: () => send({ type: 'RETRY' }),
+    dismissNotification: (id: string) => send({ type: 'DISMISS_NOTIFICATION', id }),
+  }), [send])
+
+  return {
+    // State
+    users,
+    selectedUser,
+    loading,
+    error,
+    filters,
+    pagination,
+    isEditing,
+    canRetry,
+    notifications,
+    
+    // Actions
+    actions,
+    
+    // Raw state and send for advanced usage
+    state,
+    send,
+  }
+}
+
+// ✅ Hook for spawned user editor machines
+export const useUserEditor = (userId: string) => {
+  const service = useInterpret(userEditMachine, {
+    context: {
+      user: {} as User, // Will be set when starting
+      formData: {},
+      validationErrors: {},
+    },
+  })
+
+  const [state, send] = useActor(service)
+
+  const selectors = useMemo(() => ({
+    formData: (state: any) => state.context.formData,
+    validationErrors: (state: any) => state.context.validationErrors,
+    isEditing: (state: any) => state.matches('editing'),
+    isValidating: (state: any) => state.matches('validating'),
+    isSubmitting: (state: any) => state.matches('submitting'),
+    isSuccess: (state: any) => state.matches('success'),
+    hasErrors: (state: any) => Object.keys(state.context.validationErrors).length > 0,
+  }), [])
+
+  const formData = useSelector(service, selectors.formData)
+  const validationErrors = useSelector(service, selectors.validationErrors)
+  const isEditing = useSelector(service, selectors.isEditing)
+  const isValidating = useSelector(service, selectors.isValidating)
+  const isSubmitting = useSelector(service, selectors.isSubmitting)
+  const isSuccess = useSelector(service, selectors.isSuccess)
+  const hasErrors = useSelector(service, selectors.hasErrors)
+
+  const actions = useMemo(() => ({
+    updateField: (field: keyof User, value: any) => 
+      send({ type: 'UPDATE_FIELD', field, value }),
+    validate: () => send({ type: 'VALIDATE' }),
+    submit: () => send({ type: 'SUBMIT' }),
+    reset: () => send({ type: 'RESET' }),
+    cancel: () => send({ type: 'CANCEL' }),
+  }), [send])
+
+  return {
+    // State
+    formData,
+    validationErrors,
+    isEditing,
+    isValidating,
+    isSubmitting,
+    isSuccess,
+    hasErrors,
+    
+    // Actions
+    actions,
+    
+    // Service for advanced usage
+    service,
+    state,
+    send,
+  }
+}
+
+// ✅ Advanced React components using XState
+const UserManagementApp: React.FC = () => {
+  const userManagement = useUserManagement()
+
+  useEffect(() => {
+    // Auto-fetch users on mount
+    userManagement.actions.fetchUsers()
+  }, [])
+
+  return (
+    <div className="user-management-app">
+      <UserManagementHeader userManagement={userManagement} />
+      <UserFilters userManagement={userManagement} />
+      <UserList userManagement={userManagement} />
+      <UserPagination userManagement={userManagement} />
+      <NotificationCenter notifications={userManagement.notifications} />
+      
+      {userManagement.selectedUser && (
+        <UserEditModal 
+          user={userManagement.selectedUser}
+          isOpen={userManagement.isEditing}
+          onClose={userManagement.actions.cancelEdit}
+        />
+      )}
+    </div>
+  )
+}
+
+// ✅ Component optimized with XState selectors
+const UserList: React.FC<{ userManagement: ReturnType<typeof useUserManagement> }> = ({
+  userManagement
+}) => {
+  const { users, loading, error, actions } = userManagement
+
+  if (loading) {
+    return <div className="loading">Loading users...</div>
+  }
+
+  if (error) {
+    return (
+      <div className="error">
+        <p>Error: {error}</p>
+        {userManagement.canRetry && (
+          <button onClick={actions.retry}>Retry</button>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="user-list">
+      {users.map(user => (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={() => actions.selectUser(user)}
+          onEdit={() => actions.editUser(user)}
+          onDelete={() => actions.deleteUser(user.id)}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ✅ Modal component with spawned editor machine
+const UserEditModal: React.FC<{
+  user: User
+  isOpen: boolean
+  onClose: () => void
+}> = ({ user, isOpen, onClose }) => {
+  const editor = useUserEditor(user.id)
+
+  useEffect(() => {
+    if (isOpen) {
+      // Initialize editor with user data
+      editor.actions.reset()
+    }
+  }, [isOpen, user])
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    editor.actions.submit()
+  }, [editor.actions])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal">
+        <h2>Edit User</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>First Name</label>
+            <input
+              type="text"
+              value={editor.formData.firstName || ''}
+              onChange={(e) => editor.actions.updateField('firstName', e.target.value)}
+            />
+            {editor.validationErrors.firstName && (
+              <span className="error">{editor.validationErrors.firstName}</span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label>Last Name</label>
+            <input
+              type="text"
+              value={editor.formData.lastName || ''}
+              onChange={(e) => editor.actions.updateField('lastName', e.target.value)}
+            />
+            {editor.validationErrors.lastName && (
+              <span className="error">{editor.validationErrors.lastName}</span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={editor.formData.email || ''}
+              onChange={(e) => editor.actions.updateField('email', e.target.value)}
+            />
+            {editor.validationErrors.email && (
+              <span className="error">{editor.validationErrors.email}</span>
+            )}
+          </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              onClick={editor.actions.cancel}
+              disabled={editor.isSubmitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={editor.isSubmitting || editor.hasErrors}
+            >
+              {editor.isSubmitting ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+
+          {editor.isSuccess && (
+            <div className="success-message">
+              User saved successfully!
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ✅ Notification center component
+const NotificationCenter: React.FC<{
+  notifications: Notification[]
+}> = ({ notifications }) => {
+  if (notifications.length === 0) return null
+
+  return (
+    <div className="notification-center">
+      {notifications.map(notification => (
+        <NotificationItem
+          key={notification.id}
+          notification={notification}
+        />
+      ))}
+    </div>
+  )
+}
+
+const NotificationItem: React.FC<{
+  notification: Notification
+}> = ({ notification }) => {
+  return (
+    <div className={`notification notification--${notification.type}`}>
+      <span className="notification__message">{notification.message}</span>
+      <button 
+        className="notification__dismiss"
+        aria-label="Dismiss notification"
+      >
+        ×
+      </button>
+    </div>
+  )
+}
+
+// ✅ Performance optimization with React.memo and XState
+const UserCard = React.memo<{
+  user: User
+  onSelect: () => void
+  onEdit: () => void
+  onDelete: () => void
+}>(({ user, onSelect, onEdit, onDelete }) => {
+  return (
+    <div className="user-card">
+      <div className="user-info">
+        <h4>{user.firstName} {user.lastName}</h4>
+        <p>{user.email}</p>
+        <div className="user-roles">
+          {user.roles.map(role => (
+            <span key={role} className="role-badge">
+              {role}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="user-actions">
+        <button onClick={onSelect}>Select</button>
+        <button onClick={onEdit}>Edit</button>
+        <button onClick={onDelete} className="danger">Delete</button>
+      </div>
+    </div>
+  )
+})
+```
+
+## State Machine Visualization & Debugging
+
+**Advanced debugging and visualization patterns:**
+```tsx
+import { interpret } from 'xstate'
+import { inspect } from '@xstate/inspect'
+
+// ✅ Development mode setup with inspector
+if (process.env.NODE_ENV === 'development') {
+  inspect({
+    url: 'https://stately.ai/viz?inspect',
+    iframe: false
+  })
+}
+
+// ✅ Machine with logging and debugging capabilities
+const debugUserMachine = userManagementMachine.withConfig({
+  actions: {
+    ...userManagementMachine.config.actions,
+    
+    // ✅ Debug actions for state transitions
+    logStateEntry: (context, event) => {
+      console.log('State Entry:', {
+        context,
+        event,
+        timestamp: new Date().toISOString(),
+      })
+    },
+    
+    logStateExit: (context, event) => {
+      console.log('State Exit:', {
+        context,
+        event,
+        timestamp: new Date().toISOString(),
+      })
+    },
+    
+    logError: (context, event) => {
+      console.error('State Machine Error:', {
+        context,
+        event,
+        stack: new Error().stack,
+      })
+    },
+  },
+})
+
+// ✅ Custom interpreter with enhanced debugging
+export const createUserManagementService = () => {
+  const service = interpret(debugUserMachine, {
+    devTools: process.env.NODE_ENV === 'development',
+  })
+
+  if (process.env.NODE_ENV === 'development') {
+    // ✅ Enhanced logging for development
+    service.onTransition((state, event) => {
+      console.group(`🔄 State Transition: ${event.type}`)
+      console.log('Previous State:', state.history?.value)
+      console.log('Current State:', state.value)
+      console.log('Context:', state.context)
+      console.log('Event:', event)
+      console.groupEnd()
+    })
+
+    service.onChange((context) => {
+      console.log('📊 Context Changed:', context)
+    })
+
+    service.onEvent((event) => {
+      console.log('📨 Event Received:', event)
+    })
+  }
+
+  return service
+}
+
+// ✅ State machine testing utilities
+export const createTestService = (initialContext?: Partial<UserContext>) => {
+  const testMachine = userManagementMachine.withContext({
+    ...userManagementMachine.context,
+    ...initialContext,
+  })
+
+  return interpret(testMachine)
+}
+
+// ✅ State path utilities for testing
+export const getStatePath = (state: UserManagementState): string[] => {
+  const paths: string[] = []
+  
+  const traverse = (stateValue: any, path: string[] = []) => {
+    if (typeof stateValue === 'string') {
+      paths.push([...path, stateValue].join('.'))
+    } else if (typeof stateValue === 'object') {
+      Object.entries(stateValue).forEach(([key, value]) => {
+        traverse(value, [...path, key])
+      })
+    }
+  }
+  
+  traverse(state.value)
+  return paths
+}
+
+// ✅ Machine introspection utilities
+export const analyzeMachine = (machine: any) => {
+  const analysis = {
+    stateCount: 0,
+    transitionCount: 0,
+    actionCount: 0,
+    guardCount: 0,
+    serviceCount: 0,
+  }
+
+  const traverse = (stateNode: any) => {
+    analysis.stateCount++
+    
+    if (stateNode.on) {
+      analysis.transitionCount += Object.keys(stateNode.on).length
+    }
+    
+    if (stateNode.states) {
+      Object.values(stateNode.states).forEach(traverse)
+    }
+  }
+
+  traverse(machine.config)
+  
+  if (machine.config.actions) {
+    analysis.actionCount = Object.keys(machine.config.actions).length
+  }
+  
+  if (machine.config.guards) {
+    analysis.guardCount = Object.keys(machine.config.guards).length
+  }
+  
+  if (machine.config.services) {
+    analysis.serviceCount = Object.keys(machine.config.services).length
+  }
+
+  return analysis
+}
+```
+
+## Advanced Testing Patterns
+
+**Comprehensive testing strategies for XState machines:**
+```tsx
+import { interpret } from 'xstate'
+import { waitFor } from '@testing-library/react'
+
+// ✅ Testing utilities for XState machines
+export const testMachineTransition = async (
+  machine: any,
+  initialContext: any,
+  events: any[],
+  expectedFinalState: string
+) => {
+  const service = interpret(machine.withContext(initialContext))
+  service.start()
+
+  for (const event of events) {
+    service.send(event)
+    // Wait for any async operations
+    await new Promise(resolve => setTimeout(resolve, 0))
+  }
+
+  expect(service.getSnapshot().matches(expectedFinalState)).toBe(true)
+  service.stop()
+}
+
+// ✅ Mock services for testing
+const createMockServices = () => ({
+  fetchUsersService: jest.fn().mockResolvedValue({
+    users: [
+      { id: '1', firstName: 'John', lastName: 'Doe', email: 'john@test.com' },
+      { id: '2', firstName: 'Jane', lastName: 'Smith', email: 'jane@test.com' },
+    ],
+    total: 2,
+  }),
+  
+  saveUserService: jest.fn().mockResolvedValue({
+    id: '1',
+    firstName: 'Updated',
+    lastName: 'User',
+    email: 'updated@test.com',
+  }),
+  
+  deleteUserService: jest.fn().mockResolvedValue({
+    userId: '1',
+  }),
+  
+  bulkActionService: jest.fn().mockResolvedValue({
+    updatedIds: ['1', '2'],
+    updates: { isActive: false },
+  }),
+})
+
+// ✅ Comprehensive test suite
+describe('User Management State Machine', () => {
+  let mockServices: ReturnType<typeof createMockServices>
+  let testMachine: any
+
+  beforeEach(() => {
+    mockServices = createMockServices()
+    testMachine = userManagementMachine.withConfig({
+      services: mockServices,
+    })
+  })
+
+  describe('Initial State', () => {
+    test('starts in loading state', () => {
+      const service = interpret(testMachine)
+      expect(service.getSnapshot().matches('loading')).toBe(true)
+    })
+
+    test('has correct initial context', () => {
+      const service = interpret(testMachine)
+      const snapshot = service.getSnapshot()
+      
+      expect(snapshot.context.users).toEqual([])
+      expect(snapshot.context.selectedUser).toBeNull()
+      expect(snapshot.context.error).toBeNull()
+      expect(snapshot.context.retryCount).toBe(0)
+    })
+  })
+
+  describe('Loading Flow', () => {
+    test('transitions to idle on successful fetch', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      const snapshot = service.getSnapshot()
+      expect(snapshot.context.users).toHaveLength(2)
+      expect(mockServices.fetchUsersService).toHaveBeenCalled()
+    })
+
+    test('transitions to error on failed fetch with max retries', async () => {
+      mockServices.fetchUsersService.mockRejectedValue(new Error('Network error'))
+      
+      const service = interpret(testMachine)
+      service.start()
+
+      // Should retry 3 times then go to error state
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('error')).toBe(true)
+      })
+
+      expect(service.getSnapshot().context.retryCount).toBe(3)
+      expect(service.getSnapshot().context.error).toBe('Network error')
+    })
+
+    test('retries on failure before max retries', async () => {
+      let callCount = 0
+      mockServices.fetchUsersService.mockImplementation(() => {
+        callCount++
+        if (callCount < 3) {
+          return Promise.reject(new Error('Network error'))
+        }
+        return Promise.resolve({ users: [], total: 0 })
+      })
+
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      expect(callCount).toBe(3)
+    })
+  })
+
+  describe('User Operations', () => {
+    test('selects user correctly', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      const testUser = { id: '1', firstName: 'Test', lastName: 'User' } as User
+      service.send({ type: 'SELECT_USER', user: testUser })
+
+      expect(service.getSnapshot().context.selectedUser).toEqual(testUser)
+    })
+
+    test('editing flow works correctly', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      const testUser = { id: '1', firstName: 'Test', lastName: 'User' } as User
+      
+      // Start editing
+      service.send({ type: 'EDIT_USER', user: testUser })
+      expect(service.getSnapshot().matches({ idle: { dataManagement: 'editing' } })).toBe(true)
+      expect(service.getSnapshot().context.selectedUser).toEqual(testUser)
+
+      // Save user
+      service.send({ type: 'SAVE_USER', userData: { firstName: 'Updated' } })
+      expect(service.getSnapshot().matches({ idle: { dataManagement: { editing: 'saving' } } })).toBe(true)
+
+      // Wait for save to complete
+      await waitFor(() => {
+        expect(service.getSnapshot().matches({ idle: { dataManagement: 'viewing' } })).toBe(true)
+      })
+
+      expect(mockServices.saveUserService).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({ userData: { firstName: 'Updated' } })
+      )
+    })
+
+    test('delete user flow works correctly', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      service.send({ type: 'DELETE_USER', userId: '1' })
+      expect(service.getSnapshot().matches({ idle: { dataManagement: 'deleting' } })).toBe(true)
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches({ idle: { dataManagement: 'viewing' } })).toBe(true)
+      })
+
+      expect(mockServices.deleteUserService).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({ userId: '1' })
+      )
+    })
+  })
+
+  describe('Filtering and Search', () => {
+    test('search triggers debounced filter', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      service.send({ type: 'SEARCH', query: 'test' })
+      expect(service.getSnapshot().matches({ idle: { filtering: 'debouncing' } })).toBe(true)
+      expect(service.getSnapshot().context.filters.search).toBe('test')
+
+      // Wait for debounce to complete
+      await waitFor(() => {
+        expect(service.getSnapshot().matches({ idle: { filtering: 'active' } })).toBe(true)
+      }, { timeout: 500 })
+    })
+
+    test('filter updates context correctly', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      service.send({ type: 'FILTER', filters: { status: 'active', role: 'admin' } })
+      
+      const context = service.getSnapshot().context
+      expect(context.filters.status).toBe('active')
+      expect(context.filters.role).toBe('admin')
+      expect(context.pagination.page).toBe(1) // Should reset page
+    })
+  })
+
+  describe('Pagination', () => {
+    test('pagination updates page and triggers fetch', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      service.send({ type: 'PAGINATE', page: 2 })
+      expect(service.getSnapshot().matches({ idle: { pagination: 'navigating' } })).toBe(true)
+      expect(service.getSnapshot().context.pagination.page).toBe(2)
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches({ idle: { pagination: 'ready' } })).toBe(true)
+      })
+    })
+  })
+
+  describe('Error Handling', () => {
+    test('clear error transitions back to idle', async () => {
+      mockServices.fetchUsersService.mockRejectedValue(new Error('Network error'))
+      
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('error')).toBe(true)
+      })
+
+      service.send({ type: 'CLEAR_ERROR' })
+      expect(service.getSnapshot().matches('idle')).toBe(true)
+      expect(service.getSnapshot().context.error).toBeNull()
+    })
+
+    test('retry from error state works', async () => {
+      let callCount = 0
+      mockServices.fetchUsersService.mockImplementation(() => {
+        callCount++
+        if (callCount <= 3) {
+          return Promise.reject(new Error('Network error'))
+        }
+        return Promise.resolve({ users: [], total: 0 })
+      })
+
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('error')).toBe(true)
+      })
+
+      service.send({ type: 'RETRY' })
+      expect(service.getSnapshot().matches('loading')).toBe(true)
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+    })
+  })
+
+  describe('Notifications', () => {
+    test('notifications are added and removed correctly', async () => {
+      const service = interpret(testMachine)
+      service.start()
+
+      await waitFor(() => {
+        expect(service.getSnapshot().matches('idle')).toBe(true)
+      })
+
+      service.send({ 
+        type: 'SHOW_NOTIFICATION', 
+        notification: { type: 'success', message: 'Test notification' } 
+      })
+
+      expect(service.getSnapshot().context.notifications).toHaveLength(1)
+      expect(service.getSnapshot().context.notifications[0].message).toBe('Test notification')
+
+      const notificationId = service.getSnapshot().context.notifications[0].id
+      service.send({ type: 'DISMISS_NOTIFICATION', id: notificationId })
+
+      expect(service.getSnapshot().context.notifications).toHaveLength(0)
+    })
+  })
+
+  describe('Guards', () => {
+    test('maxRetriesReached guard works correctly', () => {
+      const context = { ...testMachine.context, retryCount: 3 }
+      const guard = testMachine.config.guards.maxRetriesReached
+      
+      expect(guard(context, {} as any)).toBe(true)
+      
+      const contextWithLessRetries = { ...context, retryCount: 2 }
+      expect(guard(contextWithLessRetries, {} as any)).toBe(false)
+    })
+
+    test('canDelete guard prevents admin deletion', () => {
+      const context = {
+        ...testMachine.context,
+        users: [
+          { id: '1', roles: ['admin'] } as User,
+          { id: '2', roles: ['user'] } as User,
+        ],
+      }
+      
+      const guard = testMachine.config.guards.canDelete
+      
+      expect(guard(context, { userId: '1' } as any)).toBe(false)
+      expect(guard(context, { userId: '2' } as any)).toBe(true)
+    })
+  })
+})
+
+// ✅ Integration tests with React components
+describe('XState React Integration', () => {
+  test('useUserManagement hook works correctly', async () => {
+    const TestComponent = () => {
+      const userManagement = useUserManagement()
+      
+      return (
+        <div>
+          <div data-testid="loading">{userManagement.loading.toString()}</div>
+          <div data-testid="users-count">{userManagement.users.length}</div>
+          <button 
+            data-testid="fetch-button" 
+            onClick={userManagement.actions.fetchUsers}
+          >
+            Fetch Users
+          </button>
+        </div>
+      )
+    }
+
+    const { getByTestId } = render(<TestComponent />)
+    
+    expect(getByTestId('loading')).toHaveTextContent('true')
+    expect(getByTestId('users-count')).toHaveTextContent('0')
+
+    await waitFor(() => {
+      expect(getByTestId('loading')).toHaveTextContent('false')
+      expect(getByTestId('users-count')).toHaveTextContent('2')
+    })
+  })
+})
+```
+
+## Performance Optimization
+
+**Advanced patterns for optimizing XState applications:**
+```tsx
+import { useMemo, useRef, useCallback } from 'react'
+
+// ✅ Optimized selectors to prevent unnecessary re-renders
+const createUserSelectors = () => {
+  const selectUsers = (state: UserManagementState) => state.context.users
+  const selectLoading = (state: UserManagementState) => 
+    state.matches('loading') || state.matches({ idle: { dataManagement: 'deleting' } })
+  const selectError = (state: UserManagementState) => state.context.error
+  const selectFilters = (state: UserManagementState) => state.context.filters
+  const selectPagination = (state: UserManagementState) => state.context.pagination
+  
+  // ✅ Memoized computed selectors
+  const selectFilteredUsers = useMemo(() => 
+    (state: UserManagementState) => {
+      const users = selectUsers(state)
+      const filters = selectFilters(state)
+      
+      if (!filters.search && filters.status === 'all' && filters.role === 'all') {
+        return users
+      }
+      
+      return users.filter(user => {
+        if (filters.search) {
+          const query = filters.search.toLowerCase()
+          const matchesSearch = 
+            user.firstName.toLowerCase().includes(query) ||
+            user.lastName.toLowerCase().includes(query) ||
+            user.email.toLowerCase().includes(query)
+          if (!matchesSearch) return false
+        }
+        
+        if (filters.status !== 'all') {
+          const isActive = filters.status === 'active'
+          if (user.isActive !== isActive) return false
+        }
+        
+        if (filters.role !== 'all') {
+          if (!user.roles.includes(filters.role)) return false
+        }
+        
+        return true
+      })
+    },
+    []
+  )
+  
+  const selectPaginatedUsers = useMemo(() =>
+    (state: UserManagementState) => {
+      const filteredUsers = selectFilteredUsers(state)
+      const pagination = selectPagination(state)
+      
+      const start = (pagination.page - 1) * pagination.pageSize
+      const end = start + pagination.pageSize
+      
+      return filteredUsers.slice(start, end)
+    },
+    [selectFilteredUsers]
+  )
+
+  return {
+    selectUsers,
+    selectLoading,
+    selectError,
+    selectFilters,
+    selectPagination,
+    selectFilteredUsers,
+    selectPaginatedUsers,
+  }
+}
+
+// ✅ Optimized hook with selective subscriptions
+export const useOptimizedUserManagement = () => {
+  const [state, send] = useMachine(userManagementMachine)
+  const selectorsRef = useRef(createUserSelectors())
+  
+  // ✅ Only re-render when specific data changes
+  const users = useSelector(state, selectorsRef.current.selectUsers)
+  const loading = useSelector(state, selectorsRef.current.selectLoading)
+  const error = useSelector(state, selectorsRef.current.selectError)
+  const filteredUsers = useSelector(state, selectorsRef.current.selectFilteredUsers)
+  const paginatedUsers = useSelector(state, selectorsRef.current.selectPaginatedUsers)
+  
+  // ✅ Memoized action creators
+  const actions = useMemo(() => ({
+    fetchUsers: () => send({ type: 'FETCH_USERS' }),
+    search: (query: string) => send({ type: 'SEARCH', query }),
+    filter: (filters: Partial<UserContext['filters']>) => send({ type: 'FILTER', filters }),
+    paginate: (page: number) => send({ type: 'PAGINATE', page }),
+    selectUser: (user: User) => send({ type: 'SELECT_USER', user }),
+    editUser: (user: User) => send({ type: 'EDIT_USER', user }),
+    deleteUser: (userId: string) => send({ type: 'DELETE_USER', userId }),
+    bulkAction: (action: string, userIds: string[]) => send({ type: 'BULK_ACTION', action, userIds }),
+  }), [send])
+  
+  return {
+    users,
+    loading,
+    error,
+    filteredUsers,
+    paginatedUsers,
+    actions,
+    state,
+    send,
+  }
+}
+
+// ✅ Performance monitoring for state machines
+export class XStatePerformanceMonitor {
+  private transitionTimes: Map<string, number[]> = new Map()
+  private renderCounts: Map<string, number> = new Map()
+  
+  measureTransition(fromState: string, toState: string, duration: number) {
+    const transitionKey = `${fromState} → ${toState}`
+    const times = this.transitionTimes.get(transitionKey) || []
+    times.push(duration)
+    this.transitionTimes.set(transitionKey, times)
+    
+    if (duration > 100) { // Slow transition warning
+      console.warn(`Slow state transition: ${transitionKey} took ${duration}ms`)
+    }
+  }
+  
+  trackRender(componentName: string) {
+    const count = this.renderCounts.get(componentName) || 0
+    this.renderCounts.set(componentName, count + 1)
+    
+    if ((count + 1) % 50 === 0) {
+      console.log(`Component ${componentName} has rendered ${count + 1} times`)
+    }
+  }
+  
+  getStats() {
+    const transitionStats = new Map<string, { avg: number; max: number; count: number }>()
+    
+    for (const [transition, times] of this.transitionTimes.entries()) {
+      const avg = times.reduce((sum, time) => sum + time, 0) / times.length
+      const max = Math.max(...times)
+      transitionStats.set(transition, { avg, max, count: times.length })
+    }
+    
+    return {
+      transitions: Object.fromEntries(transitionStats),
+      renders: Object.fromEntries(this.renderCounts),
+    }
+  }
+  
+  reset() {
+    this.transitionTimes.clear()
+    this.renderCounts.clear()
+  }
+}
+
+// ✅ HOC for performance monitoring
+export function withXStatePerformanceMonitoring<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+  componentName: string
+) {
+  const monitor = new XStatePerformanceMonitor()
+  
+  return React.memo((props: P) => {
+    monitor.trackRender(componentName)
+    
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const stats = monitor.getStats()
+        console.log(`Performance stats for ${componentName}:`, stats)
+      }, 30000) // Log every 30 seconds
+      
+      return () => clearInterval(interval)
+    }, [])
+    
+    return <WrappedComponent {...props} />
+  })
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for professional XState applications:**
+
+1. **Machine Design**: Create hierarchical state machines with clear state boundaries, use parallel states for independent concerns, implement proper error states with recovery paths.
+
+2. **Type Safety**: Define strict TypeScript interfaces for context and events, use proper typing for guards and actions, implement type-safe selectors.
+
+3. **React Integration**: Use optimized selectors to prevent unnecessary re-renders, leverage useMemo for expensive computations, implement proper cleanup patterns.
+
+4. **Testing**: Test state transitions independently, mock services for deterministic tests, use comprehensive integration tests with React components.
+
+5. **Performance**: Implement selective subscriptions with useSelector, use memoized selectors for computed values, monitor transition performance.
+
+6. **Debugging**: Use XState DevTools for visualization, implement comprehensive logging in development, create debugging utilities for state inspection.
+
+7. **Architecture**: Use actor model for complex applications, implement proper service abstractions, create reusable machine configurations.
+
+8. **Error Handling**: Implement proper error boundaries, create retry mechanisms with exponential backoff, provide user-friendly error messages.
+
+Always prioritize clear state modeling, maintain predictable transitions, and leverage XState's visualization tools for understanding complex state flows in enterprise applications.
+```
   },
   states: {
     idle: {

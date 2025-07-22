@@ -1,53 +1,158 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and using Semantic UI React with Less in React applications.
-globs: '**/*.{ts,tsx,js,jsx,less}'
+description: Advanced React Semantic UI with Less preprocessing patterns for custom theming, component styling, variable management, and enterprise design systems.
+globs: '**/*.{ts,tsx,js,jsx,less,css}', '**/semantic.json', '**/theme.config'
 ---
 
-# Semantic UI React with Less Rules
+# Advanced React Semantic UI with Less Implementation
 
-You are an expert in Semantic UI React with Less and follow these guidelines:
+## Enterprise Less Theme Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create components with clear, descriptive names and organize them by feature/domain.
-3. Use Semantic UI's built-in theming system with Less for consistent styling.
-4. Leverage Semantic UI's responsive utilities for mobile-first design.
-5. Use Semantic UI's color system with Less variables for consistent branding.
-6. Use Less mixins and variables for reusable styles.
-7. Follow Semantic UI's design patterns for consistent UX.
-8. Document component behavior with JSDoc or TypeScript types.
-9. Implement proper error boundaries and loading states.
-10. Follow accessibility best practices.
+**Comprehensive theming system with custom Less preprocessing:**
+```less
+// themes/default/globals/site.variables
+/*******************************
+     User Global Variables
+*******************************/
 
-## Anti-Patterns to Avoid
+/* Primary Colors */
+@primaryColor        : #2185D0;
+@secondaryColor      : #1B1C1D;
+@redColor            : #DB2828;
+@orangeColor         : #F2711C;
+@yellowColor         : #FBBD08;
+@oliveColor          : #B5CC18;
+@greenColor          : #21BA45;
+@tealColor           : #00B5AD;
+@blueColor           : #2185D0;
+@violetColor         : #6435C9;
+@purpleColor         : #A333C8;
+@pinkColor           : #E03997;
+@brownColor          : #A5673F;
+@greyColor           : #767676;
+@blackColor          : #1B1C1D;
 
-1. Never use Semantic UI components for server-side rendering without proper hydration.
-2. Avoid using Semantic UI components for complex, custom UI elements.
-3. Don't use Semantic UI components for performance-critical UI elements.
-4. Avoid using Semantic UI components for complex animations.
-5. Don't use Semantic UI components for complex, custom layouts.
+/* Brand Colors */
+@lightPrimaryColor   : lighten(@primaryColor, 5);
+@lightSecondaryColor : lighten(@secondaryColor, 5);
+@darkPrimaryColor    : darken(@primaryColor, 5);
+@darkSecondaryColor  : darken(@secondaryColor, 5);
 
-## Example Implementation
+/* Neutral Colors */
+@fullBlack           : #000000;
+@offWhite            : #F9FAFB;
+@darkWhite           : #F3F4F5;
+@midWhite            : #DCDDDE;
+@white               : #FFFFFF;
 
-```tsx
-import React from 'react';
-import { Card, Image, Button, Loader } from 'semantic-ui-react';
-import './ProductCard.less';
+/* Typography */
+@pageFont           : 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@headerFont         : 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@fontSmoothing      : antialiased;
 
-interface ProductCardProps {
-  product: Product;
-  onAddToCart: (product: Product) => void;
-  isLoading?: boolean;
+/* Shadow System */
+@subtleShadow: 0px 1px 2px 0px rgba(34, 36, 38, 0.15);
+@floatingShadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12), 0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+@highlightShadow: 0px 4px 8px 0px rgba(34, 36, 38, 0.15), 0px 8px 20px 0px rgba(34, 36, 38, 0.10);
+
+/* Border Radius */
+@defaultBorderRadius: 4px;
+@largeBorderRadius: 6px;
+@circularRadius: 50%;
+
+/* Animation */
+@defaultDuration: 0.3s;
+@defaultEasing: ease;
+@transitionDuration: @defaultDuration;
+@transitionEasing: @defaultEasing;
+
+/* Breakpoints */
+@mobileBreakpoint: 320px;
+@tabletBreakpoint: 768px;
+@computerBreakpoint: 992px;
+@largeMonitorBreakpoint: 1200px;
+@widescreenMonitorBreakpoint: 1920px;
+```
+
+**Advanced Less mixins library:**
+```less
+// mixins/utilities.less
+.flex(@direction: row, @wrap: nowrap, @justify: flex-start, @align: stretch) {
+  display: flex;
+  flex-direction: @direction;
+  flex-wrap: @wrap;
+  justify-content: @justify;
+  align-items: @align;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ 
-  product, 
-  onAddToCart,
-  isLoading = false 
-}) => (
-  <Card className="product-card">
-    <Image src={product.image} wrapped ui={false} />
-    <Card.Content>
-      <Card.Header>{product.name}</Card.Header>
+.grid(@columns: 12, @gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat(@columns, 1fr);
+  gap: @gap;
+}
+
+.text-clamp(@lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: @lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.elevation(@level: 1) {
+  @shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12);
+  @shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16);
+  @shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19);
+  
+  & when (@level = 1) { box-shadow: @shadow-1; }
+  & when (@level = 2) { box-shadow: @shadow-2; }
+  & when (@level = 3) { box-shadow: @shadow-3; }
+}
+
+.transition(@property: all, @duration: @defaultDuration, @easing: @defaultEasing) {
+  transition: @property @duration @easing;
+}
+
+.gradient-bg(@color1: @primaryColor, @color2: @secondaryColor, @direction: 135deg) {
+  background: linear-gradient(@direction, @color1 0%, @color2 100%);
+}
+
+.glass-bg(@opacity: 0.2, @blur: 10px) {
+  background: rgba(255, 255, 255, @opacity);
+  backdrop-filter: blur(@blur);
+}
+```
+
+## TypeScript Component Integration
+
+**Advanced React component with Less styling:**
+```tsx
+import React, { useState, useEffect, useMemo } from 'react'
+import {
+  Card,
+  Image,
+  Button,
+  Header,
+  Segment,
+  Grid,
+  Dropdown,
+  Input,
+  Label,
+  Icon,
+  Loader,
+  Message,
+  Modal,
+  Form,
+  Progress,
+  Statistic,
+  Feed,
+  Comment,
+  Rating,
+  Accordion,
+  Menu,
+  Sidebar,
+  Dimmer
+} from 'semantic-ui-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import './ProductCatalog.less'
       <Card.Description>{product.description}</Card.Description>
     </Card.Content>
     <Card.Content extra>

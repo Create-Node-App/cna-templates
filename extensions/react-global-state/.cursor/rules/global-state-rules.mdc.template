@@ -1,48 +1,1261 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and managing global state in React applications.
+description: Advanced React global state management patterns for scalable applications, state synchronization, middleware integration, and enterprise-grade state architecture.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Global State Rules
+# Advanced React Global State Management
 
-You are an expert in Global State management and follow these guidelines:
+## Enterprise Global State Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create global state with clear, descriptive names and organize it by feature/domain.
-3. Use the `createGlobalState` function with proper typing and avoid direct state mutations.
-4. Implement selectors for derived state and memoize them when necessary.
-5. Handle async actions inside the state using proper error handling.
-6. Use proper state splitting to avoid unnecessary re-renders.
-7. Follow the single responsibility principle for each global state.
-8. Document state behavior with JSDoc or TypeScript types.
-9. Implement proper error boundaries and loading states.
-10. Use proper state subscriptions to optimize performance.
+**Scalable global state with middleware, persistence, and advanced patterns:**
+```tsx
+import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from 'react'
 
-## Anti-Patterns to Avoid
-
-1. Never use global state for server state (use React Query or SWR instead).
-2. Avoid putting all app state in a single global state.
-3. Don't store large, frequently-changing collections unless necessary.
-4. Avoid side effects inside state definitions.
-5. Don't mirror backend state without transformation.
-
-## Example Implementation
-
-```ts
-import { createGlobalState } from 'react-global-state';
-
-interface AuthState {
-  user: User | null;
-  error: string | null;
-  login: (user: User) => void;
-  logout: () => void;
-  setError: (error: string) => void;
+// ✅ Advanced global state factory with middleware support
+interface StateConfig<T> {
+  initialState: T
+  middleware?: Array<Middleware<T>>
+  persistence?: PersistenceConfig<T>
+  devTools?: boolean
 }
 
-export const useAuthState = createGlobalState<AuthState>({
-  user: null,
-  error: null,
-  login: (user) => ({ user, error: null }),
-  logout: () => ({ user: null, error: null }),
-  setError: (error) => ({ error }),
-}); 
+interface Middleware<T> {
+  (state: T, action: Action, next: (state: T) => void): void
+}
+
+interface PersistenceConfig<T> {
+  key: string
+  storage?: Storage
+  serialize?: (state: T) => string
+  deserialize?: (data: string) => Partial<T>
+  whitelist?: Array<keyof T>
+  blacklist?: Array<keyof T>
+}
+
+interface Action {
+  type: string
+  payload?: any
+  meta?: {
+    optimistic?: boolean
+    timestamp?: number
+    source?: string
+  }
+}
+
+interface StateManager<T> {
+  state: T
+  dispatch: (action: Action) => void
+  subscribe: (listener: (state: T) => void) => () => void
+  getState: () => T
+  replaceState: (newState: T) => void
+  reset: () => void
+}
+
+// ✅ Global state factory with advanced features
+export function createGlobalState<T extends Record<string, any>>(
+  config: StateConfig<T>
+): {
+  Provider: React.FC<{ children: React.ReactNode }>
+  useGlobalState: () => [T, (action: Action) => void]
+  useStateSelector: <R>(selector: (state: T) => R) => R
+  useStateActions: () => StateManager<T>
+  getGlobalState: () => T
+} {
+  const { initialState, middleware = [], persistence, devTools = false } = config
+  
+  // Load persisted state
+  let loadedState = initialState
+  if (persistence) {
+    try {
+      const stored = (persistence.storage || localStorage).getItem(persistence.key)
+      if (stored) {
+        const deserializedState = persistence.deserialize 
+          ? persistence.deserialize(stored)
+          : JSON.parse(stored)
+        
+        // Apply whitelist/blacklist
+        if (persistence.whitelist) {
+          const filtered: Partial<T> = {}
+          persistence.whitelist.forEach(key => {
+            if (key in deserializedState) {
+              filtered[key] = deserializedState[key]
+            }
+          })
+          loadedState = { ...initialState, ...filtered }
+        } else if (persistence.blacklist) {
+          const filtered = { ...deserializedState }
+          persistence.blacklist.forEach(key => {
+            delete filtered[key]
+          })
+          loadedState = { ...initialState, ...filtered }
+        } else {
+          loadedState = { ...initialState, ...deserializedState }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to load persisted state:', error)
+    }
+  }
+
+  const StateContext = createContext<StateManager<T> | null>(null)
+  
+  let globalState: T = loadedState
+  const listeners = new Set<(state: T) => void>()
+  
+  const subscribe = (listener: (state: T) => void) => {
+    listeners.add(listener)
+    return () => listeners.delete(listener)
+  }
+  
+  const notify = () => {
+    listeners.forEach(listener => listener(globalState))
+  }
+  
+  const persistState = (state: T) => {
+    if (!persistence) return
+    
+    try {
+      let stateToPersist = state
+      
+      // Apply whitelist/blacklist
+      if (persistence.whitelist) {
+        const filtered: Partial<T> = {}
+        persistence.whitelist.forEach(key => {
+          if (key in state) {
+            filtered[key] = state[key]
+          }
+        })
+        stateToPersist = filtered as T
+      } else if (persistence.blacklist) {
+        const filtered = { ...state }
+        persistence.blacklist.forEach(key => {
+          delete filtered[key]
+        })
+        stateToPersist = filtered
+      }
+      
+      const serialized = persistence.serialize 
+        ? persistence.serialize(stateToPersist)
+        : JSON.stringify(stateToPersist)
+      
+      ;(persistence.storage || localStorage).setItem(persistence.key, serialized)
+    } catch (error) {
+      console.warn('Failed to persist state:', error)
+    }
+  }
+  
+  const dispatch = (action: Action) => {
+    const prevState = globalState
+    
+    // Apply middleware chain
+    let currentState = prevState
+    let middlewareIndex = 0
+    
+    const next = (newState: T) => {
+      currentState = newState
+      
+      if (middlewareIndex < middleware.length) {
+        const currentMiddleware = middleware[middlewareIndex++]
+        currentMiddleware(currentState, action, next)
+      } else {
+        // All middleware processed, update global state
+        globalState = currentState
+        
+        // Persist state
+        persistState(globalState)
+        
+        // DevTools integration
+        if (devTools && typeof window !== 'undefined' && (window as any).__REDUX_DEVTOOLS_EXTENSION__) {
+          ;(window as any).__REDUX_DEVTOOLS_EXTENSION__.send(action.type, globalState)
+        }
+        
+        // Notify subscribers
+        notify()
+      }
+    }
+    
+    next(currentState)
+  }
+  
+  const stateManager: StateManager<T> = {
+    state: globalState,
+    dispatch,
+    subscribe,
+    getState: () => globalState,
+    replaceState: (newState: T) => {
+      globalState = newState
+      persistState(globalState)
+      notify()
+    },
+    reset: () => {
+      globalState = initialState
+      persistState(globalState)
+      notify()
+    }
+  }
+  
+  const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [state, forceUpdate] = useReducer((x: number) => x + 1, 0)
+    
+    useEffect(() => {
+      return subscribe(() => forceUpdate())
+    }, [])
+    
+    return (
+      <StateContext.Provider value={stateManager}>
+        {children}
+      </StateContext.Provider>
+    )
+  }
+  
+  const useGlobalState = (): [T, (action: Action) => void] => {
+    const manager = useContext(StateContext)
+    if (!manager) {
+      throw new Error('useGlobalState must be used within a Provider')
+    }
+    
+    const [, forceUpdate] = useReducer((x: number) => x + 1, 0)
+    
+    useEffect(() => {
+      return subscribe(() => forceUpdate())
+    }, [])
+    
+    return [globalState, dispatch]
+  }
+  
+  const useStateSelector = <R>(selector: (state: T) => R): R => {
+    const manager = useContext(StateContext)
+    if (!manager) {
+      throw new Error('useStateSelector must be used within a Provider')
+    }
+    
+    const [, forceUpdate] = useReducer((x: number) => x + 1, 0)
+    const selectedValueRef = React.useRef<R>(selector(globalState))
+    
+    useEffect(() => {
+      return subscribe((state) => {
+        const newValue = selector(state)
+        if (newValue !== selectedValueRef.current) {
+          selectedValueRef.current = newValue
+          forceUpdate()
+        }
+      })
+    }, [selector])
+    
+    return selectedValueRef.current
+  }
+  
+  const useStateActions = () => {
+    const manager = useContext(StateContext)
+    if (!manager) {
+      throw new Error('useStateActions must be used within a Provider')
+    }
+    return manager
+  }
+  
+  const getGlobalState = () => globalState
+  
+  return {
+    Provider,
+    useGlobalState,
+    useStateSelector,
+    useStateActions,
+    getGlobalState
+  }
+}
+
+// ✅ Advanced user management global state
+interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'user' | 'guest'
+  avatar?: string
+  preferences: {
+    theme: 'light' | 'dark'
+    notifications: boolean
+    language: string
+  }
+  metadata: {
+    lastLogin: Date | null
+    loginCount: number
+    isOnline: boolean
+  }
+}
+
+interface UserState {
+  currentUser: User | null
+  users: Record<string, User>
+  selectedUserIds: string[]
+  filters: {
+    role: string
+    search: string
+    online: boolean
+  }
+  ui: {
+    loading: boolean
+    error: string | null
+    modals: {
+      userProfile: boolean
+      userSettings: boolean
+    }
+  }
+  cache: {
+    lastFetch: Date | null
+    etags: Record<string, string>
+  }
+}
+
+// ✅ Middleware implementations
+const loggingMiddleware: Middleware<UserState> = (state, action, next) => {
+  console.group(`Action: ${action.type}`)
+  console.log('Previous State:', state)
+  console.log('Action:', action)
+  
+  next(state) // Continue to next middleware
+  
+  console.log('Next State:', state)
+  console.groupEnd()
+}
+
+const analyticsMiddleware: Middleware<UserState> = (state, action, next) => {
+  // Track actions for analytics
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'state_action', {
+      event_category: 'user_management',
+      event_label: action.type,
+      custom_parameters: {
+        user_count: Object.keys(state.users).length,
+        has_user: !!state.currentUser
+      }
+    })
+  }
+  
+  next(state)
+}
+
+const optimisticUpdateMiddleware: Middleware<UserState> = (state, action, next) => {
+  if (action.meta?.optimistic) {
+    // Handle optimistic updates
+    const timestamp = action.meta.timestamp || Date.now()
+    
+    // Store original state for potential rollback
+    const rollbackKey = `rollback_${action.type}_${timestamp}`
+    sessionStorage.setItem(rollbackKey, JSON.stringify(state))
+    
+    // Set cleanup timer
+    setTimeout(() => {
+      sessionStorage.removeItem(rollbackKey)
+    }, 30000) // Clean up after 30 seconds
+  }
+  
+  next(state)
+}
+
+// ✅ Action creators with type safety
+export const userActions = {
+  setCurrentUser: (user: User): Action => ({
+    type: 'SET_CURRENT_USER',
+    payload: { user }
+  }),
+  
+  updateUser: (userId: string, updates: Partial<User>, optimistic = false): Action => ({
+    type: 'UPDATE_USER',
+    payload: { userId, updates },
+    meta: { optimistic, timestamp: Date.now() }
+  }),
+  
+  addUser: (user: User): Action => ({
+    type: 'ADD_USER',
+    payload: { user }
+  }),
+  
+  removeUser: (userId: string, optimistic = false): Action => ({
+    type: 'REMOVE_USER',
+    payload: { userId },
+    meta: { optimistic, timestamp: Date.now() }
+  }),
+  
+  setUsers: (users: User[]): Action => ({
+    type: 'SET_USERS',
+    payload: { users }
+  }),
+  
+  selectUsers: (userIds: string[]): Action => ({
+    type: 'SELECT_USERS',
+    payload: { userIds }
+  }),
+  
+  updateFilters: (filters: Partial<UserState['filters']>): Action => ({
+    type: 'UPDATE_FILTERS',
+    payload: { filters }
+  }),
+  
+  setLoading: (loading: boolean): Action => ({
+    type: 'SET_LOADING',
+    payload: { loading }
+  }),
+  
+  setError: (error: string | null): Action => ({
+    type: 'SET_ERROR',
+    payload: { error }
+  }),
+  
+  toggleModal: (modal: keyof UserState['ui']['modals']): Action => ({
+    type: 'TOGGLE_MODAL',
+    payload: { modal }
+  }),
+  
+  updateCache: (updates: Partial<UserState['cache']>): Action => ({
+    type: 'UPDATE_CACHE',
+    payload: { updates }
+  })
+}
+
+// ✅ State reducer with advanced patterns
+const userStateReducer: Middleware<UserState> = (state, action, next) => {
+  let newState = { ...state }
+  
+  switch (action.type) {
+    case 'SET_CURRENT_USER':
+      newState = {
+        ...state,
+        currentUser: action.payload.user,
+        ui: { ...state.ui, error: null }
+      }
+      break
+      
+    case 'UPDATE_USER':
+      const { userId, updates } = action.payload
+      if (state.users[userId]) {
+        newState = {
+          ...state,
+          users: {
+            ...state.users,
+            [userId]: { ...state.users[userId], ...updates }
+          },
+          currentUser: state.currentUser?.id === userId 
+            ? { ...state.currentUser, ...updates }
+            : state.currentUser
+        }
+      }
+      break
+      
+    case 'ADD_USER':
+      newState = {
+        ...state,
+        users: {
+          ...state.users,
+          [action.payload.user.id]: action.payload.user
+        }
+      }
+      break
+      
+    case 'REMOVE_USER':
+      const { [action.payload.userId]: removed, ...remainingUsers } = state.users
+      newState = {
+        ...state,
+        users: remainingUsers,
+        selectedUserIds: state.selectedUserIds.filter(id => id !== action.payload.userId),
+        currentUser: state.currentUser?.id === action.payload.userId ? null : state.currentUser
+      }
+      break
+      
+    case 'SET_USERS':
+      const usersMap: Record<string, User> = {}
+      action.payload.users.forEach((user: User) => {
+        usersMap[user.id] = user
+      })
+      newState = {
+        ...state,
+        users: usersMap,
+        cache: {
+          ...state.cache,
+          lastFetch: new Date()
+        }
+      }
+      break
+      
+    case 'SELECT_USERS':
+      newState = {
+        ...state,
+        selectedUserIds: action.payload.userIds
+      }
+      break
+      
+    case 'UPDATE_FILTERS':
+      newState = {
+        ...state,
+        filters: {
+          ...state.filters,
+          ...action.payload.filters
+        }
+      }
+      break
+      
+    case 'SET_LOADING':
+      newState = {
+        ...state,
+        ui: {
+          ...state.ui,
+          loading: action.payload.loading
+        }
+      }
+      break
+      
+    case 'SET_ERROR':
+      newState = {
+        ...state,
+        ui: {
+          ...state.ui,
+          error: action.payload.error
+        }
+      }
+      break
+      
+    case 'TOGGLE_MODAL':
+      newState = {
+        ...state,
+        ui: {
+          ...state.ui,
+          modals: {
+            ...state.ui.modals,
+            [action.payload.modal]: !state.ui.modals[action.payload.modal]
+          }
+        }
+      }
+      break
+      
+    case 'UPDATE_CACHE':
+      newState = {
+        ...state,
+        cache: {
+          ...state.cache,
+          ...action.payload.updates
+        }
+      }
+      break
+      
+    case 'RESET_STATE':
+      newState = {
+        currentUser: null,
+        users: {},
+        selectedUserIds: [],
+        filters: { role: 'all', search: '', online: false },
+        ui: { 
+          loading: false, 
+          error: null, 
+          modals: { userProfile: false, userSettings: false } 
+        },
+        cache: { lastFetch: null, etags: {} }
+      }
+      break
+  }
+  
+  next(newState)
+}
+
+// ✅ Create the global user state
+export const {
+  Provider: UserStateProvider,
+  useGlobalState: useUserGlobalState,
+  useStateSelector: useUserStateSelector,
+  useStateActions: useUserStateActions,
+  getGlobalState: getUserGlobalState
+} = createGlobalState<UserState>({
+  initialState: {
+    currentUser: null,
+    users: {},
+    selectedUserIds: [],
+    filters: {
+      role: 'all',
+      search: '',
+      online: false
+    },
+    ui: {
+      loading: false,
+      error: null,
+      modals: {
+        userProfile: false,
+        userSettings: false
+      }
+    },
+    cache: {
+      lastFetch: null,
+      etags: {}
+    }
+  },
+  middleware: [
+    loggingMiddleware,
+    analyticsMiddleware,
+    optimisticUpdateMiddleware,
+    userStateReducer
+  ],
+  persistence: {
+    key: 'user_state',
+    whitelist: ['currentUser', 'filters'],
+    storage: localStorage
+  },
+  devTools: process.env.NODE_ENV === 'development'
+})
+```
+
+## Advanced React Integration Patterns
+
+**Custom hooks and optimized components with global state:**
+```tsx
+// ✅ Advanced custom hooks for user management
+export const useUserManagement = () => {
+  const stateActions = useUserStateActions()
+  
+  const currentUser = useUserStateSelector(state => state.currentUser)
+  const loading = useUserStateSelector(state => state.ui.loading)
+  const error = useUserStateSelector(state => state.ui.error)
+  
+  const fetchUsers = useCallback(async () => {
+    stateActions.dispatch(userActions.setLoading(true))
+    stateActions.dispatch(userActions.setError(null))
+    
+    try {
+      const response = await fetch('/api/users')
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const users: User[] = await response.json()
+      stateActions.dispatch(userActions.setUsers(users))
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch users'
+      stateActions.dispatch(userActions.setError(message))
+    } finally {
+      stateActions.dispatch(userActions.setLoading(false))
+    }
+  }, [stateActions])
+  
+  const updateUser = useCallback(async (userId: string, updates: Partial<User>) => {
+    // Optimistic update
+    stateActions.dispatch(userActions.updateUser(userId, updates, true))
+    
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to update user')
+      }
+      
+      const updatedUser: User = await response.json()
+      stateActions.dispatch(userActions.updateUser(userId, updatedUser))
+    } catch (error) {
+      // Rollback optimistic update
+      const rollbackKey = `rollback_UPDATE_USER_${Date.now()}`
+      const originalState = sessionStorage.getItem(rollbackKey)
+      if (originalState) {
+        const parsed = JSON.parse(originalState)
+        stateActions.replaceState(parsed)
+      }
+      throw error
+    }
+  }, [stateActions])
+  
+  const deleteUser = useCallback(async (userId: string) => {
+    stateActions.dispatch(userActions.removeUser(userId, true))
+    
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE'
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete user')
+      }
+    } catch (error) {
+      // Rollback optimistic update
+      const rollbackKey = `rollback_REMOVE_USER_${Date.now()}`
+      const originalState = sessionStorage.getItem(rollbackKey)
+      if (originalState) {
+        const parsed = JSON.parse(originalState)
+        stateActions.replaceState(parsed)
+      }
+      throw error
+    }
+  }, [stateActions])
+  
+  return {
+    currentUser,
+    loading,
+    error,
+    fetchUsers,
+    updateUser,
+    deleteUser
+  }
+}
+
+// ✅ Filtered and paginated user hook
+export const useFilteredUsers = (pageSize: number = 10) => {
+  const users = useUserStateSelector(state => Object.values(state.users))
+  const filters = useUserStateSelector(state => state.filters)
+  const stateActions = useUserStateActions()
+  
+  const [currentPage, setCurrentPage] = React.useState(1)
+  
+  const filteredUsers = useMemo(() => {
+    return users.filter(user => {
+      // Role filter
+      if (filters.role !== 'all' && user.role !== filters.role) {
+        return false
+      }
+      
+      // Search filter
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase()
+        const matchesName = user.name.toLowerCase().includes(searchTerm)
+        const matchesEmail = user.email.toLowerCase().includes(searchTerm)
+        if (!matchesName && !matchesEmail) {
+          return false
+        }
+      }
+      
+      // Online filter
+      if (filters.online && !user.metadata.isOnline) {
+        return false
+      }
+      
+      return true
+    })
+  }, [users, filters])
+  
+  const paginatedUsers = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    return filteredUsers.slice(startIndex, endIndex)
+  }, [filteredUsers, currentPage, pageSize])
+  
+  const totalPages = Math.ceil(filteredUsers.length / pageSize)
+  
+  const updateFilters = useCallback((newFilters: Partial<UserState['filters']>) => {
+    stateActions.dispatch(userActions.updateFilters(newFilters))
+    setCurrentPage(1) // Reset to first page when filters change
+  }, [stateActions])
+  
+  return {
+    users: paginatedUsers,
+    totalUsers: filteredUsers.length,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    filters,
+    updateFilters
+  }
+}
+
+// ✅ User selection hook
+export const useUserSelection = () => {
+  const selectedUserIds = useUserStateSelector(state => state.selectedUserIds)
+  const users = useUserStateSelector(state => state.users)
+  const stateActions = useUserStateActions()
+  
+  const selectedUsers = useMemo(() => {
+    return selectedUserIds.map(id => users[id]).filter(Boolean)
+  }, [selectedUserIds, users])
+  
+  const selectUser = useCallback((userId: string) => {
+    if (!selectedUserIds.includes(userId)) {
+      stateActions.dispatch(userActions.selectUsers([...selectedUserIds, userId]))
+    }
+  }, [selectedUserIds, stateActions])
+  
+  const deselectUser = useCallback((userId: string) => {
+    stateActions.dispatch(userActions.selectUsers(
+      selectedUserIds.filter(id => id !== userId)
+    ))
+  }, [selectedUserIds, stateActions])
+  
+  const toggleUserSelection = useCallback((userId: string) => {
+    if (selectedUserIds.includes(userId)) {
+      deselectUser(userId)
+    } else {
+      selectUser(userId)
+    }
+  }, [selectedUserIds, selectUser, deselectUser])
+  
+  const selectAll = useCallback((userIds: string[]) => {
+    stateActions.dispatch(userActions.selectUsers(userIds))
+  }, [stateActions])
+  
+  const clearSelection = useCallback(() => {
+    stateActions.dispatch(userActions.selectUsers([]))
+  }, [stateActions])
+  
+  return {
+    selectedUsers,
+    selectedUserIds,
+    selectUser,
+    deselectUser,
+    toggleUserSelection,
+    selectAll,
+    clearSelection
+  }
+}
+
+// ✅ Modal management hook
+export const useUserModals = () => {
+  const modals = useUserStateSelector(state => state.ui.modals)
+  const stateActions = useUserStateActions()
+  
+  const toggleModal = useCallback((modal: keyof UserState['ui']['modals']) => {
+    stateActions.dispatch(userActions.toggleModal(modal))
+  }, [stateActions])
+  
+  const openModal = useCallback((modal: keyof UserState['ui']['modals']) => {
+    if (!modals[modal]) {
+      stateActions.dispatch(userActions.toggleModal(modal))
+    }
+  }, [modals, stateActions])
+  
+  const closeModal = useCallback((modal: keyof UserState['ui']['modals']) => {
+    if (modals[modal]) {
+      stateActions.dispatch(userActions.toggleModal(modal))
+    }
+  }, [modals, stateActions])
+  
+  return {
+    modals,
+    toggleModal,
+    openModal,
+    closeModal
+  }
+}
+
+// ✅ Advanced user list component
+export const UserList: React.FC = () => {
+  const { loading, error, fetchUsers } = useUserManagement()
+  const { 
+    users, 
+    totalUsers, 
+    currentPage, 
+    totalPages, 
+    setCurrentPage, 
+    filters, 
+    updateFilters 
+  } = useFilteredUsers(20)
+  const { selectedUserIds, toggleUserSelection, selectAll, clearSelection } = useUserSelection()
+  
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
+  
+  if (loading) {
+    return <div className="loading">Loading users...</div>
+  }
+  
+  if (error) {
+    return (
+      <div className="error">
+        <p>Error: {error}</p>
+        <button onClick={fetchUsers}>Retry</button>
+      </div>
+    )
+  }
+  
+  return (
+    <div className="user-list">
+      {/* Filter Controls */}
+      <div className="user-filters">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={filters.search}
+          onChange={(e) => updateFilters({ search: e.target.value })}
+        />
+        
+        <select
+          value={filters.role}
+          onChange={(e) => updateFilters({ role: e.target.value })}
+        >
+          <option value="all">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+          <option value="guest">Guest</option>
+        </select>
+        
+        <label>
+          <input
+            type="checkbox"
+            checked={filters.online}
+            onChange={(e) => updateFilters({ online: e.target.checked })}
+          />
+          Online only
+        </label>
+      </div>
+      
+      {/* Selection Controls */}
+      {users.length > 0 && (
+        <div className="selection-controls">
+          <span>{totalUsers} users found, {selectedUserIds.length} selected</span>
+          <button onClick={() => selectAll(users.map(u => u.id))}>
+            Select All
+          </button>
+          <button onClick={clearSelection}>
+            Clear Selection
+          </button>
+        </div>
+      )}
+      
+      {/* User Grid */}
+      <div className="user-grid">
+        {users.map(user => (
+          <UserCard
+            key={user.id}
+            user={user}
+            isSelected={selectedUserIds.includes(user.id)}
+            onToggleSelection={() => toggleUserSelection(user.id)}
+          />
+        ))}
+      </div>
+      
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ✅ Optimized user card component
+export const UserCard: React.FC<{
+  user: User
+  isSelected: boolean
+  onToggleSelection: () => void
+}> = React.memo(({ user, isSelected, onToggleSelection }) => {
+  const { updateUser } = useUserManagement()
+  const { openModal } = useUserModals()
+  
+  const handleStatusToggle = useCallback(async () => {
+    try {
+      await updateUser(user.id, {
+        metadata: {
+          ...user.metadata,
+          isOnline: !user.metadata.isOnline
+        }
+      })
+    } catch (error) {
+      console.error('Failed to update user status:', error)
+    }
+  }, [user, updateUser])
+  
+  return (
+    <div className={`user-card ${isSelected ? 'selected' : ''}`}>
+      <div className="user-card-header">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onToggleSelection}
+        />
+        
+        <img
+          src={user.avatar || '/default-avatar.png'}
+          alt={`${user.name} avatar`}
+          className="user-avatar"
+        />
+        
+        <div className={`status-indicator ${user.metadata.isOnline ? 'online' : 'offline'}`} />
+      </div>
+      
+      <div className="user-card-body">
+        <h4>{user.name}</h4>
+        <p>{user.email}</p>
+        <span className={`role-badge role-${user.role}`}>
+          {user.role}
+        </span>
+      </div>
+      
+      <div className="user-card-actions">
+        <button onClick={() => openModal('userProfile')}>
+          View Profile
+        </button>
+        
+        <button onClick={handleStatusToggle}>
+          {user.metadata.isOnline ? 'Set Offline' : 'Set Online'}
+        </button>
+      </div>
+      
+      <div className="user-metadata">
+        <small>
+          Last login: {user.metadata.lastLogin 
+            ? new Date(user.metadata.lastLogin).toLocaleDateString()
+            : 'Never'
+          }
+        </small>
+        <small>
+          Login count: {user.metadata.loginCount}
+        </small>
+      </div>
+    </div>
+  )
+})
+
+// ✅ Application root with global state
+export const App: React.FC = () => {
+  return (
+    <UserStateProvider>
+      <div className="app">
+        <header className="app-header">
+          <h1>User Management</h1>
+          <UserStatusIndicator />
+        </header>
+        
+        <main className="app-main">
+          <UserList />
+          <BulkActions />
+        </main>
+        
+        <UserModals />
+      </div>
+    </UserStateProvider>
+  )
+}
+
+// ✅ Global state debugging component
+export const StateDebugger: React.FC = () => {
+  const [state] = useUserGlobalState()
+  const [showDebugger, setShowDebugger] = React.useState(false)
+  
+  if (process.env.NODE_ENV !== 'development') {
+    return null
+  }
+  
+  return (
+    <div className="state-debugger">
+      <button onClick={() => setShowDebugger(!showDebugger)}>
+        Debug State {showDebugger ? '▼' : '▶'}
+      </button>
+      
+      {showDebugger && (
+        <pre className="state-display">
+          {JSON.stringify(state, null, 2)}
+        </pre>
+      )}
+    </div>
+  )
+}
+```
+
+## State Synchronization and Real-time Updates
+
+**WebSocket integration and optimistic updates:**
+```tsx
+// ✅ Real-time state synchronization
+export const useRealtimeSync = () => {
+  const stateActions = useUserStateActions()
+  const wsRef = React.useRef<WebSocket | null>(null)
+  
+  useEffect(() => {
+    // Initialize WebSocket connection
+    const ws = new WebSocket(process.env.REACT_APP_WS_URL || 'ws://localhost:3001')
+    wsRef.current = ws
+    
+    ws.onopen = () => {
+      console.log('WebSocket connected')
+    }
+    
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data)
+        
+        switch (message.type) {
+          case 'USER_UPDATED':
+            stateActions.dispatch(userActions.updateUser(message.userId, message.updates))
+            break
+            
+          case 'USER_ADDED':
+            stateActions.dispatch(userActions.addUser(message.user))
+            break
+            
+          case 'USER_REMOVED':
+            stateActions.dispatch(userActions.removeUser(message.userId))
+            break
+            
+          case 'USER_STATUS_CHANGED':
+            stateActions.dispatch(userActions.updateUser(message.userId, {
+              metadata: { ...message.user.metadata, isOnline: message.isOnline }
+            }))
+            break
+        }
+      } catch (error) {
+        console.error('Failed to process WebSocket message:', error)
+      }
+    }
+    
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+    }
+    
+    ws.onclose = () => {
+      console.log('WebSocket disconnected')
+      
+      // Attempt to reconnect after 3 seconds
+      setTimeout(() => {
+        if (wsRef.current?.readyState === WebSocket.CLOSED) {
+          // Recursive call to reconnect
+          useRealtimeSync()
+        }
+      }, 3000)
+    }
+    
+    return () => {
+      ws.close()
+    }
+  }, [stateActions])
+  
+  const sendMessage = useCallback((message: any) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(message))
+    }
+  }, [])
+  
+  return { sendMessage }
+}
+
+// ✅ Conflict resolution middleware
+const conflictResolutionMiddleware: Middleware<UserState> = (state, action, next) => {
+  // Check for concurrent modifications
+  if (action.type.includes('UPDATE_USER') && action.payload.userId) {
+    const currentUser = state.users[action.payload.userId]
+    const incomingTimestamp = action.meta?.timestamp || Date.now()
+    const currentTimestamp = currentUser?.metadata?.lastModified || 0
+    
+    if (currentTimestamp > incomingTimestamp) {
+      console.warn('Conflict detected: Local state is newer, ignoring update')
+      return // Don't apply the update
+    }
+    
+    if (currentTimestamp === incomingTimestamp) {
+      // Merge conflicts by combining updates
+      const mergedUpdates = {
+        ...currentUser,
+        ...action.payload.updates,
+        metadata: {
+          ...currentUser?.metadata,
+          ...action.payload.updates.metadata,
+          lastModified: Math.max(currentTimestamp, incomingTimestamp)
+        }
+      }
+      
+      action.payload.updates = mergedUpdates
+    }
+  }
+  
+  next(state)
+}
+```
+
+## Performance Monitoring and Optimization
+
+**Advanced performance patterns:**
+```tsx
+// ✅ Performance monitoring hook
+export const useStatePerformance = () => {
+  const renderCountRef = React.useRef(0)
+  const lastRenderTime = React.useRef(Date.now())
+  
+  React.useLayoutEffect(() => {
+    renderCountRef.current += 1
+    const now = Date.now()
+    const timeSinceLastRender = now - lastRenderTime.current
+    lastRenderTime.current = now
+    
+    if (renderCountRef.current % 10 === 0) {
+      console.log('Performance Stats:', {
+        renderCount: renderCountRef.current,
+        averageRenderTime: timeSinceLastRender,
+        timestamp: now
+      })
+    }
+  })
+  
+  return {
+    renderCount: renderCountRef.current,
+    resetCounter: () => { renderCountRef.current = 0 }
+  }
+}
+
+// ✅ Memory-efficient selector hook
+export const useMemoizedSelector = <T, R>(
+  selector: (state: T) => R,
+  deps: React.DependencyList = []
+) => {
+  const memoizedSelector = useMemo(() => selector, deps)
+  return useUserStateSelector(memoizedSelector)
+}
+
+// ✅ Batch update utility
+export const useBatchUpdates = () => {
+  const stateActions = useUserStateActions()
+  const batchQueue = React.useRef<Action[]>([])
+  const timeoutRef = React.useRef<NodeJS.Timeout>()
+  
+  const batchDispatch = useCallback((action: Action) => {
+    batchQueue.current.push(action)
+    
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    
+    timeoutRef.current = setTimeout(() => {
+      const actions = [...batchQueue.current]
+      batchQueue.current = []
+      
+      // Dispatch all actions in sequence
+      actions.forEach(action => {
+        stateActions.dispatch(action)
+      })
+    }, 16) // Batch updates every 16ms (60fps)
+  }, [stateActions])
+  
+  return { batchDispatch }
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for enterprise global state management:**
+
+1. **Architecture**: Design modular global states with clear boundaries, implement proper middleware patterns, use type-safe action creators, maintain separation of concerns.
+
+2. **Performance**: Use selective subscriptions with selectors, implement proper memoization strategies, batch state updates, monitor render performance.
+
+3. **Persistence**: Implement smart persistence with whitelist/blacklist, handle serialization errors gracefully, provide migration strategies for state schema changes.
+
+4. **Real-time**: Integrate WebSocket for real-time updates, implement conflict resolution strategies, handle optimistic updates with rollback capabilities.
+
+5. **Developer Experience**: Provide comprehensive TypeScript support, integrate with Redux DevTools, implement logging middleware, create debugging utilities.
+
+6. **Testing**: Test state logic independently, mock middleware properly, test real-time synchronization, validate persistence mechanisms.
+
+7. **Security**: Validate state updates, sanitize persisted data, implement proper authentication state management, handle sensitive data appropriately.
+
+8. **Scalability**: Design for large-scale applications, implement proper cleanup patterns, use memory-efficient data structures, optimize for concurrent users.
+
+Always prioritize predictable state updates, implement proper error boundaries, leverage TypeScript for type safety, and maintain clear data flow patterns for scalable global state management. 

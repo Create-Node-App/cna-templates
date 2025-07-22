@@ -1,53 +1,1716 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and managing state with Easy State in React applications.
+description: Advanced React Easy State patterns for reactive state management, optimistic updates, computed values, and enterprise-scale application architecture.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Easy State Rules
+# Advanced React Easy State Management
 
-You are an expert in Easy State and follow these guidelines:
+## Enterprise Store Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create stores with clear, descriptive names and organize them by feature/domain.
-3. Use the `store` function with proper typing and avoid direct state mutations.
-4. Implement selectors for derived state and memoize them when necessary.
-5. Handle async actions inside the store using proper error handling.
-6. Use proper state splitting to avoid unnecessary re-renders.
-7. Follow the single responsibility principle for each store.
-8. Document store behavior with JSDoc or TypeScript types.
-9. Implement proper error boundaries and loading states.
-10. Use proper state subscriptions to optimize performance.
+**Type-safe stores with reactive state management and optimistic updates:**
+```tsx
+import { store, view } from '@risingstack/easy-state'
+import { batch } from '@risingstack/react-easy-state'
 
-## Anti-Patterns to Avoid
-
-1. Never use Easy State for server state (use React Query or SWR instead).
-2. Avoid putting all app state in a single store.
-3. Don't store large, frequently-changing collections unless necessary.
-4. Avoid side effects inside store definitions.
-5. Don't mirror backend state without transformation.
-
-## Example Implementation
-
-```ts
-import { store } from '@risingstack/easy-state';
-
-interface AuthState {
-  user: User | null;
-  error: string | null;
-  login: (user: User) => void;
-  logout: () => void;
-  setError: (error: string) => void;
+// ✅ Advanced user management store with reactive updates
+interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  role: 'admin' | 'user' | 'guest'
+  preferences: UserPreferences
+  lastLoginAt: Date | null
+  isActive: boolean
+  metadata: Record<string, any>
 }
 
-export const authStore = store<AuthState>({
-  user: null,
-  error: null,
-  login: (user) => {
-    authStore.user = user;
-    authStore.error = null;
+interface UserPreferences {
+  theme: 'light' | 'dark' | 'system'
+  notifications: {
+    email: boolean
+    push: boolean
+    sms: boolean
+  }
+  privacy: {
+    profileVisible: boolean
+    activityVisible: boolean
+  }
+  accessibility: {
+    reducedMotion: boolean
+    highContrast: boolean
+    fontSize: 'small' | 'medium' | 'large'
+  }
+}
+
+interface ApiResponse<T> {
+  data: T
+  meta?: {
+    total: number
+    page: number
+    pageSize: number
+  }
+  errors?: Array<{ field: string; message: string }>
+}
+
+interface UserStoreState {
+  // ✅ Data state
+  users: Map<string, User>
+  currentUser: User | null
+  selectedUsers: Set<string>
+  
+  // ✅ UI state
+  filters: {
+    search: string
+    role: string
+    status: 'all' | 'active' | 'inactive'
+    sortBy: keyof User
+    sortOrder: 'asc' | 'desc'
+  }
+  
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
+  
+  // ✅ Loading states
+  loading: {
+    users: boolean
+    user: boolean
+    creating: boolean
+    updating: boolean
+    deleting: Set<string>
+  }
+  
+  // ✅ Error states
+  errors: {
+    users: string | null
+    user: string | null
+    create: string | null
+    update: Map<string, string>
+    delete: Map<string, string>
+  }
+  
+  // ✅ Cache management
+  cache: {
+    lastFetch: Date | null
+    invalidated: boolean
+    etag: string | null
+  }
+  
+  // ✅ Optimistic updates
+  optimisticOperations: Map<string, {
+    type: 'create' | 'update' | 'delete'
+    data: any
+    timestamp: Date
+  }>
+}
+
+// ✅ Advanced user store with reactive patterns
+export const userStore = store<UserStoreState & {
+  // ✅ Computed properties (reactive)
+  get filteredUsers(): User[]
+  get paginatedUsers(): User[]
+  get userCount(): number
+  get selectedUserCount(): number
+  get hasUsers(): boolean
+  get isFiltered(): boolean
+  get canLoadMore(): boolean
+  get searchSuggestions(): string[]
+  
+  // ✅ Actions
+  fetchUsers(params?: Partial<UserStoreState['filters']>): Promise<void>
+  fetchUser(id: string): Promise<User | null>
+  createUser(userData: Omit<User, 'id' | 'lastLoginAt'>): Promise<User>
+  updateUser(id: string, updates: Partial<User>): Promise<User>
+  deleteUser(id: string): Promise<void>
+  bulkDeleteUsers(ids: string[]): Promise<void>
+  
+  // ✅ Filter actions
+  setSearch(query: string): void
+  setFilter(filter: Partial<UserStoreState['filters']>): void
+  clearFilters(): void
+  
+  // ✅ Selection actions
+  selectUser(id: string): void
+  deselectUser(id: string): void
+  selectAllUsers(): void
+  deselectAllUsers(): void
+  toggleUserSelection(id: string): void
+  
+  // ✅ Pagination actions
+  nextPage(): void
+  previousPage(): void
+  goToPage(page: number): void
+  setPageSize(pageSize: number): void
+  
+  // ✅ Cache actions
+  invalidateCache(): void
+  refreshUsers(): Promise<void>
+  
+  // ✅ Error handling
+  clearErrors(): void
+  clearError(type: keyof UserStoreState['errors']): void
+  
+  // ✅ Optimistic updates
+  addOptimisticOperation(id: string, operation: UserStoreState['optimisticOperations'][string]): void
+  removeOptimisticOperation(id: string): void
+  rollbackOptimisticOperation(id: string): void
+}>({
+  // ✅ Initial state
+  users: new Map(),
+  currentUser: null,
+  selectedUsers: new Set(),
+  
+  filters: {
+    search: '',
+    role: 'all',
+    status: 'all',
+    sortBy: 'name',
+    sortOrder: 'asc'
   },
-  logout: () => {
-    authStore.user = null;
+  
+  pagination: {
+    page: 1,
+    pageSize: 20,
+    total: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
+  },
+  
+  loading: {
+    users: false,
+    user: false,
+    creating: false,
+    updating: false,
+    deleting: new Set()
+  },
+  
+  errors: {
+    users: null,
+    user: null,
+    create: null,
+    update: new Map(),
+    delete: new Map()
+  },
+  
+  cache: {
+    lastFetch: null,
+    invalidated: false,
+    etag: null
+  },
+  
+  optimisticOperations: new Map(),
+
+  // ✅ Computed properties with reactive dependencies
+  get filteredUsers() {
+    const users = Array.from(this.users.values())
+    
+    return users.filter(user => {
+      // Search filter
+      if (this.filters.search) {
+        const searchTerm = this.filters.search.toLowerCase()
+        const matchesSearch = 
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm)
+        
+        if (!matchesSearch) return false
+      }
+      
+      // Role filter
+      if (this.filters.role !== 'all' && user.role !== this.filters.role) {
+        return false
+      }
+      
+      // Status filter
+      if (this.filters.status === 'active' && !user.isActive) return false
+      if (this.filters.status === 'inactive' && user.isActive) return false
+      
+      return true
+    }).sort((a, b) => {
+      const aValue = a[this.filters.sortBy]
+      const bValue = b[this.filters.sortBy]
+      
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        const comparison = aValue.localeCompare(bValue)
+        return this.filters.sortOrder === 'asc' ? comparison : -comparison
+      }
+      
+      if (aValue < bValue) return this.filters.sortOrder === 'asc' ? -1 : 1
+      if (aValue > bValue) return this.filters.sortOrder === 'asc' ? 1 : -1
+      return 0
+    })
+  },
+
+  get paginatedUsers() {
+    const startIndex = (this.pagination.page - 1) * this.pagination.pageSize
+    const endIndex = startIndex + this.pagination.pageSize
+    return this.filteredUsers.slice(startIndex, endIndex)
+  },
+
+  get userCount() {
+    return this.users.size
+  },
+
+  get selectedUserCount() {
+    return this.selectedUsers.size
+  },
+
+  get hasUsers() {
+    return this.users.size > 0
+  },
+
+  get isFiltered() {
+    return this.filters.search !== '' ||
+           this.filters.role !== 'all' ||
+           this.filters.status !== 'all'
+  },
+
+  get canLoadMore() {
+    return this.pagination.hasNextPage && !this.loading.users
+  },
+
+  get searchSuggestions() {
+    const users = Array.from(this.users.values())
+    const names = users.map(u => u.name)
+    const emails = users.map(u => u.email)
+    return [...new Set([...names, ...emails])].slice(0, 10)
+  },
+
+  // ✅ Async data fetching with error handling
+  async fetchUsers(params = {}) {
+    this.loading.users = true
+    this.errors.users = null
+    
+    try {
+      // Merge with current filters
+      const requestParams = { ...this.filters, ...params }
+      
+      const response = await fetch('/api/users?' + new URLSearchParams({
+        search: requestParams.search,
+        role: requestParams.role,
+        status: requestParams.status,
+        sortBy: requestParams.sortBy,
+        sortOrder: requestParams.sortOrder,
+        page: this.pagination.page.toString(),
+        pageSize: this.pagination.pageSize.toString()
+      }), {
+        headers: {
+          'If-None-Match': this.cache.etag || ''
+        }
+      })
+
+      if (response.status === 304) {
+        // Cache hit, no changes
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const result: ApiResponse<User[]> = await response.json()
+      
+      // Batch updates for performance
+      batch(() => {
+        // Clear existing users
+        this.users.clear()
+        
+        // Add fetched users
+        result.data.forEach(user => {
+          this.users.set(user.id, user)
+        })
+        
+        // Update pagination
+        if (result.meta) {
+          this.pagination.total = result.meta.total
+          this.pagination.hasNextPage = result.meta.page * result.meta.pageSize < result.meta.total
+          this.pagination.hasPreviousPage = result.meta.page > 1
+        }
+        
+        // Update cache
+        this.cache.lastFetch = new Date()
+        this.cache.invalidated = false
+        this.cache.etag = response.headers.get('ETag') || null
+      })
+
+    } catch (error) {
+      this.errors.users = error instanceof Error ? error.message : 'Failed to fetch users'
+    } finally {
+      this.loading.users = false
+    }
+  },
+
+  async fetchUser(id: string) {
+    this.loading.user = true
+    this.errors.user = null
+
+    try {
+      const response = await fetch(`/api/users/${id}`)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const user: User = await response.json()
+      
+      // Update store
+      this.users.set(user.id, user)
+      
+      return user
+    } catch (error) {
+      this.errors.user = error instanceof Error ? error.message : 'Failed to fetch user'
+      return null
+    } finally {
+      this.loading.user = false
+    }
+  },
+
+  // ✅ Optimistic updates with rollback capability
+  async createUser(userData: Omit<User, 'id' | 'lastLoginAt'>) {
+    const tempId = `temp-${Date.now()}`
+    const optimisticUser: User = {
+      ...userData,
+      id: tempId,
+      lastLoginAt: null
+    }
+
+    // Add optimistic update
+    this.addOptimisticOperation(tempId, {
+      type: 'create',
+      data: optimisticUser,
+      timestamp: new Date()
+    })
+
+    // Add to store optimistically
+    this.users.set(tempId, optimisticUser)
+    this.loading.creating = true
+    this.errors.create = null
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const createdUser: User = await response.json()
+      
+      batch(() => {
+        // Remove optimistic user
+        this.users.delete(tempId)
+        this.removeOptimisticOperation(tempId)
+        
+        // Add real user
+        this.users.set(createdUser.id, createdUser)
+        
+        // Update pagination
+        this.pagination.total += 1
+      })
+
+      return createdUser
+    } catch (error) {
+      // Rollback optimistic update
+      this.rollbackOptimisticOperation(tempId)
+      this.errors.create = error instanceof Error ? error.message : 'Failed to create user'
+      throw error
+    } finally {
+      this.loading.creating = false
+    }
+  },
+
+  async updateUser(id: string, updates: Partial<User>) {
+    const existingUser = this.users.get(id)
+    if (!existingUser) {
+      throw new Error('User not found')
+    }
+
+    const optimisticUser = { ...existingUser, ...updates }
+    
+    // Add optimistic update
+    this.addOptimisticOperation(id, {
+      type: 'update',
+      data: updates,
+      timestamp: new Date()
+    })
+
+    // Update store optimistically
+    this.users.set(id, optimisticUser)
+    this.loading.updating = true
+    this.errors.update.delete(id)
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updates)
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const updatedUser: User = await response.json()
+      
+      batch(() => {
+        this.users.set(id, updatedUser)
+        this.removeOptimisticOperation(id)
+      })
+
+      return updatedUser
+    } catch (error) {
+      // Rollback optimistic update
+      this.rollbackOptimisticOperation(id)
+      this.errors.update.set(id, error instanceof Error ? error.message : 'Failed to update user')
+      throw error
+    } finally {
+      this.loading.updating = false
+    }
+  },
+
+  async deleteUser(id: string) {
+    const existingUser = this.users.get(id)
+    if (!existingUser) {
+      throw new Error('User not found')
+    }
+
+    // Add optimistic update
+    this.addOptimisticOperation(id, {
+      type: 'delete',
+      data: existingUser,
+      timestamp: new Date()
+    })
+
+    // Remove from store optimistically
+    this.users.delete(id)
+    this.selectedUsers.delete(id)
+    this.loading.deleting.add(id)
+    this.errors.delete.delete(id)
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      batch(() => {
+        this.removeOptimisticOperation(id)
+        this.pagination.total = Math.max(0, this.pagination.total - 1)
+      })
+    } catch (error) {
+      // Rollback optimistic update
+      this.rollbackOptimisticOperation(id)
+      this.errors.delete.set(id, error instanceof Error ? error.message : 'Failed to delete user')
+      throw error
+    } finally {
+      this.loading.deleting.delete(id)
+    }
+  },
+
+  async bulkDeleteUsers(ids: string[]) {
+    const existingUsers = new Map<string, User>()
+    
+    // Store existing users for potential rollback
+    ids.forEach(id => {
+      const user = this.users.get(id)
+      if (user) {
+        existingUsers.set(id, user)
+        
+        // Add optimistic operation
+        this.addOptimisticOperation(id, {
+          type: 'delete',
+          data: user,
+          timestamp: new Date()
+        })
+        
+        // Remove optimistically
+        this.users.delete(id)
+        this.selectedUsers.delete(id)
+        this.loading.deleting.add(id)
+      }
+    })
+
+    try {
+      const response = await fetch('/api/users/bulk-delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ids })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      batch(() => {
+        ids.forEach(id => {
+          this.removeOptimisticOperation(id)
+        })
+        this.pagination.total = Math.max(0, this.pagination.total - ids.length)
+      })
+    } catch (error) {
+      // Rollback all optimistic updates
+      existingUsers.forEach((user, id) => {
+        this.rollbackOptimisticOperation(id)
+      })
+      throw error
+    } finally {
+      ids.forEach(id => {
+        this.loading.deleting.delete(id)
+      })
+    }
+  },
+
+  // ✅ Filter management
+  setSearch(query: string) {
+    this.filters.search = query
+    this.pagination.page = 1 // Reset to first page
+  },
+
+  setFilter(filter: Partial<UserStoreState['filters']>) {
+    Object.assign(this.filters, filter)
+    this.pagination.page = 1 // Reset to first page
+  },
+
+  clearFilters() {
+    this.filters = {
+      search: '',
+      role: 'all',
+      status: 'all',
+      sortBy: 'name',
+      sortOrder: 'asc'
+    }
+    this.pagination.page = 1
+  },
+
+  // ✅ Selection management
+  selectUser(id: string) {
+    this.selectedUsers.add(id)
+  },
+
+  deselectUser(id: string) {
+    this.selectedUsers.delete(id)
+  },
+
+  selectAllUsers() {
+    this.paginatedUsers.forEach(user => {
+      this.selectedUsers.add(user.id)
+    })
+  },
+
+  deselectAllUsers() {
+    this.selectedUsers.clear()
+  },
+
+  toggleUserSelection(id: string) {
+    if (this.selectedUsers.has(id)) {
+      this.selectedUsers.delete(id)
+    } else {
+      this.selectedUsers.add(id)
+    }
+  },
+
+  // ✅ Pagination management
+  nextPage() {
+    if (this.pagination.hasNextPage) {
+      this.pagination.page += 1
+    }
+  },
+
+  previousPage() {
+    if (this.pagination.hasPreviousPage) {
+      this.pagination.page -= 1
+    }
+  },
+
+  goToPage(page: number) {
+    const maxPage = Math.ceil(this.pagination.total / this.pagination.pageSize)
+    this.pagination.page = Math.max(1, Math.min(page, maxPage))
+  },
+
+  setPageSize(pageSize: number) {
+    const currentItem = (this.pagination.page - 1) * this.pagination.pageSize + 1
+    this.pagination.pageSize = pageSize
+    this.pagination.page = Math.ceil(currentItem / pageSize)
+  },
+
+  // ✅ Cache management
+  invalidateCache() {
+    this.cache.invalidated = true
+    this.cache.etag = null
+  },
+
+  async refreshUsers() {
+    this.invalidateCache()
+    await this.fetchUsers()
+  },
+
+  // ✅ Error management
+  clearErrors() {
+    this.errors = {
+      users: null,
+      user: null,
+      create: null,
+      update: new Map(),
+      delete: new Map()
+    }
+  },
+
+  clearError(type: keyof UserStoreState['errors']) {
+    if (type === 'update' || type === 'delete') {
+      (this.errors[type] as Map<string, string>).clear()
+    } else {
+      ;(this.errors as any)[type] = null
+    }
+  },
+
+  // ✅ Optimistic update management
+  addOptimisticOperation(id: string, operation: UserStoreState['optimisticOperations'][string]) {
+    this.optimisticOperations.set(id, operation)
+  },
+
+  removeOptimisticOperation(id: string) {
+    this.optimisticOperations.delete(id)
+  },
+
+  rollbackOptimisticOperation(id: string) {
+    const operation = this.optimisticOperations.get(id)
+    if (!operation) return
+
+    switch (operation.type) {
+      case 'create':
+        this.users.delete(id)
+        break
+      case 'update':
+        // Restore original user (you'd need to store the original)
+        break
+      case 'delete':
+        this.users.set(id, operation.data as User)
+        break
+    }
+
+    this.optimisticOperations.delete(id)
+  }
+})
+
+// ✅ Settings store with nested reactive state
+interface AppSettings {
+  appearance: {
+    theme: 'light' | 'dark' | 'system'
+    colorScheme: 'default' | 'high-contrast'
+    fontSize: 'small' | 'medium' | 'large'
+    reducedMotion: boolean
+  }
+  notifications: {
+    enabled: boolean
+    channels: {
+      email: boolean
+      push: boolean
+      sms: boolean
+    }
+    frequency: 'immediate' | 'hourly' | 'daily'
+  }
+  privacy: {
+    analytics: boolean
+    cookies: boolean
+    dataCollection: boolean
+  }
+  performance: {
+    animations: boolean
+    lazyLoading: boolean
+    prefetching: boolean
+  }
+}
+
+export const settingsStore = store<AppSettings & {
+  // ✅ Computed properties
+  get effectiveTheme(): 'light' | 'dark'
+  get canUseAnimations(): boolean
+  get notificationChannelCount(): number
+  
+  // ✅ Actions
+  updateAppearance(updates: Partial<AppSettings['appearance']>): void
+  updateNotifications(updates: Partial<AppSettings['notifications']>): void
+  updatePrivacy(updates: Partial<AppSettings['privacy']>): void
+  updatePerformance(updates: Partial<AppSettings['performance']>): void
+  resetToDefaults(): void
+  saveSettings(): Promise<void>
+  loadSettings(): Promise<void>
+}>({
+  // ✅ Default settings
+  appearance: {
+    theme: 'system',
+    colorScheme: 'default',
+    fontSize: 'medium',
+    reducedMotion: false
+  },
+  
+  notifications: {
+    enabled: true,
+    channels: {
+      email: true,
+      push: true,
+      sms: false
+    },
+    frequency: 'immediate'
+  },
+  
+  privacy: {
+    analytics: true,
+    cookies: true,
+    dataCollection: false
+  },
+  
+  performance: {
+    animations: true,
+    lazyLoading: true,
+    prefetching: true
+  },
+
+  // ✅ Computed values with system integration
+  get effectiveTheme() {
+    if (this.appearance.theme === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return this.appearance.theme
+  },
+
+  get canUseAnimations() {
+    return this.performance.animations && !this.appearance.reducedMotion
+  },
+
+  get notificationChannelCount() {
+    return Object.values(this.notifications.channels).filter(Boolean).length
+  },
+
+  // ✅ Nested state updates
+  updateAppearance(updates: Partial<AppSettings['appearance']>) {
+    Object.assign(this.appearance, updates)
+    this.saveSettings() // Auto-save
+  },
+
+  updateNotifications(updates: Partial<AppSettings['notifications']>) {
+    if (updates.channels) {
+      Object.assign(this.notifications.channels, updates.channels)
+      delete updates.channels
+    }
+    Object.assign(this.notifications, updates)
+    this.saveSettings()
+  },
+
+  updatePrivacy(updates: Partial<AppSettings['privacy']>) {
+    Object.assign(this.privacy, updates)
+    this.saveSettings()
+  },
+
+  updatePerformance(updates: Partial<AppSettings['performance']>) {
+    Object.assign(this.performance, updates)
+    this.saveSettings()
+  },
+
+  resetToDefaults() {
+    batch(() => {
+      this.appearance = {
+        theme: 'system',
+        colorScheme: 'default',
+        fontSize: 'medium',
+        reducedMotion: false
+      }
+      
+      this.notifications = {
+        enabled: true,
+        channels: {
+          email: true,
+          push: true,
+          sms: false
+        },
+        frequency: 'immediate'
+      }
+      
+      this.privacy = {
+        analytics: true,
+        cookies: true,
+        dataCollection: false
+      }
+      
+      this.performance = {
+        animations: true,
+        lazyLoading: true,
+        prefetching: true
+      }
+    })
+    
+    this.saveSettings()
+  },
+
+  async saveSettings() {
+    try {
+      await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          appearance: this.appearance,
+          notifications: this.notifications,
+          privacy: this.privacy,
+          performance: this.performance
+        })
+      })
+    } catch (error) {
+      console.error('Failed to save settings:', error)
+    }
+  },
+
+  async loadSettings() {
+    try {
+      const response = await fetch('/api/settings')
+      if (response.ok) {
+        const settings = await response.json()
+        
+        batch(() => {
+          Object.assign(this.appearance, settings.appearance || {})
+          Object.assign(this.notifications, settings.notifications || {})
+          Object.assign(this.privacy, settings.privacy || {})
+          Object.assign(this.performance, settings.performance || {})
+        })
+      }
+    } catch (error) {
+      console.error('Failed to load settings:', error)
+    }
+  }
+})
+```
+
+## Advanced React Integration
+
+**Optimized components with Easy State reactivity:**
+```tsx
+// ✅ Higher-order component for Easy State integration
+import React, { useEffect } from 'react'
+import { view } from '@risingstack/react-easy-state'
+
+// ✅ Auto-reactive user list component
+export const UserList = view(() => {
+  useEffect(() => {
+    // Auto-fetch users on mount
+    if (!userStore.hasUsers && !userStore.loading.users) {
+      userStore.fetchUsers()
+    }
+  }, [])
+
+  // ✅ Reactive loading state
+  if (userStore.loading.users && !userStore.hasUsers) {
+    return <LoadingSpinner />
+  }
+
+  // ✅ Reactive error state
+  if (userStore.errors.users) {
+    return (
+      <ErrorMessage 
+        error={userStore.errors.users}
+        onRetry={() => userStore.fetchUsers()}
+      />
+    )
+  }
+
+  return (
+    <div className="user-list">
+      <UserListHeader />
+      <UserFilters />
+      <UserTable />
+      <UserPagination />
+    </div>
+  )
+})
+
+// ✅ Reactive search component with debouncing
+export const UserSearch = view(() => {
+  const [localSearch, setLocalSearch] = React.useState(userStore.filters.search)
+  const timeoutRef = React.useRef<NodeJS.Timeout>()
+
+  // Debounce search updates
+  useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      userStore.setSearch(localSearch)
+    }, 300)
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [localSearch])
+
+  return (
+    <div className="user-search">
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={localSearch}
+        onChange={(e) => setLocalSearch(e.target.value)}
+        className="search-input"
+      />
+      {userStore.filters.search && (
+        <div className="search-results-count">
+          {userStore.filteredUsers.length} users found
+        </div>
+      )}
+      
+      {/* Reactive search suggestions */}
+      {localSearch && localSearch !== userStore.filters.search && (
+        <div className="search-suggestions">
+          {userStore.searchSuggestions
+            .filter(suggestion => 
+              suggestion.toLowerCase().includes(localSearch.toLowerCase())
+            )
+            .slice(0, 5)
+            .map(suggestion => (
+              <button
+                key={suggestion}
+                onClick={() => setLocalSearch(suggestion)}
+                className="search-suggestion"
+              >
+                {suggestion}
+              </button>
+            ))}
+        </div>
+      )}
+    </div>
+  )
+})
+
+// ✅ Optimistic user card component
+export const UserCard = view<{ userId: string }>(({ userId }) => {
+  const user = userStore.users.get(userId)
+  const isSelected = userStore.selectedUsers.has(userId)
+  const isDeleting = userStore.loading.deleting.has(userId)
+  const deleteError = userStore.errors.delete.get(userId)
+  const isOptimistic = userStore.optimisticOperations.has(userId)
+
+  if (!user) return null
+
+  const handleToggleSelection = () => {
+    userStore.toggleUserSelection(userId)
+  }
+
+  const handleDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
+      try {
+        await userStore.deleteUser(userId)
+      } catch (error) {
+        // Error is already handled in store
+      }
+    }
+  }
+
+  return (
+    <div 
+      className={`user-card ${isSelected ? 'selected' : ''} ${isOptimistic ? 'optimistic' : ''}`}
+    >
+      <div className="user-card-header">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={handleToggleSelection}
+          disabled={isDeleting}
+        />
+        <img 
+          src={user.avatar || '/default-avatar.png'} 
+          alt={`${user.name} avatar`}
+          className="user-avatar"
+        />
+      </div>
+
+      <div className="user-card-body">
+        <h4 className="user-name">{user.name}</h4>
+        <p className="user-email">{user.email}</p>
+        <span className={`user-role role-${user.role}`}>
+          {user.role}
+        </span>
+        <span className={`user-status ${user.isActive ? 'active' : 'inactive'}`}>
+          {user.isActive ? 'Active' : 'Inactive'}
+        </span>
+      </div>
+
+      <div className="user-card-actions">
+        <button 
+          onClick={() => console.log('Edit user', userId)}
+          disabled={isDeleting}
+        >
+          Edit
+        </button>
+        <button 
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="danger"
+        >
+          {isDeleting ? 'Deleting...' : 'Delete'}
+        </button>
+      </div>
+
+      {deleteError && (
+        <div className="error-message">
+          Error: {deleteError}
+          <button onClick={() => userStore.errors.delete.delete(userId)}>
+            ×
+          </button>
+        </div>
+      )}
+
+      {isOptimistic && (
+        <div className="optimistic-indicator">
+          <span>Pending...</span>
+        </div>
+      )}
+    </div>
+  )
+})
+
+// ✅ Reactive settings panel
+export const SettingsPanel = view(() => {
+  useEffect(() => {
+    settingsStore.loadSettings()
+  }, [])
+
+  return (
+    <div className="settings-panel">
+      <h2>Settings</h2>
+      
+      {/* ✅ Appearance Settings */}
+      <section className="settings-section">
+        <h3>Appearance</h3>
+        
+        <div className="setting-group">
+          <label>Theme</label>
+          <select 
+            value={settingsStore.appearance.theme}
+            onChange={(e) => settingsStore.updateAppearance({ 
+              theme: e.target.value as AppSettings['appearance']['theme']
+            })}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
+          <small>Effective theme: {settingsStore.effectiveTheme}</small>
+        </div>
+
+        <div className="setting-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={settingsStore.appearance.reducedMotion}
+              onChange={(e) => settingsStore.updateAppearance({ 
+                reducedMotion: e.target.checked 
+              })}
+            />
+            Reduce motion
+          </label>
+        </div>
+      </section>
+
+      {/* ✅ Notification Settings */}
+      <section className="settings-section">
+        <h3>Notifications</h3>
+        
+        <div className="setting-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={settingsStore.notifications.enabled}
+              onChange={(e) => settingsStore.updateNotifications({ 
+                enabled: e.target.checked 
+              })}
+            />
+            Enable notifications
+          </label>
+        </div>
+
+        {settingsStore.notifications.enabled && (
+          <div className="setting-group">
+            <label>Channels ({settingsStore.notificationChannelCount} active)</label>
+            <div className="checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={settingsStore.notifications.channels.email}
+                  onChange={(e) => settingsStore.updateNotifications({ 
+                    channels: { ...settingsStore.notifications.channels, email: e.target.checked }
+                  })}
+                />
+                Email
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={settingsStore.notifications.channels.push}
+                  onChange={(e) => settingsStore.updateNotifications({ 
+                    channels: { ...settingsStore.notifications.channels, push: e.target.checked }
+                  })}
+                />
+                Push
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={settingsStore.notifications.channels.sms}
+                  onChange={(e) => settingsStore.updateNotifications({ 
+                    channels: { ...settingsStore.notifications.channels, sms: e.target.checked }
+                  })}
+                />
+                SMS
+              </label>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ✅ Performance Settings */}
+      <section className="settings-section">
+        <h3>Performance</h3>
+        
+        <div className="setting-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={settingsStore.performance.animations}
+              onChange={(e) => settingsStore.updatePerformance({ 
+                animations: e.target.checked 
+              })}
+            />
+            Enable animations
+          </label>
+          <small>
+            {settingsStore.canUseAnimations ? 'Animations enabled' : 'Animations disabled'}
+          </small>
+        </div>
+      </section>
+
+      <div className="settings-actions">
+        <button onClick={settingsStore.resetToDefaults}>
+          Reset to Defaults
+        </button>
+      </div>
+    </div>
+  )
+})
+
+// ✅ Performance monitoring component
+export const PerformanceMonitor = view(() => {
+  const [showDetails, setShowDetails] = React.useState(false)
+  
+  // Monitor store sizes
+  const userCount = userStore.userCount
+  const selectedCount = userStore.selectedUserCount
+  const optimisticCount = userStore.optimisticOperations.size
+  
+  return (
+    <div className="performance-monitor">
+      <button onClick={() => setShowDetails(!showDetails)}>
+        Performance Monitor {showDetails ? '▼' : '▶'}
+      </button>
+      
+      {showDetails && (
+        <div className="performance-details">
+          <div className="metric">
+            <label>Users in store:</label>
+            <span>{userCount}</span>
+          </div>
+          <div className="metric">
+            <label>Selected users:</label>
+            <span>{selectedCount}</span>
+          </div>
+          <div className="metric">
+            <label>Optimistic operations:</label>
+            <span>{optimisticCount}</span>
+          </div>
+          <div className="metric">
+            <label>Cache last updated:</label>
+            <span>
+              {userStore.cache.lastFetch 
+                ? new Date(userStore.cache.lastFetch).toLocaleString()
+                : 'Never'}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+})
+
+// ✅ Bulk operations component
+export const BulkOperations = view(() => {
+  const selectedUsers = Array.from(userStore.selectedUsers)
+    .map(id => userStore.users.get(id))
+    .filter(Boolean) as User[]
+
+  if (selectedUsers.length === 0) {
+    return null
+  }
+
+  const handleBulkDelete = async () => {
+    const userNames = selectedUsers.map(u => u.name).join(', ')
+    if (window.confirm(`Delete ${selectedUsers.length} users: ${userNames}?`)) {
+      try {
+        await userStore.bulkDeleteUsers(selectedUsers.map(u => u.id))
+        userStore.deselectAllUsers()
+      } catch (error) {
+        console.error('Bulk delete failed:', error)
+      }
+    }
+  }
+
+  return (
+    <div className="bulk-operations">
+      <div className="bulk-info">
+        {selectedUsers.length} users selected
+      </div>
+      
+      <div className="bulk-actions">
+        <button onClick={userStore.deselectAllUsers}>
+          Deselect All
+        </button>
+        <button 
+          onClick={handleBulkDelete}
+          className="danger"
+        >
+          Delete Selected
+        </button>
+      </div>
+    </div>
+  )
+})
+```
+
+## Store Composition and Modularity
+
+**Advanced store composition patterns:**
+```tsx
+// ✅ Store composition utilities
+export const createStoreComposition = <T extends Record<string, any>>(stores: T) => {
+  return view(() => {
+    const storeValues = {} as { [K in keyof T]: T[K] }
+    
+    // Create reactive references to all stores
+    Object.keys(stores).forEach(key => {
+      storeValues[key as keyof T] = stores[key]
+    })
+    
+    return storeValues
+  })
+}
+
+// ✅ Store persistence utility
+export const createPersistedStore = <T extends object>(
+  key: string, 
+  initialState: T,
+  options: {
+    serialize?: (state: T) => string
+    deserialize?: (data: string) => Partial<T>
+    storage?: Storage
+  } = {}
+) => {
+  const {
+    serialize = JSON.stringify,
+    deserialize = JSON.parse,
+    storage = localStorage
+  } = options
+
+  // Load initial state from storage
+  let loadedState = initialState
+  try {
+    const stored = storage.getItem(key)
+    if (stored) {
+      loadedState = { ...initialState, ...deserialize(stored) }
+    }
+  } catch (error) {
+    console.warn(`Failed to load persisted state for ${key}:`, error)
+  }
+
+  const persistedStore = store(loadedState)
+
+  // Auto-save to storage on changes
+  let saveTimeout: NodeJS.Timeout
+  const saveToStorage = () => {
+    clearTimeout(saveTimeout)
+    saveTimeout = setTimeout(() => {
+      try {
+        storage.setItem(key, serialize(persistedStore))
+      } catch (error) {
+        console.warn(`Failed to persist state for ${key}:`, error)
+      }
+    }, 100) // Debounce saves
+  }
+
+  // Watch for changes (simplified approach)
+  const originalSet = Object.getOwnPropertyDescriptor(Object.prototype, '__lookupSetter__')
+  
+  return new Proxy(persistedStore, {
+    set(target, prop, value) {
+      const result = Reflect.set(target, prop, value)
+      saveToStorage()
+      return result
+    }
+  })
+}
+
+// ✅ Store middleware system
+export const createMiddleware = <T extends object>(
+  store: T,
+  middlewares: Array<(store: T, action: string, payload: any) => void>
+) => {
+  return new Proxy(store, {
+    set(target, prop, value) {
+      const actionName = String(prop)
+      
+      // Execute middlewares
+      middlewares.forEach(middleware => {
+        try {
+          middleware(target, actionName, value)
+        } catch (error) {
+          console.error('Middleware error:', error)
+        }
+      })
+      
+      return Reflect.set(target, prop, value)
+    }
+  })
+}
+
+// ✅ Logging middleware
+export const loggingMiddleware = <T extends object>(
+  store: T, 
+  action: string, 
+  payload: any
+) => {
+  console.group(`Store Action: ${action}`)
+  console.log('Previous state:', { ...store })
+  console.log('Payload:', payload)
+  console.log('New state:', { ...store, [action]: payload })
+  console.groupEnd()
+}
+
+// ✅ Analytics middleware
+export const analyticsMiddleware = <T extends object>(
+  store: T,
+  action: string,
+  payload: any
+) => {
+  // Track store actions for analytics
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'store_action', {
+      event_category: 'state_management',
+      event_label: action,
+      value: 1
+    })
+  }
+}
+
+// ✅ Usage example with middleware
+export const enhancedUserStore = createMiddleware(userStore, [
+  loggingMiddleware,
+  analyticsMiddleware
+])
+```
+
+## Testing Easy State Stores
+
+**Comprehensive testing strategies:**
+```tsx
+// ✅ Store testing utilities
+// __tests__/utils/storeTestUtils.ts
+import { store } from '@risingstack/react-easy-state'
+
+export const createMockStore = <T extends object>(initialState: T) => {
+  return store({ ...initialState })
+}
+
+export const waitForStoreUpdate = async (
+  condition: () => boolean,
+  timeout = 1000
+) => {
+  const start = Date.now()
+  
+  while (!condition() && Date.now() - start < timeout) {
+    await new Promise(resolve => setTimeout(resolve, 10))
+  }
+  
+  if (!condition()) {
+    throw new Error('Store update condition was not met within timeout')
+  }
+}
+
+// ✅ Store tests
+// __tests__/stores/userStore.test.ts
+describe('User Store', () => {
+  let mockFetch: jest.MockedFunction<typeof fetch>
+  
+  beforeEach(() => {
+    // Reset store state
+    userStore.users.clear()
+    userStore.selectedUsers.clear()
+    userStore.clearErrors()
+    
+    // Setup fetch mock
+    mockFetch = jest.fn()
+    global.fetch = mockFetch
+  })
+
+  describe('fetchUsers', () => {
+    it('should fetch and store users successfully', async () => {
+      const mockUsers = [
+        { id: '1', name: 'John Doe', email: 'john@test.com', role: 'user' as const },
+        { id: '2', name: 'Jane Smith', email: 'jane@test.com', role: 'admin' as const }
+      ]
+      
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ data: mockUsers, meta: { total: 2 } })
+      } as Response)
+
+      expect(userStore.loading.users).toBe(false)
+      
+      const fetchPromise = userStore.fetchUsers()
+      
+      expect(userStore.loading.users).toBe(true)
+      
+      await fetchPromise
+      
+      expect(userStore.loading.users).toBe(false)
+      expect(userStore.users.size).toBe(2)
+      expect(userStore.users.get('1')).toEqual(mockUsers[0])
+      expect(userStore.errors.users).toBeNull()
+    })
+
+    it('should handle fetch errors', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+
+      await userStore.fetchUsers()
+      
+      expect(userStore.errors.users).toBe('Network error')
+      expect(userStore.users.size).toBe(0)
+    })
+
+    it('should handle 304 Not Modified response', async () => {
+      userStore.cache.etag = 'test-etag'
+      
+      mockFetch.mockResolvedValueOnce({
+        status: 304,
+        ok: false
+      } as Response)
+
+      await userStore.fetchUsers()
+      
+      // Should not clear existing users on 304
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/users'),
+        expect.objectContaining({
+          headers: { 'If-None-Match': 'test-etag' }
+        })
+      )
+    })
+  })
+
+  describe('optimistic updates', () => {
+    it('should handle optimistic create with rollback on error', async () => {
+      const userData = { 
+        name: 'Test User', 
+        email: 'test@test.com', 
+        role: 'user' as const 
+      }
+      
+      mockFetch.mockRejectedValueOnce(new Error('Server error'))
+
+      const initialUserCount = userStore.users.size
+      
+      try {
+        await userStore.createUser(userData)
+      } catch (error) {
+        // Expected to fail
+      }
+      
+      // Should rollback optimistic update
+      expect(userStore.users.size).toBe(initialUserCount)
+      expect(userStore.errors.create).toBe('Server error')
+    })
+
+    it('should handle optimistic update successfully', async () => {
+      const userData = { 
+        name: 'Test User', 
+        email: 'test@test.com', 
+        role: 'user' as const 
+      }
+      const createdUser = { 
+        id: 'real-id', 
+        ...userData, 
+        lastLoginAt: null, 
+        isActive: true 
+      }
+      
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(createdUser)
+      } as Response)
+
+      const result = await userStore.createUser(userData)
+      
+      expect(result).toEqual(createdUser)
+      expect(userStore.users.get('real-id')).toEqual(createdUser)
+      expect(userStore.optimisticOperations.size).toBe(0)
+    })
+  })
+
+  describe('computed properties', () => {
+    beforeEach(() => {
+      // Add test users
+      const testUsers = [
+        { id: '1', name: 'John Doe', email: 'john@test.com', role: 'user' as const, isActive: true },
+        { id: '2', name: 'Jane Smith', email: 'jane@test.com', role: 'admin' as const, isActive: false },
+        { id: '3', name: 'Bob Johnson', email: 'bob@test.com', role: 'user' as const, isActive: true }
+      ]
+      
+      testUsers.forEach(user => {
+        userStore.users.set(user.id, user as User)
+      })
+    })
+
+    it('should filter users by search term', () => {
+      userStore.setSearch('john')
+      
+      expect(userStore.filteredUsers).toHaveLength(2) // John Doe and Bob Johnson
+      expect(userStore.filteredUsers.every(u => 
+        u.name.toLowerCase().includes('john') || u.email.toLowerCase().includes('john')
+      )).toBe(true)
+    })
+
+    it('should filter users by role', () => {
+      userStore.setFilter({ role: 'admin' })
+      
+      expect(userStore.filteredUsers).toHaveLength(1)
+      expect(userStore.filteredUsers[0].role).toBe('admin')
+    })
+
+    it('should filter users by status', () => {
+      userStore.setFilter({ status: 'active' })
+      
+      expect(userStore.filteredUsers).toHaveLength(2)
+      expect(userStore.filteredUsers.every(u => u.isActive)).toBe(true)
+    })
+  })
+
+  describe('selection management', () => {
+    it('should select and deselect users', () => {
+      userStore.selectUser('1')
+      expect(userStore.selectedUsers.has('1')).toBe(true)
+      expect(userStore.selectedUserCount).toBe(1)
+      
+      userStore.deselectUser('1')
+      expect(userStore.selectedUsers.has('1')).toBe(false)
+      expect(userStore.selectedUserCount).toBe(0)
+    })
+
+    it('should toggle user selection', () => {
+      expect(userStore.selectedUsers.has('1')).toBe(false)
+      
+      userStore.toggleUserSelection('1')
+      expect(userStore.selectedUsers.has('1')).toBe(true)
+      
+      userStore.toggleUserSelection('1')
+      expect(userStore.selectedUsers.has('1')).toBe(false)
+    })
+  })
+})
+
+// ✅ React component testing with Easy State
+// __tests__/components/UserList.test.tsx
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { UserList } from '../components/UserList'
+
+describe('UserList Component', () => {
+  beforeEach(() => {
+    // Reset store
+    userStore.users.clear()
+    userStore.clearErrors()
+  })
+
+  it('should render loading state', () => {
+    userStore.loading.users = true
+    
+    render(<UserList />)
+    
+    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument()
+  })
+
+  it('should render error state', () => {
+    userStore.errors.users = 'Failed to load users'
+    
+    render(<UserList />)
+    
+    expect(screen.getByText(/Failed to load users/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument()
+  })
+
+  it('should render users list', () => {
+    const testUser = { 
+      id: '1', 
+      name: 'John Doe', 
+      email: 'john@test.com', 
+      role: 'user' as const,
+      isActive: true
+    }
+    
+    userStore.users.set('1', testUser as User)
+    
+    render(<UserList />)
+    
+    expect(screen.getByText('John Doe')).toBeInTheDocument()
+    expect(screen.getByText('john@test.com')).toBeInTheDocument()
+  })
+})
+```
+
+## Best Practices Summary
+
+**Key patterns for enterprise Easy State applications:**
+
+1. **Store Design**: Create focused stores with single responsibility, use TypeScript for type safety, implement proper error boundaries, organize stores by feature/domain.
+
+2. **Reactivity**: Leverage computed properties for derived state, use batch updates for performance, implement proper memoization, avoid unnecessary re-renders.
+
+3. **Async Operations**: Handle loading states properly, implement optimistic updates with rollback, use proper error handling, implement retry mechanisms.
+
+4. **Performance**: Use Map and Set for large collections, implement proper store composition, avoid storing large objects unnecessarily, implement proper cleanup.
+
+5. **Testing**: Test stores independently, use proper mocking strategies, test reactive properties, implement comprehensive error scenarios.
+
+6. **Architecture**: Implement proper store composition, use middleware for cross-cutting concerns, implement persistence strategies, maintain clear data flow.
+
+7. **Development**: Use proper TypeScript typing, implement comprehensive error handling, use development tools effectively, maintain clear separation of concerns.
+
+8. **Maintenance**: Monitor store performance, implement proper logging, use analytics for insights, maintain clean store interfaces.
+
+Always prioritize reactive patterns over imperative updates, implement proper error boundaries, leverage Easy State's simplicity while maintaining enterprise-scale architecture patterns for scalable state management.
     authStore.error = null;
   },
   setError: (error) => {

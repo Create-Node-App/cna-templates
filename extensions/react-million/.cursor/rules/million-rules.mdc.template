@@ -1,38 +1,1021 @@
 ---
-description: Specific guidelines for implementing and optimizing React applications with Million.
-globs: '**/*.{ts,tsx,js,jsx}'
+description: Advanced React Million.js optimization patterns for ultra-fast component rendering, virtual DOM enhancement, performance monitoring, and enterprise-scale React applications.
+globs: '**/*.{ts,tsx,js,jsx}', '**/million.config.{js,ts,mjs}', '**/vite.config.{js,ts}', '**/webpack.config.{js,ts}'
 ---
 
-# Million Rules
+# Advanced React Million.js Implementation
 
-## Component Optimization
+## Million.js Configuration & Setup
 
-1. Use consistent component structure
-2. Implement proper component memoization
-3. Use TypeScript for component types
-4. Handle component updates properly
-5. Implement proper error boundaries
+**Enterprise Million.js configuration with advanced optimization:**
+```typescript
+// million.config.ts
+import { defineConfig } from 'million'
+import type { MillionOptions } from 'million/types'
 
-## Performance
+export const millionConfig: MillionOptions = {
+  // Core optimization settings
+  auto: {
+    // Automatically optimize components that benefit from Million
+    threshold: 0.1, // Only optimize components with >10% performance gain
+    rsc: true, // Enable React Server Components support
+    mode: 'react', // React mode for better compatibility
+  },
+  
+  // Performance monitoring and metrics
+  telemetry: {
+    enabled: process.env.NODE_ENV === 'production',
+    endpoint: process.env.MILLION_TELEMETRY_ENDPOINT,
+    sampleRate: 0.1, // Sample 10% of renders for performance data
+  },
+  
+  // Advanced optimization features
+  experimental: {
+    // Enable block-level optimization
+    blockOptimization: true,
+    
+    // Optimize component trees
+    treeShaking: true,
+    
+    // Enable compile-time optimizations
+    compileTime: {
+      enabled: true,
+      // Pre-compile known static components
+      staticComponents: [
+        'StaticHeader',
+        'Footer',
+        'Sidebar',
+        'Navigation'
+      ]
+    },
+    
+    // Memory optimization
+    memoryOptimization: {
+      // Garbage collection hints
+      gcHints: true,
+      
+      // Pool component instances
+      componentPooling: true,
+      
+      // Optimize event handlers
+      eventHandlerOptimization: true
+    }
+  },
+  
+  // Development tools integration
+  devtools: {
+    enabled: process.env.NODE_ENV === 'development',
+    
+    // Performance profiling
+    profiler: {
+      enabled: true,
+      // Track component render times
+      trackRenderTime: true,
+      // Monitor memory usage
+      trackMemory: true,
+      // Analyze component updates
+      trackUpdates: true
+    },
+    
+    // Debug information
+    debug: {
+      // Log optimization decisions
+      logOptimizations: true,
+      // Show performance warnings
+      performanceWarnings: true,
+      // Component analysis
+      componentAnalysis: true
+    }
+  },
+  
+  // Optimization rules
+  optimization: {
+    // Skip optimization for certain components
+    skip: [
+      // Components with complex lifecycle
+      'ComplexLifecycleComponent',
+      // Third-party components that might conflict
+      'ThirdPartyWidget',
+      // Dynamic components
+      'DynamicRouter'
+    ],
+    
+    // Force optimization for specific components
+    force: [
+      // High-frequency update components
+      'DataTable',
+      'VirtualList',
+      'RealtimeChart'
+    ],
+    
+    // Optimization strategies
+    strategies: {
+      // Batch updates for better performance
+      batchUpdates: true,
+      
+      // Optimize large lists
+      largeListOptimization: {
+        enabled: true,
+        threshold: 100, // Optimize lists with >100 items
+        virtualScrolling: true
+      },
+      
+      // Form optimization
+      formOptimization: {
+        enabled: true,
+        // Batch form field updates
+        batchFieldUpdates: true,
+        // Optimize validation
+        optimizeValidation: true
+      }
+    }
+  }
+}
 
-1. Use proper component optimization
-2. Implement proper code splitting
-3. Use appropriate lazy loading
-4. Handle large components properly
-5. Optimize component rendering
+export default millionConfig
+```
 
-## Best Practices
+**Vite integration with Million.js:**
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import million from 'million/compiler'
+import { millionConfig } from './million.config'
 
-1. Use proper component patterns
-2. Implement proper state management
-3. Use appropriate hooks
-4. Handle side effects properly
-5. Follow Million best practices
+export default defineConfig({
+  plugins: [
+    // Million.js compiler plugin (must be first)
+    million.vite({
+      ...millionConfig,
+      // Vite-specific optimizations
+      vite: {
+        // Enable HMR optimizations
+        hmr: {
+          enabled: true,
+          // Preserve component state during HMR
+          preserveState: true,
+          // Fast refresh compatibility
+          fastRefresh: true
+        },
+        
+        // Build optimizations
+        build: {
+          // Enable build-time optimizations
+          optimizeAtBuild: true,
+          // Generate performance reports
+          generateReports: process.env.NODE_ENV === 'production',
+          // Bundle analysis
+          bundleAnalysis: true
+        }
+      }
+    }),
+    
+    // React plugin with Million.js compatibility
+    react({
+      // Disable React's built-in optimizations to avoid conflicts
+      jsxImportSource: 'million/jsx-runtime',
+      
+      // Babel configuration for Million.js
+      babel: {
+        plugins: [
+          // Million.js Babel plugin
+          ['million/babel', {
+            // Component transformation options
+            auto: true,
+            
+            // Optimization level
+            optimize: 'aggressive',
+            
+            // Runtime options
+            runtime: {
+              // Use Million.js runtime
+              useMillion: true,
+              // Compatibility mode
+              compat: true
+            }
+          }]
+        ]
+      }
+    })
+  ],
+  
+  // Development server configuration
+  server: {
+    // Enable performance monitoring in development
+    hmr: {
+      overlay: true
+    }
+  },
+  
+  // Build configuration
+  build: {
+    // Optimize for Million.js
+    target: 'es2020',
+    
+    // Rollup options for Million.js
+    rollupOptions: {
+      // External dependencies that should not be bundled
+      external: ['react', 'react-dom'],
+      
+      // Output configuration
+      output: {
+        // Manual chunks for better code splitting
+        manualChunks: {
+          // Separate Million.js runtime
+          'million-runtime': ['million'],
+          
+          // Vendor chunks
+          'vendor': ['react', 'react-dom'],
+          
+          // UI library chunks
+          'ui': ['@mui/material', 'antd', 'semantic-ui-react']
+        }
+      }
+    }
+  },
+  
+  // Optimization configuration
+  optimizeDeps: {
+    include: [
+      // Pre-bundle Million.js
+      'million',
+      
+      // Include commonly used dependencies
+      'react',
+      'react-dom'
+    ],
+    
+    exclude: [
+      // Exclude from pre-bundling
+      '@million/lint'
+    ]
+  }
+})
+```
 
-## Development
+## Advanced Component Optimization Patterns
 
-1. Use proper development tools
-2. Implement proper testing
-3. Use appropriate debugging
-4. Handle development workflow properly
-5. Follow performance guidelines 
+**High-performance data table with Million.js:**
+```tsx
+import React, { useState, useMemo, useCallback, memo } from 'react'
+import { block, For } from 'million/react'
+import type { FC, ReactNode } from 'react'
+import './DataTable.css'
+
+// Million.js optimized interfaces
+interface TableColumn<T = any> {
+  key: string
+  title: string
+  dataIndex: keyof T
+  width?: number
+  sortable?: boolean
+  filterable?: boolean
+  render?: (value: any, record: T, index: number) => ReactNode
+  sorter?: (a: T, b: T) => number
+  onHeaderClick?: (column: TableColumn<T>) => void
+}
+
+interface TableRow {
+  id: string | number
+  [key: string]: any
+}
+
+interface DataTableProps<T extends TableRow> {
+  columns: TableColumn<T>[]
+  data: T[]
+  loading?: boolean
+  pagination?: {
+    current: number
+    pageSize: number
+    total: number
+    onChange: (page: number, pageSize: number) => void
+  }
+  sorting?: {
+    field: string
+    direction: 'asc' | 'desc'
+  }
+  filtering?: Record<string, any>
+  selection?: {
+    selectedRowKeys: (string | number)[]
+    onChange: (selectedRowKeys: (string | number)[], selectedRows: T[]) => void
+  }
+  onRowClick?: (record: T, index: number) => void
+  onRowDoubleClick?: (record: T, index: number) => void
+  className?: string
+  rowClassName?: (record: T, index: number) => string
+  expandable?: {
+    expandedRowRender: (record: T, index: number) => ReactNode
+    expandedRowKeys?: (string | number)[]
+    onExpand?: (expanded: boolean, record: T) => void
+  }
+  virtual?: {
+    enabled: boolean
+    itemHeight: number
+    overscan?: number
+  }
+}
+
+// Million.js optimized table cell component
+const TableCell = block(({ 
+  children, 
+  className, 
+  width, 
+  align 
+}: {
+  children: ReactNode
+  className?: string
+  width?: number
+  align?: 'left' | 'center' | 'right'
+}) => (
+  <td 
+    className={className}
+    style={{
+      width: width ? `${width}px` : undefined,
+      textAlign: align || 'left'
+    }}
+  >
+    {children}
+  </td>
+))
+
+// Million.js optimized table row component
+const TableRow = block(({ 
+  children,
+  className,
+  onClick,
+  onDoubleClick,
+  selected
+}: {
+  children: ReactNode
+  className?: string
+  onClick?: () => void
+  onDoubleClick?: () => void
+  selected?: boolean
+}) => (
+  <tr
+    className={`table-row ${className || ''} ${selected ? 'selected' : ''}`}
+    onClick={onClick}
+    onDoubleClick={onDoubleClick}
+  >
+    {children}
+  </tr>
+))
+
+// Million.js optimized header cell component
+const HeaderCell = block(({ 
+  column,
+  sortDirection,
+  onSort,
+  onFilter
+}: {
+  column: TableColumn
+  sortDirection?: 'asc' | 'desc'
+  onSort?: (field: string) => void
+  onFilter?: (field: string, value: any) => void
+}) => {
+  const [filterVisible, setFilterVisible] = useState(false)
+  const [filterValue, setFilterValue] = useState('')
+
+  return (
+    <th 
+      className={`table-header-cell ${column.sortable ? 'sortable' : ''}`}
+      style={{ width: column.width ? `${column.width}px` : undefined }}
+      onClick={() => {
+        if (column.sortable && onSort) {
+          onSort(column.key)
+        }
+        if (column.onHeaderClick) {
+          column.onHeaderClick(column)
+        }
+      }}
+    >
+      <div className="header-content">
+        <span className="header-title">{column.title}</span>
+        
+        {column.sortable && (
+          <span className={`sort-indicator ${sortDirection || ''}`}>
+            <svg className="sort-asc" viewBox="0 0 24 24">
+              <path d="M7 14l5-5 5 5z"/>
+            </svg>
+            <svg className="sort-desc" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </span>
+        )}
+        
+        {column.filterable && (
+          <button
+            className={`filter-button ${filterVisible ? 'active' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              setFilterVisible(!filterVisible)
+            }}
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h8v-2h-8V9h8V7h-8V5h8V3h-8.01L13 1h-2v2H3v2h8v2H3v2h8v6H3v2h8z"/>
+            </svg>
+          </button>
+        )}
+      </div>
+      
+      {filterVisible && column.filterable && (
+        <div className="filter-dropdown">
+          <input
+            type="text"
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && onFilter) {
+                onFilter(column.key, filterValue)
+                setFilterVisible(false)
+              }
+            }}
+            placeholder={`Filter ${column.title}`}
+            autoFocus
+          />
+          <div className="filter-actions">
+            <button
+              onClick={() => {
+                if (onFilter) {
+                  onFilter(column.key, filterValue)
+                }
+                setFilterVisible(false)
+              }}
+            >
+              Apply
+            </button>
+            <button
+              onClick={() => {
+                setFilterValue('')
+                if (onFilter) {
+                  onFilter(column.key, '')
+                }
+                setFilterVisible(false)
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
+    </th>
+  )
+})
+
+// Million.js optimized virtual scroller
+const VirtualScroller = block(({ 
+  items,
+  itemHeight,
+  containerHeight,
+  overscan = 5,
+  renderItem
+}: {
+  items: any[]
+  itemHeight: number
+  containerHeight: number
+  overscan?: number
+  renderItem: (item: any, index: number) => ReactNode
+}) => {
+  const [scrollTop, setScrollTop] = useState(0)
+  
+  const visibleRange = useMemo(() => {
+    const start = Math.floor(scrollTop / itemHeight)
+    const visibleCount = Math.ceil(containerHeight / itemHeight)
+    const end = start + visibleCount
+    
+    return {
+      start: Math.max(0, start - overscan),
+      end: Math.min(items.length - 1, end + overscan)
+    }
+  }, [scrollTop, itemHeight, containerHeight, items.length, overscan])
+  
+  const visibleItems = useMemo(() => {
+    return items.slice(visibleRange.start, visibleRange.end + 1).map((item, index) => ({
+      item,
+      index: visibleRange.start + index
+    }))
+  }, [items, visibleRange])
+  
+  return (
+    <div 
+      className="virtual-scroller"
+      style={{ height: containerHeight, overflow: 'auto' }}
+      onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
+    >
+      <div style={{ height: items.length * itemHeight, position: 'relative' }}>
+        {visibleItems.map(({ item, index }) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              top: index * itemHeight,
+              height: itemHeight,
+              width: '100%'
+            }}
+          >
+            {renderItem(item, index)}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+})
+
+// Main DataTable component optimized with Million.js
+export const DataTable = block(<T extends TableRow>({
+  columns,
+  data,
+  loading = false,
+  pagination,
+  sorting,
+  filtering = {},
+  selection,
+  onRowClick,
+  onRowDoubleClick,
+  className = '',
+  rowClassName,
+  expandable,
+  virtual
+}: DataTableProps<T>) => {
+  // State management
+  const [sortField, setSortField] = useState(sorting?.field || '')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(sorting?.direction || 'asc')
+  const [currentFilters, setCurrentFilters] = useState(filtering)
+  const [expandedRows, setExpandedRows] = useState<Set<string | number>>(new Set())
+  
+  // Performance optimizations with useMemo
+  const processedData = useMemo(() => {
+    let result = [...data]
+    
+    // Apply filters
+    Object.entries(currentFilters).forEach(([field, value]) => {
+      if (value !== undefined && value !== '') {
+        result = result.filter(item => {
+          const fieldValue = item[field]
+          if (typeof fieldValue === 'string') {
+            return fieldValue.toLowerCase().includes(String(value).toLowerCase())
+          }
+          return String(fieldValue).includes(String(value))
+        })
+      }
+    })
+    
+    // Apply sorting
+    if (sortField) {
+      const column = columns.find(col => col.key === sortField)
+      result.sort((a, b) => {
+        if (column?.sorter) {
+          return column.sorter(a, b)
+        }
+        
+        const aValue = a[sortField]
+        const bValue = b[sortField]
+        
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+        return 0
+      })
+    }
+    
+    return result
+  }, [data, currentFilters, sortField, sortDirection, columns])
+  
+  // Pagination calculations
+  const paginatedData = useMemo(() => {
+    if (!pagination) return processedData
+    
+    const start = (pagination.current - 1) * pagination.pageSize
+    const end = start + pagination.pageSize
+    return processedData.slice(start, end)
+  }, [processedData, pagination])
+  
+  // Event handlers with useCallback for performance
+  const handleSort = useCallback((field: string) => {
+    if (field === sortField) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }, [sortField])
+  
+  const handleFilter = useCallback((field: string, value: any) => {
+    setCurrentFilters(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }, [])
+  
+  const handleRowClick = useCallback((record: T, index: number) => {
+    onRowClick?.(record, index)
+  }, [onRowClick])
+  
+  const handleRowSelection = useCallback((record: T, selected: boolean) => {
+    if (!selection) return
+    
+    const newSelectedKeys = selected
+      ? [...selection.selectedRowKeys, record.id]
+      : selection.selectedRowKeys.filter(key => key !== record.id)
+    
+    const newSelectedRows = data.filter(item => newSelectedKeys.includes(item.id))
+    selection.onChange(newSelectedKeys, newSelectedRows)
+  }, [selection, data])
+  
+  const toggleRowExpansion = useCallback((record: T) => {
+    setExpandedRows(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(record.id)) {
+        newSet.delete(record.id)
+      } else {
+        newSet.add(record.id)
+      }
+      return newSet
+    })
+  }, [])
+  
+  // Render table content
+  const renderTableContent = () => {
+    if (virtual?.enabled) {
+      return (
+        <VirtualScroller
+          items={paginatedData}
+          itemHeight={virtual.itemHeight}
+          containerHeight={400} // Configure as needed
+          overscan={virtual.overscan}
+          renderItem={(record: T, index: number) => (
+            <TableRow
+              key={record.id}
+              className={rowClassName?.(record, index)}
+              onClick={() => handleRowClick(record, index)}
+              onDoubleClick={() => onRowDoubleClick?.(record, index)}
+              selected={selection?.selectedRowKeys.includes(record.id)}
+            >
+              {selection && (
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    checked={selection.selectedRowKeys.includes(record.id)}
+                    onChange={(e) => handleRowSelection(record, e.target.checked)}
+                  />
+                </TableCell>
+              )}
+              
+              {expandable && (
+                <TableCell>
+                  <button
+                    className={`expand-button ${expandedRows.has(record.id) ? 'expanded' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggleRowExpansion(record)
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24">
+                      <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                  </button>
+                </TableCell>
+              )}
+              
+              <For each={columns} memo>
+                {(column) => (
+                  <TableCell
+                    key={column.key}
+                    width={column.width}
+                    align={column.align}
+                  >
+                    {column.render
+                      ? column.render(record[column.dataIndex], record, index)
+                      : String(record[column.dataIndex] || '')
+                    }
+                  </TableCell>
+                )}
+              </For>
+            </TableRow>
+          )}
+        />
+      )
+    }
+    
+    return (
+      <tbody>
+        <For each={paginatedData} memo>
+          {(record, index) => (
+            <>
+              <TableRow
+                key={record.id}
+                className={rowClassName?.(record, index)}
+                onClick={() => handleRowClick(record, index)}
+                onDoubleClick={() => onRowDoubleClick?.(record, index)}
+                selected={selection?.selectedRowKeys.includes(record.id)}
+              >
+                {selection && (
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      checked={selection.selectedRowKeys.includes(record.id)}
+                      onChange={(e) => handleRowSelection(record, e.target.checked)}
+                    />
+                  </TableCell>
+                )}
+                
+                {expandable && (
+                  <TableCell>
+                    <button
+                      className={`expand-button ${expandedRows.has(record.id) ? 'expanded' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleRowExpansion(record)
+                      }}
+                    >
+                      ▼
+                    </button>
+                  </TableCell>
+                )}
+                
+                <For each={columns} memo>
+                  {(column) => (
+                    <TableCell
+                      key={column.key}
+                      width={column.width}
+                    >
+                      {column.render
+                        ? column.render(record[column.dataIndex], record, index)
+                        : String(record[column.dataIndex] || '')
+                      }
+                    </TableCell>
+                  )}
+                </For>
+              </TableRow>
+              
+              {expandable && expandedRows.has(record.id) && (
+                <tr className="expanded-row">
+                  <td colSpan={columns.length + (selection ? 1 : 0) + (expandable ? 1 : 0)}>
+                    {expandable.expandedRowRender(record, index)}
+                  </td>
+                </tr>
+              )}
+            </>
+          )}
+        </For>
+      </tbody>
+    )
+  }
+  
+  if (loading) {
+    return (
+      <div className={`data-table loading ${className}`}>
+        <div className="loading-spinner">Loading...</div>
+      </div>
+    )
+  }
+  
+  return (
+    <div className={`data-table ${className}`}>
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              {selection && <th className="selection-header">Select</th>}
+              {expandable && <th className="expand-header"></th>}
+              <For each={columns} memo>
+                {(column) => (
+                  <HeaderCell
+                    key={column.key}
+                    column={column}
+                    sortDirection={sortField === column.key ? sortDirection : undefined}
+                    onSort={column.sortable ? handleSort : undefined}
+                    onFilter={column.filterable ? handleFilter : undefined}
+                  />
+                )}
+              </For>
+            </tr>
+          </thead>
+          
+          {renderTableContent()}
+        </table>
+      </div>
+      
+      {pagination && (
+        <div className="pagination">
+          <div className="pagination-info">
+            Showing {((pagination.current - 1) * pagination.pageSize) + 1} to{' '}
+            {Math.min(pagination.current * pagination.pageSize, pagination.total)} of{' '}
+            {pagination.total} entries
+          </div>
+          
+          <div className="pagination-controls">
+            <button
+              disabled={pagination.current === 1}
+              onClick={() => pagination.onChange(pagination.current - 1, pagination.pageSize)}
+            >
+              Previous
+            </button>
+            
+            <span className="page-info">
+              Page {pagination.current} of {Math.ceil(pagination.total / pagination.pageSize)}
+            </span>
+            
+            <button
+              disabled={pagination.current * pagination.pageSize >= pagination.total}
+              onClick={() => pagination.onChange(pagination.current + 1, pagination.pageSize)}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+})
+
+export default DataTable
+```
+
+## Performance Monitoring & Analytics
+
+**Million.js performance monitoring system:**
+```tsx
+import React, { useEffect, useState, useMemo } from 'react'
+import { useMillionPerformance } from 'million/react'
+import type { PerformanceMetrics, ComponentMetrics } from 'million/types'
+
+interface PerformanceMonitorProps {
+  enabled?: boolean
+  sampleRate?: number
+  onMetrics?: (metrics: PerformanceMetrics) => void
+  children: React.ReactNode
+}
+
+// Performance monitoring hook
+export const usePerformanceMonitor = (componentName: string) => {
+  const [metrics, setMetrics] = useState<ComponentMetrics | null>(null)
+  const [renderCount, setRenderCount] = useState(0)
+  const [avgRenderTime, setAvgRenderTime] = useState(0)
+  const [memoryUsage, setMemoryUsage] = useState(0)
+  
+  useEffect(() => {
+    const startTime = performance.now()
+    setRenderCount(prev => prev + 1)
+    
+    return () => {
+      const endTime = performance.now()
+      const renderTime = endTime - startTime
+      
+      setAvgRenderTime(prev => {
+        const newAvg = (prev * (renderCount - 1) + renderTime) / renderCount
+        return newAvg
+      })
+      
+      // Memory usage tracking (if available)
+      if ('memory' in performance) {
+        const memInfo = (performance as any).memory
+        setMemoryUsage(memInfo.usedJSHeapSize)
+      }
+      
+      // Send metrics to Million.js telemetry
+      if (window.__MILLION_TELEMETRY__) {
+        window.__MILLION_TELEMETRY__.track({
+          component: componentName,
+          renderTime,
+          renderCount,
+          memoryUsage: memoryUsage
+        })
+      }
+    }
+  })
+  
+  return {
+    metrics,
+    renderCount,
+    avgRenderTime,
+    memoryUsage,
+    isOptimized: avgRenderTime < 16.67 // 60fps threshold
+  }
+}
+
+// Performance dashboard component
+export const PerformanceDashboard: React.FC = () => {
+  const millionMetrics = useMillionPerformance()
+  const [showDetails, setShowDetails] = useState(false)
+  
+  const performanceScore = useMemo(() => {
+    if (!millionMetrics) return 0
+    
+    const score = Math.max(0, Math.min(100, 
+      100 - (millionMetrics.avgRenderTime / 16.67) * 10
+    ))
+    
+    return Math.round(score)
+  }, [millionMetrics])
+  
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return '#4CAF50' // Green
+    if (score >= 70) return '#FF9800' // Orange
+    return '#F44336' // Red
+  }
+  
+  if (!millionMetrics) {
+    return (
+      <div className="performance-dashboard">
+        <div className="no-metrics">
+          Performance monitoring not available
+        </div>
+      </div>
+    )
+  }
+  
+  return (
+    <div className="performance-dashboard">
+      <div className="performance-header">
+        <h3>Million.js Performance</h3>
+        <button
+          className="toggle-details"
+          onClick={() => setShowDetails(!showDetails)}
+        >
+          {showDetails ? 'Hide' : 'Show'} Details
+        </button>
+      </div>
+      
+      <div className="performance-score">
+        <div 
+          className="score-circle"
+          style={{ '--score-color': getScoreColor(performanceScore) } as React.CSSProperties}
+        >
+          <span className="score-value">{performanceScore}</span>
+          <span className="score-label">Performance Score</span>
+        </div>
+      </div>
+      
+      <div className="performance-summary">
+        <div className="metric">
+          <label>Optimized Components</label>
+          <value>{millionMetrics.optimizedComponents}</value>
+        </div>
+        
+        <div className="metric">
+          <label>Avg Render Time</label>
+          <value>{millionMetrics.avgRenderTime.toFixed(2)}ms</value>
+        </div>
+        
+        <div className="metric">
+          <label>Memory Usage</label>
+          <value>{(millionMetrics.memoryUsage / 1024 / 1024).toFixed(2)}MB</value>
+        </div>
+        
+        <div className="metric">
+          <label>FPS</label>
+          <value>{Math.round(1000 / millionMetrics.avgRenderTime)}</value>
+        </div>
+      </div>
+      
+      {showDetails && (
+        <div className="performance-details">
+          <div className="component-metrics">
+            <h4>Component Performance</h4>
+            {millionMetrics.componentMetrics?.map((component, index) => (
+              <div key={index} className="component-metric">
+                <div className="component-name">{component.name}</div>
+                <div className="component-stats">
+                  <span>Renders: {component.renderCount}</span>
+                  <span>Avg Time: {component.avgRenderTime.toFixed(2)}ms</span>
+                  <span>Optimized: {component.optimized ? 'Yes' : 'No'}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="optimization-suggestions">
+            <h4>Optimization Suggestions</h4>
+            {millionMetrics.suggestions?.map((suggestion, index) => (
+              <div key={index} className="suggestion">
+                <div className="suggestion-type">{suggestion.type}</div>
+                <div className="suggestion-text">{suggestion.message}</div>
+                {suggestion.component && (
+                  <div className="suggestion-component">Component: {suggestion.component}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced Million.js React optimization:**
+
+1. **Component Optimization**: Use `block()` wrapper for frequently updating components, implement proper memoization strategies, optimize component trees with Million.js compiler, leverage automatic optimization detection.
+
+2. **Performance Monitoring**: Integrate telemetry and performance tracking, monitor render times and memory usage, implement performance dashboards, set up alerting for performance regressions.
+
+3. **Advanced Configuration**: Configure Million.js with project-specific settings, integrate with build tools (Vite, Webpack), enable development tools and profiling, implement performance budgets and thresholds.
+
+4. **Virtual DOM Optimization**: Use Million.js block-level optimization, implement virtual scrolling for large datasets, optimize list rendering with `For` component, leverage compile-time optimizations.
+
+5. **Build Integration**: Configure compiler plugins properly, optimize bundle splitting, implement performance monitoring, integrate with CI/CD pipelines for performance testing.
+
+Always profile before optimizing, use Million.js telemetry data to guide optimizations, maintain compatibility with React ecosystem, and monitor performance impact of changes continuously. 

@@ -1,48 +1,1463 @@
 ---
-description: You are an expert programming assistant that specializes in implementing and managing state with Teaful in React applications.
+description: Advanced React Teaful patterns for lightweight state management, performance optimization, and scalable store architecture with middleware integration.
 globs: '**/*.{ts,tsx,js,jsx}'
 ---
 
-# Teaful Rules
+# Advanced React Teaful Management
 
-You are an expert in Teaful state management and follow these guidelines:
+## Enterprise Teaful Architecture
 
-1. Always use TypeScript for type safety and better developer experience.
-2. Create stores with clear, descriptive names and organize them by feature/domain.
-3. Use the `createStore` function with proper typing and avoid direct state mutations.
-4. Implement selectors for derived state and memoize them when necessary.
-5. Handle async actions inside the store using proper error handling.
-6. Use proper state splitting to avoid unnecessary re-renders.
-7. Follow the single responsibility principle for each store.
-8. Document store behavior with JSDoc or TypeScript types.
-9. Implement proper error boundaries and loading states.
-10. Use proper state subscriptions to optimize performance.
+**Lightweight and performant state management with advanced patterns:**
+```tsx
+import React, { useCallback, useMemo, useRef, useEffect, useLayoutEffect } from 'react'
+import { createStore, useStore, Store, StoreInterface } from 'teaful'
 
-## Anti-Patterns to Avoid
-
-1. Never use Teaful for server state (use React Query or SWR instead).
-2. Avoid putting all app state in a single store.
-3. Don't store large, frequently-changing collections unless necessary.
-4. Avoid side effects inside store definitions.
-5. Don't mirror backend state without transformation.
-
-## Example Implementation
-
-```ts
-import { createStore } from 'teaful';
-
-interface AuthState {
-  user: User | null;
-  error: string | null;
-  login: (user: User) => void;
-  logout: () => void;
-  setError: (error: string) => void;
+// ✅ Advanced user management state with comprehensive structure
+interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'user' | 'guest' | 'moderator'
+  avatar?: string
+  settings: {
+    theme: 'light' | 'dark' | 'auto'
+    language: string
+    timezone: string
+    notifications: {
+      email: boolean
+      browser: boolean
+      mobile: boolean
+    }
+    privacy: {
+      profileVisible: boolean
+      activityVisible: boolean
+      onlineStatus: boolean
+    }
+  }
+  profile: {
+    bio: string
+    location: string
+    website?: string
+    company?: string
+    skills: string[]
+    socialLinks: {
+      twitter?: string
+      linkedin?: string
+      github?: string
+      portfolio?: string
+    }
+  }
+  activity: {
+    lastActive: Date
+    loginCount: number
+    sessionDuration: number
+    favoriteFeatures: string[]
+    usageStats: {
+      dailyActiveTime: number
+      weeklyActiveTime: number
+      monthlyActiveTime: number
+    }
+  }
+  subscription: {
+    plan: 'free' | 'premium' | 'enterprise'
+    startDate: Date
+    renewalDate?: Date
+    features: string[]
+    limits: {
+      storage: number
+      apiCalls: number
+      collaborators: number
+    }
+  }
 }
 
-export const useAuthStore = createStore<AuthState>({
-  user: null,
-  error: null,
-  login: (user) => ({ user, error: null }),
-  logout: () => ({ user: null, error: null }),
-  setError: (error) => ({ error }),
-}); 
+interface UIState {
+  theme: 'light' | 'dark' | 'auto'
+  sidebarCollapsed: boolean
+  activeView: 'list' | 'grid' | 'table'
+  loading: {
+    global: boolean
+    users: boolean
+    profile: boolean
+    settings: boolean
+  }
+  errors: {
+    global: string | null
+    users: string | null
+    profile: string | null
+    settings: string | null
+  }
+  modals: {
+    userDetails: {
+      open: boolean
+      userId: string | null
+    }
+    userEdit: {
+      open: boolean
+      userId: string | null
+    }
+    confirmDelete: {
+      open: boolean
+      userId: string | null
+      userName: string | null
+    }
+    settings: boolean
+    notifications: boolean
+  }
+  notifications: Array<{
+    id: string
+    type: 'success' | 'error' | 'warning' | 'info'
+    title: string
+    message: string
+    timestamp: Date
+    duration?: number
+    actions?: Array<{
+      label: string
+      action: () => void
+    }>
+  }>
+}
+
+interface FilterState {
+  search: string
+  role: string[]
+  subscription: string[]
+  online: boolean
+  active: {
+    lastWeek: boolean
+    lastMonth: boolean
+  }
+  sortBy: 'name' | 'email' | 'role' | 'lastActive' | 'joinDate'
+  sortOrder: 'asc' | 'desc'
+  pagination: {
+    page: number
+    pageSize: number
+    totalItems: number
+    totalPages: number
+  }
+}
+
+interface AppState {
+  currentUser: User | null
+  users: Record<string, User>
+  selectedUserIds: Set<string>
+  ui: UIState
+  filters: FilterState
+  cache: {
+    lastFetch: Record<string, Date>
+    etags: Record<string, string>
+    optimisticUpdates: Record<string, {
+      originalData: any
+      timestamp: Date
+      rollbackTimeout: NodeJS.Timeout
+    }>
+  }
+  realtime: {
+    connected: boolean
+    lastHeartbeat: Date | null
+    subscriptions: Set<string>
+    pendingMessages: Array<{
+      type: string
+      payload: any
+      timestamp: Date
+      retries: number
+    }>
+  }
+}
+
+// ✅ Create main application store with initial state
+const initialState: AppState = {
+  currentUser: null,
+  users: {},
+  selectedUserIds: new Set(),
+  ui: {
+    theme: 'light',
+    sidebarCollapsed: false,
+    activeView: 'grid',
+    loading: {
+      global: false,
+      users: false,
+      profile: false,
+      settings: false
+    },
+    errors: {
+      global: null,
+      users: null,
+      profile: null,
+      settings: null
+    },
+    modals: {
+      userDetails: { open: false, userId: null },
+      userEdit: { open: false, userId: null },
+      confirmDelete: { open: false, userId: null, userName: null },
+      settings: false,
+      notifications: false
+    },
+    notifications: []
+  },
+  filters: {
+    search: '',
+    role: [],
+    subscription: [],
+    online: false,
+    active: {
+      lastWeek: false,
+      lastMonth: false
+    },
+    sortBy: 'name',
+    sortOrder: 'asc',
+    pagination: {
+      page: 1,
+      pageSize: 24,
+      totalItems: 0,
+      totalPages: 0
+    }
+  },
+  cache: {
+    lastFetch: {},
+    etags: {},
+    optimisticUpdates: {}
+  },
+  realtime: {
+    connected: false,
+    lastHeartbeat: null,
+    subscriptions: new Set(),
+    pendingMessages: []
+  }
+}
+
+export const appStore = createStore(initialState)
+
+// ✅ Advanced middleware system for Teaful
+interface TeafulMiddleware {
+  name: string
+  onUpdate: (path: string[], newValue: any, prevValue: any, store: Store<AppState>) => void
+  onRead?: (path: string[], value: any, store: Store<AppState>) => any
+}
+
+class TeafulMiddlewareManager {
+  private middlewares: TeafulMiddleware[] = []
+  
+  register(middleware: TeafulMiddleware) {
+    this.middlewares.push(middleware)
+  }
+  
+  unregister(name: string) {
+    this.middlewares = this.middlewares.filter(m => m.name !== name)
+  }
+  
+  executeOnUpdate(path: string[], newValue: any, prevValue: any, store: Store<AppState>) {
+    this.middlewares.forEach(middleware => {
+      try {
+        middleware.onUpdate(path, newValue, prevValue, store)
+      } catch (error) {
+        console.error(`Middleware ${middleware.name} error:`, error)
+      }
+    })
+  }
+  
+  executeOnRead(path: string[], value: any, store: Store<AppState>) {
+    return this.middlewares.reduce((acc, middleware) => {
+      if (middleware.onRead) {
+        try {
+          return middleware.onRead(path, acc, store)
+        } catch (error) {
+          console.error(`Middleware ${middleware.name} read error:`, error)
+          return acc
+        }
+      }
+      return acc
+    }, value)
+  }
+}
+
+const middlewareManager = new TeafulMiddlewareManager()
+
+// ✅ Analytics middleware
+const analyticsMiddleware: TeafulMiddleware = {
+  name: 'analytics',
+  onUpdate: (path, newValue, prevValue) => {
+    const pathStr = path.join('.')
+    
+    // Track meaningful state changes
+    if (pathStr.includes('currentUser')) {
+      if (newValue && !prevValue) {
+        // User logged in
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'user_login', {
+            event_category: 'user_management',
+            event_label: newValue.id
+          })
+        }
+      } else if (!newValue && prevValue) {
+        // User logged out
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'user_logout', {
+            event_category: 'user_management',
+            event_label: prevValue.id
+          })
+        }
+      }
+    }
+    
+    if (pathStr.includes('filters')) {
+      // Track filter usage
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'filter_applied', {
+          event_category: 'user_interface',
+          event_label: pathStr,
+          custom_parameters: { filter_value: JSON.stringify(newValue) }
+        })
+      }
+    }
+    
+    if (pathStr.includes('ui.activeView')) {
+      // Track view changes
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'view_changed', {
+          event_category: 'user_interface',
+          event_label: newValue,
+          custom_parameters: { previous_view: prevValue }
+        })
+      }
+    }
+  }
+}
+
+// ✅ Performance monitoring middleware
+const performanceMiddleware: TeafulMiddleware = {
+  name: 'performance',
+  onUpdate: (path, newValue, prevValue) => {
+    const pathStr = path.join('.')
+    const updateSize = JSON.stringify(newValue).length
+    
+    if (updateSize > 10000) { // 10KB threshold
+      console.warn(`Large state update detected at ${pathStr}: ${updateSize} bytes`)
+    }
+    
+    // Track frequent updates
+    const key = `update_frequency_${pathStr}`
+    const now = Date.now()
+    const lastUpdate = (window as any)[key] || 0
+    
+    if (now - lastUpdate < 100) { // Updates within 100ms
+      console.warn(`High frequency updates detected at ${pathStr}`)
+    }
+    
+    ;(window as any)[key] = now
+  }
+}
+
+// ✅ Persistence middleware
+const persistenceMiddleware: TeafulMiddleware = {
+  name: 'persistence',
+  onUpdate: (path, newValue) => {
+    const pathStr = path.join('.')
+    
+    // Persist specific paths
+    const persistentPaths = [
+      'currentUser',
+      'ui.theme',
+      'ui.sidebarCollapsed',
+      'ui.activeView',
+      'filters'
+    ]
+    
+    if (persistentPaths.some(p => pathStr.includes(p))) {
+      try {
+        const key = `teaful_${pathStr.replace(/\./g, '_')}`
+        localStorage.setItem(key, JSON.stringify(newValue))
+      } catch (error) {
+        console.warn(`Failed to persist ${pathStr}:`, error)
+      }
+    }
+  }
+}
+
+// Register middleware
+middlewareManager.register(analyticsMiddleware)
+middlewareManager.register(performanceMiddleware)
+middlewareManager.register(persistenceMiddleware)
+
+// ✅ Enhanced store wrapper with middleware integration
+export const useEnhancedStore = <T>(selector?: (state: AppState) => T): [T, Store<AppState>] => {
+  const [state, store] = useStore(appStore, selector)
+  
+  // Intercept store updates for middleware
+  const originalUpdate = store.update
+  const enhancedStore = useMemo(() => ({
+    ...store,
+    update: (callback: (state: AppState) => AppState) => {
+      const prevState = store.get()
+      const result = originalUpdate(callback)
+      const newState = store.get()
+      
+      // Find changed paths and notify middleware
+      const changedPaths = findChangedPaths(prevState, newState)
+      changedPaths.forEach(({ path, newValue, prevValue }) => {
+        middlewareManager.executeOnUpdate(path, newValue, prevValue, store)
+      })
+      
+      return result
+    }
+  }), [store, originalUpdate])
+  
+  return [state as T, enhancedStore]
+}
+
+// ✅ Utility to find changed paths in state
+function findChangedPaths(prev: any, next: any, basePath: string[] = []): Array<{
+  path: string[]
+  newValue: any
+  prevValue: any
+}> {
+  const changes: Array<{ path: string[], newValue: any, prevValue: any }> = []
+  
+  if (prev === next) return changes
+  
+  if (typeof prev !== 'object' || typeof next !== 'object' || prev === null || next === null) {
+    changes.push({ path: basePath, newValue: next, prevValue: prev })
+    return changes
+  }
+  
+  const allKeys = new Set([...Object.keys(prev), ...Object.keys(next)])
+  
+  for (const key of allKeys) {
+    const newPath = [...basePath, key]
+    
+    if (!(key in prev)) {
+      changes.push({ path: newPath, newValue: next[key], prevValue: undefined })
+    } else if (!(key in next)) {
+      changes.push({ path: newPath, newValue: undefined, prevValue: prev[key] })
+    } else if (prev[key] !== next[key]) {
+      changes.push(...findChangedPaths(prev[key], next[key], newPath))
+    }
+  }
+  
+  return changes
+}
+
+// ✅ Advanced user management hook
+export const useUserManagement = () => {
+  const [state, store] = useEnhancedStore()
+  
+  // Memoized selectors
+  const currentUser = useMemo(() => state.currentUser, [state.currentUser])
+  const users = useMemo(() => Object.values(state.users), [state.users])
+  const loading = useMemo(() => state.ui.loading, [state.ui.loading])
+  const errors = useMemo(() => state.ui.errors, [state.ui.errors])
+  
+  // Load persisted state on mount
+  useEffect(() => {
+    const loadPersistedState = () => {
+      try {
+        // Load persisted user
+        const persistedUser = localStorage.getItem('teaful_currentUser')
+        if (persistedUser) {
+          const user = JSON.parse(persistedUser)
+          store.update(state => ({ ...state, currentUser: user }))
+        }
+        
+        // Load persisted theme
+        const persistedTheme = localStorage.getItem('teaful_ui_theme')
+        if (persistedTheme) {
+          const theme = JSON.parse(persistedTheme)
+          store.update(state => ({
+            ...state,
+            ui: { ...state.ui, theme }
+          }))
+        }
+        
+        // Load persisted sidebar state
+        const persistedSidebar = localStorage.getItem('teaful_ui_sidebarCollapsed')
+        if (persistedSidebar) {
+          const collapsed = JSON.parse(persistedSidebar)
+          store.update(state => ({
+            ...state,
+            ui: { ...state.ui, sidebarCollapsed: collapsed }
+          }))
+        }
+      } catch (error) {
+        console.warn('Failed to load persisted state:', error)
+      }
+    }
+    
+    loadPersistedState()
+  }, [store])
+  
+  // Fetch users with comprehensive error handling and caching
+  const fetchUsers = useCallback(async (options: {
+    page?: number
+    pageSize?: number
+    filters?: Partial<FilterState>
+    force?: boolean
+  } = {}) => {
+    const { page = 1, pageSize = 24, filters = {}, force = false } = options
+    
+    // Check cache
+    const cacheKey = `users_${JSON.stringify({ page, pageSize, filters })}`
+    const lastFetch = state.cache.lastFetch[cacheKey]
+    const cacheValid = lastFetch && (Date.now() - lastFetch.getTime()) < 300000 // 5 minutes
+    
+    if (!force && cacheValid) {
+      console.log('Using cached users data')
+      return
+    }
+    
+    store.update(state => ({
+      ...state,
+      ui: {
+        ...state.ui,
+        loading: { ...state.ui.loading, users: true },
+        errors: { ...state.ui.errors, users: null }
+      }
+    }))
+    
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        ...filters
+      })
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      }
+      
+      // Add ETag for caching
+      const etag = state.cache.etags[cacheKey]
+      if (etag) {
+        headers['If-None-Match'] = etag
+      }
+      
+      const response = await fetch(`/api/users?${params}`, { headers })
+      
+      if (response.status === 304) {
+        // Not modified, data is still valid
+        return
+      }
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      const responseEtag = response.headers.get('etag')
+      
+      // Convert users array to record for efficient lookups
+      const usersRecord: Record<string, User> = {}
+      data.users.forEach((user: User) => {
+        usersRecord[user.id] = user
+      })
+      
+      store.update(state => ({
+        ...state,
+        users: usersRecord,
+        filters: {
+          ...state.filters,
+          pagination: {
+            page: data.pagination.page,
+            pageSize: data.pagination.pageSize,
+            totalItems: data.pagination.totalItems,
+            totalPages: data.pagination.totalPages
+          }
+        },
+        cache: {
+          ...state.cache,
+          lastFetch: {
+            ...state.cache.lastFetch,
+            [cacheKey]: new Date()
+          },
+          etags: responseEtag ? {
+            ...state.cache.etags,
+            [cacheKey]: responseEtag
+          } : state.cache.etags
+        }
+      }))
+      
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch users'
+      store.update(state => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          errors: { ...state.ui.errors, users: message }
+        }
+      }))
+      throw error
+    } finally {
+      store.update(state => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          loading: { ...state.ui.loading, users: false }
+        }
+      }))
+    }
+  }, [state, store])
+  
+  // Optimistic user update with rollback capability
+  const updateUser = useCallback(async (userId: string, updates: Partial<User>) => {
+    const originalUser = state.users[userId]
+    if (!originalUser) {
+      throw new Error('User not found')
+    }
+    
+    const updatedUser = { ...originalUser, ...updates }
+    const optimisticId = `update_${userId}_${Date.now()}`
+    
+    // Store original data for rollback
+    const rollbackTimeout = setTimeout(() => {
+      // Clean up rollback data after 30 seconds
+      store.update(state => {
+        const { [optimisticId]: removed, ...remaining } = state.cache.optimisticUpdates
+        return {
+          ...state,
+          cache: { ...state.cache, optimisticUpdates: remaining }
+        }
+      })
+    }, 30000)
+    
+    // Apply optimistic update
+    store.update(state => ({
+      ...state,
+      users: {
+        ...state.users,
+        [userId]: updatedUser
+      },
+      currentUser: state.currentUser?.id === userId ? updatedUser : state.currentUser,
+      cache: {
+        ...state.cache,
+        optimisticUpdates: {
+          ...state.cache.optimisticUpdates,
+          [optimisticId]: {
+            originalData: originalUser,
+            timestamp: new Date(),
+            rollbackTimeout
+          }
+        }
+      }
+    }))
+    
+    store.update(state => ({
+      ...state,
+      ui: {
+        ...state.ui,
+        loading: { ...state.ui.loading, profile: true },
+        errors: { ...state.ui.errors, profile: null }
+      }
+    }))
+    
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to update user')
+      }
+      
+      const serverUser: User = await response.json()
+      
+      // Update with server response
+      store.update(state => ({
+        ...state,
+        users: {
+          ...state.users,
+          [userId]: serverUser
+        },
+        currentUser: state.currentUser?.id === userId ? serverUser : state.currentUser
+      }))
+      
+      // Clear optimistic update data
+      clearTimeout(rollbackTimeout)
+      store.update(state => {
+        const { [optimisticId]: removed, ...remaining } = state.cache.optimisticUpdates
+        return {
+          ...state,
+          cache: { ...state.cache, optimisticUpdates: remaining }
+        }
+      })
+      
+    } catch (error) {
+      // Rollback optimistic update
+      const rollbackData = state.cache.optimisticUpdates[optimisticId]
+      if (rollbackData) {
+        store.update(state => ({
+          ...state,
+          users: {
+            ...state.users,
+            [userId]: rollbackData.originalData
+          },
+          currentUser: state.currentUser?.id === userId 
+            ? rollbackData.originalData 
+            : state.currentUser
+        }))
+        
+        clearTimeout(rollbackData.rollbackTimeout)
+      }
+      
+      const message = error instanceof Error ? error.message : 'Failed to update user'
+      store.update(state => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          errors: { ...state.ui.errors, profile: message }
+        }
+      }))
+      throw error
+    } finally {
+      store.update(state => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          loading: { ...state.ui.loading, profile: false }
+        }
+      }))
+    }
+  }, [state, store])
+  
+  // Batch operations
+  const batchDeleteUsers = useCallback(async (userIds: string[]) => {
+    const originalUsers = userIds.map(id => state.users[id]).filter(Boolean)
+    
+    // Optimistic removal
+    store.update(state => {
+      const filteredUsers = { ...state.users }
+      userIds.forEach(id => {
+        delete filteredUsers[id]
+      })
+      
+      return {
+        ...state,
+        users: filteredUsers,
+        selectedUserIds: new Set([...state.selectedUserIds].filter(id => !userIds.includes(id)))
+      }
+    })
+    
+    try {
+      const response = await fetch('/api/users/batch-delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userIds })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete users')
+      }
+      
+      // Update pagination count
+      store.update(state => ({
+        ...state,
+        filters: {
+          ...state.filters,
+          pagination: {
+            ...state.filters.pagination,
+            totalItems: Math.max(0, state.filters.pagination.totalItems - userIds.length)
+          }
+        }
+      }))
+      
+    } catch (error) {
+      // Rollback deletions
+      store.update(state => {
+        const restoredUsers = { ...state.users }
+        originalUsers.forEach(user => {
+          restoredUsers[user.id] = user
+        })
+        
+        return {
+          ...state,
+          users: restoredUsers
+        }
+      })
+      throw error
+    }
+  }, [state, store])
+  
+  return {
+    currentUser,
+    users,
+    loading,
+    errors,
+    fetchUsers,
+    updateUser,
+    batchDeleteUsers
+  }
+}
+
+// ✅ Advanced filtering hook with performance optimization
+export const useUserFilters = () => {
+  const [filters, store] = useEnhancedStore(state => state.filters)
+  const [users] = useEnhancedStore(state => Object.values(state.users))
+  
+  // Memoized filtered users with complex criteria
+  const filteredUsers = useMemo(() => {
+    let result = users
+    
+    // Text search across multiple fields
+    if (filters.search.trim()) {
+      const searchTerm = filters.search.toLowerCase().trim()
+      result = result.filter(user => 
+        user.name.toLowerCase().includes(searchTerm) ||
+        user.email.toLowerCase().includes(searchTerm) ||
+        user.profile.bio.toLowerCase().includes(searchTerm) ||
+        user.profile.company?.toLowerCase().includes(searchTerm) ||
+        user.profile.skills.some(skill => skill.toLowerCase().includes(searchTerm))
+      )
+    }
+    
+    // Role filter
+    if (filters.role.length > 0) {
+      result = result.filter(user => filters.role.includes(user.role))
+    }
+    
+    // Subscription filter
+    if (filters.subscription.length > 0) {
+      result = result.filter(user => filters.subscription.includes(user.subscription.plan))
+    }
+    
+    // Online status filter
+    if (filters.online) {
+      result = result.filter(user => {
+        const lastActive = new Date(user.activity.lastActive)
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+        return lastActive > fiveMinutesAgo
+      })
+    }
+    
+    // Activity filters
+    if (filters.active.lastWeek) {
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      result = result.filter(user => new Date(user.activity.lastActive) > weekAgo)
+    }
+    
+    if (filters.active.lastMonth) {
+      const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      result = result.filter(user => new Date(user.activity.lastActive) > monthAgo)
+    }
+    
+    // Sorting
+    result.sort((a, b) => {
+      let comparison = 0
+      
+      switch (filters.sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name)
+          break
+        case 'email':
+          comparison = a.email.localeCompare(b.email)
+          break
+        case 'role':
+          comparison = a.role.localeCompare(b.role)
+          break
+        case 'lastActive':
+          comparison = new Date(b.activity.lastActive).getTime() - new Date(a.activity.lastActive).getTime()
+          break
+        case 'joinDate':
+          comparison = new Date(b.subscription.startDate).getTime() - new Date(a.subscription.startDate).getTime()
+          break
+      }
+      
+      return filters.sortOrder === 'desc' ? -comparison : comparison
+    })
+    
+    return result
+  }, [users, filters])
+  
+  // Paginated users
+  const paginatedUsers = useMemo(() => {
+    const startIndex = (filters.pagination.page - 1) * filters.pagination.pageSize
+    const endIndex = startIndex + filters.pagination.pageSize
+    return filteredUsers.slice(startIndex, endIndex)
+  }, [filteredUsers, filters.pagination.page, filters.pagination.pageSize])
+  
+  // Debounced search update
+  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const updateSearch = useCallback((search: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      store.update(state => ({
+        ...state,
+        filters: {
+          ...state.filters,
+          search,
+          pagination: {
+            ...state.filters.pagination,
+            page: 1 // Reset to first page
+          }
+        }
+      }))
+    }, 300)
+  }, [store])
+  
+  // Filter update methods
+  const updateRole = useCallback((roles: string[]) => {
+    store.update(state => ({
+      ...state,
+      filters: {
+        ...state.filters,
+        role: roles,
+        pagination: { ...state.filters.pagination, page: 1 }
+      }
+    }))
+  }, [store])
+  
+  const updateSubscription = useCallback((subscriptions: string[]) => {
+    store.update(state => ({
+      ...state,
+      filters: {
+        ...state.filters,
+        subscription: subscriptions,
+        pagination: { ...state.filters.pagination, page: 1 }
+      }
+    }))
+  }, [store])
+  
+  const updateSorting = useCallback((sortBy: FilterState['sortBy'], sortOrder?: FilterState['sortOrder']) => {
+    store.update(state => ({
+      ...state,
+      filters: {
+        ...state.filters,
+        sortBy,
+        sortOrder: sortOrder || (sortBy === state.filters.sortBy && state.filters.sortOrder === 'asc' ? 'desc' : 'asc')
+      }
+    }))
+  }, [store])
+  
+  // Pagination methods
+  const goToPage = useCallback((page: number) => {
+    const totalPages = Math.ceil(filteredUsers.length / filters.pagination.pageSize)
+    const validPage = Math.max(1, Math.min(page, totalPages))
+    
+    store.update(state => ({
+      ...state,
+      filters: {
+        ...state.filters,
+        pagination: { ...state.filters.pagination, page: validPage }
+      }
+    }))
+  }, [store, filteredUsers.length, filters.pagination.pageSize])
+  
+  // Update total counts
+  useLayoutEffect(() => {
+    const totalItems = filteredUsers.length
+    const totalPages = Math.ceil(totalItems / filters.pagination.pageSize)
+    
+    if (totalItems !== filters.pagination.totalItems || totalPages !== filters.pagination.totalPages) {
+      store.update(state => ({
+        ...state,
+        filters: {
+          ...state.filters,
+          pagination: {
+            ...state.filters.pagination,
+            totalItems,
+            totalPages
+          }
+        }
+      }))
+    }
+  }, [filteredUsers.length, filters.pagination, store])
+  
+  return {
+    filters,
+    filteredUsers,
+    paginatedUsers,
+    updateSearch,
+    updateRole,
+    updateSubscription,
+    updateSorting,
+    goToPage,
+    totalItems: filteredUsers.length,
+    currentPage: filters.pagination.page,
+    totalPages: Math.ceil(filteredUsers.length / filters.pagination.pageSize)
+  }
+}
+
+// ✅ Selection management hook with advanced operations
+export const useUserSelection = () => {
+  const [selectedUserIds, store] = useEnhancedStore(state => state.selectedUserIds)
+  const [users] = useEnhancedStore(state => state.users)
+  
+  const selectedUsers = useMemo(() => {
+    return Array.from(selectedUserIds).map(id => users[id]).filter(Boolean)
+  }, [selectedUserIds, users])
+  
+  const selectUser = useCallback((userId: string) => {
+    store.update(state => ({
+      ...state,
+      selectedUserIds: new Set([...state.selectedUserIds, userId])
+    }))
+  }, [store])
+  
+  const deselectUser = useCallback((userId: string) => {
+    store.update(state => {
+      const newSelection = new Set(state.selectedUserIds)
+      newSelection.delete(userId)
+      return { ...state, selectedUserIds: newSelection }
+    })
+  }, [store])
+  
+  const toggleUser = useCallback((userId: string) => {
+    if (selectedUserIds.has(userId)) {
+      deselectUser(userId)
+    } else {
+      selectUser(userId)
+    }
+  }, [selectedUserIds, selectUser, deselectUser])
+  
+  const selectAll = useCallback((userIds: string[]) => {
+    store.update(state => ({
+      ...state,
+      selectedUserIds: new Set(userIds)
+    }))
+  }, [store])
+  
+  const selectRange = useCallback((startId: string, endId: string, allUserIds: string[]) => {
+    const startIndex = allUserIds.indexOf(startId)
+    const endIndex = allUserIds.indexOf(endId)
+    
+    if (startIndex !== -1 && endIndex !== -1) {
+      const minIndex = Math.min(startIndex, endIndex)
+      const maxIndex = Math.max(startIndex, endIndex)
+      const rangeIds = allUserIds.slice(minIndex, maxIndex + 1)
+      
+      store.update(state => ({
+        ...state,
+        selectedUserIds: new Set([...state.selectedUserIds, ...rangeIds])
+      }))
+    }
+  }, [store])
+  
+  const clearSelection = useCallback(() => {
+    store.update(state => ({
+      ...state,
+      selectedUserIds: new Set()
+    }))
+  }, [store])
+  
+  const invertSelection = useCallback((allUserIds: string[]) => {
+    store.update(state => {
+      const inverted = new Set(allUserIds.filter(id => !state.selectedUserIds.has(id)))
+      return { ...state, selectedUserIds: inverted }
+    })
+  }, [store])
+  
+  return {
+    selectedUsers,
+    selectedUserIds: Array.from(selectedUserIds),
+    selectionCount: selectedUserIds.size,
+    selectUser,
+    deselectUser,
+    toggleUser,
+    selectAll,
+    selectRange,
+    clearSelection,
+    invertSelection,
+    isSelected: (userId: string) => selectedUserIds.has(userId)
+  }
+}
+
+// ✅ Advanced notification system hook
+export const useNotifications = () => {
+  const [notifications, store] = useEnhancedStore(state => state.ui.notifications)
+  
+  const addNotification = useCallback((notification: Omit<UIState['notifications'][0], 'id' | 'timestamp'>) => {
+    const id = `notification_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    const newNotification = {
+      ...notification,
+      id,
+      timestamp: new Date()
+    }
+    
+    store.update(state => ({
+      ...state,
+      ui: {
+        ...state.ui,
+        notifications: [...state.ui.notifications, newNotification]
+      }
+    }))
+    
+    // Auto-remove after duration
+    if (notification.duration !== undefined && notification.duration > 0) {
+      setTimeout(() => {
+        removeNotification(id)
+      }, notification.duration)
+    }
+    
+    return id
+  }, [store])
+  
+  const removeNotification = useCallback((id: string) => {
+    store.update(state => ({
+      ...state,
+      ui: {
+        ...state.ui,
+        notifications: state.ui.notifications.filter(n => n.id !== id)
+      }
+    }))
+  }, [store])
+  
+  const clearAllNotifications = useCallback(() => {
+    store.update(state => ({
+      ...state,
+      ui: {
+        ...state.ui,
+        notifications: []
+      }
+    }))
+  }, [store])
+  
+  // Convenience methods
+  const showSuccess = useCallback((title: string, message: string, duration = 5000) => {
+    return addNotification({ type: 'success', title, message, duration })
+  }, [addNotification])
+  
+  const showError = useCallback((title: string, message: string, duration = 8000) => {
+    return addNotification({ type: 'error', title, message, duration })
+  }, [addNotification])
+  
+  const showWarning = useCallback((title: string, message: string, duration = 6000) => {
+    return addNotification({ type: 'warning', title, message, duration })
+  }, [addNotification])
+  
+  const showInfo = useCallback((title: string, message: string, duration = 4000) => {
+    return addNotification({ type: 'info', title, message, duration })
+  }, [addNotification])
+  
+  return {
+    notifications,
+    addNotification,
+    removeNotification,
+    clearAllNotifications,
+    showSuccess,
+    showError,
+    showWarning,
+    showInfo
+  }
+}
+
+// ✅ Advanced user list component with virtualization support
+export const UserList: React.FC = () => {
+  const { users: allUsers, fetchUsers, loading, errors } = useUserManagement()
+  const { paginatedUsers, filters, updateSearch, updateRole, updateSubscription, updateSorting } = useUserFilters()
+  const { selectedUserIds, toggleUser, selectAll, clearSelection } = useUserSelection()
+  const { showSuccess, showError } = useNotifications()
+  
+  // Initial data fetch
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
+  
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case 'a':
+            event.preventDefault()
+            selectAll(paginatedUsers.map(u => u.id))
+            showSuccess('Selection', 'All users selected')
+            break
+          case 'd':
+            event.preventDefault()
+            clearSelection()
+            showSuccess('Selection', 'Selection cleared')
+            break
+        }
+      }
+      
+      if (event.key === 'Escape') {
+        clearSelection()
+      }
+    }
+    
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [paginatedUsers, selectAll, clearSelection, showSuccess])
+  
+  if (loading.users) {
+    return (
+      <div className="user-list-loading">
+        <div className="loading-spinner" />
+        <p>Loading users...</p>
+      </div>
+    )
+  }
+  
+  if (errors.users) {
+    return (
+      <div className="user-list-error">
+        <h3>Failed to load users</h3>
+        <p>{errors.users}</p>
+        <button onClick={() => fetchUsers({ force: true })} className="retry-button">
+          Retry
+        </button>
+      </div>
+    )
+  }
+  
+  return (
+    <div className="user-list">
+      {/* Filter Controls */}
+      <div className="user-list-filters">
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search users by name, email, bio, company, or skills..."
+            defaultValue={filters.search}
+            onChange={(e) => updateSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
+        
+        <div className="filter-row">
+          <div className="filter-group">
+            <label>Roles:</label>
+            <div className="checkbox-group">
+              {['admin', 'user', 'guest', 'moderator'].map(role => (
+                <label key={role} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filters.role.includes(role)}
+                    onChange={(e) => {
+                      const newRoles = e.target.checked
+                        ? [...filters.role, role]
+                        : filters.role.filter(r => r !== role)
+                      updateRole(newRoles)
+                    }}
+                  />
+                  {role}
+                </label>
+              ))}
+            </div>
+          </div>
+          
+          <div className="filter-group">
+            <label>Subscription:</label>
+            <div className="checkbox-group">
+              {['free', 'premium', 'enterprise'].map(plan => (
+                <label key={plan} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filters.subscription.includes(plan)}
+                    onChange={(e) => {
+                      const newPlans = e.target.checked
+                        ? [...filters.subscription, plan]
+                        : filters.subscription.filter(p => p !== plan)
+                      updateSubscription(newPlans)
+                    }}
+                  />
+                  {plan}
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="sort-controls">
+          <label>Sort by:</label>
+          <select
+            value={filters.sortBy}
+            onChange={(e) => updateSorting(e.target.value as FilterState['sortBy'])}
+          >
+            <option value="name">Name</option>
+            <option value="email">Email</option>
+            <option value="role">Role</option>
+            <option value="lastActive">Last Active</option>
+            <option value="joinDate">Join Date</option>
+          </select>
+          
+          <button
+            onClick={() => updateSorting(filters.sortBy, filters.sortOrder === 'asc' ? 'desc' : 'asc')}
+            className="sort-order-button"
+          >
+            {filters.sortOrder === 'asc' ? '↑' : '↓'}
+          </button>
+        </div>
+      </div>
+      
+      {/* Selection Info */}
+      {selectedUserIds.length > 0 && (
+        <div className="selection-info">
+          <span>{selectedUserIds.length} user(s) selected</span>
+          <button onClick={clearSelection} className="clear-selection">
+            Clear Selection
+          </button>
+        </div>
+      )}
+      
+      {/* User Grid */}
+      <div className="user-grid">
+        {paginatedUsers.map(user => (
+          <UserCard
+            key={user.id}
+            user={user}
+            isSelected={selectedUserIds.includes(user.id)}
+            onToggle={() => toggleUser(user.id)}
+          />
+        ))}
+      </div>
+      
+      {paginatedUsers.length === 0 && (
+        <div className="empty-state">
+          <h3>No users found</h3>
+          <p>Try adjusting your filters or search criteria.</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ✅ Optimized user card component
+export const UserCard: React.FC<{
+  user: User
+  isSelected: boolean
+  onToggle: () => void
+}> = React.memo(({ user, isSelected, onToggle }) => {
+  const { updateUser } = useUserManagement()
+  const { showSuccess, showError } = useNotifications()
+  
+  const isOnline = useMemo(() => {
+    const lastActive = new Date(user.activity.lastActive)
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+    return lastActive > fiveMinutesAgo
+  }, [user.activity.lastActive])
+  
+  const handleQuickAction = useCallback(async (action: 'toggle-online' | 'upgrade-plan') => {
+    try {
+      switch (action) {
+        case 'toggle-online':
+          // Simulate toggling online status
+          const newLastActive = isOnline 
+            ? new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
+            : new Date() // Now
+          
+          await updateUser(user.id, {
+            activity: {
+              ...user.activity,
+              lastActive: newLastActive
+            }
+          })
+          
+          showSuccess('Status Updated', `${user.name} is now ${isOnline ? 'offline' : 'online'}`)
+          break
+          
+        case 'upgrade-plan':
+          const nextPlan = user.subscription.plan === 'free' ? 'premium' : 'enterprise'
+          await updateUser(user.id, {
+            subscription: {
+              ...user.subscription,
+              plan: nextPlan
+            }
+          })
+          
+          showSuccess('Plan Upgraded', `${user.name} upgraded to ${nextPlan}`)
+          break
+      }
+    } catch (error) {
+      showError('Action Failed', error instanceof Error ? error.message : 'Unknown error')
+    }
+  }, [user, updateUser, showSuccess, showError, isOnline])
+  
+  return (
+    <div className={`user-card ${isSelected ? 'selected' : ''}`}>
+      <div className="user-card-header">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onToggle}
+          className="selection-checkbox"
+        />
+        
+        <div className="user-avatar-container">
+          <img
+            src={user.avatar || '/default-avatar.png'}
+            alt={`${user.name} avatar`}
+            className="user-avatar"
+            loading="lazy"
+          />
+          <div className={`status-indicator ${isOnline ? 'online' : 'offline'}`} />
+        </div>
+        
+        <div className={`subscription-badge ${user.subscription.plan}`}>
+          {user.subscription.plan}
+        </div>
+      </div>
+      
+      <div className="user-card-body">
+        <h4 className="user-name">{user.name}</h4>
+        <p className="user-email">{user.email}</p>
+        <span className={`role-badge ${user.role}`}>{user.role}</span>
+        
+        {user.profile.company && (
+          <p className="user-company">🏢 {user.profile.company}</p>
+        )}
+        
+        {user.profile.location && (
+          <p className="user-location">📍 {user.profile.location}</p>
+        )}
+        
+        <div className="user-skills">
+          {user.profile.skills.slice(0, 3).map(skill => (
+            <span key={skill} className="skill-tag">{skill}</span>
+          ))}
+          {user.profile.skills.length > 3 && (
+            <span className="skill-more">+{user.profile.skills.length - 3} more</span>
+          )}
+        </div>
+      </div>
+      
+      <div className="user-card-actions">
+        <button
+          onClick={() => handleQuickAction('toggle-online')}
+          className="action-button status"
+          title={`Set ${isOnline ? 'offline' : 'online'}`}
+        >
+          {isOnline ? '🔴' : '🟢'}
+        </button>
+        
+        <button
+          onClick={() => handleQuickAction('upgrade-plan')}
+          className="action-button upgrade"
+          title="Upgrade plan"
+        >
+          ⬆️
+        </button>
+      </div>
+      
+      <div className="user-card-footer">
+        <small>Last active: {new Date(user.activity.lastActive).toLocaleDateString()}</small>
+        <small>Logins: {user.activity.loginCount}</small>
+      </div>
+    </div>
+  )
+})
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced Teaful management:**
+
+1. **Lightweight Architecture**: Leverage Teaful's minimal overhead while implementing enterprise features through middleware patterns and custom hooks.
+
+2. **Performance First**: Use selective state subscriptions, implement proper memoization, monitor update frequencies, and optimize rendering patterns.
+
+3. **Middleware Integration**: Build custom middleware for analytics, persistence, performance monitoring, and cross-cutting concerns.
+
+4. **Type Safety**: Implement comprehensive TypeScript interfaces, use proper generic constraints, leverage discriminated unions for complex state.
+
+5. **State Organization**: Structure state hierarchically, use domain-driven boundaries, implement proper normalization for collections.
+
+6. **Optimistic Updates**: Implement rollback mechanisms, handle concurrent modifications, provide visual feedback for pending operations.
+
+7. **Developer Experience**: Provide debugging utilities, implement comprehensive logging, create performance monitoring tools.
+
+8. **Scalability**: Design for large datasets, implement efficient filtering and pagination, use virtualization for large lists.
+
+Always prioritize minimal bundle size, leverage Teaful's simplicity, implement proper error boundaries, and maintain clean separation between UI and business logic for maintainable state management. 

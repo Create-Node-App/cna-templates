@@ -1,36 +1,1487 @@
 ---
-description: Specific guidelines for implementing and managing Android development tools in React applications.
-globs: '**/*.{ts,tsx,js,jsx}'
+description: Advanced React Native Android development patterns for native module integration, performance optimization, debugging tools, and enterprise mobile application architecture.
+globs: '**/*.{ts,tsx,js,jsx,java,kotlin}', '**/android/**/*.{xml,gradle,properties}', '**/metro.config.{js,ts}', '**/react-native.config.{js,ts}'
 ---
 
-# Android Tools Rules
+# Advanced React Native Android Development
 
-## Android Development
+## Enterprise Android Development Architecture
 
-1. Use consistent Android patterns
-2. Implement proper Android structure
-3. Use TypeScript for Android types
-4. Handle Android lifecycle properly
-5. Implement proper error handling
+**Advanced Android native module integration with TypeScript:**
+```typescript
+// android/app/src/main/java/com/yourapp/modules/DeviceInfoModule.java
+package com.yourapp.modules;
 
-## Android Tools
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.LocationManager;
+import android.bluetooth.BluetoothAdapter;
+import android.nfc.NfcAdapter;
 
-1. Implement proper Android debugging
-2. Use appropriate Android testing
-3. Handle Android performance properly
-4. Follow Android best practices
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 
-## Performance
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
-1. Use proper Android optimization
-2. Implement proper Android caching
-3. Handle large applications properly
-4. Optimize Android performance
+public class DeviceInfoModule extends ReactContextBaseJavaModule {
+    private static final String MODULE_NAME = "DeviceInfoModule";
+    private final ReactApplicationContext reactContext;
+    
+    public DeviceInfoModule(@Nonnull ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
+    }
+    
+    @Nonnull
+    @Override
+    public String getName() {
+        return MODULE_NAME;
+    }
+    
+    @Override
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+        
+        // Device constants available immediately
+        constants.put("DEVICE_MODEL", Build.MODEL);
+        constants.put("DEVICE_BRAND", Build.BRAND);
+        constants.put("DEVICE_MANUFACTURER", Build.MANUFACTURER);
+        constants.put("ANDROID_VERSION", Build.VERSION.RELEASE);
+        constants.put("API_LEVEL", Build.VERSION.SDK_INT);
+        constants.put("DEVICE_ID", Build.ID);
+        constants.put("HARDWARE", Build.HARDWARE);
+        constants.put("BOARD", Build.BOARD);
+        constants.put("BOOTLOADER", Build.BOOTLOADER);
+        constants.put("FINGERPRINT", Build.FINGERPRINT);
+        constants.put("HOST", Build.HOST);
+        constants.put("PRODUCT", Build.PRODUCT);
+        constants.put("TAGS", Build.TAGS);
+        constants.put("TYPE", Build.TYPE);
+        constants.put("USER", Build.USER);
+        
+        return constants;
+    }
+    
+    @ReactMethod
+    public void getDeviceInfo(Promise promise) {
+        try {
+            WritableMap deviceInfo = Arguments.createMap();
+            Context context = getReactApplicationContext();
+            
+            // Basic device information
+            deviceInfo.putString("deviceId", getDeviceId());
+            deviceInfo.putString("model", Build.MODEL);
+            deviceInfo.putString("brand", Build.BRAND);
+            deviceInfo.putString("manufacturer", Build.MANUFACTURER);
+            deviceInfo.putString("androidVersion", Build.VERSION.RELEASE);
+            deviceInfo.putInt("apiLevel", Build.VERSION.SDK_INT);
+            
+            // App information
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            deviceInfo.putString("appVersion", packageInfo.versionName);
+            deviceInfo.putInt("appVersionCode", packageInfo.versionCode);
+            deviceInfo.putString("packageName", packageInfo.packageName);
+            
+            // Network information
+            deviceInfo.putMap("networkInfo", getNetworkInfo());
+            
+            // Hardware capabilities
+            deviceInfo.putMap("capabilities", getDeviceCapabilities());
+            
+            // Sensors information
+            deviceInfo.putArray("sensors", getSensorList());
+            
+            // Memory information
+            deviceInfo.putMap("memoryInfo", getMemoryInfo());
+            
+            // Storage information
+            deviceInfo.putMap("storageInfo", getStorageInfo());
+            
+            // Battery information
+            deviceInfo.putMap("batteryInfo", getBatteryInfo());
+            
+            // Display information
+            deviceInfo.putMap("displayInfo", getDisplayInfo());
+            
+            promise.resolve(deviceInfo);
+            
+        } catch (Exception e) {
+            promise.reject("DEVICE_INFO_ERROR", e.getMessage(), e);
+        }
+    }
+    
+    @ReactMethod
+    public void getSystemPerformanceMetrics(Promise promise) {
+        try {
+            WritableMap metrics = Arguments.createMap();
+            
+            // CPU information
+            metrics.putMap("cpu", getCpuInfo());
+            
+            // Memory usage
+            metrics.putMap("memory", getCurrentMemoryUsage());
+            
+            // Network usage
+            metrics.putMap("network", getNetworkUsage());
+            
+            // Battery status
+            metrics.putMap("battery", getCurrentBatteryStatus());
+            
+            // Thermal state
+            metrics.putString("thermalState", getThermalState());
+            
+            promise.resolve(metrics);
+            
+        } catch (Exception e) {
+            promise.reject("PERFORMANCE_METRICS_ERROR", e.getMessage(), e);
+        }
+    }
+    
+    @ReactMethod
+    public void checkPermissions(ReadableMap permissions, Promise promise) {
+        try {
+            WritableMap results = Arguments.createMap();
+            Context context = getReactApplicationContext();
+            
+            // Check each requested permission
+            for (String permission : permissions.toHashMap().keySet()) {
+                boolean isGranted = ContextCompat.checkSelfPermission(context, permission) 
+                    == PackageManager.PERMISSION_GRANTED;
+                results.putBoolean(permission, isGranted);
+            }
+            
+            promise.resolve(results);
+            
+        } catch (Exception e) {
+            promise.reject("PERMISSION_CHECK_ERROR", e.getMessage(), e);
+        }
+    }
+    
+    @ReactMethod
+    public void requestPermissions(ReadableMap permissions, Promise promise) {
+        try {
+            Activity activity = getCurrentActivity();
+            if (activity == null) {
+                promise.reject("NO_ACTIVITY", "No current activity available");
+                return;
+            }
+            
+            String[] permissionArray = permissions.toHashMap().keySet().toArray(new String[0]);
+            
+            // Store promise for callback
+            this.permissionPromise = promise;
+            
+            ActivityCompat.requestPermissions(activity, permissionArray, PERMISSION_REQUEST_CODE);
+            
+        } catch (Exception e) {
+            promise.reject("PERMISSION_REQUEST_ERROR", e.getMessage(), e);
+        }
+    }
+    
+    @ReactMethod
+    public void optimizePerformance(ReadableMap options, Promise promise) {
+        try {
+            WritableMap results = Arguments.createMap();
+            
+            // Memory optimization
+            if (options.hasKey("gc") && options.getBoolean("gc")) {
+                System.gc();
+                results.putBoolean("gcTriggered", true);
+            }
+            
+            // Clear caches
+            if (options.hasKey("clearCaches") && options.getBoolean("clearCaches")) {
+                clearApplicationCaches();
+                results.putBoolean("cachesCleared", true);
+            }
+            
+            // Optimize images
+            if (options.hasKey("optimizeImages") && options.getBoolean("optimizeImages")) {
+                optimizeImageCaches();
+                results.putBoolean("imagesOptimized", true);
+            }
+            
+            // CPU optimization
+            if (options.hasKey("cpuOptimization") && options.getBoolean("cpuOptimization")) {
+                applyCpuOptimizations();
+                results.putBoolean("cpuOptimized", true);
+            }
+            
+            promise.resolve(results);
+            
+        } catch (Exception e) {
+            promise.reject("PERFORMANCE_OPTIMIZATION_ERROR", e.getMessage(), e);
+        }
+    }
+    
+    private String getDeviceId() {
+        return Settings.Secure.getString(
+            getReactApplicationContext().getContentResolver(),
+            Settings.Secure.ANDROID_ID
+        );
+    }
+    
+    private WritableMap getNetworkInfo() {
+        WritableMap networkInfo = Arguments.createMap();
+        ConnectivityManager cm = (ConnectivityManager) getReactApplicationContext()
+            .getSystemService(Context.CONNECTIVITY_SERVICE);
+        
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            networkInfo.putBoolean("isConnected", activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+            networkInfo.putString("type", activeNetwork != null ? activeNetwork.getTypeName() : "None");
+            networkInfo.putString("subtype", activeNetwork != null ? activeNetwork.getSubtypeName() : "None");
+        }
+        
+        return networkInfo;
+    }
+    
+    private WritableMap getDeviceCapabilities() {
+        WritableMap capabilities = Arguments.createMap();
+        Context context = getReactApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        
+        // Hardware features
+        capabilities.putBoolean("hasCamera", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA));
+        capabilities.putBoolean("hasCameraFront", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT));
+        capabilities.putBoolean("hasGPS", pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS));
+        capabilities.putBoolean("hasBluetooth", pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH));
+        capabilities.putBoolean("hasNFC", pm.hasSystemFeature(PackageManager.FEATURE_NFC));
+        capabilities.putBoolean("hasAccelerometer", pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER));
+        capabilities.putBoolean("hasGyroscope", pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_GYROSCOPE));
+        capabilities.putBoolean("hasCompass", pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS));
+        capabilities.putBoolean("hasTelephony", pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
+        capabilities.putBoolean("hasWiFi", pm.hasSystemFeature(PackageManager.FEATURE_WIFI));
+        
+        return capabilities;
+    }
+    
+    // Additional helper methods for sensors, memory, storage, battery, display, etc.
+    // Implementation details would continue here...
+}
+```
 
-## Best Practices
+**TypeScript interface for Android native module:**
+```typescript
+// src/native/DeviceInfoModule.ts
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native'
 
-1. Use proper Android organization
-2. Implement proper Android documentation
-3. Use appropriate Android tools (e.g., Android Studio, Gradle, and ADB) to ensure consistency and efficiency in development.
-4. Handle Android updates properly
-5. Follow Android development guidelines 
+export interface DeviceInfo {
+  deviceId: string
+  model: string
+  brand: string
+  manufacturer: string
+  androidVersion: string
+  apiLevel: number
+  appVersion: string
+  appVersionCode: number
+  packageName: string
+  networkInfo: NetworkInfo
+  capabilities: DeviceCapabilities
+  sensors: SensorInfo[]
+  memoryInfo: MemoryInfo
+  storageInfo: StorageInfo
+  batteryInfo: BatteryInfo
+  displayInfo: DisplayInfo
+}
+
+export interface NetworkInfo {
+  isConnected: boolean
+  type: string
+  subtype: string
+  strength?: number
+  ipAddress?: string
+  macAddress?: string
+}
+
+export interface DeviceCapabilities {
+  hasCamera: boolean
+  hasCameraFront: boolean
+  hasGPS: boolean
+  hasBluetooth: boolean
+  hasNFC: boolean
+  hasAccelerometer: boolean
+  hasGyroscope: boolean
+  hasCompass: boolean
+  hasTelephony: boolean
+  hasWiFi: boolean
+}
+
+export interface SensorInfo {
+  name: string
+  type: number
+  vendor: string
+  version: number
+  resolution: number
+  power: number
+  maxRange: number
+}
+
+export interface MemoryInfo {
+  totalMemory: number
+  availableMemory: number
+  usedMemory: number
+  lowMemoryThreshold: number
+  isLowMemory: boolean
+}
+
+export interface StorageInfo {
+  internal: {
+    total: number
+    available: number
+    used: number
+  }
+  external?: {
+    total: number
+    available: number
+    used: number
+  }
+}
+
+export interface BatteryInfo {
+  level: number
+  isCharging: boolean
+  chargingType: 'ac' | 'usb' | 'wireless' | 'unknown'
+  health: 'good' | 'dead' | 'cold' | 'overheat' | 'failure' | 'unknown'
+  temperature: number
+  voltage: number
+}
+
+export interface DisplayInfo {
+  width: number
+  height: number
+  density: number
+  densityDpi: number
+  scaledDensity: number
+  fontScale: number
+  orientation: 'portrait' | 'landscape'
+}
+
+export interface PerformanceMetrics {
+  cpu: {
+    usage: number
+    cores: number
+    architecture: string
+    frequency: number
+  }
+  memory: {
+    heapUsed: number
+    heapTotal: number
+    heapFree: number
+    nativeUsed: number
+    nativeTotal: number
+  }
+  network: {
+    bytesReceived: number
+    bytesSent: number
+    packetsReceived: number
+    packetsSent: number
+  }
+  battery: {
+    level: number
+    temperature: number
+    isCharging: boolean
+    estimatedTimeRemaining?: number
+  }
+  thermalState: 'nominal' | 'fair' | 'serious' | 'critical'
+}
+
+export interface PermissionResult {
+  [permission: string]: boolean
+}
+
+export interface OptimizationOptions {
+  gc?: boolean
+  clearCaches?: boolean
+  optimizeImages?: boolean
+  cpuOptimization?: boolean
+}
+
+export interface OptimizationResult {
+  gcTriggered?: boolean
+  cachesCleared?: boolean
+  imagesOptimized?: boolean
+  cpuOptimized?: boolean
+}
+
+// Native module interface
+interface DeviceInfoNativeModule {
+  getDeviceInfo(): Promise<DeviceInfo>
+  getSystemPerformanceMetrics(): Promise<PerformanceMetrics>
+  checkPermissions(permissions: Record<string, boolean>): Promise<PermissionResult>
+  requestPermissions(permissions: Record<string, boolean>): Promise<PermissionResult>
+  optimizePerformance(options: OptimizationOptions): Promise<OptimizationResult>
+}
+
+const { DeviceInfoModule } = NativeModules
+
+// Enhanced DeviceInfo service with caching and error handling
+class DeviceInfoService {
+  private static instance: DeviceInfoService
+  private cachedDeviceInfo: DeviceInfo | null = null
+  private eventEmitter: NativeEventEmitter
+  private performanceMetrics: PerformanceMetrics | null = null
+  private metricsUpdateInterval: NodeJS.Timeout | null = null
+  
+  constructor() {
+    this.eventEmitter = new NativeEventEmitter(DeviceInfoModule)
+    this.setupEventListeners()
+  }
+  
+  public static getInstance(): DeviceInfoService {
+    if (!DeviceInfoService.instance) {
+      DeviceInfoService.instance = new DeviceInfoService()
+    }
+    return DeviceInfoService.instance
+  }
+  
+  private setupEventListeners(): void {
+    this.eventEmitter.addListener('onBatteryLevelChanged', (data) => {
+      if (this.performanceMetrics) {
+        this.performanceMetrics.battery = { ...this.performanceMetrics.battery, ...data }
+      }
+    })
+    
+    this.eventEmitter.addListener('onNetworkStateChanged', (data) => {
+      if (this.cachedDeviceInfo) {
+        this.cachedDeviceInfo.networkInfo = { ...this.cachedDeviceInfo.networkInfo, ...data }
+      }
+    })
+    
+    this.eventEmitter.addListener('onMemoryWarning', (data) => {
+      console.warn('Memory warning received:', data)
+      this.optimizeMemoryUsage()
+    })
+  }
+  
+  public async getDeviceInfo(forceRefresh = false): Promise<DeviceInfo> {
+    if (!this.cachedDeviceInfo || forceRefresh) {
+      try {
+        this.cachedDeviceInfo = await DeviceInfoModule.getDeviceInfo()
+        
+        // Add computed properties
+        this.cachedDeviceInfo = this.enhanceDeviceInfo(this.cachedDeviceInfo)
+        
+      } catch (error) {
+        console.error('Failed to get device info:', error)
+        throw new Error(`Device info unavailable: ${error.message}`)
+      }
+    }
+    
+    return this.cachedDeviceInfo
+  }
+  
+  private enhanceDeviceInfo(deviceInfo: DeviceInfo): DeviceInfo {
+    // Add computed properties and validations
+    return {
+      ...deviceInfo,
+      // Add device tier classification
+      deviceTier: this.classifyDeviceTier(deviceInfo),
+      
+      // Add performance category
+      performanceCategory: this.categorizePerformance(deviceInfo),
+      
+      // Add security level
+      securityLevel: this.assessSecurityLevel(deviceInfo)
+    }
+  }
+  
+  private classifyDeviceTier(deviceInfo: DeviceInfo): 'flagship' | 'mid-range' | 'budget' {
+    const { apiLevel, memoryInfo } = deviceInfo
+    
+    if (apiLevel >= 30 && memoryInfo.totalMemory > 6 * 1024 * 1024 * 1024) { // 6GB+
+      return 'flagship'
+    } else if (apiLevel >= 28 && memoryInfo.totalMemory > 3 * 1024 * 1024 * 1024) { // 3GB+
+      return 'mid-range'
+    }
+    return 'budget'
+  }
+  
+  private categorizePerformance(deviceInfo: DeviceInfo): 'high' | 'medium' | 'low' {
+    const { apiLevel, memoryInfo } = deviceInfo
+    
+    if (apiLevel >= 29 && memoryInfo.totalMemory > 4 * 1024 * 1024 * 1024) {
+      return 'high'
+    } else if (apiLevel >= 26 && memoryInfo.totalMemory > 2 * 1024 * 1024 * 1024) {
+      return 'medium'
+    }
+    return 'low'
+  }
+  
+  private assessSecurityLevel(deviceInfo: DeviceInfo): 'high' | 'medium' | 'low' {
+    const { apiLevel } = deviceInfo
+    
+    if (apiLevel >= 30) return 'high'
+    if (apiLevel >= 26) return 'medium'
+    return 'low'
+  }
+  
+  public async getPerformanceMetrics(): Promise<PerformanceMetrics> {
+    try {
+      this.performanceMetrics = await DeviceInfoModule.getSystemPerformanceMetrics()
+      return this.performanceMetrics
+    } catch (error) {
+      console.error('Failed to get performance metrics:', error)
+      throw new Error(`Performance metrics unavailable: ${error.message}`)
+    }
+  }
+  
+  public startPerformanceMonitoring(intervalMs = 5000): void {
+    if (this.metricsUpdateInterval) {
+      clearInterval(this.metricsUpdateInterval)
+    }
+    
+    this.metricsUpdateInterval = setInterval(async () => {
+      try {
+        await this.getPerformanceMetrics()
+      } catch (error) {
+        console.error('Performance monitoring error:', error)
+      }
+    }, intervalMs)
+  }
+  
+  public stopPerformanceMonitoring(): void {
+    if (this.metricsUpdateInterval) {
+      clearInterval(this.metricsUpdateInterval)
+      this.metricsUpdateInterval = null
+    }
+  }
+  
+  public async checkPermissions(permissions: string[]): Promise<PermissionResult> {
+    const permissionMap = permissions.reduce((acc, permission) => {
+      acc[permission] = true
+      return acc
+    }, {} as Record<string, boolean>)
+    
+    try {
+      return await DeviceInfoModule.checkPermissions(permissionMap)
+    } catch (error) {
+      console.error('Failed to check permissions:', error)
+      throw new Error(`Permission check failed: ${error.message}`)
+    }
+  }
+  
+  public async requestPermissions(permissions: string[]): Promise<PermissionResult> {
+    const permissionMap = permissions.reduce((acc, permission) => {
+      acc[permission] = true
+      return acc
+    }, {} as Record<string, boolean>)
+    
+    try {
+      return await DeviceInfoModule.requestPermissions(permissionMap)
+    } catch (error) {
+      console.error('Failed to request permissions:', error)
+      throw new Error(`Permission request failed: ${error.message}`)
+    }
+  }
+  
+  public async optimizePerformance(options: OptimizationOptions = {}): Promise<OptimizationResult> {
+    const defaultOptions: OptimizationOptions = {
+      gc: true,
+      clearCaches: true,
+      optimizeImages: false,
+      cpuOptimization: false
+    }
+    
+    const finalOptions = { ...defaultOptions, ...options }
+    
+    try {
+      return await DeviceInfoModule.optimizePerformance(finalOptions)
+    } catch (error) {
+      console.error('Performance optimization failed:', error)
+      throw new Error(`Optimization failed: ${error.message}`)
+    }
+  }
+  
+  private async optimizeMemoryUsage(): Promise<void> {
+    try {
+      await this.optimizePerformance({
+        gc: true,
+        clearCaches: true,
+        optimizeImages: true
+      })
+    } catch (error) {
+      console.error('Memory optimization failed:', error)
+    }
+  }
+  
+  public async getOptimalConfiguration(): Promise<{
+    imageQuality: number
+    animationScale: number
+    cacheSize: number
+    networkTimeout: number
+  }> {
+    const deviceInfo = await this.getDeviceInfo()
+    const performanceMetrics = await this.getPerformanceMetrics()
+    
+    // Determine optimal settings based on device capabilities
+    const config = {
+      imageQuality: this.calculateOptimalImageQuality(deviceInfo, performanceMetrics),
+      animationScale: this.calculateOptimalAnimationScale(deviceInfo, performanceMetrics),
+      cacheSize: this.calculateOptimalCacheSize(deviceInfo),
+      networkTimeout: this.calculateOptimalNetworkTimeout(deviceInfo)
+    }
+    
+    return config
+  }
+  
+  private calculateOptimalImageQuality(deviceInfo: DeviceInfo, metrics: PerformanceMetrics): number {
+    const { performanceCategory } = deviceInfo as any
+    const memoryPressure = metrics.memory.heapUsed / metrics.memory.heapTotal
+    
+    if (performanceCategory === 'high' && memoryPressure < 0.7) return 0.9
+    if (performanceCategory === 'medium' && memoryPressure < 0.8) return 0.75
+    return 0.6
+  }
+  
+  private calculateOptimalAnimationScale(deviceInfo: DeviceInfo, metrics: PerformanceMetrics): number {
+    const { performanceCategory } = deviceInfo as any
+    const cpuUsage = metrics.cpu.usage
+    
+    if (performanceCategory === 'high' && cpuUsage < 50) return 1.0
+    if (performanceCategory === 'medium' && cpuUsage < 70) return 0.8
+    return 0.5
+  }
+  
+  private calculateOptimalCacheSize(deviceInfo: DeviceInfo): number {
+    const totalMemoryMB = deviceInfo.memoryInfo.totalMemory / (1024 * 1024)
+    
+    // Use 10-15% of total memory for cache
+    return Math.min(Math.max(totalMemoryMB * 0.12, 50), 500) * 1024 * 1024
+  }
+  
+  private calculateOptimalNetworkTimeout(deviceInfo: DeviceInfo): number {
+    const { networkInfo } = deviceInfo
+    
+    switch (networkInfo.type.toLowerCase()) {
+      case 'wifi': return 10000
+      case '4g':
+      case 'lte': return 15000
+      case '3g': return 25000
+      case '2g': return 45000
+      default: return 30000
+    }
+  }
+  
+  public destroy(): void {
+    this.stopPerformanceMonitoring()
+    this.eventEmitter.removeAllListeners()
+    this.cachedDeviceInfo = null
+    this.performanceMetrics = null
+  }
+}
+
+export default DeviceInfoService
+```
+
+## React Component Integration
+
+**Advanced React component using Android native features:**
+```tsx
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+  Alert,
+  Dimensions,
+  Platform,
+  StatusBar,
+  ActivityIndicator,
+  TouchableOpacity,
+  Modal,
+  ProgressBarAndroid,
+  ToastAndroid
+} from 'react-native'
+import DeviceInfoService, { DeviceInfo, PerformanceMetrics } from '../native/DeviceInfoService'
+import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'
+import { useFocusEffect } from '@react-navigation/native'
+import LinearGradient from 'react-native-linear-gradient'
+
+interface SystemDashboardProps {
+  refreshInterval?: number
+  showAdvancedMetrics?: boolean
+  enableOptimizations?: boolean
+}
+
+export const SystemDashboard: React.FC<SystemDashboardProps> = ({
+  refreshInterval = 5000,
+  showAdvancedMetrics = false,
+  enableOptimizations = true
+}) => {
+  // State management
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo | null>(null)
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [optimizationInProgress, setOptimizationInProgress] = useState(false)
+  const [showOptimizationModal, setShowOptimizationModal] = useState(false)
+  const [historicalData, setHistoricalData] = useState<{
+    timestamps: string[]
+    cpuUsage: number[]
+    memoryUsage: number[]
+    batteryLevel: number[]
+  }>({
+    timestamps: [],
+    cpuUsage: [],
+    memoryUsage: [],
+    batteryLevel: []
+  })
+  
+  // Device info service instance
+  const deviceService = useMemo(() => DeviceInfoService.getInstance(), [])
+  
+  // Screen dimensions
+  const { width: screenWidth } = Dimensions.get('window')
+  
+  // Load initial data
+  const loadDeviceInfo = useCallback(async (forceRefresh = false) => {
+    try {
+      const info = await deviceService.getDeviceInfo(forceRefresh)
+      setDeviceInfo(info)
+      setError(null)
+    } catch (err) {
+      setError(err.message)
+      console.error('Failed to load device info:', err)
+    }
+  }, [deviceService])
+  
+  const loadPerformanceMetrics = useCallback(async () => {
+    try {
+      const metrics = await deviceService.getPerformanceMetrics()
+      setPerformanceMetrics(metrics)
+      
+      // Update historical data
+      setHistoricalData(prev => {
+        const now = new Date().toLocaleTimeString()
+        const maxDataPoints = 20
+        
+        return {
+          timestamps: [...prev.timestamps.slice(-maxDataPoints + 1), now],
+          cpuUsage: [...prev.cpuUsage.slice(-maxDataPoints + 1), metrics.cpu.usage],
+          memoryUsage: [...prev.memoryUsage.slice(-maxDataPoints + 1), 
+            (metrics.memory.heapUsed / metrics.memory.heapTotal) * 100],
+          batteryLevel: [...prev.batteryLevel.slice(-maxDataPoints + 1), metrics.battery.level]
+        }
+      })
+      
+    } catch (err) {
+      console.error('Failed to load performance metrics:', err)
+    }
+  }, [deviceService])
+  
+  const loadData = useCallback(async (forceRefresh = false) => {
+    setIsLoading(true)
+    await Promise.all([
+      loadDeviceInfo(forceRefresh),
+      loadPerformanceMetrics()
+    ])
+    setIsLoading(false)
+  }, [loadDeviceInfo, loadPerformanceMetrics])
+  
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true)
+    await loadData(true)
+    setIsRefreshing(false)
+  }, [loadData])
+  
+  // Performance optimization handler
+  const handleOptimization = useCallback(async () => {
+    setOptimizationInProgress(true)
+    
+    try {
+      const result = await deviceService.optimizePerformance({
+        gc: true,
+        clearCaches: true,
+        optimizeImages: true,
+        cpuOptimization: true
+      })
+      
+      ToastAndroid.show(
+        `Optimization complete: ${Object.values(result).filter(Boolean).length} optimizations applied`,
+        ToastAndroid.SHORT
+      )
+      
+      // Refresh metrics after optimization
+      setTimeout(() => {
+        loadPerformanceMetrics()
+      }, 1000)
+      
+    } catch (err) {
+      Alert.alert('Optimization Failed', err.message)
+    } finally {
+      setOptimizationInProgress(false)
+      setShowOptimizationModal(false)
+    }
+  }, [deviceService, loadPerformanceMetrics])
+  
+  // Permission checking
+  const checkPermissions = useCallback(async () => {
+    const requiredPermissions = [
+      'android.permission.ACCESS_NETWORK_STATE',
+      'android.permission.ACCESS_WIFI_STATE',
+      'android.permission.READ_PHONE_STATE',
+      'android.permission.ACCESS_FINE_LOCATION'
+    ]
+    
+    try {
+      const results = await deviceService.checkPermissions(requiredPermissions)
+      const missingPermissions = requiredPermissions.filter(permission => !results[permission])
+      
+      if (missingPermissions.length > 0) {
+        Alert.alert(
+          'Permissions Required',
+          `The following permissions are needed for full functionality:\n${missingPermissions.join('\n')}`,
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Request', onPress: () => requestPermissions(missingPermissions) }
+          ]
+        )
+      }
+    } catch (err) {
+      console.error('Permission check failed:', err)
+    }
+  }, [deviceService])
+  
+  const requestPermissions = useCallback(async (permissions: string[]) => {
+    try {
+      const results = await deviceService.requestPermissions(permissions)
+      const granted = Object.values(results).filter(Boolean).length
+      const total = Object.keys(results).length
+      
+      ToastAndroid.show(
+        `${granted}/${total} permissions granted`,
+        ToastAndroid.SHORT
+      )
+      
+      // Refresh data after permissions change
+      await loadData(true)
+    } catch (err) {
+      Alert.alert('Permission Request Failed', err.message)
+    }
+  }, [deviceService, loadData])
+  
+  // Setup effects
+  useEffect(() => {
+    loadData()
+    checkPermissions()
+  }, [loadData, checkPermissions])
+  
+  // Focus effect for navigation
+  useFocusEffect(
+    useCallback(() => {
+      deviceService.startPerformanceMonitoring(refreshInterval)
+      
+      return () => {
+        deviceService.stopPerformanceMonitoring()
+      }
+    }, [deviceService, refreshInterval])
+  )
+  
+  // Performance metrics update effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    
+    if (performanceMetrics) {
+      interval = setInterval(() => {
+        loadPerformanceMetrics()
+      }, refreshInterval)
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [performanceMetrics, refreshInterval, loadPerformanceMetrics])
+  
+  // Render device info section
+  const renderDeviceInfo = () => {
+    if (!deviceInfo) return null
+    
+    const deviceTier = (deviceInfo as any).deviceTier || 'unknown'
+    const performanceCategory = (deviceInfo as any).performanceCategory || 'unknown'
+    
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Device Information</Text>
+        
+        <View style={styles.infoGrid}>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Model</Text>
+            <Text style={styles.infoValue}>{deviceInfo.brand} {deviceInfo.model}</Text>
+          </View>
+          
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Android Version</Text>
+            <Text style={styles.infoValue}>API {deviceInfo.apiLevel} ({deviceInfo.androidVersion})</Text>
+          </View>
+          
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Device Tier</Text>
+            <Text style={[styles.infoValue, { color: getTierColor(deviceTier) }]}>
+              {deviceTier.charAt(0).toUpperCase() + deviceTier.slice(1)}
+            </Text>
+          </View>
+          
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Performance</Text>
+            <Text style={[styles.infoValue, { color: getPerformanceColor(performanceCategory) }]}>
+              {performanceCategory.charAt(0).toUpperCase() + performanceCategory.slice(1)}
+            </Text>
+          </View>
+          
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Memory</Text>
+            <Text style={styles.infoValue}>
+              {Math.round(deviceInfo.memoryInfo.totalMemory / (1024 * 1024 * 1024) * 10) / 10} GB
+            </Text>
+          </View>
+          
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Storage</Text>
+            <Text style={styles.infoValue}>
+              {Math.round(deviceInfo.storageInfo.internal.available / (1024 * 1024 * 1024) * 10) / 10} GB free
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+  
+  // Render performance metrics section
+  const renderPerformanceMetrics = () => {
+    if (!performanceMetrics) return null
+    
+    const cpuUsage = performanceMetrics.cpu.usage
+    const memoryUsage = (performanceMetrics.memory.heapUsed / performanceMetrics.memory.heapTotal) * 100
+    const batteryLevel = performanceMetrics.battery.level
+    
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Performance Metrics</Text>
+        
+        <View style={styles.metricsGrid}>
+          <View style={styles.metricCard}>
+            <Text style={styles.metricLabel}>CPU Usage</Text>
+            <View style={styles.progressContainer}>
+              <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={false}
+                progress={cpuUsage / 100}
+                color={cpuUsage > 80 ? '#e74c3c' : cpuUsage > 60 ? '#f39c12' : '#27ae60'}
+                style={styles.progressBar}
+              />
+              <Text style={styles.metricValue}>{cpuUsage.toFixed(1)}%</Text>
+            </View>
+          </View>
+          
+          <View style={styles.metricCard}>
+            <Text style={styles.metricLabel}>Memory Usage</Text>
+            <View style={styles.progressContainer}>
+              <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={false}
+                progress={memoryUsage / 100}
+                color={memoryUsage > 85 ? '#e74c3c' : memoryUsage > 70 ? '#f39c12' : '#27ae60'}
+                style={styles.progressBar}
+              />
+              <Text style={styles.metricValue}>{memoryUsage.toFixed(1)}%</Text>
+            </View>
+          </View>
+          
+          <View style={styles.metricCard}>
+            <Text style={styles.metricLabel}>Battery Level</Text>
+            <View style={styles.progressContainer}>
+              <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={false}
+                progress={batteryLevel / 100}
+                color={batteryLevel < 20 ? '#e74c3c' : batteryLevel < 50 ? '#f39c12' : '#27ae60'}
+                style={styles.progressBar}
+              />
+              <Text style={styles.metricValue}>{batteryLevel}%</Text>
+            </View>
+            <Text style={styles.metricSubtext}>
+              {performanceMetrics.battery.isCharging ? '🔌 Charging' : '🔋 On battery'}
+            </Text>
+          </View>
+          
+          <View style={styles.metricCard}>
+            <Text style={styles.metricLabel}>Thermal State</Text>
+            <Text style={[styles.metricValue, { color: getThermalColor(performanceMetrics.thermalState) }]}>
+              {performanceMetrics.thermalState.charAt(0).toUpperCase() + 
+               performanceMetrics.thermalState.slice(1)}
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+  
+  // Render performance charts
+  const renderPerformanceCharts = () => {
+    if (!showAdvancedMetrics || historicalData.timestamps.length < 2) return null
+    
+    const chartConfig = {
+      backgroundGradientFrom: '#1e3c72',
+      backgroundGradientTo: '#2a5298',
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      strokeWidth: 2,
+      barPercentage: 0.5,
+      useShadowColorFromDataset: false,
+    }
+    
+    const cpuData = {
+      labels: historicalData.timestamps.slice(-6),
+      datasets: [
+        {
+          data: historicalData.cpuUsage.slice(-6),
+          color: (opacity = 1) => `rgba(255, 99, 132, ${opacity})`,
+          strokeWidth: 2
+        }
+      ]
+    }
+    
+    const memoryData = {
+      labels: historicalData.timestamps.slice(-6),
+      datasets: [
+        {
+          data: historicalData.memoryUsage.slice(-6),
+          color: (opacity = 1) => `rgba(54, 162, 235, ${opacity})`,
+          strokeWidth: 2
+        }
+      ]
+    }
+    
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Performance Trends</Text>
+        
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.chartsContainer}>
+            <View style={styles.chartItem}>
+              <Text style={styles.chartTitle}>CPU Usage</Text>
+              <LineChart
+                data={cpuData}
+                width={screenWidth - 80}
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+              />
+            </View>
+            
+            <View style={styles.chartItem}>
+              <Text style={styles.chartTitle}>Memory Usage</Text>
+              <LineChart
+                data={memoryData}
+                width={screenWidth - 80}
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    )
+  }
+  
+  // Helper functions
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'flagship': return '#27ae60'
+      case 'mid-range': return '#f39c12'
+      case 'budget': return '#e74c3c'
+      default: return '#95a5a6'
+    }
+  }
+  
+  const getPerformanceColor = (category: string) => {
+    switch (category) {
+      case 'high': return '#27ae60'
+      case 'medium': return '#f39c12'
+      case 'low': return '#e74c3c'
+      default: return '#95a5a6'
+    }
+  }
+  
+  const getThermalColor = (state: string) => {
+    switch (state) {
+      case 'nominal': return '#27ae60'
+      case 'fair': return '#f39c12'
+      case 'serious': return '#e67e22'
+      case 'critical': return '#e74c3c'
+      default: return '#95a5a6'
+    }
+  }
+  
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3498db" />
+        <Text style={styles.loadingText}>Loading system information...</Text>
+      </View>
+    )
+  }
+  
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>Unable to load system information</Text>
+        <Text style={styles.errorMessage}>{error}</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => loadData(true)}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+  
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#2c3e50" />
+      
+      <LinearGradient
+        colors={['#2c3e50', '#3498db']}
+        style={styles.header}
+      >
+        <Text style={styles.headerTitle}>System Dashboard</Text>
+        {enableOptimizations && (
+          <TouchableOpacity
+            style={styles.optimizeButton}
+            onPress={() => setShowOptimizationModal(true)}
+            disabled={optimizationInProgress}
+          >
+            <Text style={styles.optimizeButtonText}>
+              {optimizationInProgress ? 'Optimizing...' : 'Optimize'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </LinearGradient>
+      
+      <ScrollView
+        style={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            colors={['#3498db']}
+          />
+        }
+      >
+        {renderDeviceInfo()}
+        {renderPerformanceMetrics()}
+        {renderPerformanceCharts()}
+      </ScrollView>
+      
+      {/* Optimization Modal */}
+      <Modal
+        visible={showOptimizationModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowOptimizationModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>System Optimization</Text>
+            <Text style={styles.modalText}>
+              This will perform the following optimizations:
+              {'\n'}• Clear system cache
+              {'\n'}• Trigger garbage collection
+              {'\n'}• Optimize image cache
+              {'\n'}• Apply CPU optimizations
+            </Text>
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setShowOptimizationModal(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={handleOptimization}
+                disabled={optimizationInProgress}
+              >
+                {optimizationInProgress ? (
+                  <ActivityIndicator size="small" color="#ffffff" />
+                ) : (
+                  <Text style={styles.confirmButtonText}>Optimize</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  )
+}
+
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ecf0f1',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 15 : 15,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  optimizeButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  optimizeButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  section: {
+    backgroundColor: '#ffffff',
+    marginBottom: 16,
+    padding: 20,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 15,
+  },
+  infoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  infoItem: {
+    width: '48%',
+    marginBottom: 15,
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#7f8c8d',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    color: '#2c3e50',
+    fontWeight: '500',
+  },
+  metricsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  metricCard: {
+    width: '48%',
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  metricLabel: {
+    fontSize: 12,
+    color: '#6c757d',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  progressBar: {
+    flex: 1,
+    height: 8,
+    marginRight: 10,
+  },
+  metricValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    minWidth: 50,
+    textAlign: 'right',
+  },
+  metricSubtext: {
+    fontSize: 11,
+    color: '#6c757d',
+    marginTop: 4,
+  },
+  chartsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+  },
+  chartItem: {
+    marginRight: 20,
+  },
+  chartTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  chart: {
+    borderRadius: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ecf0f1',
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: '#7f8c8d',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#ecf0f1',
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#e74c3c',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#3498db',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+  },
+  retryButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    margin: 20,
+    padding: 25,
+    borderRadius: 15,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalText: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    lineHeight: 22,
+    marginBottom: 25,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#ecf0f1',
+  },
+  confirmButton: {
+    backgroundColor: '#e74c3c',
+  },
+  cancelButtonText: {
+    textAlign: 'center',
+    color: '#7f8c8d',
+    fontWeight: '600',
+  },
+  confirmButtonText: {
+    textAlign: 'center',
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+})
+
+export default SystemDashboard
+```
+
+## Best Practices Summary
+
+**Key patterns for advanced React Native Android development:**
+
+1. **Native Module Integration**: Create comprehensive native modules with TypeScript interfaces, implement proper error handling and validation, use modern Android APIs with compatibility checking, provide extensive device information and capabilities.
+
+2. **Performance Optimization**: Monitor system performance metrics in real-time, implement intelligent optimization strategies, provide device-specific configuration recommendations, track historical performance data.
+
+3. **Permission Management**: Handle runtime permissions systematically, provide clear permission explanations to users, implement graceful fallbacks for denied permissions, check permissions before accessing sensitive APIs.
+
+4. **Component Architecture**: Build responsive components with proper state management, implement loading states and error boundaries, use proper TypeScript interfaces for type safety, provide comprehensive performance monitoring.
+
+5. **Android Development**: Follow Android development best practices, use proper native code patterns, implement proper lifecycle management, provide comprehensive debugging and testing tools.
+
+Always test on multiple devices and API levels, implement proper error handling and fallbacks, monitor performance impact of native modules, and maintain compatibility with React Native updates. 
