@@ -1,4 +1,0 @@
-# Universal Development Guidelines for Turborepo Monorepo
-
-# General Assistant Rules
-include: .cursor/rules/general-assistant-rules.mdc

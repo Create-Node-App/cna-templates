@@ -1,0 +1,69 @@
+# AGENTS.md – AI Interaction & Execution Guide (Human contributors: see CONTRIBUTING.md & docs/)
+
+This file is intentionally scoped only for AI assistants (Cursor, Copilot Chat, PR automation bots).
+Humans: read CONTRIBUTING.md and docs/.
+
+## 1. Authoritative References (Never Reproduce Content Here)
+
+| Topic | Source of Truth |
+|-------|-----------------|
+| Project architecture | docs/PROJECT_STRUCTURE.md |
+| Component & styling patterns | docs/COMPONENTS_AND_STYLING.md |
+| Performance guidance | docs/PERFORMANCE.md |
+| State management approach | docs/STATE_MANAGEMENT.md |
+| Project / build configuration | docs/PROJECT_CONFIGURATION.md |
+
+(.template files are materialized during project generation—still treat as authoritative.)
+
+## 2. Operating Principles (AI Perspective)
+
+- Documentation-first
+- Reuse-before-build
+- Type safety always (no unvetted any)
+- Deterministic, incremental changes
+- Explicit assumption logging
+
+## 3. AI Execution Protocol (Next.js Feature / Route Work)
+
+When asked to add/modify UI or route logic:
+
+1. Identify target feature folder under `[src]/features/*` or app route segment (justify new ones)
+2. Read referenced docs before proposing code
+3. Prefer extending existing component / hook / state patterns
+4. Present proposed file tree + diff plan BEFORE writing code
+5. After code changes: list validation steps (format, lint, type check, test)
+
+## 4. Guardrails (Must Enforce)
+
+- Do NOT fabricate file paths, component APIs, or library versions
+- Do NOT remove existing accessibility props (aria-*, alt, role) without rationale + replacement
+- Do NOT introduce global untracked singletons—follow documented patterns
+- ALWAYS flag large dependency additions (>1 lib) for human confirmation
+- Surface potential performance regressions (server/client boundary issues, large client bundles)
+
+## 5. Component / Route Creation Checklist
+
+- Typed props / params interfaces exported
+- Proper Next.js conventions (RSC vs Client Component) respected
+- Accessibility reviewed (labels, semantics)
+- Example or usage snippet considered
+- Test file added or explicitly deferred with reason
+
+## 6. When the AI Should Ask or Refuse
+
+Ask if: unclear route placement, conflicting patterns, missing target directory.
+Refuse if: asked to bypass validation, remove type safety, duplicate existing documented component.
+
+## 7. Post-Change Assistant Report
+
+Return a bullet summary:
+
+- Files touched (concise)
+- New dependencies (if any)
+- Type/lint status
+- Suggested manual QA steps
+- Deferred items (tests, docs)
+
+---
+Maintained automatically by create-awesome-node-app Next.js template provisioning.
+Humans: stop reading—go to CONTRIBUTING.md + docs/.
