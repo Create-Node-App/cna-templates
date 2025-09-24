@@ -58,3 +58,7 @@ In the project directory, you can run:
 | `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
 | `format`           | Formats the project using [Prettier](https://prettier.io/)                                                              |
 | `type-check`        | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |
+
+## Contributing
+
+Follow the local workflow described in [CONTRIBUTING.md](./CONTRIBUTING.md). To propose changes to the underlying template itself, contribute via the main repo: [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

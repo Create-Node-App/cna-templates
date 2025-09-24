@@ -1,0 +1,71 @@
+# Contributing
+
+Welcome! After the README, start here.
+
+## Contents
+- [Prerequisites](#prerequisites)
+- [Bootstrap](#bootstrap)
+- [Architecture](#architecture)
+- [Modules & Providers](#modules--providers)
+- [Coding Standards](#coding-standards)
+- [Error Handling](#error-handling)
+- [DTOs & Validation](#dtos--validation)
+- [Branch & Commit Strategy](#branch--commit-strategy)
+- [Dependencies](#dependencies)
+- [Testing](#testing)
+- [Documentation](#documentation)
+- [PR Checklist](#pr-checklist)
+
+## Prerequisites
+```sh
+fnm use
+<%= installCommand%>
+```
+
+## Bootstrap
+```sh
+<%= runCommand%> dev
+```
+Or Docker (recommended for DB, etc.):
+```sh
+<%= runCommand%> compose:up
+```
+
+## Architecture
+Read `docs/PROJECT_STRUCTURE.md`. Domain-driven: `src/modules/<domain>` holding controllers, services, entities, dtos.
+
+## Modules & Providers
+Keep modules focused. Export only necessary providers. Avoid circular dependencies—refactor shared logic to a common module.
+
+## Coding Standards
+- Strong typing everywhere
+- Avoid leaking persistence models into controllers (use DTOs)
+- Keep controllers thin—push logic to services
+
+## Error Handling
+Throw Nest `HttpException` or subclasses. Centralize custom exceptions when reused.
+
+## DTOs & Validation
+Use `class-validator` decorators on DTOs. Keep DTOs immutable (readonly props where possible).
+
+## Branch & Commit Strategy
+`feat/*`, `fix/*`, `refactor/*`. Conventional Commits. Rebase before PR.
+
+## Dependencies
+Add only with clear justification. Prefer standard Nest modules & existing libs.
+
+## Testing
+- Unit test services & pure logic
+- Integration tests for modules with DB (can use in-memory or test containers)
+
+## Documentation
+Update `docs/` for architectural shifts or new cross-cutting concerns.
+
+## PR Checklist
+- [ ] Lint & type check pass
+- [ ] Tests added/updated or reason stated
+- [ ] DTOs validated & documented
+- [ ] No dead code
+- [ ] Docs updated if needed
+
+Thanks for contributing! 🚀

@@ -59,4 +59,4 @@ For more details, see [Test Configuration](./docs/TEST_CONFIGURATION.md).
 
 ## Contributing
 
-Bug reports, feature requests, and pull requests are welcome on the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
+Consult [CONTRIBUTING.md](./CONTRIBUTING.md) for local authoring standards (spec style, selectors, retries). For broader template issues use: [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

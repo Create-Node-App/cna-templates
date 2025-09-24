@@ -1,0 +1,66 @@
+# Contributing
+
+Thank you for contributing! This document guides human developers after reading the README.
+
+## Table of Contents
+- [Prerequisites](#prerequisites)
+- [Bootstrap](#bootstrap)
+- [Architecture & Routing](#architecture--routing)
+- [Feature Modules](#feature-modules)
+- [Server vs Client Components](#server-vs-client-components)
+- [Coding Standards](#coding-standards)
+- [Branch & Commit Strategy](#branch--commit-strategy)
+- [Dependencies](#dependencies)
+- [Testing](#testing)
+- [Documentation](#documentation)
+- [PR Checklist](#pr-checklist)
+
+## Prerequisites
+Use the documented Node version (`fnm use`). Install dependencies:
+```sh
+fnm use
+<%= installCommand%>
+```
+
+## Bootstrap
+Development server:
+```sh
+<%= runCommand%> dev
+```
+
+## Architecture & Routing
+Consult `docs/PROJECT_STRUCTURE.md`. App Router layout lives under `src/app/`. Features expose components & logic under `src/features/<domain>`.
+
+## Feature Modules
+Encapsulate UI, hooks, services, and types. Export a minimal public surface (`index.ts`).
+
+## Server vs Client Components
+- Prefer Server Components for data-fetch & static composition
+- Add `"use client"` only when needed (state, effects, event handlers)
+
+## Coding Standards
+- Strict TypeScript
+- Accessibility by default
+- No large un-memoized lists; use streaming / pagination
+- Avoid leaking server-only code to client bundles
+
+## Branch & Commit Strategy
+`feat/*`, `fix/*`, `chore/*`. Conventional Commits format. Rebase before PR.
+
+## Dependencies
+Justify additions > 0 new runtime deps in PR. Prefer built-in Next.js / React features.
+
+## Testing
+Add tests for business logic (services, hooks). Snapshot or interaction tests for critical UI.
+
+## Documentation
+Update `docs/` for architectural or pattern changes.
+
+## PR Checklist
+- [ ] Lint & type check pass
+- [ ] Tests added/updated or reason stated
+- [ ] No unused exports
+- [ ] Accessible UI changes
+- [ ] Docs updated if needed
+
+Happy building! 🚀

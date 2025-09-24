@@ -66,4 +66,4 @@ Scripts for preparing and viewing the production version:
 
 ## Contributing
 
-You can report bugs, request features and create Pull Requests in the [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates) repository!
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for local project contribution workflow (branching, commits, architecture). For overarching template issues or improvements, open issues / PRs in the main monorepo: [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

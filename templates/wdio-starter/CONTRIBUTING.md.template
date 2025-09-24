@@ -1,0 +1,63 @@
+# Contributing
+
+This is the entry point for contributors after the README.
+
+## Contents
+- [Prerequisites](#prerequisites)
+- [Bootstrap](#bootstrap)
+- [Test Architecture](#test-architecture)
+- [Spec Authoring Guidelines](#spec-authoring-guidelines)
+- [Selectors & Stability](#selectors--stability)
+- [Parallel & Retry Strategy](#parallel--retry-strategy)
+- [Branch & Commit Strategy](#branch--commit-strategy)
+- [Dependencies](#dependencies)
+- [Reporting & Artifacts](#reporting--artifacts)
+- [PR Checklist](#pr-checklist)
+
+## Prerequisites
+```sh
+fnm use
+<%= installCommand%>
+```
+
+## Bootstrap
+Local run:
+```sh
+<%= runCommand%> test:local
+```
+Remote (Selenoid / grid):
+```sh
+<%= runCommand%> test:remote
+```
+
+## Test Architecture
+See `docs/PROJECT_STRUCTURE.md`. Organize by feature/domain. Reuse helpers in `config/` and any shared utils.
+
+## Spec Authoring Guidelines
+- Keep specs deterministic
+- Avoid fixed sleeps—prefer waits on conditions
+- One clear assertion focus per spec block (grouped logically)
+
+## Selectors & Stability
+Prefer data attributes (e.g. `data-testid`). Avoid brittle chained CSS unless necessary.
+
+## Parallel & Retry Strategy
+Use configuration values to scale. Keep flake low: investigate timing issues instead of piling retries.
+
+## Branch & Commit Strategy
+`feat/*`, `fix/*`, `chore/*`. Conventional Commits. Rebase before PR.
+
+## Dependencies
+Add with caution—ensure reduced runtime or test flakiness risk.
+
+## Reporting & Artifacts
+Configure reporters in `wdio.conf.js`. Include logs/screenshots for failing specs.
+
+## PR Checklist
+- [ ] Specs deterministic
+- [ ] Lint & type check pass
+- [ ] No accidental focus (`it.only` / `describe.only`)
+- [ ] New helpers documented
+- [ ] Flaky logic addressed or explained
+
+Thanks for contributing! 🚀

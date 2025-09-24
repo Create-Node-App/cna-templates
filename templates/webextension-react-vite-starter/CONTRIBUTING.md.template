@@ -1,0 +1,67 @@
+# Contributing
+
+Welcome! After the README, start here.
+
+## Contents
+- [Prerequisites](#prerequisites)
+- [Bootstrap](#bootstrap)
+- [Architecture](#architecture)
+- [Extension Contexts](#extension-contexts)
+- [Messaging Patterns](#messaging-patterns)
+- [Coding Standards](#coding-standards)
+- [Branch & Commit Strategy](#branch--commit-strategy)
+- [Dependencies](#dependencies)
+- [Testing](#testing)
+- [Publishing](#publishing)
+- [PR Checklist](#pr-checklist)
+
+## Prerequisites
+```sh
+fnm use
+<%= installCommand%>
+```
+
+## Bootstrap
+```sh
+<%= runCommand%> dev
+```
+Then load with one of:
+```sh
+<%= runCommand%> web-ext:chromium
+<%= runCommand%> web-ext:firefox
+```
+
+## Architecture
+See `docs/PROJECT_STRUCTURE.md`. Contexts: background, content scripts, UI (popup/options). Shared logic in `src/shared` (if present).
+
+## Extension Contexts
+Be explicit about what runs where. Content scripts shouldn’t import background-only APIs directly.
+
+## Messaging Patterns
+Use structured message types. Avoid anonymous string channels. Centralize message enums or builders.
+
+## Coding Standards
+- Strict TypeScript
+- No silent failures; log meaningful errors
+- Avoid blocking the main thread in content scripts
+
+## Branch & Commit Strategy
+`feat/*`, `fix/*`, `chore/*`. Conventional Commits. Rebase before PR.
+
+## Dependencies
+Prefer lightweight libs—bundle size matters for extension review.
+
+## Testing
+Add integration tests where possible (e.g., mocks or e2e harness). Unit test pure helpers.
+
+## Publishing
+Update version + changelog. Validate manifest. Smoke test on target browsers.
+
+## PR Checklist
+- [ ] Lint & type check pass
+- [ ] Manifest changes reviewed
+- [ ] No unused permissions
+- [ ] Tests updated/added or rationale explained
+- [ ] Docs updated if needed
+
+Happy contributing! 🚀

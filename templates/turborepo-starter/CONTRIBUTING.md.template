@@ -1,0 +1,71 @@
+# Contributing
+
+Welcome to the monorepo template! After reading the main README, this guides you through effective contribution.
+
+## Contents
+- [Prerequisites](#prerequisites)
+- [Bootstrap](#bootstrap)
+- [Repo Structure](#repo-structure)
+- [Packages vs Apps](#packages-vs-apps)
+- [Development Workflow](#development-workflow)
+- [Code Standards](#code-standards)
+- [Branch & Commit Strategy](#branch--commit-strategy)
+- [Dependency Management](#dependency-management)
+- [Build & Caching](#build--caching)
+- [Testing](#testing)
+- [Versioning & Releases](#versioning--releases)
+- [PR Checklist](#pr-checklist)
+
+## Prerequisites
+```sh
+fnm use
+<%= installCommand %>
+```
+
+## Bootstrap
+Run from repo root:
+```sh
+<%= runCommand %> build
+```
+
+## Repo Structure
+See `docs/PROJECT_STRUCTURE.md`. Top-level:
+- `apps/` deployable applications
+- `packages/` shared libraries
+
+## Packages vs Apps
+Put cross-cutting logic (ui, config, utils) in `packages/`. Keep app folders thin—assemble features.
+
+## Development Workflow
+- Use Turborepo to leverage caching
+- Run selective builds: `turbo run build --filter=app-web`
+- Co-locate tests with source or in `__tests__` subfolders
+
+## Code Standards
+- Strict TypeScript
+- Avoid tight coupling between packages—export stable APIs
+- Keep public surface small & documented
+
+## Branch & Commit Strategy
+`feat/*`, `fix/*`, `chore/*`. Conventional Commits. Rebase before PR.
+
+## Dependency Management
+Use workspace ranges. If a package depends on another local package, reference it via workspace. Avoid duplicate versions.
+
+## Build & Caching
+Leverage incremental builds. Don’t disable caching unless debugging.
+
+## Testing
+Each package/app should define its own test scripts. Add tests for shared utilities first.
+
+## Versioning & Releases
+Managed via Changesets. Follow prompts: `npx changeset` then version & publish workflows.
+
+## PR Checklist
+- [ ] Lint & type check pass
+- [ ] Tests added/updated or rationale provided
+- [ ] No circular deps introduced
+- [ ] Changeset added if publishing impact
+- [ ] Docs updated if needed
+
+Happy contributing! 🚀
