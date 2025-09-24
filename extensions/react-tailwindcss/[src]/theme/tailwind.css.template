@@ -1,0 +1,17 @@
+/* Tailwind base stylesheet (templated) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 8px;
+}
+
+html.dark { color-scheme: dark; }
+
+body { @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 antialiased; }
+
+/* Example utility composition */
+.btn-primary {
+  @apply inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors;
+}

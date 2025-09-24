@@ -1,0 +1,18 @@
+import React from 'react';
+
+// Simple Tailwind Button example using the utility class from tailwind.css
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, loading, className = '', ...rest }) => (
+  <button
+    className={`btn-primary ${loading ? 'opacity-70 cursor-wait' : ''} ${className}`.trim()}
+    disabled={rest.disabled || loading}
+    {...rest}
+  >
+    {loading ? 'Loading...' : children}
+  </button>
+);
+
+export default Button;

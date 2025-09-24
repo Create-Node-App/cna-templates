@@ -1,0 +1,33 @@
+/**
+ * Tailwind CSS Config
+ */
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: 'class',
+  content: [
+    './index.html',
+    '<%= srcDir %>/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50: '#f5f8ff',
+          100: '#ebf1ff',
+          200: '#d6e3ff',
+          300: '#adc7ff',
+          400: '#7aa5ff',
+          500: '#3d7dff',
+          600: '#1559e6',
+          700: '#0f44b4',
+          800: '#0d378f',
+          900: '#0c2f75'
+        }
+      },
+      borderRadius: {
+        xl: '1rem'
+      }
+    }
+  },
+  plugins: []
+};

@@ -1,0 +1,7 @@
+/** PostCSS Config (templated, shadcn) */
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};

@@ -1,0 +1,1 @@
+import '<%= projectImportPath %>theme/tailwind.css';
