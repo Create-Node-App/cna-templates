@@ -1,1 +1,1 @@
-import '<%= projectImportPath %>theme/tailwind.css';
+import './tailwind.css';

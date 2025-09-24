@@ -1,1 +1,1 @@
-import '<%= projectImportPath %>theme/global.css';
+import './global.css';
