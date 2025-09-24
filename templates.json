@@ -717,5 +717,39 @@
       "category": "Cross Platform",
       "labels": ["React", "Electron", "Vite", "Cross Platform"]
     }
+    ,
+    {
+      "name": "Tailwind CSS",
+      "slug": "tailwind-css",
+      "description": "Add Tailwind CSS utility-first styling with PostCSS and dark mode class strategy.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-tailwindcss",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "TailwindCSS",
+        "Utility-First",
+        "Styling",
+        "Dark Mode",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "shadcn/ui",
+      "slug": "shadcn-ui",
+      "description": "Add shadcn/ui component primitives (Radix UI + Tailwind CSS) with variant-based theming utilities.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-shadcn",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "shadcn/ui",
+        "TailwindCSS",
+        "Radix UI",
+        "Components",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    }
   ]
 }
