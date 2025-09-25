@@ -29,7 +29,7 @@ Run from repo root:
 ```
 
 ## Repo Structure
-See `docs/PROJECT_STRUCTURE.md`. Top-level:
+See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Top-level:
 - `apps/` deployable applications
 - `packages/` shared libraries
 

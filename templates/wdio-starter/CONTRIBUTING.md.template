@@ -31,7 +31,7 @@ Remote (Selenoid / grid):
 ```
 
 ## Test Architecture
-See `docs/PROJECT_STRUCTURE.md`. Organize by feature/domain. Reuse helpers in `config/` and any shared utils.
+See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Organize by feature/domain. Reuse helpers in `config/` and any shared utils.
 
 ## Spec Authoring Guidelines
 - Keep specs deterministic

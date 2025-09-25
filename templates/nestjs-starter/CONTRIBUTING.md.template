@@ -32,7 +32,7 @@ Or Docker (recommended for DB, etc.):
 ```
 
 ## Architecture
-Read `docs/PROJECT_STRUCTURE.md`. Domain-driven: `src/modules/<domain>` holding controllers, services, entities, dtos.
+Read [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Domain-driven: `src/modules/<domain>` holding controllers, services, entities, dtos.
 
 ## Modules & Providers
 Keep modules focused. Export only necessary providers. Avoid circular dependencies—refactor shared logic to a common module.

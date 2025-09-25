@@ -29,7 +29,7 @@ fnm use
 Run `<%= runCommand%> lint`, `<%= runCommand%> format`, `<%= runCommand%> build` as needed. Keep a clean working tree.
 
 ## Architecture Conventions
-Read `docs/PROJECT_STRUCTURE.md` first. Each feature is self-contained under `src/features/<domain>` with internal folders (components, hooks, services, types).
+Read [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) first. Each feature is self-contained under `src/features/<domain>` with internal folders (components, hooks, services, types).
 
 ## Coding Standards
 - TypeScript strict typing – avoid `any` unless justified

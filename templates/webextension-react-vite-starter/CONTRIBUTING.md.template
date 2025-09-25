@@ -32,7 +32,7 @@ Then load with one of:
 ```
 
 ## Architecture
-See `docs/PROJECT_STRUCTURE.md`. Contexts: background, content scripts, UI (popup/options). Shared logic in `src/shared` (if present).
+See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Contexts: background, content scripts, UI (popup/options). Shared logic in `src/shared` (if present).
 
 ## Extension Contexts
 Be explicit about what runs where. Content scripts shouldn’t import background-only APIs directly.

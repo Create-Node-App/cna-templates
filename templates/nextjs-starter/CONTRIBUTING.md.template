@@ -29,7 +29,7 @@ Development server:
 ```
 
 ## Architecture & Routing
-Consult `docs/PROJECT_STRUCTURE.md`. App Router layout lives under `src/app/`. Features expose components & logic under `src/features/<domain>`.
+Consult [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). App Router layout lives under `src/app/`. Features expose components & logic under `src/features/<domain>`.
 
 ## Feature Modules
 Encapsulate UI, hooks, services, and types. Export a minimal public surface (`index.ts`).
