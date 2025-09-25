@@ -26,7 +26,7 @@ AI assistants only. Humans: see CONTRIBUTING.md and docs/.
 
 When adding/modifying extension UI or logic:
 
-1. Identify target feature folder under `[src]/features/*` (justify new ones) or background/content script area
+1. Identify target feature folder under `<%= srcDir %>/features/*` (justify new ones) or background/content script area
 2. Read referenced docs first
 3. Follow existing messaging/storage patterns (avoid ad-hoc globals)
 4. Present proposed file tree + diff plan BEFORE writing code
