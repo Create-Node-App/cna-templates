@@ -19,6 +19,9 @@
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
   },
+  "exclude": [
+    "tools/**/*"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
