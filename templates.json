@@ -268,9 +268,9 @@
       ]
     },
     {
-      "name": "Husky + Lint Staged",
-      "slug": "husky-lint-staged",
-      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged.",
+      "name": "Husky + Lint Staged (Monorepo)",
+      "slug": "monorepo-husky-lint-staged",
+      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged for monorepo projects.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
       "type": ["monorepo"],
       "category": "Tooling",
@@ -279,7 +279,8 @@
         "Lint Staged",
         "Code Quality",
         "Pre-commit",
-        "Automation"
+        "Automation",
+        "Monorepo"
       ]
     },
     {
@@ -522,7 +523,7 @@
       "name": "Cross Platform Apps with Ionic React + Capacitor",
       "slug": "ionic-react-capacitor",
       "description": "Add Ionic React and Capacitor to your cross platform react app",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic-capacitor",
       "type": "react",
       "category": "Cross Platform",
       "labels": ["Ionic", "Capacitor", "React", "Cross Platform"]

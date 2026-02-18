@@ -14,8 +14,28 @@ on:
   schedule:
     - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
 
+permissions:
+  contents: read
+
 jobs:
+  validate:
+    name: Validate templates.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run validation script
+        run: node scripts/validate-templates.js
+
   generate-combinations:
+    name: Generate test combinations
+    needs: validate
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -58,6 +78,7 @@ jobs:
           EOF
 
   test-combinations:
+    name: Test ${{ matrix.combination.template }}
     needs: generate-combinations
     strategy:
       fail-fast: false
@@ -81,6 +102,9 @@ jobs:
 
           # Move to the generated project
           cd my-project
+
+          # Install dependencies
+          npm install
 
           # Run format and lint fix if present
           npm run format --if-present

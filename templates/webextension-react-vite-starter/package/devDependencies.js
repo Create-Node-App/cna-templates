@@ -3,8 +3,6 @@ module.exports = {
   '@types/node': '^22.13.4',
   '@types/react': '^19.0.8',
   '@types/react-dom': '^19.0.3',
-  '@types/react-router': '^5.1.20',
-  '@types/react-router-dom': '^5.3.3',
   '@types/webextension-polyfill': '^0.12.1',
   '@types/ws': '^8.5.4',
   '@vitejs/plugin-react': '^4.3.4',
