@@ -172,7 +172,7 @@ function checkCommonIssues() {
 }
 
 function main() {
-  console.log('�� Checking dependencies across templates and extensions...\n');
+  console.log('🔍 Checking dependencies across templates and extensions...\n');
 
   checkTemplates();
   console.log();
