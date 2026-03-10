@@ -16,11 +16,17 @@ This repo is the template and extension bank for [create-awesome-node-app](https
 ## How to test
 
 ```sh
-npx create-awesome-node-app --template <slug> --addons <ext1> <ext2>
-cd my-project && npm install && npm run lint:fix && npm run build
+# With published slugs (CI=true uses customOptions defaults automatically)
+CI=true npx create-awesome-node-app my-app --template <slug> --addons <ext1> <ext2>
+cd my-app && npm install && npm run lint:fix && npm run build
+
+# Local extension against a published template (best for extension development)
+CI=true npx create-awesome-node-app my-app \
+  --template react-vite-boilerplate \
+  --addons "file://$PWD?subdir=extensions/my-extension"
 ```
 
-See [docs/TESTING.md](./docs/TESTING.md) for more examples and CI details.
+See [docs/TESTING.md](./docs/TESTING.md) for more examples, `file://` caveats, and CI details.
 
 ## Docs
 

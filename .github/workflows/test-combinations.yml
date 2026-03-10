@@ -74,7 +74,8 @@ jobs:
             return { template: template.slug, extensions: selectedExtensions };
           });
 
-          console.log('::set-output name=matrix::' + JSON.stringify(randomCombinations));
+          const matrix = JSON.stringify(randomCombinations);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'matrix=' + matrix + '\n');
           EOF
 
   test-combinations:
