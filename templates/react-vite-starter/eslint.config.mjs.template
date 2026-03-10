@@ -5,7 +5,6 @@ import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
-import jest from 'eslint-plugin-jest';
 
 export default [
   {
@@ -23,7 +22,6 @@ export default [
       'release/',
       '.prettierrc.js',
       'postcss.config.js',
-      'jest.config.js',
     ],
   },
   {
@@ -41,7 +39,6 @@ export default [
         ...globals.commonjs,
         ...globals.node,
         ...globals.es2020,
-        ...globals.jest,
       },
     },
   },
@@ -71,7 +68,6 @@ export default [
         ...globals.commonjs,
         ...globals.node,
         ...globals.es2020,
-        ...globals.jest,
       },
     },
   },
@@ -84,7 +80,6 @@ export default [
       prettier,
       'jsx-a11y': jsxA11y,
       import: importPlugin,
-      jest,
     },
     settings: {
       react: {
@@ -98,11 +93,6 @@ export default [
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
-      'jest/no-disabled-tests': 'warn',
-      'jest/no-focused-tests': 'error',
-      'jest/no-identical-title': 'error',
-      'jest/prefer-to-have-length': 'warn',
-      'jest/valid-expect': 'error',
     },
   },
 ];

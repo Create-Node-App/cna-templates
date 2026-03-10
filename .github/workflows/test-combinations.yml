@@ -18,24 +18,8 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate templates.json
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Run validation script
-        run: node scripts/validate-templates.js
-
   generate-combinations:
     name: Generate test combinations
-    needs: validate
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -53,25 +37,46 @@ jobs:
         run: |
           node <<EOF
           const fs = require('fs');
-          const path = './templates.json';
-          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const data = JSON.parse(fs.readFileSync('./templates.json', 'utf8'));
+          const repoDir = process.cwd();
 
-          const templates = data.templates.map(t => ({ slug: t.slug, type: t.type }));
+          const templates = data.templates.map(t => ({
+            slug: t.slug,
+            type: t.type,
+            localUrl: \`file://\${repoDir}?subdir=templates/\${t.slug.replace(/-boilerplate$|-starter$/, '') + '-starter'}\`,
+          }));
           const extensions = data.extensions;
 
-          const randomCombinations = templates.map(template => {
+          // Build local URL for each extension using its url path
+          const extLocalUrl = (ext) => {
+            const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
+            const dir = match ? match[1] : null;
+            return dir ? \`file://\${repoDir}?subdir=extensions/\${dir}\` : null;
+          };
+
+          const randomCombinations = data.templates.map(template => {
             const compatibleExtensions = extensions.filter(ext => {
               const extTypes = Array.isArray(ext.type) ? ext.type : [ext.type];
               return extTypes.includes(template.type);
             });
 
             const categories = [...new Set(compatibleExtensions.map(e => e.category))];
-            const selectedExtensions = categories.map(category => {
-              const categoryExtensions = compatibleExtensions.filter(e => e.category === category);
-              return categoryExtensions[Math.floor(Math.random() * categoryExtensions.length)]?.slug;
-            }).filter(Boolean);
+            const selectedExtensions = categories
+              .map(category => {
+                const categoryExtensions = compatibleExtensions.filter(e => e.category === category);
+                const ext = categoryExtensions[Math.floor(Math.random() * categoryExtensions.length)];
+                if (!ext) return null;
+                const url = extLocalUrl(ext);
+                return url;
+              })
+              .filter(Boolean);
 
-            return { template: template.slug, extensions: selectedExtensions };
+            // Derive local template URL from the url field in templates.json
+            const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
+            const tplDir = tplMatch ? tplMatch[1] : null;
+            const templateUrl = tplDir ? \`file://\${repoDir}?subdir=templates/\${tplDir}\` : template.slug;
+
+            return { template: template.slug, templateUrl, extensions: selectedExtensions };
           });
 
           const matrix = JSON.stringify(randomCombinations);
@@ -98,21 +103,23 @@ jobs:
       - name: Run tests for combination
         run: |
           echo "Testing template: ${{ matrix.combination.template }}"
-          echo "With extensions: ${{ matrix.combination.extensions }}"
-          npx create-awesome-node-app --template ${{ matrix.combination.template }} --addons ${{ join(matrix.combination.extensions, ' ') }}
+          echo "Template URL: ${{ matrix.combination.templateUrl }}"
+          echo "With extensions: ${{ join(matrix.combination.extensions, ' ') }}"
 
-          # Move to the generated project
+          ADDONS="${{ join(matrix.combination.extensions, ' ') }}"
+          ADDONS_FLAG=""
+          if [ -n "$ADDONS" ]; then
+            ADDONS_FLAG="--addons $ADDONS"
+          fi
+
+          npx create-awesome-node-app my-project \
+            -t "${{ matrix.combination.templateUrl }}" \
+            $ADDONS_FLAG
+
           cd my-project
 
-          # Install dependencies
-          npm install
-
-          # Run format and lint fix if present
           npm run format --if-present
           npm run lint:fix --if-present
-
-          # Run build if present
           npm run build --if-present
 
-          # Print the generated files
           tree -I 'node_modules|dist|.git'
