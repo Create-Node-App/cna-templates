@@ -5,7 +5,7 @@ This directory serves as a template for creating new features in the application
 ## Structure
 
 ```
-_feature-template/
+_feature-template_/
 |
 +-- components/ # Feature-specific components
 |   +-- ExampleComponent.tsx

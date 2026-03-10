@@ -1,0 +1,19 @@
+{
+  "name": "nextjs-drizzle-postgres-extension",
+  "dependencies": {
+    "drizzle-orm": "^0.45.1",
+    "pg": "^8.17.2",
+    "postgres": "^3.4.8"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.8",
+    "dotenv": "^17.2.3"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  }
+}

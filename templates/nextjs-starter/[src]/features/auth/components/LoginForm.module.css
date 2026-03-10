@@ -39,7 +39,7 @@
   border-radius: 4px;
 }
 
-button {
+.button {
   width: 100%;
   padding: 0.75rem;
   background: #2563eb;
@@ -51,11 +51,11 @@ button {
   transition: background-color 0.2s;
 }
 
-button:hover {
+.button:hover {
   background: #1d4ed8;
 }
 
-button:disabled {
+.button:disabled {
   background: #93c5fd;
   cursor: not-allowed;
 }

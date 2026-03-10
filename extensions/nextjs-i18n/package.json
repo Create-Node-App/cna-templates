@@ -1,0 +1,7 @@
+{
+  "name": "nextjs-i18n-extension",
+  "dependencies": {
+    "next-intl": "^4.7.0"
+  },
+  "devDependencies": {}
+}

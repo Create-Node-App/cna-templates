@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { useExample } from '../hooks';
 import styles from './ExampleComponent.module.css';

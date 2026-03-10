@@ -1,22 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { login as loginService } from '../services/auth-service';
+import { doSomething as doSomethingService } from '../services';
 
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export const useAuth = () => {
+export const useExample = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = async (credentials: LoginCredentials) => {
+  const doSomething = async (value: string) => {
     try {
       setIsLoading(true);
       setError(null);
-      await loginService(credentials);
+      await doSomethingService(value);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -24,9 +19,5 @@ export const useAuth = () => {
     }
   };
 
-  return {
-    login,
-    isLoading,
-    error,
-  };
+  return { doSomething, isLoading, error };
 };

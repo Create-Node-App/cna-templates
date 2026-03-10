@@ -1,0 +1,10 @@
+{
+  "app": {
+    "title": "My App",
+    "description": "A Next.js application"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  }
+}

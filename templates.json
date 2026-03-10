@@ -186,6 +186,29 @@
         "Prettier",
         "Automated Testing"
       ]
+    },
+    {
+      "name": "NextJS SaaS AI Starter",
+      "slug": "nextjs-saas-ai-starter",
+      "description": "A production-ready multi-tenant Next.js SaaS starter with AI (OpenAI/Anthropic), Auth.js v5, Drizzle ORM + PostgreSQL, Tailwind CSS v4, shadcn/ui, RBAC, audit logs, webhooks, and i18n.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-saas-ai-starter",
+      "type": "nextjs",
+      "category": "fullstack-applications",
+      "labels": [
+        "Next.js",
+        "SaaS",
+        "AI",
+        "Multi-tenant",
+        "TypeScript",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "Drizzle",
+        "PostgreSQL",
+        "Auth.js",
+        "RBAC",
+        "i18n",
+        "Production-ready"
+      ]
     }
   ],
   "extensions": [
@@ -792,6 +815,78 @@
         "Components",
         "TypeScript",
         "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Tailwind CSS for Next.js",
+      "slug": "nextjs-tailwindcss",
+      "description": "Add Tailwind CSS v4 to your Next.js project with PostCSS configuration and utility-first CSS setup.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-tailwindcss",
+      "type": "nextjs",
+      "category": "UI",
+      "labels": [
+        "Tailwind CSS",
+        "CSS",
+        "Styling",
+        "PostCSS"
+      ]
+    },
+    {
+      "name": "shadcn/ui for Next.js",
+      "slug": "nextjs-shadcn",
+      "description": "Add shadcn/ui component library to your Next.js project with Radix UI primitives, class-variance-authority, and a cn() utility.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-shadcn",
+      "type": "nextjs",
+      "category": "UI",
+      "labels": [
+        "shadcn/ui",
+        "Radix UI",
+        "Components",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "name": "Drizzle ORM + PostgreSQL for Next.js",
+      "slug": "nextjs-drizzle-postgres",
+      "description": "Add Drizzle ORM with PostgreSQL to your Next.js project. Includes schema setup, migrations, Docker Compose for local development, and db:* scripts.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-drizzle-postgres",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Drizzle",
+        "PostgreSQL",
+        "ORM",
+        "Database",
+        "Docker"
+      ]
+    },
+    {
+      "name": "Auth.js v5 for Next.js",
+      "slug": "nextjs-auth",
+      "description": "Add Auth.js v5 (next-auth beta) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-auth",
+      "type": "nextjs",
+      "category": "Auth",
+      "labels": [
+        "Auth.js",
+        "NextAuth",
+        "Authentication",
+        "OAuth",
+        "Session"
+      ]
+    },
+    {
+      "name": "next-intl (i18n) for Next.js",
+      "slug": "nextjs-i18n",
+      "description": "Add internationalization to your Next.js project using next-intl with English and Spanish translations, middleware routing, and type-safe message access.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-i18n",
+      "type": "nextjs",
+      "category": "Tooling",
+      "labels": [
+        "i18n",
+        "Internationalization",
+        "next-intl",
+        "Localization"
       ]
     }
   ]
