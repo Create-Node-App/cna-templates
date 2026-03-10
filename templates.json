@@ -6,42 +6,79 @@
       "name": "Frontend Applications",
       "description": "Templates for building modern web interfaces.",
       "details": "Discover templates for React, Vue, and other frontend frameworks to build beautiful user interfaces.",
-      "labels": ["Frontend", "UI", "React", "Vue", "Web"]
+      "labels": [
+        "Frontend",
+        "UI",
+        "React",
+        "Vue",
+        "Web"
+      ]
     },
     {
       "slug": "backend-applications",
       "name": "Backend Applications",
       "description": "Templates for building robust server-side applications.",
       "details": "Explore templates for Node.js, Express, NestJS, and other backend frameworks to build powerful APIs.",
-      "labels": ["Backend", "API", "Server", "Node.js", "Express", "NestJS"]
+      "labels": [
+        "Backend",
+        "API",
+        "Server",
+        "Node.js",
+        "Express",
+        "NestJS"
+      ]
     },
     {
       "slug": "fullstack-applications",
       "name": "Full Stack Applications",
       "description": "Templates for building complete web applications.",
       "details": "Find templates for Next.js, Remix, and other full stack frameworks to build end-to-end applications.",
-      "labels": ["FullStack", "Frontend", "Backend", "Next.js", "Remix"]
+      "labels": [
+        "FullStack",
+        "Frontend",
+        "Backend",
+        "Next.js",
+        "Remix"
+      ]
     },
     {
       "slug": "monorepo-boilerplate",
       "name": "Monorepo Boilerplate",
       "description": "Templates for managing multiple packages in a single repository.",
       "details": "Streamline development with monorepo templates using tools like Nx, Turborepo, and Lerna for efficient code sharing.",
-      "labels": ["Monorepo", "Workspaces", "Turborepo", "Nx", "Lerna"]
+      "labels": [
+        "Monorepo",
+        "Workspaces",
+        "Turborepo",
+        "Nx",
+        "Lerna"
+      ]
     },
     {
       "slug": "user-acceptance-testing",
       "name": "User Acceptance Testing",
       "description": "Templates with built-in testing frameworks for end-to-end validation.",
       "details": "Ensure your applications meet user requirements with templates featuring Cypress, Playwright, or Selenium for comprehensive testing.",
-      "labels": ["Testing", "End-to-End", "Cypress", "Playwright", "Selenium"]
+      "labels": [
+        "Testing",
+        "End-to-End",
+        "Cypress",
+        "Playwright",
+        "Selenium"
+      ]
     },
     {
       "slug": "web-extension",
       "name": "Web Extension",
       "description": "Templates for building browser extensions and add-ons.",
       "details": "Develop cross-browser extensions with templates that support Chrome, Firefox, and Edge with modern web technologies.",
-      "labels": ["WebExtension", "Browser", "Chrome", "Firefox", "Edge"]
+      "labels": [
+        "WebExtension",
+        "Browser",
+        "Chrome",
+        "Firefox",
+        "Edge"
+      ]
     }
   ],
   "templates": [
@@ -77,20 +114,6 @@
         "Prettier",
         "Customizable",
         "Production-ready"
-      ],
-      "customOptions": [
-        {
-          "name": "srcDir",
-          "type": "text",
-          "message": "Subdirectory to put all source content (e.g., `src`). Leave blank to use the root directory.",
-          "initial": "src"
-        },
-        {
-          "name": "projectImportPath",
-          "type": "text",
-          "message": "Import alias to use for the project, e.g., `@/`",
-          "initial": "@/"
-        }
       ]
     },
     {
@@ -108,15 +131,6 @@
         "Workspaces",
         "Efficient",
         "Multi-package"
-      ],
-      "customOptions": [
-        {
-          "name": "scope",
-          "type": "text",
-          "message": "Scope to use for the packages, e.g., `@my-org/`",
-          "initial": "",
-          "required": false
-        }
       ]
     },
     {
@@ -136,20 +150,6 @@
         "React Router",
         "Fast",
         "Lightweight"
-      ],
-      "customOptions": [
-        {
-          "name": "srcDir",
-          "type": "text",
-          "message": "Subdirectory to put all source content (e.g., `src`, `app`). Leave blank to use the root directory.",
-          "initial": "src"
-        },
-        {
-          "name": "projectImportPath",
-          "type": "text",
-          "message": "Import alias to use for the project, e.g., `@/`",
-          "initial": "@/"
-        }
       ]
     },
     {
@@ -168,20 +168,6 @@
         "Polyfill",
         "ESLint",
         "Prettier"
-      ],
-      "customOptions": [
-        {
-          "name": "srcDir",
-          "type": "text",
-          "message": "Subdirectory to put all source content (e.g., `src`, `app`). Leave blank to use the root directory.",
-          "initial": "src"
-        },
-        {
-          "name": "projectImportPath",
-          "type": "text",
-          "message": "Import alias to use for the project, e.g., `@/`",
-          "initial": "@/"
-        }
       ]
     },
     {
@@ -232,7 +218,9 @@
       "slug": "github-setup-uat",
       "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more. It also adds a GitHub Action to run User Acceptance Tests using Selenium.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/wdio-github-setup",
-      "type": ["webdriverio"],
+      "type": [
+        "webdriverio"
+      ],
       "category": "Tooling",
       "labels": [
         "GitHub",
@@ -272,7 +260,9 @@
       "slug": "monorepo-husky-lint-staged",
       "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged for monorepo projects.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
-      "type": ["monorepo"],
+      "type": [
+        "monorepo"
+      ],
       "category": "Tooling",
       "labels": [
         "Husky",
@@ -312,7 +302,11 @@
       "slug": "jest-react-testing-library",
       "description": "Add Jest and React Testing Library for unit and integration testing in React projects.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
-      "type": ["react", "webextension-react", "nextjs"],
+      "type": [
+        "react",
+        "webextension-react",
+        "nextjs"
+      ],
       "category": "Testing",
       "labels": [
         "Jest",
@@ -359,7 +353,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hook-form",
       "type": "react",
       "category": "State Management",
-      "labels": ["React Hook Form", "State Management", "Form Validation"]
+      "labels": [
+        "React Hook Form",
+        "State Management",
+        "Form Validation"
+      ]
     },
     {
       "name": "Recoil.js (Deprecated)",
@@ -368,7 +366,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
       "type": "react",
       "category": "State Management",
-      "labels": ["Recoil.js", "State Management", "Atomic State Management"]
+      "labels": [
+        "Recoil.js",
+        "State Management",
+        "Atomic State Management"
+      ]
     },
     {
       "name": "Jotai",
@@ -377,7 +379,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-jotai",
       "type": "react",
       "category": "State Management",
-      "labels": ["Jotai", "State Management", "Atomic State Management"]
+      "labels": [
+        "Jotai",
+        "State Management",
+        "Atomic State Management"
+      ]
     },
     {
       "name": "Easy State",
@@ -431,7 +437,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-mobx",
       "type": "react",
       "category": "State Management",
-      "labels": ["MobX", "State Management", "Bidirectional State Management"]
+      "labels": [
+        "MobX",
+        "State Management",
+        "Bidirectional State Management"
+      ]
     },
     {
       "name": "Teaful",
@@ -455,7 +465,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-valtio",
       "type": "react",
       "category": "State Management",
-      "labels": ["Valtio", "State Management", "Bidirectional State Management"]
+      "labels": [
+        "Valtio",
+        "State Management",
+        "Bidirectional State Management"
+      ]
     },
     {
       "name": "XState",
@@ -526,7 +540,12 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic-capacitor",
       "type": "react",
       "category": "Cross Platform",
-      "labels": ["Ionic", "Capacitor", "React", "Cross Platform"]
+      "labels": [
+        "Ionic",
+        "Capacitor",
+        "React",
+        "Cross Platform"
+      ]
     },
     {
       "name": "Docker Compose Setup",
@@ -551,7 +570,13 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
       "type": "react",
       "category": "Cross Platform",
-      "labels": ["Android", "React", "Android Studio", "Gradle", "Kotlin"]
+      "labels": [
+        "Android",
+        "React",
+        "Android Studio",
+        "Gradle",
+        "Kotlin"
+      ]
     },
     {
       "name": "Semantic UI React",
@@ -560,7 +585,12 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
       "type": "react",
       "category": "UI",
-      "labels": ["React", "Semantic UI", "Semantic UI React", "CSS"]
+      "labels": [
+        "React",
+        "Semantic UI",
+        "Semantic UI React",
+        "CSS"
+      ]
     },
     {
       "name": "Semantic UI React with Theme",
@@ -698,7 +728,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-million",
       "type": "react",
       "category": "Tooling",
-      "labels": ["React", "Million", "Optimization"]
+      "labels": [
+        "React",
+        "Million",
+        "Optimization"
+      ]
     },
     {
       "name": "OpenAPI",
@@ -707,7 +741,11 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
       "type": "nestjs-backend",
       "category": "Tooling",
-      "labels": ["NestJS", "OpenAPI", "Swagger"]
+      "labels": [
+        "NestJS",
+        "OpenAPI",
+        "Swagger"
+      ]
     },
     {
       "name": "React Electron Vite",
@@ -716,9 +754,13 @@
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-electron-vite",
       "type": "react",
       "category": "Cross Platform",
-      "labels": ["React", "Electron", "Vite", "Cross Platform"]
-    }
-    ,
+      "labels": [
+        "React",
+        "Electron",
+        "Vite",
+        "Cross Platform"
+      ]
+    },
     {
       "name": "Tailwind CSS",
       "slug": "tailwind-css",

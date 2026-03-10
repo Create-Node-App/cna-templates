@@ -70,19 +70,23 @@ Extensions are simpler — they only add files and dependencies.
 Everything else in the extension directory is copied into the project,
 respecting all file suffix conventions above.
 
-## `customOptions`
+## `customOptions` — Interactive Prompts
 
 Only templates can define these. They become EJS variables and control bracket directory renaming.
 
+Define them in `cna.config.json` at the root of the template directory:
+
 ```json
-"customOptions": [
-  {
-    "name": "srcDir",
-    "type": "text",
-    "message": "Source directory (e.g. `src`). Leave blank for root.",
-    "initial": "src"
-  }
-]
+{
+  "customOptions": [
+    {
+      "name": "srcDir",
+      "type": "text",
+      "message": "Source directory (e.g. `src`). Leave blank for root.",
+      "initial": "src"
+    }
+  ]
+}
 ```
 
 | Field | Description |
@@ -90,5 +94,8 @@ Only templates can define these. They become EJS variables and control bracket d
 | `name` | Used as `<%= name %>` in templates and matches `[name]/` dirs |
 | `type` | Prompt type (`"text"` is the standard) |
 | `message` | Question shown in the CLI |
-| `initial` | Default value |
+| `initial` | Default value (used automatically in non-interactive/CI mode) |
 | `required` | Optional. Defaults to true |
+
+> `cna.config.json` is co-located with the template so it works with both slug resolution and `file://` local URLs.
+> Do **not** put `customOptions` in `templates.json` — it is no longer read from there.

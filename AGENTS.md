@@ -11,7 +11,7 @@ This repo is the template and extension bank for [create-awesome-node-app](https
 - **`.append` files** — content is appended to the matching existing file instead of replacing it.
 - **`.if-pnpm` files** — only included when the user picks pnpm.
 - **`[bracket]/` dirs** — renamed based on the matching `customOption` value.
-- **`customOptions`** — template-only field that defines interactive CLI prompts; answers become EJS variables.
+- **`cna.config.json`** — lives in the template directory, defines `customOptions` (interactive CLI prompts; answers become EJS variables). Replaces the old `customOptions` field in `templates.json`.
 
 ## How to test
 

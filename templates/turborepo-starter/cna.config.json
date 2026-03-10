@@ -1,0 +1,11 @@
+{
+  "customOptions": [
+    {
+      "name": "scope",
+      "type": "text",
+      "message": "Scope to use for the packages, e.g., `@my-org/`",
+      "initial": "",
+      "required": false
+    }
+  ]
+}

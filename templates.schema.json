@@ -28,8 +28,7 @@
           "url": { "type": "string" },
           "type": { "oneOf": [ { "type": "string" }, { "type": "array", "items": { "type": "string" } } ] },
           "category": { "type": "string" },
-          "labels": { "type": "array", "items": { "type": "string" } },
-          "customOptions": { "type": "array", "items": { "type": "object" } }
+          "labels": { "type": "array", "items": { "type": "string" } }
         },
         "required": ["name", "slug", "description", "url", "type", "category", "labels"]
       }
