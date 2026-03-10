@@ -1,0 +1,93 @@
+services:
+  # =============================================================================
+  # Development Container
+  # =============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mount workspace
+      - ../..:/workspaces:cached
+      # Persist pnpm store for faster installs
+      - pnpm-store:/home/node/.local/share/pnpm
+      # Mount AWS credentials from host (read-only for security)
+      - ${HOME}/.aws:/home/node/.aws:ro
+    command: sleep infinity
+    environment:
+      # Database connection for development
+      DATABASE_URL: postgresql://saas_app:saas_app@db:5432/saas_template_dev
+      # Node environment
+      NODE_ENV: development
+      # pnpm store location
+      PNPM_HOME: /home/node/.local/share/pnpm
+      # MinIO S3-compatible storage
+      S3_ENDPOINT: http://minio:9000
+      # Public endpoint for browser-accessible presigned URLs
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      S3_ACCESS_KEY: saas_app
+      S3_SECRET_KEY: saas_app123
+      S3_BUCKET: saas-template-uploads
+      S3_REGION: us-east-1
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    # Expose app ports when running via DevContainer CLI (no IDE forwarding)
+    ports:
+      - '3000:3000' # Next.js dev server
+      - '4982:4982' # Drizzle Studio
+
+  # =============================================================================
+  # PostgreSQL 17 with pgvector 0.8.1 extension
+  # Official image: https://hub.docker.com/r/pgvector/pgvector
+  # =============================================================================
+  db:
+    image: pgvector/pgvector:0.8.1-pg17-bookworm
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    environment:
+      POSTGRES_USER: saas_app
+      POSTGRES_PASSWORD: saas_app
+      POSTGRES_DB: saas_template_dev
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U saas_app -d saas_template_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Expose port for external tools (DBeaver, etc.)
+    ports:
+      - '5432:5432'
+
+  # =============================================================================
+  # MinIO - S3-compatible object storage for local development
+  # Console: http://localhost:9001 (login: saas_app / saas_app123)
+  # =============================================================================
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: saas_app
+      MINIO_ROOT_PASSWORD: saas_app123
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # MinIO Console
+
+volumes:
+  postgres-data:
+    name: saas-template-postgres-data
+  pnpm-store:
+    name: saas-template-pnpm-store
+  minio-data:
+    name: saas-template-minio-data

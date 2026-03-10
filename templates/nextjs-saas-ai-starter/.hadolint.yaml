@@ -1,0 +1,20 @@
+# Hadolint configuration for Next.js SaaS AI Template
+# https://github.com/hadolint/hadolint
+#
+# This is a development container — some production-focused rules are relaxed.
+---
+failure-threshold: error
+
+ignore:
+  # DL3006: Always tag the version of an image explicitly
+  # The devcontainers base image uses rolling tags by design
+  - DL3006
+  # DL3008: Pin versions in apt-get install
+  # Dev container tools don't need pinned versions
+  - DL3008
+  # DL3016: Pin versions in npm install
+  # pnpm version is pinned explicitly in package.json
+  - DL3016
+  # DL3028: Pin versions in gem install
+  # Not applicable (no Ruby)
+  - DL3028

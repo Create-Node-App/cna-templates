@@ -1,0 +1,35 @@
+# Grype configuration for Next.js SaaS AI Template
+# https://github.com/anchore/grype
+#
+# This is a template repository. Transitive dependency vulnerabilities in
+# devDependencies (testing, storybook, build tools) are tracked but do not
+# block CI. Direct runtime dependency vulnerabilities should be fixed promptly.
+---
+
+# Only fail on Critical severity for this template project
+fail-on-severity: critical
+
+# Database configuration
+db:
+  auto-update: true
+
+# Ignore specific low-risk findings for this template
+ignore:
+  # elliptic: no fix available yet
+  - vulnerability: GHSA-848j-6mx2-7j84
+    reason: "No fix available for this advisory"
+  # @tootallnate/once: transitively used, low risk
+  - vulnerability: GHSA-vpq2-c234-7xj6
+    reason: "Transitive dependency, low severity"
+  # esbuild: dev-only, no production exposure
+  - vulnerability: GHSA-67mh-4wv8-2f99
+    reason: "Dev-only build tool, not exposed in production"
+  # qs: low severity
+  - vulnerability: GHSA-w7fw-mjwx-w883
+    reason: "Low severity, queued for update"
+  # bn.js: low/medium severity
+  - vulnerability: GHSA-378v-28hj-76wf
+    reason: "Transitive dependency, medium severity"
+  # markdown-it: medium severity, transitive
+  - vulnerability: GHSA-38c4-r59v-3vqw
+    reason: "Transitive dependency"
