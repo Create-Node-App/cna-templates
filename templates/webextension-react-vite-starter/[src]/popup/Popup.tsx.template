@@ -9,6 +9,8 @@ const openOptions = () => {
   }
 };
 
+const canOpenOptions = Boolean(Browser.runtime.openOptionsPage);
+
 const Popup = () => {
   return (
     <div className="popup">
@@ -35,8 +37,8 @@ const Popup = () => {
           </p>
         </div>
 
-        <button type="button" className="popup__button" onClick={openOptions}>
-          Open options
+        <button type="button" className="popup__button" onClick={openOptions} disabled={!canOpenOptions}>
+          {canOpenOptions ? 'Open options' : 'Options unavailable'}
         </button>
       </div>
     </div>

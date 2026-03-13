@@ -5,6 +5,9 @@ body {
   --popup-text: #f8fafc;
   --popup-muted: #cbd5e1;
   --popup-accent: #93c5fd;
+  --popup-button-gradient-start: #3b82f6;
+  --popup-button-gradient-end: #2563eb;
+  --popup-button-text: #eff6ff;
   width: 320px;
   min-height: 280px;
   margin: 0;

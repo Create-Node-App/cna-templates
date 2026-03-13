@@ -12,7 +12,7 @@ describe('AppController', () => {
     }).compile();
   });
 
-  describe('getHello', () => {
+  describe('getStatus', () => {
     it('should return starter status metadata', () => {
       const appController = app.get(AppController);
       expect(appController.getStatus()).toEqual(

@@ -32,7 +32,7 @@
 .landing__title {
   margin: 0 0 0.75rem;
   font-size: clamp(2.4rem, 8vw, 4.25rem);
-  line-height: 0.95;
+  line-height: 1.1;
   letter-spacing: -0.05em;
 }
 
