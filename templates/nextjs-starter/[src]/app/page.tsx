@@ -1,94 +1,99 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 
+const quickStartSteps = [
+  {
+    title: "Shape your first route",
+    description: "Update this page or add a new route under src/app to define your app flow.",
+  },
+  {
+    title: "Add a feature slice",
+    description: "Group UI, hooks, services, and types by feature so the codebase stays easy to scale.",
+  },
+  {
+    title: "Ship with confidence",
+    description: "Use the built-in format, lint, and type-check scripts as you grow the starter.",
+  },
+];
+
+const starterChecklist = [
+  "Edit src/app/page.tsx to reflect your product",
+  "Create your first feature inside src/features",
+  "Run npm run dev and start iterating",
+];
+
 export default function Home() {
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
+      <section className={styles.hero}>
+        <span className={styles.badge}>Create Awesome Node App</span>
+        <div className={styles.brand}>
+          <div className={styles.brandMark}>
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
+              className={styles.logo}
+              src="/next.svg"
+              alt="Next.js Logo"
+              width={136}
+              height={28}
               priority
             />
-          </a>
+          </div>
+          <p className={styles.hint}>Setup complete. Your Next.js starter is ready to become a product.</p>
         </div>
-      </div>
+        <h1 className={styles.title}>Start with a clean feature-based foundation.</h1>
+        <p className={styles.lead}>
+          This template gives you a lightweight App Router setup that is easy to shape, extend, and pair with the
+          compatible CNA addons.
+        </p>
+        <div className={styles.description}>
+          <p>
+            First edit:&nbsp;
+            <code className={styles.code}>src/app/page.tsx</code>
+          </p>
+          <p>
+            Feature home:&nbsp;
+            <code className={styles.code}>src/features</code>
+          </p>
+        </div>
+      </section>
 
-      <div className={styles.center}>
+      <section className={styles.grid}>
+        {quickStartSteps.map((step) => (
+          <article key={step.title} className={styles.card}>
+            <h2>{step.title}</h2>
+            <p>{step.description}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className={styles.checklist}>
+        <div>
+          <h2>Quick start checklist</h2>
+          <ul className={styles.list}>
+            {starterChecklist.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+
+        <a
+          href="https://nextjs.org/docs"
+          className={styles.resource}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Explore the Next.js docs
+        </a>
+      </section>
+
+      <div className={styles.footer}>
         <Image
-          className={styles.logo}
           src="/next.svg"
           alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          width={96}
+          height={20}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <span>Polished starter, minimal assumptions, ready for compatible addons.</span>
       </div>
     </main>
   );

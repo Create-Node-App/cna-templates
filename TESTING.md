@@ -290,11 +290,13 @@ The workflow:
 
 1. **Generates random combinations** of templates and extensions
 2. **Creates a project** for each combination
-3. **Installs dependencies** 
+3. **Installs dependencies**
 4. **Runs format** (if available)
 5. **Runs lint:fix** (if available)
-6. **Runs build** (if available)
-7. **Outputs project structure** for inspection
+6. **Runs lint** (if available)
+7. **Runs type-check** (if available)
+8. **Runs build** (if available)
+9. **Outputs project structure** for inspection
 
 ### Viewing Test Results
 

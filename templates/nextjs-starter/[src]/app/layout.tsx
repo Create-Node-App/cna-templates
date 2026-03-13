@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Next.js Feature-Based App',
-  description: 'A Next.js application using Feature-Based Architecture generated with Create Awesome Node App',
+  title: 'Next.js Starter',
+  description: 'A polished feature-based Next.js starter generated with Create Awesome Node App',
 };
 
 export default function RootLayout({

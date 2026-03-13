@@ -112,14 +112,17 @@ jobs:
             ADDONS_FLAG="--addons $ADDONS"
           fi
 
-          npx create-awesome-node-app my-project \
+          CI=true npx create-awesome-node-app my-project \
             -t "${{ matrix.combination.templateUrl }}" \
             $ADDONS_FLAG
 
           cd my-project
 
+          npm install
           npm run format --if-present
           npm run lint:fix --if-present
+          npm run lint --if-present
+          npm run type-check --if-present
           npm run build --if-present
 
           tree -I 'node_modules|dist|.git'
