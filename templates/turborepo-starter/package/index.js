@@ -17,7 +17,7 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
     },
     "devDependencies": {
       "@changesets/cli": "^2.25.0",
-      "eslint-config-base": "*",
+      "eslint-config-base": "0.0.0",
       "prettier": "^2.7.1",
       "turbo": "^1.5.5"
     },

@@ -10,7 +10,8 @@
   "dependencies": {
     "<%= scope%>eslint-config-ts": "*",
     "eslint": "^7.23.0",
-    "eslint-config-react-hooks": "^1.0.0"
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2"
   },
   "devDependencies": {
     "typescript": "^4.7.4"

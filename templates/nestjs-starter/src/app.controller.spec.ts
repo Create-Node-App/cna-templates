@@ -13,9 +13,18 @@ describe('AppController', () => {
   });
 
   describe('getHello', () => {
-    it('should return "Hello World!"', () => {
+    it('should return starter status metadata', () => {
       const appController = app.get(AppController);
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getStatus()).toEqual(
+        expect.objectContaining({
+          status: 'ok',
+          message: 'NestJS starter API is running.',
+          routes: {
+            root: '/',
+            health: '/health',
+          },
+        }),
+      );
     });
   });
 });

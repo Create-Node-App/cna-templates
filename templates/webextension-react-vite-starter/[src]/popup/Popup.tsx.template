@@ -1,19 +1,44 @@
 import React from 'react';
+import Browser from 'webextension-polyfill';
 import logo from '@/assets/img/logo.svg';
 import '@/popup/Popup.css';
 
+const openOptions = () => {
+  if (Browser.runtime.openOptionsPage) {
+    Browser.runtime.openOptionsPage();
+  }
+};
+
 const Popup = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code><%= srcDir%>/popup/Popup.tsx</code> and save to reload.
+    <div className="popup">
+      <div className="popup__surface">
+        <div className="popup__brand">
+          <img src={logo} className="popup__logo" alt="Extension logo" />
+          <div>
+            <p className="popup__eyebrow">Extension ready</p>
+            <h1 className="popup__title">Your popup is live.</h1>
+          </div>
+        </div>
+
+        <p className="popup__lead">
+          Start with a clean browser extension shell and customize the popup, options page, background scripts, and
+          content scripts as your product evolves.
         </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React!
-        </a>
-      </header>
+
+        <div className="popup__meta">
+          <p>
+            Edit <code><%= srcDir%>/popup/Popup.tsx</code>
+          </p>
+          <p>
+            Configure <code><%= srcDir%>/options/Options.tsx</code>
+          </p>
+        </div>
+
+        <button type="button" className="popup__button" onClick={openOptions}>
+          Open options
+        </button>
+      </div>
     </div>
   );
 };

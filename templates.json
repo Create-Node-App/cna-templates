@@ -192,7 +192,7 @@
       "slug": "nextjs-saas-ai-starter",
       "description": "A production-ready multi-tenant Next.js SaaS starter with AI (OpenAI/Anthropic), Auth.js v5, Drizzle ORM + PostgreSQL, Tailwind CSS v4, shadcn/ui, RBAC, audit logs, webhooks, and i18n.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-saas-ai-starter",
-      "type": "nextjs",
+      "type": "nextjs-saas-ai",
       "category": "fullstack-applications",
       "labels": [
         "Next.js",
@@ -224,7 +224,8 @@
         "monorepo",
         "backend",
         "nestjs-backend",
-        "nextjs"
+        "nextjs",
+        "nextjs-saas-ai"
       ],
       "category": "Tooling",
       "labels": [
@@ -267,7 +268,8 @@
         "webdriverio",
         "backend",
         "nestjs-backend",
-        "nextjs"
+        "nextjs",
+        "nextjs-saas-ai"
       ],
       "category": "Tooling",
       "labels": [
@@ -309,7 +311,8 @@
         "webdriverio",
         "backend",
         "nestjs-backend",
-        "nextjs"
+        "nextjs",
+        "nextjs-saas-ai"
       ],
       "category": "Tooling",
       "labels": [

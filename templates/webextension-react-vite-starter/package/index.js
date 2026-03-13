@@ -18,7 +18,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       ],
     },
     scripts: {
-      build: "tsc && vite build",
+      build: "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && vite build",
       "build:watch": "vite build --watch",
       wss: "ts-node .webext-config/reload/initReloadServer.ts",
       dev: "(run-p wss build:watch)",
@@ -30,7 +30,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
         "web-ext run --source-dir ./dist --target=chromium",
       "web-ext:firefox":
         "web-ext run --source-dir ./dist --target=firefox-desktop",
-      "type-check": "tsc --noEmit",
+      "type-check": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
     },
   };
 

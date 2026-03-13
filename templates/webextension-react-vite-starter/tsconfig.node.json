@@ -2,15 +2,12 @@
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
   "include": [
-    ".webext-config",
-    ".webext-config/plugins/make-manifest.ts",
-    ".webext-config/plugins/custom-dynamic-import.ts",
-    ".webext-config/plugins/add-hmr.ts",
+    ".webext-config/**/*.ts",
     "manifest.ts",
     "vite.config.ts",
     "package.json"

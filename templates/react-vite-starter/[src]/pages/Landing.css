@@ -1,10 +1,80 @@
-body {
-  background: rgba(20, 5, 5, 1);
-  height: 100vh;
-  overflow: hidden;
+.landing {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top, rgba(99, 102, 241, 0.16), transparent 32%),
+    linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  color: #e5eefc;
+}
+
+.landing__surface {
+  width: min(720px, 100%);
+  padding: 2rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 1.5rem;
+  background: rgba(15, 23, 42, 0.78);
+  box-shadow: 0 24px 70px rgba(2, 6, 23, 0.45);
+}
+
+.landing__eyebrow {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.landing__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2.4rem, 8vw, 4.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.landing__lead {
+  margin: 0 0 1.5rem;
+  max-width: 40rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.landing__meta {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  perspective: 800px;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.landing__meta p {
+  margin: 0;
+  padding: 0.8rem 0.95rem;
+  border-radius: 0.95rem;
+  background: rgba(30, 41, 59, 0.9);
+  color: #dbeafe;
+}
+
+.landing__meta code {
+  font-weight: 700;
+}
+
+.landing__list {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #cbd5e1;
+  line-height: 1.8;
+}
+
+@media (max-width: 640px) {
+  .landing {
+    padding: 1rem;
+  }
+
+  .landing__surface {
+    padding: 1.5rem;
+  }
 }
