@@ -19,7 +19,7 @@
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
   },
-  "exclude": ["./tools/**/*"],
+  "exclude": ["./tools/**/*", "./electron/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"
