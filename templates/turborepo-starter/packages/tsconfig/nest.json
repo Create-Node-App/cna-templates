@@ -12,7 +12,6 @@
     "target": "es2019",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "esModuleInterop": true
   }
 }
