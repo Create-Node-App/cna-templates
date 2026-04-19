@@ -1,1 +1,0 @@
-export { DirectoryClient } from './DirectoryClient';

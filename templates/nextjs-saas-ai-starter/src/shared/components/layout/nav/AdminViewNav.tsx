@@ -6,14 +6,12 @@ import {
   Building2,
   ClipboardList,
   Database,
-  FileSpreadsheet,
   LayoutDashboard,
   Link2,
   Mail,
   Palette,
   Settings,
   Sliders,
-  UserPlus,
   Users,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -61,8 +59,8 @@ export function AdminViewNav({ basePath, permissions, onItemClick }: AdminViewNa
       <SidebarSeparator />
 
       {/* People & Operations */}
-      {canShowNavAny(permissions, ['admin:members', 'admin:invites', 'admin:onboard', 'admin:settings']) && (
-        <SidebarSection title={tAdmin('peopleManagement')} icon={<Users className="h-4 w-4" />} variant="team">
+      {canShowNavAny(permissions, ['admin:members', 'admin:invites', 'admin:settings']) && (
+        <SidebarSection title={tAdmin('members')} icon={<Users className="h-4 w-4" />} variant="team">
           {canShowNav(permissions, 'admin:members') && (
             <SidebarNavItem
               href={`${adminBase}/members`}
@@ -73,14 +71,6 @@ export function AdminViewNav({ basePath, permissions, onItemClick }: AdminViewNa
           )}
           {canShowNav(permissions, 'admin:invites') && (
             <SidebarNavItem href={`${adminBase}/invites`} label={tAdmin('invites')} icon={Mail} onClick={onItemClick} />
-          )}
-          {canShowNav(permissions, 'admin:onboard') && (
-            <SidebarNavItem
-              href={`${adminBase}/onboard-person`}
-              label={tAdmin('onboardPerson')}
-              icon={UserPlus}
-              onClick={onItemClick}
-            />
           )}
           {canShowNav(permissions, 'admin:settings') && (
             <SidebarNavItem
@@ -96,13 +86,7 @@ export function AdminViewNav({ basePath, permissions, onItemClick }: AdminViewNa
       <SidebarSeparator />
 
       {/* Settings & System - collapsible by default */}
-      {canShowNavAny(permissions, [
-        'admin:settings',
-        'admin:roles',
-        'admin:audit',
-        'admin:integrations',
-        'admin:members',
-      ]) && (
+      {canShowNavAny(permissions, ['admin:settings', 'admin:roles', 'admin:audit', 'admin:integrations']) && (
         <SidebarSection
           title="Settings & System"
           icon={<Settings className="h-4 w-4" />}
@@ -157,14 +141,6 @@ export function AdminViewNav({ basePath, permissions, onItemClick }: AdminViewNa
               href={`${adminBase}/integrations`}
               label={tAdmin('integrations')}
               icon={Link2}
-              onClick={onItemClick}
-            />
-          )}
-          {canShowNav(permissions, 'admin:members') && (
-            <SidebarNavItem
-              href={`${adminBase}/bulk-import`}
-              label={tAdmin('bulkImport')}
-              icon={FileSpreadsheet}
               onClick={onItemClick}
             />
           )}

@@ -4,10 +4,10 @@
  * Search Suggestions Component
  *
  * Displays instant search results in a dropdown while the user types.
- * Shows top results grouped by type with similarity scores.
+ * Shows top results with similarity scores.
  */
 
-import { FileText, GraduationCap, Map, User, Zap } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -17,7 +17,7 @@ import { cn } from '@/shared/lib/utils';
 
 interface SearchResult {
   id: string;
-  type: 'role_profile' | 'training' | 'roadmap' | 'capability' | 'skill';
+  type: string;
   title: string;
   subtitle?: string;
   similarity?: number;
@@ -32,34 +32,6 @@ interface SearchSuggestionsProps {
   showSimilarity?: boolean;
   className?: string;
 }
-
-const typeConfig: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  role_profile: {
-    label: 'Role',
-    icon: <User className="h-4 w-4" />,
-    color: 'text-blue-600 dark:text-blue-400',
-  },
-  training: {
-    label: 'Training',
-    icon: <GraduationCap className="h-4 w-4" />,
-    color: 'text-purple-600 dark:text-purple-400',
-  },
-  roadmap: {
-    label: 'Roadmap',
-    icon: <Map className="h-4 w-4" />,
-    color: 'text-emerald-600 dark:text-emerald-400',
-  },
-  capability: {
-    label: 'Capability',
-    icon: <Zap className="h-4 w-4" />,
-    color: 'text-amber-600 dark:text-amber-400',
-  },
-  skill: {
-    label: 'Skill',
-    icon: <FileText className="h-4 w-4" />,
-    color: 'text-cyan-600 dark:text-cyan-400',
-  },
-};
 
 export function SearchSuggestions({
   results,
@@ -128,16 +100,6 @@ export function SearchSuggestions({
     return null;
   }
 
-  // Group by type
-  const grouped = displayResults.reduce(
-    (acc, result) => {
-      if (!acc[result.type]) acc[result.type] = [];
-      acc[result.type].push(result);
-      return acc;
-    },
-    {} as Record<string, SearchResult[]>,
-  );
-
   return (
     <div
       className={cn(
@@ -147,44 +109,36 @@ export function SearchSuggestions({
       style={{ backgroundColor: 'hsl(var(--popover))' }}
     >
       <div className="max-h-[300px] overflow-y-auto">
-        {Object.entries(grouped).map(([type, typeResults]) => {
-          const config = typeConfig[type] || typeConfig.skill;
-          return (
-            <div key={type}>
-              <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground bg-muted/50 flex items-center gap-1.5">
-                <span className={config.color}>{config.icon}</span>
-                <span>{config.label}s</span>
-              </div>
-              {typeResults.map((result) => {
-                const globalIndex = displayResults.indexOf(result);
-                const isSelected = globalIndex === selectedIndex;
+        {displayResults.map((result) => {
+          const globalIndex = displayResults.indexOf(result);
+          const isSelected = globalIndex === selectedIndex;
 
-                return (
-                  <Link
-                    key={result.id}
-                    href={result.url}
-                    onClick={() => onSelect?.(result)}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2 hover:bg-accent transition-colors',
-                      isSelected && 'bg-accent',
-                    )}
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{result.title}</p>
-                      {result.subtitle && <p className="text-xs text-muted-foreground truncate">{result.subtitle}</p>}
-                    </div>
-                    {showSimilarity && result.similarity !== undefined && result.similarity > 0 && (
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Progress value={result.similarity * 100} className="w-16 h-1.5" />
-                        <Badge variant="secondary" className="text-xs tabular-nums">
-                          {Math.round(result.similarity * 100)}%
-                        </Badge>
-                      </div>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
+          return (
+            <Link
+              key={result.id}
+              href={result.url}
+              onClick={() => onSelect?.(result)}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 hover:bg-accent transition-colors',
+                isSelected && 'bg-accent',
+              )}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-md border bg-background shrink-0">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{result.title}</p>
+                {result.subtitle && <p className="text-xs text-muted-foreground truncate">{result.subtitle}</p>}
+              </div>
+              {showSimilarity && result.similarity !== undefined && result.similarity > 0 && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <Progress value={result.similarity * 100} className="w-16 h-1.5" />
+                  <Badge variant="secondary" className="text-xs tabular-nums">
+                    {Math.round(result.similarity * 100)}%
+                  </Badge>
+                </div>
+              )}
+            </Link>
           );
         })}
       </div>

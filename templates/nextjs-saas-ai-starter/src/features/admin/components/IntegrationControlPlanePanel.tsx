@@ -182,7 +182,7 @@ export function IntegrationControlPlanePanel({ tenantSlug }: IntegrationControlP
     } finally {
       setIsRunning(false);
     }
-  }, [endpoint, refreshOpsData, t, tenantSlug]);
+  }, [endpoint, mode, provider, refreshOpsData, t, tenantSlug]);
 
   const resolveConflict = useCallback(
     async (conflictId: string) => {
@@ -349,12 +349,12 @@ export function IntegrationControlPlanePanel({ tenantSlug }: IntegrationControlP
           <div className="grid gap-3 md:grid-cols-3">
             <Input
               value={mappingEntityType}
-              onChange={(event) => setMappingEntityType(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setMappingEntityType(event.target.value)}
               placeholder={t('mappingEntityPlaceholder')}
             />
             <Input
               value={mappingFieldPath}
-              onChange={(event) => setMappingFieldPath(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setMappingFieldPath(event.target.value)}
               placeholder={t('mappingFieldPlaceholder')}
             />
             <Select

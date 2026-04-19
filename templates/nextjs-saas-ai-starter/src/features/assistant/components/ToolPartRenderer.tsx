@@ -5,7 +5,7 @@
  * Used when part.type starts with 'tool-' and part.state is output-available.
  */
 
-import { ChevronDown, ChevronUp, FileText, Loader2, Search, Target, Users } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, Search, Target, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -13,20 +13,17 @@ import { Badge } from '@/shared/components/ui/badge';
 import { cn } from '@/shared/lib/utils';
 
 import { ComparisonTableCard } from './ComparisonTableCard';
-import { KnowledgeDocRow } from './KnowledgeDocCard';
 import { PersonMiniCard } from './PersonMiniCard';
 import type {
   CompareCandidatesOutput,
   FindCandidatesOutput,
   GetPersonOutput,
-  SearchKnowledgeOutput,
   SearchPeopleOutput,
 } from '../types/genui';
 import {
   compareCandidatesOutputSchema,
   findCandidatesOutputSchema,
   getPersonOutputSchema,
-  searchKnowledgeOutputSchema,
   searchPeopleOutputSchema,
 } from '../types/genui';
 
@@ -251,41 +248,9 @@ export function ToolPartRenderer({
 
     case 'tool-getCapability':
     case 'tool-listCapabilities':
-      // Capability tools removed - return null
+    case 'tool-searchKnowledge':
+      // These tools are not rendered in the generic template
       return null;
-
-    case 'tool-searchKnowledge': {
-      const parsed = searchKnowledgeOutputSchema.safeParse(partOutput);
-      if (!parsed.success) return null;
-      const data = parsed.data as SearchKnowledgeOutput;
-      if (data.documents.length === 0) return null;
-
-      const headerLabel = data.summary
-        ? data.summary
-            .split('\n')[0]
-            .replace(/[#*]/g, '')
-            .replace(/\(búsqueda.*\)/, '')
-            .trim()
-        : 'Knowledge documents';
-
-      const rows = data.documents.map((doc) => <KnowledgeDocRow key={doc.id} doc={doc} tenantSlug={tenantSlug} />);
-
-      return (
-        <CollapsibleList
-          total={data.documents.length}
-          header={
-            <ResultHeader
-              icon={<FileText className="h-3.5 w-3.5" />}
-              label={headerLabel}
-              count={data.documents.length}
-            />
-          }
-          className={cn('mt-2', className)}
-        >
-          {rows}
-        </CollapsibleList>
-      );
-    }
 
     case 'tool-compareCandidates':
     case 'tool-findAndCompareTop': {

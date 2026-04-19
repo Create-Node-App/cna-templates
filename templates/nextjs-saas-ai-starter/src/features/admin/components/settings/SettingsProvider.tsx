@@ -2,19 +2,8 @@
 
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState, useTransition } from 'react';
 
-import type { SkillCategory, TenantSettings } from '@/shared/lib/tenant-settings';
-import {
-  DEFAULT_AI,
-  DEFAULT_BULK_IMPORT,
-  DEFAULT_EVIDENCE_UPLOAD,
-  DEFAULT_FEATURES,
-  DEFAULT_PROCESSING,
-  DEFAULT_QUIZ,
-  DEFAULT_SKILL_MATCHING,
-  DEFAULT_STORAGE,
-  DEFAULT_TAXONOMY,
-  DEFAULT_UI,
-} from '@/shared/lib/tenant-settings';
+import type { TenantSettings } from '@/shared/lib/tenant-settings';
+import { DEFAULT_AI, DEFAULT_FEATURES, DEFAULT_STORAGE, DEFAULT_UI } from '@/shared/lib/tenant-settings';
 
 // ============================================================================
 // Types
@@ -31,15 +20,9 @@ export interface SettingsContextValue {
 
   // Computed settings with defaults
   features: NonNullable<TenantSettings['features']>;
-  skillMatching: NonNullable<TenantSettings['skillMatching']>;
-  processing: NonNullable<TenantSettings['processing']>;
   ui: NonNullable<TenantSettings['ui']>;
-  bulkImport: NonNullable<TenantSettings['bulkImport']>;
-  evidenceUpload: NonNullable<TenantSettings['evidenceUpload']>;
   ai: NonNullable<TenantSettings['ai']>;
   storage: NonNullable<TenantSettings['storage']>;
-  taxonomy: NonNullable<TenantSettings['taxonomy']>;
-  quiz: NonNullable<TenantSettings['quiz']>;
 
   // State
   name: string;
@@ -55,12 +38,6 @@ export interface SettingsContextValue {
     section: string,
     data: Partial<TenantSettings> | { name?: string; description?: string },
   ) => Promise<void>;
-
-  // Categories
-  handleAddCategory: () => void;
-  handleUpdateCategory: (id: string, updates: Partial<SkillCategory>) => void;
-  handleRemoveCategory: (id: string) => void;
-  handleResetCategories: () => void;
 }
 
 // ============================================================================
@@ -104,21 +81,9 @@ export function SettingsProvider({
 
   // Memoized settings with defaults
   const features = useMemo(() => ({ ...DEFAULT_FEATURES, ...settings.features }), [settings.features]);
-  const skillMatching = useMemo(
-    () => ({ ...DEFAULT_SKILL_MATCHING, ...settings.skillMatching }),
-    [settings.skillMatching],
-  );
-  const processing = useMemo(() => ({ ...DEFAULT_PROCESSING, ...settings.processing }), [settings.processing]);
   const ui = useMemo(() => ({ ...DEFAULT_UI, ...settings.ui }), [settings.ui]);
-  const bulkImport = useMemo(() => ({ ...DEFAULT_BULK_IMPORT, ...settings.bulkImport }), [settings.bulkImport]);
-  const evidenceUpload = useMemo(
-    () => ({ ...DEFAULT_EVIDENCE_UPLOAD, ...settings.evidenceUpload }),
-    [settings.evidenceUpload],
-  );
   const ai = useMemo(() => ({ ...DEFAULT_AI, ...settings.ai }), [settings.ai]);
   const storage = useMemo(() => ({ ...DEFAULT_STORAGE, ...settings.storage }), [settings.storage]);
-  const taxonomy = useMemo(() => ({ ...DEFAULT_TAXONOMY, ...settings.taxonomy }), [settings.taxonomy]);
-  const quiz = useMemo(() => ({ ...DEFAULT_QUIZ, ...settings.quiz }), [settings.quiz]);
 
   // Save handler
   const handleSave = useCallback(
@@ -151,38 +116,6 @@ export function SettingsProvider({
     [tenantSlug],
   );
 
-  // Categories management
-  const handleAddCategory = useCallback(() => {
-    const newCat: SkillCategory = {
-      id: `cat-${Date.now()}`,
-      name: '',
-      color: '#6B7280',
-      sortOrder: (taxonomy.skillCategories?.length ?? 0) + 1,
-    };
-    const newList = [...(taxonomy.skillCategories ?? []), newCat];
-    setSettings((prev) => ({ ...prev, taxonomy: { ...taxonomy, skillCategories: newList } }));
-  }, [taxonomy]);
-
-  const handleUpdateCategory = useCallback(
-    (id: string, updates: Partial<SkillCategory>) => {
-      const newList = (taxonomy.skillCategories ?? []).map((c) => (c.id === id ? { ...c, ...updates } : c));
-      setSettings((prev) => ({ ...prev, taxonomy: { ...taxonomy, skillCategories: newList } }));
-    },
-    [taxonomy],
-  );
-
-  const handleRemoveCategory = useCallback(
-    (id: string) => {
-      const newList = (taxonomy.skillCategories ?? []).filter((c) => c.id !== id);
-      setSettings((prev) => ({ ...prev, taxonomy: { ...taxonomy, skillCategories: newList } }));
-    },
-    [taxonomy],
-  );
-
-  const handleResetCategories = useCallback(() => {
-    setSettings((prev) => ({ ...prev, taxonomy: DEFAULT_TAXONOMY }));
-  }, []);
-
   const value = useMemo<SettingsContextValue>(
     () => ({
       tenantSlug,
@@ -190,15 +123,9 @@ export function SettingsProvider({
       tenantDescription: description,
       settings,
       features,
-      skillMatching,
-      processing,
       ui,
-      bulkImport,
-      evidenceUpload,
       ai,
       storage,
-      taxonomy,
-      quiz,
       name,
       description,
       isPending,
@@ -207,34 +134,8 @@ export function SettingsProvider({
       setDescription,
       setSettings,
       handleSave,
-      handleAddCategory,
-      handleUpdateCategory,
-      handleRemoveCategory,
-      handleResetCategories,
     }),
-    [
-      tenantSlug,
-      name,
-      description,
-      settings,
-      features,
-      skillMatching,
-      processing,
-      ui,
-      bulkImport,
-      evidenceUpload,
-      ai,
-      storage,
-      taxonomy,
-      quiz,
-      isPending,
-      saveStatus,
-      handleSave,
-      handleAddCategory,
-      handleUpdateCategory,
-      handleRemoveCategory,
-      handleResetCategories,
-    ],
+    [tenantSlug, name, description, settings, features, ui, ai, storage, isPending, saveStatus, handleSave],
   );
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

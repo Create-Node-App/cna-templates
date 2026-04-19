@@ -12,7 +12,7 @@ import type { TenantSettings } from '@/shared/lib/tenant-settings';
 
 import { updateFeatureFlag } from './settings-service';
 
-type IntegrationFeatureKey = 'webhooks' | 'hrisIntegration';
+type IntegrationFeatureKey = 'webhooks';
 
 type IntegrationFeatureFlags = Partial<Pick<NonNullable<TenantSettings['features']>, IntegrationFeatureKey>>;
 

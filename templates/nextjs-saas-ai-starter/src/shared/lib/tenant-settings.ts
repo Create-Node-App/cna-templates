@@ -5,16 +5,10 @@ import { z } from 'zod';
 // ============================================================================
 
 export const featureFlagsSchema = z.object({
-  /** Enable bulk import functionality in admin */
-  bulkImport: z.boolean().optional().default(true),
   /** Enable knowledge base features */
   knowledgeBase: z.boolean().optional().default(true),
-  /** Enable AI-generated quiz assessments */
-  quiz: z.boolean().optional().default(true),
   /** Enable webhook notifications */
   webhooks: z.boolean().optional().default(false),
-  /** Enable HRIS integration */
-  hrisIntegration: z.boolean().optional().default(false),
   /** When on, admins can create new roles in addition to system roles. */
   allowCustomRoles: z.boolean().optional().default(true),
   /** Enable GitHub integration */
@@ -24,44 +18,6 @@ export const featureFlagsSchema = z.object({
 });
 
 export type FeatureFlags = z.infer<typeof featureFlagsSchema>;
-
-// ============================================================================
-// Skill Matching Schema
-// ============================================================================
-
-export const skillMatchingSchema = z.object({
-  /** Threshold for exact skill match (0-1) */
-  exactMatchThreshold: z.number().min(0).max(1).optional().default(0.92),
-  /** Threshold for suggesting similar skills (0-1) */
-  suggestThreshold: z.number().min(0).max(1).optional().default(0.75),
-  /** Threshold below which to auto-create new skills (0-1) */
-  autoCreateThreshold: z.number().min(0).max(1).optional().default(0.75),
-  /** Require admin approval for auto-created skills */
-  requireApprovalForNewSkills: z.boolean().optional().default(true),
-  /** Maximum number of skill suggestions to show */
-  maxSuggestions: z.number().int().min(1).max(10).optional().default(5),
-});
-
-export type SkillMatchingSettings = z.infer<typeof skillMatchingSchema>;
-
-// ============================================================================
-// Processing Schema
-// ============================================================================
-
-export const processingSchema = z.object({
-  /** Batch size for evidence processing */
-  batchSize: z.number().int().min(1).max(100).optional().default(10),
-  /** Processing interval in minutes */
-  processingIntervalMinutes: z.number().int().min(1).max(60).optional().default(5),
-  /** Maximum retries for failed processing */
-  maxRetries: z.number().int().min(0).max(10).optional().default(3),
-  /** Timeout for AI processing in seconds */
-  aiTimeoutSeconds: z.number().int().min(10).max(300).optional().default(60),
-  /** Enable parallel processing */
-  parallelProcessing: z.boolean().optional().default(true),
-});
-
-export type ProcessingSettings = z.infer<typeof processingSchema>;
 
 // ============================================================================
 // UI Customization Schema
@@ -142,9 +98,6 @@ export const webhookEventTypes = [
   // Integration events
   'integration.synced',
   'integration.failed',
-  // Bulk import events
-  'bulk_import.completed',
-  'bulk_import.failed',
 ] as const;
 
 export type WebhookEventType = (typeof webhookEventTypes)[number];
@@ -184,13 +137,6 @@ const integrationBaseSchema = z.object({
   enabledBy: z.string().uuid().optional(),
 });
 
-const hrisSchema = integrationBaseSchema.extend({
-  provider: z.enum(['workday', 'adp', 'custom']).optional(),
-  apiUrl: z.string().url().optional(),
-  apiKey: z.string().optional(),
-  syncIntervalHours: z.number().int().min(1).max(168).optional().default(24),
-});
-
 const ssoSchema = z.object({
   provider: z.enum(['okta', 'azure_ad', 'google', 'custom']).optional(),
   enabled: z.boolean().optional().default(false),
@@ -228,7 +174,7 @@ const googleWorkspaceSettingsSchema = integrationBaseSchema.extend({
    */
   autoImportGeminiNotes: z.boolean().optional().default(true),
   /**
-   * Auto-generate a meeting notes draft in Next.js SaaS AI Template from agenda + imported notes.
+   * Auto-generate a meeting notes draft from agenda + imported notes.
    */
   autoDraftMeetingNotes: z.boolean().optional().default(true),
   /**
@@ -305,8 +251,6 @@ export type LinkedInSettings = z.infer<typeof linkedinSettingsSchema>;
 export const integrationsSchema = z.object({
   /** Configured webhooks */
   webhooks: z.array(webhookSchema).optional().default([]),
-  /** HRIS integration settings (placeholder for future) */
-  hris: hrisSchema.optional(),
   /** SSO configuration (placeholder for future) */
   sso: ssoSchema.optional(),
   /** Google Workspace integration settings */
@@ -318,54 +262,6 @@ export const integrationsSchema = z.object({
 });
 
 export type IntegrationsSettings = z.infer<typeof integrationsSchema>;
-
-// ============================================================================
-// Bulk Import Schema
-// ============================================================================
-
-export const bulkImportSchema = z.object({
-  /** Default mode: strict (fail on error) or lenient (skip invalid rows) */
-  defaultMode: z.enum(['strict', 'lenient']).optional().default('strict'),
-  /** Maximum rows per import */
-  maxRowsPerImport: z.number().int().min(100).max(50000).optional().default(10000),
-  /** Allowed file types */
-  allowedFileTypes: z
-    .array(z.enum(['csv', 'xlsx']))
-    .optional()
-    .default(['csv']),
-  /** Enable duplicate detection */
-  duplicateDetection: z.boolean().optional().default(true),
-  /** Action on duplicate: skip, update, or error */
-  duplicateAction: z.enum(['skip', 'update', 'error']).optional().default('skip'),
-});
-
-export type BulkImportSettings = z.infer<typeof bulkImportSchema>;
-
-// ============================================================================
-// Evidence Upload Schema
-// ============================================================================
-
-export const evidenceUploadSchema = z.object({
-  /** Maximum file size in MB */
-  maxFileSizeMB: z.number().int().min(1).max(100).optional().default(25),
-  /** Allowed MIME types */
-  allowedMimeTypes: z
-    .array(z.string())
-    .optional()
-    .default([
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'image/png',
-      'image/jpeg',
-    ]),
-  /** Maximum files per person */
-  maxFilesPerPerson: z.number().int().min(1).max(100).optional().default(50),
-  /** Require description for uploads */
-  requireDescription: z.boolean().optional().default(false),
-});
-
-export type EvidenceUploadSettings = z.infer<typeof evidenceUploadSchema>;
 
 // ============================================================================
 // Departments Schema (Tenant-configurable)
@@ -393,36 +289,6 @@ export type Department = z.infer<typeof departmentSchema>;
 export type DepartmentsSettings = z.infer<typeof departmentsSchema>;
 
 // ============================================================================
-// Skill Categories Schema (Tenant-configurable Taxonomy)
-// ============================================================================
-
-export const skillCategorySchema = z.object({
-  /** Unique identifier (slug) */
-  id: z.string().min(1).max(50),
-  /** Display name */
-  name: z.string().min(1).max(100),
-  /** Optional description */
-  description: z.string().max(500).optional(),
-  /** Color for UI display (hex) */
-  color: z
-    .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/)
-    .optional(),
-  /** Icon name (from lucide-react) */
-  icon: z.string().optional(),
-  /** Sort order for display */
-  sortOrder: z.number().int().optional().default(0),
-});
-
-export const taxonomySchema = z.object({
-  /** Custom skill categories for this tenant */
-  skillCategories: z.array(skillCategorySchema).optional(),
-});
-
-export type SkillCategory = z.infer<typeof skillCategorySchema>;
-export type TaxonomySettings = z.infer<typeof taxonomySchema>;
-
-// ============================================================================
 // AI Provider Settings Schema
 // ============================================================================
 
@@ -438,7 +304,7 @@ export const aiSettingsSchema = z.object({
   embeddingModel: z.string().optional().default('text-embedding-3-small'),
   /** Model for chat completions */
   chatModel: z.string().optional().default('gpt-4o-mini'),
-  /** Model for skill extraction from CVs */
+  /** Model for structured data extraction */
   extractionModel: z.string().optional().default('gpt-4o-mini'),
   /** Temperature for chat/extraction */
   temperature: z.number().min(0).max(2).optional().default(0.1),
@@ -477,48 +343,17 @@ export const storageSettingsSchema = z.object({
 export type StorageSettings = z.infer<typeof storageSettingsSchema>;
 
 // ============================================================================
-// Quiz Settings Schema
-// ============================================================================
-
-export const quizSettingsSchema = z.object({
-  /** Enable quiz feature */
-  enabled: z.boolean().optional().default(true),
-  /** Maximum number of quizzes a user can take per day */
-  rateLimitPerDay: z.number().int().min(1).max(100).optional().default(10),
-  /** Number of days quiz cache is valid (-1 for infinite/no expiration) */
-  cacheTtlDays: z.number().int().min(-1).max(365).optional().default(-1),
-  /** Number of questions per quiz */
-  questionsPerQuiz: z.number().int().min(5).max(20).optional().default(10),
-  /** AI model to use for quiz generation (falls back to ai.chatModel if not set) */
-  aiModel: z.string().optional(),
-  /** Temperature for quiz generation (0-2) */
-  temperature: z.number().min(0).max(2).optional().default(0.7),
-  /** Timeout for quiz generation in seconds */
-  generationTimeoutSeconds: z.number().int().min(10).max(300).optional().default(60),
-});
-
-export type QuizSettings = z.infer<typeof quizSettingsSchema>;
-
-// ============================================================================
 // Complete Tenant Settings Schema
 // ============================================================================
 
 export const tenantSettingsSchema = z.object({
   features: featureFlagsSchema.optional(),
-  skillMatching: skillMatchingSchema.optional(),
-  processing: processingSchema.optional(),
   ui: uiSchema.optional(),
   integrations: integrationsSchema.optional(),
-  bulkImport: bulkImportSchema.optional(),
-  evidenceUpload: evidenceUploadSchema.optional(),
   ai: aiSettingsSchema.optional(),
   storage: storageSettingsSchema.optional(),
   /** Tenant departments configuration */
   departments: departmentsSchema.optional(),
-  /** Skill taxonomy (categories) configuration */
-  taxonomy: taxonomySchema.optional(),
-  /** Quiz configuration */
-  quiz: quizSettingsSchema.optional(),
 });
 
 export type TenantSettings = z.infer<typeof tenantSettingsSchema>;
@@ -534,30 +369,11 @@ export type TenantSettingsInput = z.input<typeof tenantSettingsSchema>;
 // ============================================================================
 
 export const DEFAULT_FEATURES: NonNullable<TenantSettings['features']> = {
-  bulkImport: true,
   knowledgeBase: true,
-  quiz: true,
   webhooks: false,
-  hrisIntegration: false,
   allowCustomRoles: true,
   githubIntegrationEnabled: true,
   aiAssistantEnabled: true,
-};
-
-export const DEFAULT_SKILL_MATCHING: NonNullable<TenantSettings['skillMatching']> = {
-  exactMatchThreshold: 0.92,
-  suggestThreshold: 0.75,
-  autoCreateThreshold: 0.75,
-  requireApprovalForNewSkills: true,
-  maxSuggestions: 5,
-};
-
-export const DEFAULT_PROCESSING: NonNullable<TenantSettings['processing']> = {
-  batchSize: 10,
-  processingIntervalMinutes: 5,
-  maxRetries: 3,
-  aiTimeoutSeconds: 60,
-  parallelProcessing: true,
 };
 
 export const DEFAULT_UI: NonNullable<TenantSettings['ui']> = {
@@ -589,27 +405,6 @@ export const DEFAULT_INTEGRATIONS: NonNullable<TenantSettings['integrations']> =
   },
 };
 
-export const DEFAULT_BULK_IMPORT: NonNullable<TenantSettings['bulkImport']> = {
-  defaultMode: 'strict',
-  maxRowsPerImport: 10000,
-  allowedFileTypes: ['csv'],
-  duplicateDetection: true,
-  duplicateAction: 'skip',
-};
-
-export const DEFAULT_EVIDENCE_UPLOAD: NonNullable<TenantSettings['evidenceUpload']> = {
-  maxFileSizeMB: 25,
-  allowedMimeTypes: [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'image/png',
-    'image/jpeg',
-  ],
-  maxFilesPerPerson: 50,
-  requireDescription: false,
-};
-
 export const DEFAULT_AI: NonNullable<TenantSettings['ai']> = {
   embeddingModel: 'text-embedding-3-small',
   chatModel: 'gpt-4o-mini',
@@ -627,25 +422,6 @@ export const DEFAULT_DEPARTMENTS: NonNullable<TenantSettings['departments']> = {
   list: [],
 };
 
-export const DEFAULT_TAXONOMY: NonNullable<TenantSettings['taxonomy']> = {
-  skillCategories: [
-    { id: 'technical', name: 'Technical', color: '#3B82F6', sortOrder: 1 },
-    { id: 'soft', name: 'Soft Skills', color: '#8B5CF6', sortOrder: 2 },
-    { id: 'domain', name: 'Domain', color: '#10B981', sortOrder: 3 },
-    { id: 'language', name: 'Language', color: '#F59E0B', sortOrder: 4 },
-    { id: 'certification', name: 'Certification', color: '#EF4444', sortOrder: 5 },
-  ],
-};
-
-export const DEFAULT_QUIZ: NonNullable<TenantSettings['quiz']> = {
-  enabled: true,
-  rateLimitPerDay: 10,
-  cacheTtlDays: -1, // -1 = infinite (no expiration)
-  questionsPerQuiz: 10,
-  temperature: 0.7,
-  generationTimeoutSeconds: 60,
-};
-
 // ============================================================================
 // Utility Functions
 // ============================================================================
@@ -653,16 +429,11 @@ export const DEFAULT_QUIZ: NonNullable<TenantSettings['quiz']> = {
 /** Return type for applySettingsDefaults - fully populated settings */
 export type AppliedTenantSettings = Required<{
   features: NonNullable<TenantSettings['features']>;
-  skillMatching: NonNullable<TenantSettings['skillMatching']>;
-  processing: NonNullable<TenantSettings['processing']>;
   ui: NonNullable<TenantSettings['ui']>;
   integrations: NonNullable<TenantSettings['integrations']>;
-  bulkImport: NonNullable<TenantSettings['bulkImport']>;
-  evidenceUpload: NonNullable<TenantSettings['evidenceUpload']>;
   ai: NonNullable<TenantSettings['ai']>;
   storage: NonNullable<TenantSettings['storage']>;
   departments: NonNullable<TenantSettings['departments']>;
-  taxonomy: NonNullable<TenantSettings['taxonomy']>;
 }>;
 
 /**
@@ -670,20 +441,13 @@ export type AppliedTenantSettings = Required<{
  * Accepts partial input and returns complete output.
  */
 export function applySettingsDefaults(settings: TenantSettingsInput): AppliedTenantSettings {
-  // Spread defaults with provided settings. The defaults guarantee all required properties.
-  // Type assertion is safe because we're spreading complete defaults first.
   return {
     features: { ...DEFAULT_FEATURES, ...settings.features },
-    skillMatching: { ...DEFAULT_SKILL_MATCHING, ...settings.skillMatching },
-    processing: { ...DEFAULT_PROCESSING, ...settings.processing },
     ui: { ...DEFAULT_UI, ...settings.ui },
     integrations: { ...DEFAULT_INTEGRATIONS, ...settings.integrations },
-    bulkImport: { ...DEFAULT_BULK_IMPORT, ...settings.bulkImport },
-    evidenceUpload: { ...DEFAULT_EVIDENCE_UPLOAD, ...settings.evidenceUpload },
     ai: { ...DEFAULT_AI, ...settings.ai },
     storage: { ...DEFAULT_STORAGE, ...settings.storage },
     departments: { ...DEFAULT_DEPARTMENTS, ...settings.departments },
-    taxonomy: { ...DEFAULT_TAXONOMY, ...settings.taxonomy },
   } as AppliedTenantSettings;
 }
 
@@ -710,31 +474,17 @@ export function mergeTenantSettings(
   existing: TenantSettings | TenantSettingsInput,
   partial: Partial<TenantSettings | TenantSettingsInput>,
 ): TenantSettings {
-  // Type assertion is safe because we're merging existing values with partial overrides
   return {
     features: partial.features !== undefined ? { ...existing.features, ...partial.features } : existing.features,
-    skillMatching:
-      partial.skillMatching !== undefined
-        ? { ...existing.skillMatching, ...partial.skillMatching }
-        : existing.skillMatching,
-    processing:
-      partial.processing !== undefined ? { ...existing.processing, ...partial.processing } : existing.processing,
     ui: partial.ui !== undefined ? { ...existing.ui, ...partial.ui } : existing.ui,
     integrations:
       partial.integrations !== undefined
         ? { ...existing.integrations, ...partial.integrations }
         : existing.integrations,
-    bulkImport:
-      partial.bulkImport !== undefined ? { ...existing.bulkImport, ...partial.bulkImport } : existing.bulkImport,
-    evidenceUpload:
-      partial.evidenceUpload !== undefined
-        ? { ...existing.evidenceUpload, ...partial.evidenceUpload }
-        : existing.evidenceUpload,
     ai: partial.ai !== undefined ? { ...existing.ai, ...partial.ai } : existing.ai,
     storage: partial.storage !== undefined ? { ...existing.storage, ...partial.storage } : existing.storage,
     departments:
       partial.departments !== undefined ? { ...existing.departments, ...partial.departments } : existing.departments,
-    taxonomy: partial.taxonomy !== undefined ? { ...existing.taxonomy, ...partial.taxonomy } : existing.taxonomy,
   } as TenantSettings;
 }
 
@@ -775,20 +525,6 @@ export function hasStorageConfigured(settings: TenantSettings | TenantSettingsIn
 }
 
 /**
- * Get skill categories for a tenant (with defaults)
- */
-export function getSkillCategories(settings: TenantSettings | TenantSettingsInput): SkillCategory[] {
-  const categories = settings.taxonomy?.skillCategories;
-  if (categories && categories.length > 0) {
-    // Sort and return with default sortOrder values applied
-    return categories
-      .map((c) => ({ ...c, sortOrder: c.sortOrder ?? 0 }))
-      .sort((a, b) => a.sortOrder - b.sortOrder) as SkillCategory[];
-  }
-  return DEFAULT_TAXONOMY.skillCategories!;
-}
-
-/**
  * Get departments for a tenant
  */
 export function getDepartments(settings: TenantSettings | TenantSettingsInput): Department[] {
@@ -796,17 +532,6 @@ export function getDepartments(settings: TenantSettings | TenantSettingsInput): 
   if (!list) return [];
   // Apply default sortOrder if missing
   return list.map((d) => ({ ...d, sortOrder: d.sortOrder ?? 0 })) as Department[];
-}
-
-/**
- * Get skill category by ID
- */
-export function getSkillCategoryById(
-  settings: TenantSettings | TenantSettingsInput,
-  id: string,
-): SkillCategory | undefined {
-  const categories = getSkillCategories(settings);
-  return categories.find((c) => c.id === id);
 }
 
 /**

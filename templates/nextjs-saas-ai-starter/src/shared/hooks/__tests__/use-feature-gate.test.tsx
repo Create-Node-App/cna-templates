@@ -80,7 +80,7 @@ describe('FeatureGate', () => {
   });
 
   it('should render nothing as default fallback', () => {
-    const settings = applySettingsDefaults({ features: { hrisIntegration: false } });
+    const settings = applySettingsDefaults({ features: { githubIntegrationEnabled: false } });
     const Wrapper = createWrapper({
       id: 'tenant-123',
       slug: 'test',
@@ -90,7 +90,7 @@ describe('FeatureGate', () => {
 
     const { container } = render(
       <Wrapper>
-        <FeatureGate feature="hrisIntegration">
+        <FeatureGate feature="githubIntegrationEnabled">
           <div data-testid="content">Feature Content</div>
         </FeatureGate>
       </Wrapper>,
@@ -101,7 +101,7 @@ describe('FeatureGate', () => {
   });
 
   it('should handle multiple children', () => {
-    const settings = applySettingsDefaults({ features: { quiz: true } });
+    const settings = applySettingsDefaults({ features: { aiAssistantEnabled: true } });
     const Wrapper = createWrapper({
       id: 'tenant-123',
       slug: 'test',
@@ -111,7 +111,7 @@ describe('FeatureGate', () => {
 
     render(
       <Wrapper>
-        <FeatureGate feature="quiz">
+        <FeatureGate feature="aiAssistantEnabled">
           <div data-testid="child1">Child 1</div>
           <div data-testid="child2">Child 2</div>
         </FeatureGate>

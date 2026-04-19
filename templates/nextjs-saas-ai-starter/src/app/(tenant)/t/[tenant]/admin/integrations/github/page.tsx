@@ -8,7 +8,6 @@ import { redirect } from 'next/navigation';
 import { AdminPageHeader } from '@/features/admin';
 import { GitHubCredentialsForm } from '@/features/admin/components/GitHubCredentialsForm';
 import { GitHubSettingsPanel } from '@/features/admin/components/GitHubSettingsPanel';
-import { GitHubSyncWizard } from '@/features/admin/components/GitHubSyncWizard';
 import { getGitHubTenantCredentials } from '@/features/admin/services/github-credentials-service';
 import { getGitHubConnectionInfo } from '@/features/admin/services/github-settings-service';
 import { getTenantSettings } from '@/features/admin/services/settings-service';
@@ -107,11 +106,6 @@ export default async function GitHubPage({ params }: GitHubPageProps) {
         connectedGithubUsername={connectionInfo.githubUsername}
         hasEnvCredentials={hasEnvCredentials}
       />
-
-      {/* Sync Wizard - shown when enabled and connected */}
-      {ghSettings?.enabled && connectionInfo.isConnected && (
-        <GitHubSyncWizard tenantSlug={tenant} settings={ghSettings} />
-      )}
 
       {/* Credentials form: only when NOT using env vars (overridable per-tenant) */}
       {!hasEnvCredentials && (

@@ -12,7 +12,7 @@ import type { TenantSettings } from '@/shared/lib/tenant-settings';
 
 import { saveIntegrationFeatureFlags } from '../services/integration-feature-flags-service';
 
-type IntegrationFeatureKey = 'webhooks' | 'hrisIntegration';
+type IntegrationFeatureKey = 'webhooks';
 
 const INTEGRATION_FEATURE_FLAGS: Array<{
   key: IntegrationFeatureKey;
@@ -23,11 +23,6 @@ const INTEGRATION_FEATURE_FLAGS: Array<{
     key: 'webhooks',
     label: 'Webhooks',
     description: 'Enable webhook notifications for external systems',
-  },
-  {
-    key: 'hrisIntegration',
-    label: 'HRIS Integration',
-    description: 'Enable HR system integration',
   },
 ];
 

@@ -29,106 +29,35 @@ const TABLES_TO_CLEAN = [
   'audit_events',
 
   // ============================================================================
-  // QUIZZES (depend on persons, skills, tenants)
-  // ============================================================================
-  'quiz_attempts',
-  'quiz_cache',
-
-  // ============================================================================
   // EMBEDDINGS (depend on tenants)
   // ============================================================================
   'embedding_chunks',
 
   // ============================================================================
-  // LEARNING (depend on persons, knowledge_documents, tenants)
+  // WEBHOOKS (depend on tenants)
   // ============================================================================
-  'roadmap_node_progress', // depends on roadmap_progress
-  'roadmap_progress', // depends on persons, knowledge_documents
-  'training_completions', // depends on persons, knowledge_documents
-  'learning_assignments', // depends on persons
+  'webhook_deliveries', // depends on webhook_endpoints
+  'webhook_endpoints', // depends on tenants
 
   // ============================================================================
-  // OKRs / OBJECTIVES (depend on persons, capabilities, knowledge_documents)
+  // INTEGRATION SYNC ENGINE (depend on tenants)
   // ============================================================================
-  'kr_check_ins', // depends on key_results, persons
-  'key_results', // depends on objectives, skills
-  'objective_comments', // depends on objectives, persons
-  'objectives', // depends on persons, capabilities, knowledge_documents
+  'integration_sync_run_items', // depends on integration_sync_runs
+  'integration_sync_conflicts', // depends on integration_sync_runs
+  'integration_sync_runs', // depends on tenants
+  'integration_sync_cursors', // depends on tenants
+  'integration_entity_links', // depends on tenants
+  'integration_field_mappings', // depends on tenants
+  'integration_processing_jobs', // depends on tenants
 
   // ============================================================================
-  // ASSESSMENT HISTORY (depend on persons, skills)
+  // FILES (depend on persons)
   // ============================================================================
-  'assessment_history',
-
-  // ============================================================================
-  // PERFORMANCE ASSESSMENTS & PROJECTS (depend on persons, projects, evidences, tenants)
-  // ============================================================================
-  'performance_assessment_dimensions', // depends on performance_assessments
-  'performance_assessments', // depends on persons, projects, evidences, tenants
-  'performance_assessment_requests', // depends on persons, projects, tenants
-  'peer_nominations', // depends on review_cycles, persons
-  'review_cycle_assignments', // depends on review_cycles, persons, performance_assessments
-  'review_cycle_participants', // depends on review_cycles, persons
-  'review_cycles', // depends on tenants, persons
-  'pulse_response_answers', // depends on pulse_responses, pulse_questions
-  'pulse_responses', // depends on pulse_surveys, persons
-  'pulse_questions', // depends on pulse_surveys
-  'pulse_surveys', // depends on tenants, persons
-  'project_members', // depends on projects, persons, tenants
-  'projects', // depends on clients, persons, tenants
-
-  // TRACK bridge tables (M:N, depend on track entities)
-  'track_goal_kpis',
-  'track_goal_objectives',
-  'track_route_projects',
-  'track_play_routes',
-  'track_play_assignments',
-  'track_cadence_participants',
-
-  'clients', // depends on tenants
-
-  // ============================================================================
-  // KNOWLEDGE DOCUMENTS (depend on persons, tenants)
-  // ============================================================================
-  'knowledge_document_versions', // depends on knowledge_documents
-  'knowledge_documents', // depends on tenants, persons
-
-  // ============================================================================
-  // CAPABILITIES (depend on skills, tenants)
-  // ============================================================================
-  'capability_requirements', // depends on capabilities, skills
-  'capabilities', // depends on tenants
-
-  // ============================================================================
-  // INTERESTS (depend on skills, persons)
-  // ============================================================================
-  'interest_signals',
-
-  // ============================================================================
-  // ASSESSMENTS (depend on skills, persons)
-  // ============================================================================
-  'assessment_evidence', // depends on assessments, evidences
-  'assessments',
-
-  // ============================================================================
-  // EVIDENCES & FILES (depend on persons)
-  // ============================================================================
-  'cv_processing_jobs', // depends on persons, file_objects
   'file_objects', // depends on persons
-  'evidences', // depends on persons, skills
-
-  // ============================================================================
-  // FEEDBACK & 1:1 MEETINGS & RECOGNITIONS (depend on persons, tenants)
-  // ============================================================================
-  'feedback', // depends on persons, one_on_one_meetings
-  'one_on_one_meetings', // depends on persons
-  'recognitions', // depends on persons, recognition_categories
-  'recognition_categories', // depends on tenants
 
   // ============================================================================
   // PERSONS & RELATIONS (depend on tenants)
   // ============================================================================
-  'management_hierarchy_cache', // depends on persons
   'assistant_conversations', // depends on persons, tenants
   'person_relations', // depends on persons
   'department_managers', // depends on persons, tenants
@@ -136,14 +65,6 @@ const TABLES_TO_CLEAN = [
   'tenant_memberships', // depends on users, tenants, persons
   'tenant_invitations', // depends on tenants, users (optional roleId → roles)
   'persons', // depends on tenants
-
-  // ============================================================================
-  // SKILLS (depend on tenants)
-  // ============================================================================
-  'skill_scale_levels', // optional: old schema, depends on skill_scales
-  'skill_scales', // depends on tenants
-  'skill_aliases', // depends on skills
-  'skills', // depends on tenants
 
   // ============================================================================
   // ROLES & PERMISSIONS / PBAC (depend on tenants)
