@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
     "isolatedModules": false,
-    "moduleResolution": "node16",
+    "moduleResolution": "node",
     "ignoreDeprecations": "5.0",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
