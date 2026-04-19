@@ -19,7 +19,7 @@ type Story = StoryObj<typeof ToolPartRenderer>;
 
 export const Loading: Story = {
   args: {
-    partType: 'tool-searchPeople',
+    partType: 'tool-searchEntities',
     partState: 'input-available',
     partOutput: undefined,
     tenantSlug: 'demo',
@@ -28,31 +28,31 @@ export const Loading: Story = {
 
 export const Error: Story = {
   args: {
-    partType: 'tool-searchPeople',
+    partType: 'tool-searchEntities',
     partState: 'output-error',
     partOutput: undefined,
-    partErrorText: 'Failed to search people.',
+    partErrorText: 'Failed to search entities.',
     tenantSlug: 'demo',
   },
 };
 
-const searchPeopleOutput = {
-  summary: 'Found 2 people with React skills.',
+const searchEntitiesOutput = {
+  summary: 'Found 2 entities with React attributes.',
   items: [
     {
-      personId: 'person-1',
+      entityId: 'entity-1',
       name: 'Jane Doe',
-      department: 'Engineering',
-      skills: [
+      category: 'Engineering',
+      attributes: [
         { name: 'React', level: 4 },
         { name: 'TypeScript', level: 5 },
       ],
     },
     {
-      personId: 'person-2',
+      entityId: 'entity-2',
       name: 'John Smith',
-      department: 'Product',
-      skills: [
+      category: 'Product',
+      attributes: [
         { name: 'React', level: 3 },
         { name: 'Node.js', level: 4 },
       ],
@@ -60,11 +60,11 @@ const searchPeopleOutput = {
   ],
 };
 
-export const SearchPeopleOutput: Story = {
+export const SearchEntitiesOutput: Story = {
   args: {
-    partType: 'tool-searchPeople',
+    partType: 'tool-searchEntities',
     partState: 'output-available',
-    partOutput: searchPeopleOutput,
+    partOutput: searchEntitiesOutput,
     tenantSlug: 'demo',
   },
 };

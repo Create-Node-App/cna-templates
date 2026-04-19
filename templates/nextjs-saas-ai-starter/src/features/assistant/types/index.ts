@@ -3,16 +3,16 @@
  */
 
 export type {
-  CandidateItem,
-  CompareCandidatesOutput,
-  FindCandidatesOutput,
-  GetCapabilityOutput,
-  GetPersonOutput,
+  CompareEntitiesOutput,
+  EntityItem,
+  FindMatchesOutput,
+  GetEntityOutput,
+  GetProfileOutput,
   KnowledgeDocItem,
-  ListCapabilitiesOutput,
-  PersonListItem,
+  ListProfilesOutput,
+  ScoredEntityItem,
+  SearchEntitiesOutput,
   SearchKnowledgeOutput,
-  SearchPeopleOutput,
   ToolOutput,
   ToolPartType,
 } from './genui';
@@ -29,7 +29,7 @@ export interface ConversationContext {
   userId: string;
   personId: string;
   tenantId: string;
-  currentSkills?: string[];
+  currentContext?: string[];
   recentActivity?: string[];
 }
 

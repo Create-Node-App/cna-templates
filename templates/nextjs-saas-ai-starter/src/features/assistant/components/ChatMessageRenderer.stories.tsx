@@ -20,8 +20,8 @@ type Story = StoryObj<typeof ChatMessageRenderer>;
 const markdownOnly = `
 Here are some **suggestions** for your next steps:
 
-1. Review your skill levels
-2. Explore capabilities that match your profile
+1. Review your attribute levels
+2. Explore profiles that match your background
 3. Find learning resources
 
 Let me know if you need more details.
@@ -42,9 +42,9 @@ export const WithTenantSlug: Story = {
   },
 };
 
-/** Text that triggers pattern detection (person list). */
-const textWithPersonPattern = `
-People with React skills:
+/** Text that triggers pattern detection (entity list). */
+const textWithEntityPattern = `
+People with React attributes:
 
 • **Jane Doe** - Engineering
   Skills: React (4), TypeScript (5)
@@ -53,9 +53,9 @@ People with React skills:
   Skills: React (3), Node.js (4)
 `;
 
-export const WithDetectedPersonPattern: Story = {
+export const WithDetectedEntityPattern: Story = {
   args: {
-    content: textWithPersonPattern.trim(),
+    content: textWithEntityPattern.trim(),
     tenantSlug: 'demo',
     isUserMessage: false,
   },

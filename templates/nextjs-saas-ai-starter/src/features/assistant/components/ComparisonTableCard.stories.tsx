@@ -7,7 +7,7 @@ const meta: Meta<typeof ComparisonTableCard> = {
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
   argTypes: {
-    personIds: { control: 'object' },
+    entityIds: { control: 'object' },
     tenantSlug: { control: 'text' },
   },
 };
@@ -17,11 +17,11 @@ export default meta;
 type Story = StoryObj<typeof ComparisonTableCard>;
 
 const comparison = {
-  headers: ['Skill', 'Jane Doe', 'John Smith'],
+  headers: ['Attribute', 'Jane Doe', 'John Smith'],
   rows: [
-    { skill: 'React', values: ['4', '3'] },
-    { skill: 'TypeScript', values: ['5', '4'] },
-    { skill: 'Leadership', values: ['3', '4'] },
+    { label: 'React', values: ['4', '3'] },
+    { label: 'TypeScript', values: ['5', '4'] },
+    { label: 'Leadership', values: ['3', '4'] },
   ],
   raw: '',
 };
@@ -32,10 +32,10 @@ export const Default: Story = {
   },
 };
 
-export const WithPersonLinks: Story = {
+export const WithEntityLinks: Story = {
   args: {
     comparison,
-    personIds: ['person-1', 'person-2'],
+    entityIds: ['entity-1', 'entity-2'],
     tenantSlug: 'demo',
   },
 };

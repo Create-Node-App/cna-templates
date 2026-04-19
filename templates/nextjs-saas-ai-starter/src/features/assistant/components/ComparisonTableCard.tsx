@@ -3,7 +3,7 @@
 /**
  * ComparisonTableCard Component
  *
- * Rich comparison table for displaying side-by-side skill comparisons in AI chat.
+ * Rich comparison table for displaying side-by-side comparisons in AI chat.
  */
 
 import { CheckCircle, Scale, XCircle } from 'lucide-react';
@@ -19,7 +19,7 @@ import type { DetectedComparison } from '../utils/pattern-detectors';
 interface ComparisonTableCardProps {
   comparison: DetectedComparison;
   className?: string;
-  personIds?: string[];
+  entityIds?: string[];
   tenantSlug?: string;
 }
 
@@ -71,9 +71,9 @@ function getComparisonColor(value1: string, value2: string): { col1: string; col
   return { col1: '', col2: '' };
 }
 
-export function ComparisonTableCard({ comparison, className, personIds, tenantSlug }: ComparisonTableCardProps) {
+export function ComparisonTableCard({ comparison, className, entityIds, tenantSlug }: ComparisonTableCardProps) {
   const t = useTranslations('genui');
-  const personNames = comparison.headers.slice(1);
+  const entityNames = comparison.headers.slice(1);
 
   // Generate initials for avatars
   const getInitials = (name: string) =>
@@ -93,15 +93,15 @@ export function ComparisonTableCard({ comparison, className, personIds, tenantSl
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 overflow-x-auto">
-        {/* Header with person avatars */}
+        {/* Header with entity avatars */}
         <div
           className="grid border-b bg-muted/30 min-w-[400px]"
-          style={{ gridTemplateColumns: `minmax(120px, 1fr) repeat(${personNames.length}, minmax(100px, 1fr))` }}
+          style={{ gridTemplateColumns: `minmax(120px, 1fr) repeat(${entityNames.length}, minmax(100px, 1fr))` }}
         >
-          <div className="p-3 font-medium text-sm text-muted-foreground">{comparison.headers[0] || t('skill')}</div>
-          {personNames.map((name, i) => {
-            const personId = personIds?.[i];
-            const href = tenantSlug && personId ? `/t/${tenantSlug}/team/${personId}` : undefined;
+          <div className="p-3 font-medium text-sm text-muted-foreground">{comparison.headers[0] || t('attribute')}</div>
+          {entityNames.map((name, i) => {
+            const entityId = entityIds?.[i];
+            const href = tenantSlug && entityId ? `/t/${tenantSlug}/team/${entityId}` : undefined;
             const cell = (
               <div key={i} className="p-3 flex items-center gap-2 justify-center">
                 <Avatar className="h-6 w-6">
@@ -134,9 +134,9 @@ export function ComparisonTableCard({ comparison, className, personIds, tenantSl
               <div
                 key={rowIndex}
                 className="grid hover:bg-muted/20 transition-colors"
-                style={{ gridTemplateColumns: `minmax(120px, 1fr) repeat(${personNames.length}, minmax(100px, 1fr))` }}
+                style={{ gridTemplateColumns: `minmax(120px, 1fr) repeat(${entityNames.length}, minmax(100px, 1fr))` }}
               >
-                <div className="p-3 text-sm font-medium">{row.skill}</div>
+                <div className="p-3 text-sm font-medium">{row.label}</div>
                 {row.values.map((value, colIndex) => {
                   const parsed = parseComparisonValue(value);
                   const colorClass = colIndex === 0 ? colors.col1 : colors.col2;

@@ -521,7 +521,9 @@
     "sendMessage": "Enviar Mensaje",
     "viewDetails": "Ver Detalles",
     "showMore": "Mostrar {count} más",
-    "showLess": "Mostrar menos"
+    "showLess": "Mostrar menos",
+    "comparison": "Comparación",
+    "attribute": "Atributo"
   },
   "dashboard": {
     "title": "Panel",
