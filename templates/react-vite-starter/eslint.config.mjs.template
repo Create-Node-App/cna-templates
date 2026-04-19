@@ -17,7 +17,7 @@ export default [
       '__mocks__/',
       '<%= srcDir %>/theme/',
       'tools/',
-      '*.d.ts',
+      '**/*.d.ts',
       'dist-electron/',
       'release/',
       '.prettierrc.js',
