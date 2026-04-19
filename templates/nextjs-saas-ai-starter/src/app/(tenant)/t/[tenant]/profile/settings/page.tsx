@@ -2,8 +2,6 @@ import { Settings } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { getTenantSettings } from '@/features/admin/services/settings-service';
-import { GitHubSyncButton } from '@/features/profile/components/GitHubSyncButton';
 import { ProfileSettingsForm } from '@/features/profile/components/ProfileSettingsForm';
 import { getMyPerson } from '@/features/profile/services/profile-update-service';
 import { PageHeader } from '@/shared/components/ui/page-header';
@@ -22,13 +20,12 @@ export default async function ProfileSettingsPage({ params }: ProfileSettingsPag
     redirect(`/t/${tenant}/login`);
   }
 
-  const [person, tenantSettings] = await Promise.all([getMyPerson(tenant), getTenantSettings(tenant)]);
+  const person = await getMyPerson(tenant);
 
   if (!person) {
     redirect(`/t/${tenant}/profile`);
   }
 
-  const isGitHubEnabled = tenantSettings.integrations?.github?.enabled ?? false;
   const displayName = person.displayName ?? `${person.firstName} ${person.lastName}`.trim();
 
   return (
@@ -56,14 +53,6 @@ export default async function ProfileSettingsPage({ params }: ProfileSettingsPag
             githubUsername: person.githubUsername,
           }}
         />
-
-        {person.githubUsername && (
-          <GitHubSyncButton
-            tenantSlug={tenant}
-            githubUsername={person.githubUsername}
-            isGitHubEnabled={isGitHubEnabled}
-          />
-        )}
       </div>
     </div>
   );

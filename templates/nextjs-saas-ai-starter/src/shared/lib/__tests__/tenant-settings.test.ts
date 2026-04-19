@@ -5,29 +5,20 @@
 import {
   applySettingsDefaults,
   DEFAULT_AI,
-  DEFAULT_BULK_IMPORT,
   DEFAULT_DEPARTMENTS,
-  DEFAULT_EVIDENCE_UPLOAD,
   DEFAULT_FEATURES,
   DEFAULT_INTEGRATIONS,
-  DEFAULT_PROCESSING,
-  DEFAULT_QUIZ,
-  DEFAULT_SKILL_MATCHING,
   DEFAULT_STORAGE,
-  DEFAULT_TAXONOMY,
   DEFAULT_UI,
   generateWebhookSecret,
   getDefaultTenantSettings,
   getDepartments,
-  getSkillCategories,
-  getSkillCategoryById,
   hasAIConfigured,
   hasStorageConfigured,
   isFeatureEnabled,
   isValidWebhookUrl,
   mergeTenantSettings,
   parseTenantSettings,
-  type TenantSettings,
   type TenantSettingsInput,
 } from '../tenant-settings';
 
@@ -37,29 +28,23 @@ describe('tenant-settings', () => {
       const result = applySettingsDefaults({});
 
       expect(result.features).toEqual(DEFAULT_FEATURES);
-      expect(result.skillMatching).toEqual(DEFAULT_SKILL_MATCHING);
-      expect(result.processing).toEqual(DEFAULT_PROCESSING);
       expect(result.ui).toEqual(DEFAULT_UI);
       expect(result.integrations).toEqual(DEFAULT_INTEGRATIONS);
-      expect(result.bulkImport).toEqual(DEFAULT_BULK_IMPORT);
-      expect(result.evidenceUpload).toEqual(DEFAULT_EVIDENCE_UPLOAD);
       expect(result.ai).toEqual(DEFAULT_AI);
       expect(result.storage).toEqual(DEFAULT_STORAGE);
       expect(result.departments).toEqual(DEFAULT_DEPARTMENTS);
-      expect(result.taxonomy).toEqual(DEFAULT_TAXONOMY);
     });
 
     it('should merge custom values with defaults', () => {
-      // Using plain objects - TenantSettingsInput accepts partials for nested objects
       const settings: TenantSettingsInput = {
-        features: { bulkImport: false },
+        features: { knowledgeBase: false },
         ui: { primaryColor: '#FF0000' },
       };
 
       const result = applySettingsDefaults(settings);
 
-      expect(result.features.bulkImport).toBe(false);
-      expect(result.features.knowledgeBase).toBe(true); // default
+      expect(result.features.knowledgeBase).toBe(false);
+      expect(result.features.webhooks).toBe(false); // default
       expect(result.ui.primaryColor).toBe('#FF0000');
       expect(result.ui.secondaryColor).toBe('#7C6EAF'); // default
     });
@@ -67,15 +52,15 @@ describe('tenant-settings', () => {
 
   describe('parseTenantSettings', () => {
     it('should parse valid settings object', () => {
-      const input = { features: { bulkImport: true } };
+      const input = { features: { knowledgeBase: true } };
       const result = parseTenantSettings(input);
-      expect(result.features?.bulkImport).toBe(true);
+      expect(result.features?.knowledgeBase).toBe(true);
     });
 
     it('should parse JSON string', () => {
-      const input = JSON.stringify({ features: { quiz: false } });
+      const input = JSON.stringify({ features: { webhooks: false } });
       const result = parseTenantSettings(input);
-      expect(result.features?.quiz).toBe(false);
+      expect(result.features?.webhooks).toBe(false);
     });
 
     it('should return empty object for invalid input', () => {
@@ -92,45 +77,45 @@ describe('tenant-settings', () => {
   describe('mergeTenantSettings', () => {
     it('should merge partial settings into existing', () => {
       const existing: TenantSettingsInput = {
-        features: { bulkImport: true, quiz: true },
+        features: { knowledgeBase: true, webhooks: true },
         ui: { primaryColor: '#0000FF' },
       };
       const partial: Partial<TenantSettingsInput> = {
-        features: { bulkImport: false },
+        features: { knowledgeBase: false },
       };
 
       const result = mergeTenantSettings(existing, partial);
 
-      expect(result.features?.bulkImport).toBe(false);
-      expect(result.features?.quiz).toBe(true);
+      expect(result.features?.knowledgeBase).toBe(false);
+      expect(result.features?.webhooks).toBe(true);
       expect(result.ui?.primaryColor).toBe('#0000FF');
     });
 
     it('should preserve existing values when partial is undefined', () => {
       const existing: TenantSettingsInput = {
-        features: { bulkImport: true },
+        features: { knowledgeBase: true },
       };
 
       const result = mergeTenantSettings(existing, {});
 
-      expect(result.features?.bulkImport).toBe(true);
+      expect(result.features?.knowledgeBase).toBe(true);
     });
   });
 
   describe('isFeatureEnabled', () => {
     it('should return true for enabled feature', () => {
-      const settings: TenantSettingsInput = { features: { bulkImport: true } };
-      expect(isFeatureEnabled(settings, 'bulkImport')).toBe(true);
+      const settings: TenantSettingsInput = { features: { knowledgeBase: true } };
+      expect(isFeatureEnabled(settings, 'knowledgeBase')).toBe(true);
     });
 
     it('should return false for disabled feature', () => {
-      const settings: TenantSettingsInput = { features: { bulkImport: false } };
-      expect(isFeatureEnabled(settings, 'bulkImport')).toBe(false);
+      const settings: TenantSettingsInput = { features: { knowledgeBase: false } };
+      expect(isFeatureEnabled(settings, 'knowledgeBase')).toBe(false);
     });
 
     it('should return default value for missing feature', () => {
       const settings: TenantSettingsInput = {};
-      expect(isFeatureEnabled(settings, 'bulkImport')).toBe(true); // default is true
+      expect(isFeatureEnabled(settings, 'knowledgeBase')).toBe(true); // default is true
       expect(isFeatureEnabled(settings, 'webhooks')).toBe(false); // default is false
     });
   });
@@ -193,40 +178,6 @@ describe('tenant-settings', () => {
     });
   });
 
-  describe('getSkillCategories', () => {
-    it('should return custom categories when defined', () => {
-      const customCategories = [
-        { id: 'custom1', name: 'Custom 1', sortOrder: 1 },
-        { id: 'custom2', name: 'Custom 2', sortOrder: 2 },
-      ];
-      const settings: TenantSettings = {
-        taxonomy: { skillCategories: customCategories },
-      };
-
-      const result = getSkillCategories(settings);
-      expect(result).toEqual(customCategories);
-    });
-
-    it('should return sorted categories', () => {
-      const unsortedCategories = [
-        { id: 'b', name: 'B', sortOrder: 2 },
-        { id: 'a', name: 'A', sortOrder: 1 },
-      ];
-      const settings: TenantSettings = {
-        taxonomy: { skillCategories: unsortedCategories },
-      };
-
-      const result = getSkillCategories(settings);
-      expect(result[0].id).toBe('a');
-      expect(result[1].id).toBe('b');
-    });
-
-    it('should return default categories when not defined', () => {
-      const result = getSkillCategories({});
-      expect(result).toEqual(DEFAULT_TAXONOMY.skillCategories);
-    });
-  });
-
   describe('getDepartments', () => {
     it('should return departments list', () => {
       const depts = [{ id: 'eng', name: 'Engineering', sortOrder: 0 }];
@@ -239,29 +190,6 @@ describe('tenant-settings', () => {
 
     it('should return empty array when not defined', () => {
       expect(getDepartments({})).toEqual([]);
-    });
-  });
-
-  describe('getSkillCategoryById', () => {
-    it('should return category by ID', () => {
-      const categories = [
-        { id: 'tech', name: 'Technical', sortOrder: 1 },
-        { id: 'soft', name: 'Soft Skills', sortOrder: 2 },
-      ];
-      const settings: TenantSettingsInput = {
-        taxonomy: { skillCategories: categories },
-      };
-
-      const result = getSkillCategoryById(settings, 'tech');
-      expect(result?.name).toBe('Technical');
-    });
-
-    it('should return undefined for non-existing ID', () => {
-      const settings: TenantSettingsInput = {
-        taxonomy: { skillCategories: [{ id: 'tech', name: 'Technical', sortOrder: 1 }] },
-      };
-
-      expect(getSkillCategoryById(settings, 'unknown')).toBeUndefined();
     });
   });
 
@@ -327,19 +255,9 @@ describe('tenant-settings', () => {
 
   describe('default constants', () => {
     it('should have correct DEFAULT_FEATURES', () => {
-      expect(DEFAULT_FEATURES.bulkImport).toBe(true);
+      expect(DEFAULT_FEATURES.knowledgeBase).toBe(true);
       expect(DEFAULT_FEATURES.webhooks).toBe(false);
-      expect(DEFAULT_FEATURES.hrisIntegration).toBe(false);
-    });
-
-    it('should have correct DEFAULT_SKILL_MATCHING', () => {
-      expect(DEFAULT_SKILL_MATCHING.exactMatchThreshold).toBe(0.92);
-      expect(DEFAULT_SKILL_MATCHING.suggestThreshold).toBe(0.75);
-    });
-
-    it('should have correct DEFAULT_PROCESSING', () => {
-      expect(DEFAULT_PROCESSING.batchSize).toBe(10);
-      expect(DEFAULT_PROCESSING.maxRetries).toBe(3);
+      expect(DEFAULT_FEATURES.allowCustomRoles).toBe(true);
     });
 
     it('should have correct DEFAULT_UI', () => {
@@ -347,10 +265,9 @@ describe('tenant-settings', () => {
       expect(DEFAULT_UI.defaultLanguage).toBe('en');
     });
 
-    it('should have correct DEFAULT_QUIZ', () => {
-      expect(DEFAULT_QUIZ.enabled).toBe(true);
-      expect(DEFAULT_QUIZ.questionsPerQuiz).toBe(10);
-      expect(DEFAULT_QUIZ.cacheTtlDays).toBe(-1);
+    it('should have correct DEFAULT_AI', () => {
+      expect(DEFAULT_AI.chatModel).toBe('gpt-4o-mini');
+      expect(DEFAULT_AI.temperature).toBe(0.1);
     });
   });
 });

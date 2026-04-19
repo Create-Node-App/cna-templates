@@ -1,7 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
-import { GitHubSyncButton } from '@/features/profile/components/GitHubSyncButton';
 import { ProfileSettingsForm } from '@/features/profile/components/ProfileSettingsForm';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
@@ -40,8 +39,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       .toUpperCase()
       .slice(0, 2) || 'U';
 
-  const isGitHubEnabled = !!person.githubUsername;
-
   return (
     <div className="container max-w-3xl py-8 space-y-6">
       <Card>
@@ -77,21 +74,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           />
         </CardContent>
       </Card>
-
-      {isGitHubEnabled && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Connected Accounts</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <GitHubSyncButton
-              tenantSlug={tenantSlug}
-              githubUsername={person.githubUsername!}
-              isGitHubEnabled={isGitHubEnabled}
-            />
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

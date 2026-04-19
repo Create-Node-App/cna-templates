@@ -72,15 +72,13 @@ Before implementing features related to members, tenants, or permissions, **read
 #### Scope and visibility
 
 - **Admin panel** shows data for all tenant members (requires `admin:dashboard`).
-- **Manager features** (`manager:*`) are for users with reports in the management hierarchy.
-- **1:1 Facilitator features** (`one_on_one:*`) are for users who facilitate 1:1 conversations.
+- **Role-based features** are gated by permission keys, not role names.
 
 #### Anti-patterns to avoid
 
 - **Do not** check role names for authorization; always check permissions.
 - **Do not** hardcode "if admin" checks; use permission keys.
 - **Do not** skip tenant scoping on DB queries.
-- **Do not** derive manager relations from projects (project manager ≠ org manager).
 
 ---
 

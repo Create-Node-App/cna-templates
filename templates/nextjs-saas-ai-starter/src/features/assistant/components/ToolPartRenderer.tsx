@@ -5,7 +5,7 @@
  * Used when part.type starts with 'tool-' and part.state is output-available.
  */
 
-import { ChevronDown, ChevronUp, FileText, Loader2, Search, Target, Users } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, Search, Target, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -13,21 +13,13 @@ import { Badge } from '@/shared/components/ui/badge';
 import { cn } from '@/shared/lib/utils';
 
 import { ComparisonTableCard } from './ComparisonTableCard';
-import { KnowledgeDocRow } from './KnowledgeDocCard';
 import { PersonMiniCard } from './PersonMiniCard';
-import type {
-  CompareCandidatesOutput,
-  FindCandidatesOutput,
-  GetPersonOutput,
-  SearchKnowledgeOutput,
-  SearchPeopleOutput,
-} from '../types/genui';
+import type { CompareEntitiesOutput, FindMatchesOutput, GetEntityOutput, SearchEntitiesOutput } from '../types/genui';
 import {
-  compareCandidatesOutputSchema,
-  findCandidatesOutputSchema,
-  getPersonOutputSchema,
-  searchKnowledgeOutputSchema,
-  searchPeopleOutputSchema,
+  compareEntitiesOutputSchema,
+  findMatchesOutputSchema,
+  getEntityOutputSchema,
+  searchEntitiesOutputSchema,
 } from '../types/genui';
 
 /** Max items shown before "show more" toggle */
@@ -149,28 +141,27 @@ export function ToolPartRenderer({
   }
 
   switch (partType) {
-    case 'tool-searchPeople': {
-      const parsed = searchPeopleOutputSchema.safeParse(partOutput);
+    case 'tool-searchEntities': {
+      const parsed = searchEntitiesOutputSchema.safeParse(partOutput);
       if (!parsed.success) return null;
-      const data = parsed.data as SearchPeopleOutput;
+      const data = parsed.data as SearchEntitiesOutput;
       if (data.items.length === 0) return null;
 
       const cards = data.items.map((item, index) => (
         <PersonMiniCard
-          key={item.personId}
+          key={item.entityId}
           person={{
             name: item.name,
-            department: item.department,
-            skills: item.skills,
+            category: item.category,
+            attributes: item.attributes,
             raw: '',
           }}
           rank={index + 1}
-          personId={item.personId}
+          personId={item.entityId}
           tenantSlug={tenantSlug}
         />
       ));
 
-      // Extract a short label from the summary (e.g. 'Personas con skills de "React"')
       const summaryLabel = data.summary.replace(/[#*]/g, '').trim();
 
       return (
@@ -186,23 +177,23 @@ export function ToolPartRenderer({
       );
     }
 
-    case 'tool-findCandidates': {
-      const parsed = findCandidatesOutputSchema.safeParse(partOutput);
+    case 'tool-findMatches': {
+      const parsed = findMatchesOutputSchema.safeParse(partOutput);
       if (!parsed.success) return null;
-      const data = parsed.data as FindCandidatesOutput;
-      if (data.candidates.length === 0) return null;
+      const data = parsed.data as FindMatchesOutput;
+      if (data.matches.length === 0) return null;
 
-      const cards = data.candidates.map((c, index) => (
+      const cards = data.matches.map((c, index) => (
         <PersonMiniCard
-          key={c.personId}
+          key={c.entityId}
           person={{
             name: c.name,
-            department: c.department,
-            skills: undefined,
+            category: c.category,
+            attributes: undefined,
             raw: '',
           }}
           rank={index + 1}
-          personId={c.personId}
+          personId={c.entityId}
           tenantSlug={tenantSlug}
           score={c.score}
           met={c.met}
@@ -210,16 +201,14 @@ export function ToolPartRenderer({
         />
       ));
 
-      const label = data.capabilityName
-        ? `Candidatos para "${data.capabilityName}"`
+      const label = data.profileName
+        ? `Matches for "${data.profileName}"`
         : data.summary.split('\n')[0].replace(/[#*]/g, '').trim();
 
       return (
         <CollapsibleList
-          total={data.candidates.length}
-          header={
-            <ResultHeader icon={<Target className="h-3.5 w-3.5" />} label={label} count={data.candidates.length} />
-          }
+          total={data.matches.length}
+          header={<ResultHeader icon={<Target className="h-3.5 w-3.5" />} label={label} count={data.matches.length} />}
           className={cn('mt-2', className)}
         >
           {cards}
@@ -227,10 +216,10 @@ export function ToolPartRenderer({
       );
     }
 
-    case 'tool-getPerson': {
-      const parsed = getPersonOutputSchema.safeParse(partOutput);
+    case 'tool-getEntity': {
+      const parsed = getEntityOutputSchema.safeParse(partOutput);
       if (!parsed.success) return null;
-      const data = parsed.data as GetPersonOutput;
+      const data = parsed.data as GetEntityOutput;
       if (!data.item) return null;
       return (
         <div className={cn('rounded-lg border bg-muted/20 overflow-hidden mt-2', className)}>
@@ -238,65 +227,33 @@ export function ToolPartRenderer({
           <PersonMiniCard
             person={{
               name: data.item.name,
-              department: data.item.department,
-              skills: data.item.skills,
+              category: data.item.category,
+              attributes: data.item.attributes,
               raw: '',
             }}
-            personId={data.item.personId}
+            personId={data.item.entityId}
             tenantSlug={tenantSlug}
           />
         </div>
       );
     }
 
-    case 'tool-getCapability':
-    case 'tool-listCapabilities':
-      // Capability tools removed - return null
+    case 'tool-getProfile':
+    case 'tool-listProfiles':
+    case 'tool-searchKnowledge':
+      // These tools render as plain text in the generic template
       return null;
 
-    case 'tool-searchKnowledge': {
-      const parsed = searchKnowledgeOutputSchema.safeParse(partOutput);
-      if (!parsed.success) return null;
-      const data = parsed.data as SearchKnowledgeOutput;
-      if (data.documents.length === 0) return null;
-
-      const headerLabel = data.summary
-        ? data.summary
-            .split('\n')[0]
-            .replace(/[#*]/g, '')
-            .replace(/\(búsqueda.*\)/, '')
-            .trim()
-        : 'Knowledge documents';
-
-      const rows = data.documents.map((doc) => <KnowledgeDocRow key={doc.id} doc={doc} tenantSlug={tenantSlug} />);
-
-      return (
-        <CollapsibleList
-          total={data.documents.length}
-          header={
-            <ResultHeader
-              icon={<FileText className="h-3.5 w-3.5" />}
-              label={headerLabel}
-              count={data.documents.length}
-            />
-          }
-          className={cn('mt-2', className)}
-        >
-          {rows}
-        </CollapsibleList>
-      );
-    }
-
-    case 'tool-compareCandidates':
+    case 'tool-compareEntities':
     case 'tool-findAndCompareTop': {
-      const parsed = compareCandidatesOutputSchema.safeParse(partOutput);
+      const parsed = compareEntitiesOutputSchema.safeParse(partOutput);
       if (!parsed.success) return null;
-      const data = parsed.data as CompareCandidatesOutput;
+      const data = parsed.data as CompareEntitiesOutput;
       if (data.rows.length === 0) return null;
       return (
         <ComparisonTableCard
           comparison={{ headers: data.headers, rows: data.rows, raw: '' }}
-          personIds={data.personIds}
+          entityIds={data.entityIds}
           tenantSlug={tenantSlug}
           className={cn('mt-2', className)}
         />

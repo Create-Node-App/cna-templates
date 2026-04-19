@@ -7,20 +7,13 @@ import {
   Database,
   Eye,
   EyeOff,
-  FileUp,
-  GraduationCap,
-  HelpCircle,
   Loader2,
   Palette,
-  Plus,
   Settings,
   Sliders,
-  Tag,
-  Trash2,
-  Upload,
   XCircle,
 } from 'lucide-react';
-import { useCallback, useMemo, useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 
 import {
   Button,
@@ -38,18 +31,12 @@ import {
   TabsTrigger,
 } from '@/shared/components/ui';
 import { useUrlTab } from '@/shared/hooks';
-import type { SkillCategory, TenantSettings } from '@/shared/lib/tenant-settings';
+import type { TenantSettings } from '@/shared/lib/tenant-settings';
 import {
   aiProviders,
   DEFAULT_AI,
-  DEFAULT_BULK_IMPORT,
-  DEFAULT_EVIDENCE_UPLOAD,
   DEFAULT_FEATURES,
-  DEFAULT_PROCESSING,
-  DEFAULT_QUIZ,
-  DEFAULT_SKILL_MATCHING,
   DEFAULT_STORAGE,
-  DEFAULT_TAXONOMY,
   DEFAULT_UI,
   storageProviders,
 } from '@/shared/lib/tenant-settings';
@@ -78,12 +65,6 @@ const FEATURE_FLAGS: Array<{
   category: 'core' | 'ai' | 'integrations';
 }> = [
   {
-    key: 'bulkImport',
-    label: 'Bulk Import',
-    description: 'Enable CSV/Excel bulk import in admin',
-    category: 'core',
-  },
-  {
     key: 'knowledgeBase',
     label: 'Knowledge Base',
     description: 'Enable knowledge documents management',
@@ -95,12 +76,6 @@ const FEATURE_FLAGS: Array<{
     description:
       'When on, admins can create new roles in addition to system roles (Member, Manager, Admin, etc.). When off, only system roles are available.',
     category: 'core',
-  },
-  {
-    key: 'quiz',
-    label: 'Quiz Assessments',
-    description: 'AI-generated quizzes for skill assessment',
-    category: 'ai',
   },
   {
     key: 'aiAssistantEnabled',
@@ -120,12 +95,6 @@ const FEATURE_FLAGS: Array<{
     description: 'Enable GitHub user profile sync',
     category: 'integrations',
   },
-  {
-    key: 'hrisIntegration',
-    label: 'HRIS Integration',
-    description: 'Enable HR system integration',
-    category: 'integrations',
-  },
 ];
 
 // ============================================================================
@@ -142,38 +111,14 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
   // URL-synced tab state for deep linking
   const [activeTab, setActiveTab] = useUrlTab({
     defaultTab: 'general',
-    validTabs: [
-      'general',
-      'features',
-      'ai-provider',
-      'storage',
-      'skill-levels',
-      'categories',
-      'skill-matching',
-      'bulk-import',
-      'evidence',
-      'ui',
-      'quiz',
-    ],
+    validTabs: ['general', 'features', 'ai-provider', 'storage', 'ui'],
   });
 
   // Memoized settings with defaults
   const features = useMemo(() => ({ ...DEFAULT_FEATURES, ...settings.features }), [settings.features]);
-  const skillMatching = useMemo(
-    () => ({ ...DEFAULT_SKILL_MATCHING, ...settings.skillMatching }),
-    [settings.skillMatching],
-  );
-  const processing = useMemo(() => ({ ...DEFAULT_PROCESSING, ...settings.processing }), [settings.processing]);
   const ui = useMemo(() => ({ ...DEFAULT_UI, ...settings.ui }), [settings.ui]);
-  const bulkImport = useMemo(() => ({ ...DEFAULT_BULK_IMPORT, ...settings.bulkImport }), [settings.bulkImport]);
-  const evidenceUpload = useMemo(
-    () => ({ ...DEFAULT_EVIDENCE_UPLOAD, ...settings.evidenceUpload }),
-    [settings.evidenceUpload],
-  );
   const ai = useMemo(() => ({ ...DEFAULT_AI, ...settings.ai }), [settings.ai]);
   const storage = useMemo(() => ({ ...DEFAULT_STORAGE, ...settings.storage }), [settings.storage]);
-  const taxonomy = useMemo(() => ({ ...DEFAULT_TAXONOMY, ...settings.taxonomy }), [settings.taxonomy]);
-  const quiz = useMemo(() => ({ ...DEFAULT_QUIZ, ...settings.quiz }), [settings.quiz]);
 
   // Password visibility and test states
   const [showAIApiKey, setShowAIApiKey] = useState(false);
@@ -221,41 +166,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
     handleSave('features', { features: newFeatures });
   };
 
-  // Skill matching update
-  const handleSkillMatchingUpdate = (
-    key: keyof NonNullable<TenantSettings['skillMatching']>,
-    value: number | boolean,
-  ) => {
-    const newSkillMatching = { ...skillMatching, [key]: value };
-    setSettings({ ...settings, skillMatching: newSkillMatching });
-  };
-
-  // Processing update
-  const handleProcessingUpdate = (key: keyof NonNullable<TenantSettings['processing']>, value: number | boolean) => {
-    const newProcessing = { ...processing, [key]: value };
-    setSettings({ ...settings, processing: newProcessing });
-  };
-
-  // Bulk import update
-  const handleBulkImportUpdate = (
-    key: keyof NonNullable<TenantSettings['bulkImport']>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any,
-  ) => {
-    const newBulkImport = { ...bulkImport, [key]: value };
-    setSettings({ ...settings, bulkImport: newBulkImport });
-  };
-
-  // Evidence upload update
-  const handleEvidenceUploadUpdate = (
-    key: keyof NonNullable<TenantSettings['evidenceUpload']>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any,
-  ) => {
-    const newEvidenceUpload = { ...evidenceUpload, [key]: value };
-    setSettings({ ...settings, evidenceUpload: newEvidenceUpload });
-  };
-
   // AI settings update
   const handleAIUpdate = (
     key: keyof NonNullable<TenantSettings['ai']>,
@@ -279,38 +189,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
     // Clear test result when settings change
     setStorageTestResult(null);
   };
-
-  // Categories management
-  const handleAddCategory = useCallback(() => {
-    const newCat: SkillCategory = {
-      id: `cat-${Date.now()}`,
-      name: '',
-      color: '#6B7280',
-      sortOrder: (taxonomy.skillCategories?.length ?? 0) + 1,
-    };
-    const newList = [...(taxonomy.skillCategories ?? []), newCat];
-    setSettings({ ...settings, taxonomy: { ...taxonomy, skillCategories: newList } });
-  }, [taxonomy, settings]);
-
-  const handleUpdateCategory = useCallback(
-    (id: string, updates: Partial<SkillCategory>) => {
-      const newList = (taxonomy.skillCategories ?? []).map((c) => (c.id === id ? { ...c, ...updates } : c));
-      setSettings({ ...settings, taxonomy: { ...taxonomy, skillCategories: newList } });
-    },
-    [taxonomy, settings],
-  );
-
-  const handleRemoveCategory = useCallback(
-    (id: string) => {
-      const newList = (taxonomy.skillCategories ?? []).filter((c) => c.id !== id);
-      setSettings({ ...settings, taxonomy: { ...taxonomy, skillCategories: newList } });
-    },
-    [taxonomy, settings],
-  );
-
-  const handleResetCategories = useCallback(() => {
-    setSettings({ ...settings, taxonomy: DEFAULT_TAXONOMY });
-  }, [settings]);
 
   // Test AI connection
   const testAIConnection = async () => {
@@ -359,7 +237,7 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-      <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-flex lg:flex-wrap gap-1">
+      <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-flex lg:flex-wrap gap-1">
         <TabsTrigger value="general" className="gap-2">
           <Settings className="h-4 w-4" />
           <span className="hidden sm:inline">General</span>
@@ -367,14 +245,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
         <TabsTrigger value="features" className="gap-2">
           <Sliders className="h-4 w-4" />
           <span className="hidden sm:inline">Features</span>
-        </TabsTrigger>
-        <TabsTrigger value="skill-levels" className="gap-2">
-          <GraduationCap className="h-4 w-4" />
-          <span className="hidden sm:inline">Skill Levels</span>
-        </TabsTrigger>
-        <TabsTrigger value="categories" className="gap-2">
-          <Tag className="h-4 w-4" />
-          <span className="hidden sm:inline">Categories</span>
         </TabsTrigger>
         <TabsTrigger value="ai-provider" className="gap-2">
           <Brain className="h-4 w-4" />
@@ -384,25 +254,9 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
           <Database className="h-4 w-4" />
           <span className="hidden sm:inline">Storage</span>
         </TabsTrigger>
-        <TabsTrigger value="skill-matching" className="gap-2">
-          <Sliders className="h-4 w-4" />
-          <span className="hidden sm:inline">Matching</span>
-        </TabsTrigger>
-        <TabsTrigger value="bulk-import" className="gap-2">
-          <FileUp className="h-4 w-4" />
-          <span className="hidden sm:inline">Import</span>
-        </TabsTrigger>
-        <TabsTrigger value="evidence" className="gap-2">
-          <Upload className="h-4 w-4" />
-          <span className="hidden sm:inline">Evidence</span>
-        </TabsTrigger>
         <TabsTrigger value="ui" className="gap-2">
           <Palette className="h-4 w-4" />
           <span className="hidden sm:inline">Branding</span>
-        </TabsTrigger>
-        <TabsTrigger value="quiz" className="gap-2">
-          <HelpCircle className="h-4 w-4" />
-          <span className="hidden sm:inline">Quiz</span>
         </TabsTrigger>
       </TabsList>
 
@@ -570,86 +424,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
         </div>
       </TabsContent>
 
-      {/* Skill Categories Tab */}
-      <TabsContent value="categories">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <Tag className="h-5 w-5" />
-                Skill Categories
-              </span>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleResetCategories}>
-                  Reset to Default
-                </Button>
-                <Button size="sm" onClick={handleAddCategory}>
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Category
-                </Button>
-              </div>
-            </CardTitle>
-            <CardDescription>
-              Define the taxonomy for organizing skills. Each category can have a custom color for visual
-              identification.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {(taxonomy.skillCategories?.length ?? 0) === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Tag className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No categories configured</p>
-                <p className="text-sm">Add categories to organize skills by type</p>
-              </div>
-            ) : (
-              <div className="grid gap-3">
-                {taxonomy.skillCategories?.map((cat) => (
-                  <div key={cat.id} className="flex items-center gap-3 p-3 border rounded-lg bg-card">
-                    <input
-                      type="color"
-                      value={cat.color ?? '#6B7280'}
-                      onChange={(e) => handleUpdateCategory(cat.id, { color: e.target.value })}
-                      className="h-9 w-12 rounded border cursor-pointer"
-                    />
-                    <Input
-                      value={cat.id}
-                      onChange={(e) =>
-                        handleUpdateCategory(cat.id, { id: e.target.value.toLowerCase().replace(/\s+/g, '-') })
-                      }
-                      placeholder="ID (slug)"
-                      className="w-32 font-mono text-sm"
-                    />
-                    <Input
-                      value={cat.name}
-                      onChange={(e) => handleUpdateCategory(cat.id, { name: e.target.value })}
-                      placeholder="Display name"
-                      className="flex-1"
-                    />
-                    <Input
-                      value={cat.description ?? ''}
-                      onChange={(e) => handleUpdateCategory(cat.id, { description: e.target.value })}
-                      placeholder="Description"
-                      className="flex-1"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleRemoveCategory(cat.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <Button onClick={() => handleSave('taxonomy', { taxonomy })} disabled={isPending} className="mt-4">
-              Save Categories
-            </Button>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
       {/* AI Provider Tab */}
       <TabsContent value="ai-provider">
         <div className="grid gap-6 lg:grid-cols-2">
@@ -657,7 +431,7 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
             <CardHeader>
               <CardTitle>AI Provider Configuration</CardTitle>
               <CardDescription>
-                Configure your AI provider for skill extraction and chat features. Settings are stored per-tenant.
+                Configure your AI provider for data extraction and chat features. Settings are stored per-tenant.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -750,7 +524,7 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
               </div>
               <div>
                 <Label htmlFor="extraction-model">Extraction Model</Label>
-                <p className="text-xs text-muted-foreground mb-2">Model for CV skill extraction</p>
+                <p className="text-xs text-muted-foreground mb-2">Model for structured data extraction</p>
                 <Input
                   id="extraction-model"
                   value={ai.extractionModel || ''}
@@ -944,261 +718,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
         </div>
       </TabsContent>
 
-      {/* Skill Matching Tab */}
-      <TabsContent value="skill-matching">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Matching Thresholds</CardTitle>
-              <CardDescription>Configure skill similarity thresholds (0-1)</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="exact-match">Exact Match Threshold</Label>
-                <p className="text-xs text-muted-foreground mb-2">
-                  Skills above this score are considered exact matches
-                </p>
-                <Input
-                  id="exact-match"
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={skillMatching.exactMatchThreshold}
-                  onChange={(e) => handleSkillMatchingUpdate('exactMatchThreshold', parseFloat(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div>
-                <Label htmlFor="suggest">Suggest Threshold</Label>
-                <p className="text-xs text-muted-foreground mb-2">
-                  Skills above this score are suggested as alternatives
-                </p>
-                <Input
-                  id="suggest"
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={skillMatching.suggestThreshold}
-                  onChange={(e) => handleSkillMatchingUpdate('suggestThreshold', parseFloat(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div>
-                <Label htmlFor="auto-create">Auto-Create Threshold</Label>
-                <p className="text-xs text-muted-foreground mb-2">
-                  Skills below this score trigger auto-creation (if enabled)
-                </p>
-                <Input
-                  id="auto-create"
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={skillMatching.autoCreateThreshold}
-                  onChange={(e) => handleSkillMatchingUpdate('autoCreateThreshold', parseFloat(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <Button onClick={() => handleSave('skillMatching', { skillMatching })} disabled={isPending}>
-                Save Thresholds
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Processing Settings</CardTitle>
-              <CardDescription>Configure batch processing</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="batch-size">Batch Size</Label>
-                <p className="text-xs text-muted-foreground mb-2">Number of items to process per batch</p>
-                <Input
-                  id="batch-size"
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={processing.batchSize}
-                  onChange={(e) => handleProcessingUpdate('batchSize', parseInt(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div>
-                <Label htmlFor="interval">Processing Interval (minutes)</Label>
-                <p className="text-xs text-muted-foreground mb-2">How often to run the processing job</p>
-                <Input
-                  id="interval"
-                  type="number"
-                  min="1"
-                  max="60"
-                  value={processing.processingIntervalMinutes}
-                  onChange={(e) => handleProcessingUpdate('processingIntervalMinutes', parseInt(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div>
-                <Label htmlFor="max-retries">Max Retries</Label>
-                <p className="text-xs text-muted-foreground mb-2">Maximum retry attempts for failed processing</p>
-                <Input
-                  id="max-retries"
-                  type="number"
-                  min="0"
-                  max="10"
-                  value={processing.maxRetries}
-                  onChange={(e) => handleProcessingUpdate('maxRetries', parseInt(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Parallel Processing</Label>
-                  <p className="text-xs text-muted-foreground">Process multiple items concurrently</p>
-                </div>
-                <Switch
-                  checked={processing.parallelProcessing}
-                  onCheckedChange={(checked) => handleProcessingUpdate('parallelProcessing', checked)}
-                  disabled={isPending}
-                />
-              </div>
-              <Button onClick={() => handleSave('processing', { processing })} disabled={isPending}>
-                Save Processing
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </TabsContent>
-
-      {/* Bulk Import Tab */}
-      <TabsContent value="bulk-import">
-        <Card>
-          <CardHeader>
-            <CardTitle>Bulk Import Settings</CardTitle>
-            <CardDescription>Configure CSV/Excel import behavior</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div>
-                <Label htmlFor="default-mode">Default Mode</Label>
-                <p className="text-xs text-muted-foreground mb-2">How to handle validation errors</p>
-                <select
-                  id="default-mode"
-                  value={bulkImport.defaultMode}
-                  onChange={(e) => handleBulkImportUpdate('defaultMode', e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  <option value="strict">Strict (fail on any error)</option>
-                  <option value="lenient">Lenient (skip invalid rows)</option>
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="max-rows">Max Rows Per Import</Label>
-                <p className="text-xs text-muted-foreground mb-2">Maximum number of rows allowed per import</p>
-                <Input
-                  id="max-rows"
-                  type="number"
-                  min="100"
-                  max="50000"
-                  value={bulkImport.maxRowsPerImport}
-                  onChange={(e) => handleBulkImportUpdate('maxRowsPerImport', parseInt(e.target.value))}
-                  className="w-40"
-                />
-              </div>
-              <div>
-                <Label htmlFor="duplicate-action">On Duplicate</Label>
-                <p className="text-xs text-muted-foreground mb-2">Action when a duplicate record is found</p>
-                <select
-                  id="duplicate-action"
-                  value={bulkImport.duplicateAction}
-                  onChange={(e) => handleBulkImportUpdate('duplicateAction', e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  <option value="skip">Skip</option>
-                  <option value="update">Update existing</option>
-                  <option value="error">Error</option>
-                </select>
-              </div>
-              <div className="flex items-center justify-between pt-6">
-                <div>
-                  <Label>Duplicate Detection</Label>
-                  <p className="text-xs text-muted-foreground">Check for existing records before import</p>
-                </div>
-                <Switch
-                  checked={bulkImport.duplicateDetection}
-                  onCheckedChange={(checked) => handleBulkImportUpdate('duplicateDetection', checked)}
-                  disabled={isPending}
-                />
-              </div>
-            </div>
-            <Button onClick={() => handleSave('bulkImport', { bulkImport })} disabled={isPending}>
-              Save Bulk Import Settings
-            </Button>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      {/* Evidence Upload Tab */}
-      <TabsContent value="evidence">
-        <Card>
-          <CardHeader>
-            <CardTitle>Evidence Upload Settings</CardTitle>
-            <CardDescription>Configure file uploads for CVs and evidence</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div>
-                <Label htmlFor="max-file-size">Max File Size (MB)</Label>
-                <p className="text-xs text-muted-foreground mb-2">Maximum file size for uploads</p>
-                <Input
-                  id="max-file-size"
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={evidenceUpload.maxFileSizeMB}
-                  onChange={(e) => handleEvidenceUploadUpdate('maxFileSizeMB', parseInt(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div>
-                <Label htmlFor="max-files">Max Files Per Person</Label>
-                <p className="text-xs text-muted-foreground mb-2">Maximum number of evidence files per team member</p>
-                <Input
-                  id="max-files"
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={evidenceUpload.maxFilesPerPerson}
-                  onChange={(e) => handleEvidenceUploadUpdate('maxFilesPerPerson', parseInt(e.target.value))}
-                  className="w-32"
-                />
-              </div>
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <Label>Require Description</Label>
-                  <p className="text-xs text-muted-foreground">Require a description for each upload</p>
-                </div>
-                <Switch
-                  checked={evidenceUpload.requireDescription}
-                  onCheckedChange={(checked) => handleEvidenceUploadUpdate('requireDescription', checked)}
-                  disabled={isPending}
-                />
-              </div>
-            </div>
-            <div>
-              <Label>Allowed File Types</Label>
-              <p className="text-xs text-muted-foreground mb-2">
-                Accepted MIME types: {evidenceUpload.allowedMimeTypes.join(', ')}
-              </p>
-            </div>
-            <Button onClick={() => handleSave('evidenceUpload', { evidenceUpload })} disabled={isPending}>
-              Save Evidence Settings
-            </Button>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
       {/* UI/Branding Tab */}
       <TabsContent value="ui">
         <Card>
@@ -1355,210 +874,6 @@ export function SettingsClient({ tenantSlug, tenantName, tenantDescription, init
             </div>
             <Button onClick={() => handleSave('ui', { ui })} disabled={isPending}>
               Save Branding
-            </Button>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      {/* Quiz Settings Tab */}
-      <TabsContent value="quiz">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quiz Configuration</CardTitle>
-            <CardDescription>
-              Configure AI-generated skill assessment quizzes, including rate limits, caching, and generation settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              {/* Enable/Disable notice */}
-              {!features.quiz && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20">
-                  <p className="text-sm text-amber-800 dark:text-amber-200">
-                    Quiz feature is disabled. Enable it from the{' '}
-                    <button
-                      type="button"
-                      className="font-medium underline hover:no-underline"
-                      onClick={() => setActiveTab('features')}
-                    >
-                      Features tab
-                    </button>{' '}
-                    to configure advanced settings.
-                  </p>
-                </div>
-              )}
-
-              {features.quiz && (
-                <>
-                  {/* Rate Limit */}
-                  <div>
-                    <Label htmlFor="rate-limit">Rate Limit (Quizzes per Day)</Label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Maximum number of quizzes a user can take per day (1-100)
-                    </p>
-                    <Input
-                      id="rate-limit"
-                      type="number"
-                      min={1}
-                      max={100}
-                      value={quiz.rateLimitPerDay}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
-                        if (!isNaN(value) && value >= 1 && value <= 100) {
-                          setSettings({
-                            ...settings,
-                            quiz: { ...quiz, rateLimitPerDay: value },
-                          });
-                        }
-                      }}
-                      className="w-32"
-                    />
-                  </div>
-
-                  {/* Cache TTL */}
-                  <div>
-                    <Label htmlFor="cache-ttl">Cache Duration</Label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      How long generated quizzes are cached before regeneration (-1 for infinite, 1-365 days)
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <Input
-                        id="cache-ttl"
-                        type="number"
-                        min={-1}
-                        max={365}
-                        value={quiz.cacheTtlDays}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value, 10);
-                          if (!isNaN(value) && value >= -1 && value <= 365) {
-                            setSettings({
-                              ...settings,
-                              quiz: { ...quiz, cacheTtlDays: value },
-                            });
-                          }
-                        }}
-                        className="w-32"
-                      />
-                      {quiz.cacheTtlDays === -1 && (
-                        <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                          ∞ Infinite (no expiration)
-                        </span>
-                      )}
-                      {quiz.cacheTtlDays > 0 && (
-                        <span className="text-sm text-muted-foreground">
-                          {quiz.cacheTtlDays} day{quiz.cacheTtlDays !== 1 ? 's' : ''}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Questions Per Quiz */}
-                  <div>
-                    <Label htmlFor="questions-per-quiz">Questions Per Quiz</Label>
-                    <p className="text-xs text-muted-foreground mb-2">Number of questions in each quiz (5-20)</p>
-                    <Input
-                      id="questions-per-quiz"
-                      type="number"
-                      min={5}
-                      max={20}
-                      value={quiz.questionsPerQuiz}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
-                        if (!isNaN(value) && value >= 5 && value <= 20) {
-                          setSettings({
-                            ...settings,
-                            quiz: { ...quiz, questionsPerQuiz: value },
-                          });
-                        }
-                      }}
-                      className="w-32"
-                    />
-                  </div>
-
-                  {/* AI Model */}
-                  <div>
-                    <Label htmlFor="quiz-ai-model">AI Model (Optional)</Label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Specific model for quiz generation. Leave empty to use the default chat model.
-                    </p>
-                    <Input
-                      id="quiz-ai-model"
-                      value={quiz.aiModel ?? ''}
-                      onChange={(e) =>
-                        setSettings({
-                          ...settings,
-                          quiz: { ...quiz, aiModel: e.target.value || undefined },
-                        })
-                      }
-                      className="w-64 font-mono"
-                      placeholder="gpt-4o-mini (uses default if empty)"
-                    />
-                  </div>
-
-                  {/* Temperature */}
-                  <div>
-                    <Label htmlFor="quiz-temperature">Temperature</Label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Controls randomness in quiz generation (0.0 = deterministic, 2.0 = very creative)
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <Input
-                        id="quiz-temperature"
-                        type="number"
-                        min={0}
-                        max={2}
-                        step={0.1}
-                        value={quiz.temperature}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          if (!isNaN(value) && value >= 0 && value <= 2) {
-                            setSettings({
-                              ...settings,
-                              quiz: { ...quiz, temperature: value },
-                            });
-                          }
-                        }}
-                        className="w-32"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        {quiz.temperature === 0 && 'Deterministic'}
-                        {quiz.temperature > 0 && quiz.temperature < 0.5 && 'Focused'}
-                        {quiz.temperature >= 0.5 && quiz.temperature < 1 && 'Balanced'}
-                        {quiz.temperature >= 1 && quiz.temperature < 1.5 && 'Creative'}
-                        {quiz.temperature >= 1.5 && 'Very Creative'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Generation Timeout */}
-                  <div>
-                    <Label htmlFor="quiz-timeout">Generation Timeout (Seconds)</Label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Maximum time to wait for quiz generation (10-300 seconds)
-                    </p>
-                    <Input
-                      id="quiz-timeout"
-                      type="number"
-                      min={10}
-                      max={300}
-                      value={quiz.generationTimeoutSeconds}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
-                        if (!isNaN(value) && value >= 10 && value <= 300) {
-                          setSettings({
-                            ...settings,
-                            quiz: { ...quiz, generationTimeoutSeconds: value },
-                          });
-                        }
-                      }}
-                      className="w-32"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-            <Button onClick={() => handleSave('quiz', { quiz })} disabled={isPending}>
-              Save Quiz Settings
             </Button>
           </CardContent>
         </Card>

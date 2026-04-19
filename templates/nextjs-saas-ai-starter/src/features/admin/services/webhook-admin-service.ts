@@ -491,10 +491,6 @@ export async function getAvailableEventTypes(): Promise<{ value: string; label: 
       events: ['integration.synced', 'integration.failed'],
       label: 'Integrations',
     },
-    bulk: {
-      events: ['bulk_import.completed', 'bulk_import.failed'],
-      label: 'Bulk Import',
-    },
   };
 
   const result: { value: string; label: string; category: string }[] = [];

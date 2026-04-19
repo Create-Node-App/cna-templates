@@ -46,7 +46,7 @@ export function StatsCards({
       accentBorder: 'border-l-primary',
       iconBg: 'bg-primary/10 dark:bg-primary/20',
       iconColor: 'text-primary',
-      href: `${base}/people`,
+      href: `${base}/admin/members`,
     },
     {
       title: t('aiConversations'),

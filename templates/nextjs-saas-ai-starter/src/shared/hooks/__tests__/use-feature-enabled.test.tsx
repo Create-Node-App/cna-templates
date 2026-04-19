@@ -23,7 +23,7 @@ const createWrapper = (value: TenantContextValue | null) => {
 describe('use-feature-enabled', () => {
   describe('useTenantSettings', () => {
     it('should return tenant settings from context', () => {
-      const settings = applySettingsDefaults({ features: { bulkImport: false } });
+      const settings = applySettingsDefaults({ features: { knowledgeBase: false } });
       const wrapper = createWrapper({
         id: 'tenant-123',
         slug: 'test',
@@ -33,7 +33,7 @@ describe('use-feature-enabled', () => {
 
       const { result } = renderHook(() => useTenantSettings(), { wrapper });
 
-      expect(result.current.features.bulkImport).toBe(false);
+      expect(result.current.features.knowledgeBase).toBe(false);
     });
 
     it('should return default settings when no context', () => {
@@ -42,7 +42,7 @@ describe('use-feature-enabled', () => {
       const { result } = renderHook(() => useTenantSettings(), { wrapper });
 
       // Should have all default values
-      expect(result.current.features.bulkImport).toBe(true);
+      expect(result.current.features.knowledgeBase).toBe(true);
       expect(result.current.ui.primaryColor).toBe('#4F5BD5');
     });
   });
@@ -79,9 +79,9 @@ describe('use-feature-enabled', () => {
     it('should return default value when no context', () => {
       const wrapper = createWrapper(null);
 
-      // bulkImport default is true
-      const { result: bulkResult } = renderHook(() => useFeatureEnabled('bulkImport'), { wrapper });
-      expect(bulkResult.current).toBe(true);
+      // knowledgeBase default is true
+      const { result: kbResult } = renderHook(() => useFeatureEnabled('knowledgeBase'), { wrapper });
+      expect(kbResult.current).toBe(true);
 
       // webhooks default is false
       const { result: webhooksResult } = renderHook(() => useFeatureEnabled('webhooks'), { wrapper });
@@ -97,16 +97,16 @@ describe('use-feature-enabled', () => {
         settings,
       });
 
-      // quiz default is true
-      const { result } = renderHook(() => useFeatureEnabled('quiz'), { wrapper });
-      expect(result.current).toBe(DEFAULT_FEATURES.quiz);
+      // aiAssistantEnabled default is true
+      const { result } = renderHook(() => useFeatureEnabled('aiAssistantEnabled'), { wrapper });
+      expect(result.current).toBe(DEFAULT_FEATURES.aiAssistantEnabled);
     });
   });
 
   describe('useFeatureFlags', () => {
     it('should return multiple feature flags', () => {
       const settings = applySettingsDefaults({
-        features: { bulkImport: false, quiz: true, webhooks: true },
+        features: { knowledgeBase: false, aiAssistantEnabled: true, webhooks: true },
       });
       const wrapper = createWrapper({
         id: 'tenant-123',
@@ -115,19 +115,21 @@ describe('use-feature-enabled', () => {
         settings,
       });
 
-      const { result } = renderHook(() => useFeatureFlags(['bulkImport', 'quiz', 'webhooks']), { wrapper });
+      const { result } = renderHook(() => useFeatureFlags(['knowledgeBase', 'aiAssistantEnabled', 'webhooks']), {
+        wrapper,
+      });
 
-      expect(result.current.bulkImport).toBe(false);
-      expect(result.current.quiz).toBe(true);
+      expect(result.current.knowledgeBase).toBe(false);
+      expect(result.current.aiAssistantEnabled).toBe(true);
       expect(result.current.webhooks).toBe(true);
     });
 
     it('should return defaults when no context', () => {
       const wrapper = createWrapper(null);
 
-      const { result } = renderHook(() => useFeatureFlags(['bulkImport', 'webhooks']), { wrapper });
+      const { result } = renderHook(() => useFeatureFlags(['knowledgeBase', 'webhooks']), { wrapper });
 
-      expect(result.current.bulkImport).toBe(DEFAULT_FEATURES.bulkImport);
+      expect(result.current.knowledgeBase).toBe(DEFAULT_FEATURES.knowledgeBase);
       expect(result.current.webhooks).toBe(DEFAULT_FEATURES.webhooks);
     });
 

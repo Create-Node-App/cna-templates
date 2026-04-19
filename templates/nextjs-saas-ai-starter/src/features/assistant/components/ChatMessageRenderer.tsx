@@ -28,11 +28,11 @@ interface ChatMessageRendererProps {
 
 /**
  * Renders a detected pattern as a GenUI component.
- * Fallback patterns don't have IDs (personId, capabilityId); tenantSlug still enables links where supported.
+ * Fallback patterns don't have IDs (entityId, profileId); tenantSlug still enables links where supported.
  */
 function PatternRenderer({ pattern, tenantSlug }: { pattern: DetectedPattern; tenantSlug?: string }) {
   switch (pattern.type) {
-    case 'person':
+    case 'entity':
       return <PersonMiniCard person={pattern.data} className="my-2" tenantSlug={tenantSlug} />;
     case 'comparison':
       return <ComparisonTableCard comparison={pattern.data} className="my-3" tenantSlug={tenantSlug} />;

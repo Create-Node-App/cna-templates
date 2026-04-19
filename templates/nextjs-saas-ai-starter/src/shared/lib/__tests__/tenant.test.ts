@@ -17,7 +17,7 @@ describe('tenant', () => {
     });
 
     it('should build path without leading slash', () => {
-      expect(buildTenantPath('acme', 'skills')).toBe('/t/acme/skills');
+      expect(buildTenantPath('acme', 'settings')).toBe('/t/acme/settings');
     });
 
     it('should handle empty path', () => {

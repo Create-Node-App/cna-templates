@@ -18,8 +18,8 @@ type Story = StoryObj<typeof PersonMiniCard>;
 
 const person = {
   name: 'Jane Doe',
-  department: 'Engineering',
-  skills: [
+  category: 'Engineering',
+  attributes: [
     { name: 'React', level: 4 },
     { name: 'TypeScript', level: 5 },
   ],

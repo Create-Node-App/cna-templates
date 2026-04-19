@@ -15,21 +15,21 @@ import { Avatar, AvatarFallback } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
 import { cn } from '@/shared/lib/utils';
 
-import type { DetectedPerson } from '../utils/pattern-detectors';
+import type { DetectedEntity } from '../utils/pattern-detectors';
 
 interface PersonMiniCardProps {
-  person: DetectedPerson;
+  person: DetectedEntity;
   rank?: number;
   className?: string;
   /** When set with tenantSlug, the card links to team profile. */
   personId?: string;
   tenantSlug?: string;
   onViewProfile?: () => void;
-  /** Capability match score (0-100) */
+  /** Profile match score (0-100) */
   score?: number;
-  /** Skills that meet requirements, e.g. ["Python (4/3)", "SQL (5/3)"] */
+  /** Attributes that meet criteria, e.g. ["Python (4/3)", "SQL (5/3)"] */
   met?: string[];
-  /** Skills that don't meet requirements, e.g. ["TensorFlow (2/4)"] */
+  /** Attributes that don't meet criteria, e.g. ["TensorFlow (2/4)"] */
   gaps?: string[];
 }
 
@@ -55,7 +55,7 @@ export function PersonMiniCard({
     .slice(0, 2);
 
   const hasContext = score != null || (met && met.length > 0) || (gaps && gaps.length > 0);
-  const hasSkills = person.skills && person.skills.length > 0;
+  const hasAttributes = person.attributes && person.attributes.length > 0;
 
   const row = (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -98,13 +98,13 @@ export function PersonMiniCard({
           <AvatarFallback className="bg-green-500 text-white text-[10px]">{initials}</AvatarFallback>
         </Avatar>
 
-        {/* Name + department */}
+        {/* Name + category */}
         <div className="min-w-0 flex-1 flex items-center gap-2">
           <span className="font-medium text-sm truncate group-hover:text-primary transition-colors">{person.name}</span>
-          {person.department && (
+          {person.category && (
             <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground shrink-0">
               <Building2 className="h-3 w-3" />
-              <span className="truncate max-w-[120px]">{person.department}</span>
+              <span className="truncate max-w-[120px]">{person.category}</span>
             </span>
           )}
         </div>
@@ -124,23 +124,23 @@ export function PersonMiniCard({
           </Badge>
         )}
 
-        {/* Skills (compact badges) - only shown when no candidate context */}
-        {!hasContext && hasSkills && (
+        {/* Attributes (compact badges) - only shown when no candidate context */}
+        {!hasContext && hasAttributes && (
           <div className="hidden sm:flex items-center gap-1 shrink-0">
-            {person.skills!.slice(0, 3).map((skill, i) => (
+            {person.attributes!.slice(0, 3).map((attr, i) => (
               <Badge
                 key={i}
                 variant="secondary"
                 className="text-[10px] gap-0.5 px-1.5 py-0 h-5 bg-blue-500/10 text-blue-700 dark:text-blue-300 border-0"
               >
                 <Star className="h-2 w-2 fill-current" />
-                {skill.name}
-                <span className="opacity-70">{skill.level}</span>
+                {attr.name}
+                <span className="opacity-70">{attr.level}</span>
               </Badge>
             ))}
-            {person.skills!.length > 3 && (
+            {person.attributes!.length > 3 && (
               <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
-                +{person.skills!.length - 3}
+                +{person.attributes!.length - 3}
               </Badge>
             )}
           </div>
@@ -209,7 +209,7 @@ export function PersonMiniCard({
  * Renders a list of person cards in a compact list layout.
  */
 interface PersonMiniCardListProps {
-  persons: DetectedPerson[];
+  persons: DetectedEntity[];
   showRanks?: boolean;
   className?: string;
 }

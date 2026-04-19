@@ -7,42 +7,25 @@
  */
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import {
-  AdminDataTable,
-  AdminFormDialog,
-  AdminPageHeader,
-  BulkImportDialog,
-  PersonRelationsDialog,
-} from '@/features/admin';
+import { AdminDataTable, AdminFormDialog, AdminPageHeader } from '@/features/admin';
 import type { Column } from '@/features/admin/components/AdminDataTable';
 import {
   getAvailableRoles,
   getMemberRoleIds,
   inviteMember,
   listMembers,
-  listTenantPersonsForRelations,
   removeMember,
   updateMember,
 } from '@/features/admin/services/members-service';
 import type { GetAvailableRolesResult, MemberWithDetails, PaginatedResult, TenantRole } from '@/features/admin/types';
-import { Button, Input } from '@/shared/components/ui';
+import { Input } from '@/shared/components/ui';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { useFeatureFlags } from '@/shared/hooks';
-
-/** Person shape for PersonRelationsDialog */
-interface RelationPerson {
-  id: string;
-  displayName: string | null;
-  email: string;
-  avatarUrl: string | null;
-}
 
 interface MembersClientProps {
   tenantSlug: string;
@@ -67,17 +50,11 @@ type MemberFormValues = z.infer<typeof memberFormSchema>;
 export function MembersClient({ tenantSlug, initialData, currentUserId }: MembersClientProps) {
   const t = useTranslations('members');
   const tCommon = useTranslations('common');
-  const featureFlags = useFeatureFlags(['bulkImport']);
   const [data, setData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [bulkImportOpen, setBulkImportOpen] = useState(false);
   const [editing, setEditing] = useState<MemberWithDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const [relationsDialogOpen, setRelationsDialogOpen] = useState(false);
-  const [relationsMember, setRelationsMember] = useState<MemberWithDetails | null>(null);
-  const [availablePersonsForRelations, setAvailablePersonsForRelations] = useState<RelationPerson[]>([]);
 
   // Available roles from DB
   const [rolesResult, setRolesResult] = useState<GetAvailableRolesResult | null>(null);
@@ -111,17 +88,6 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
       setRolesResult(result.data);
     }
   }, [tenantSlug]);
-
-  // Fetch tenant persons when relations dialog opens (for manager/1:1er/mentor/teacher picker)
-  useEffect(() => {
-    if (relationsDialogOpen && tenantSlug) {
-      listTenantPersonsForRelations(tenantSlug).then((res) => {
-        if (res.success && res.data) {
-          setAvailablePersonsForRelations(res.data);
-        }
-      });
-    }
-  }, [relationsDialogOpen, tenantSlug]);
 
   // When dialog opens: sync reset + fetch roles; when editing, fetch member roleIds (async)
   const openDialog = (editingMember: MemberWithDetails | null) => {
@@ -289,28 +255,6 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
       header: 'Joined',
       render: (member) => <span className="text-sm text-muted-foreground">{formatDate(member.createdAt)}</span>,
     },
-    {
-      key: 'relations',
-      header: '',
-      render: (member) =>
-        member.person?.id ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="gap-1.5"
-            onClick={(e) => {
-              e.stopPropagation();
-              setRelationsMember(member);
-              setRelationsDialogOpen(true);
-            }}
-            aria-label="Manager & 1:1er"
-          >
-            <Users className="h-4 w-4" />
-            Relations
-          </Button>
-        ) : null,
-    },
   ];
 
   return (
@@ -322,14 +266,7 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
         backLabel="Admin"
         actionLabel={t('inviteMember')}
         onAction={() => openDialog(null)}
-      >
-        {featureFlags.bulkImport && (
-          <Button variant="outline" onClick={() => setBulkImportOpen(true)} className="gap-2">
-            <Upload className="h-4 w-4" />
-            Import
-          </Button>
-        )}
-      </AdminPageHeader>
+      />
 
       <AdminDataTable
         columns={columns}
@@ -437,26 +374,6 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
           </div>
         </Form>
       </AdminFormDialog>
-
-      {featureFlags.bulkImport && (
-        <BulkImportDialog
-          isOpen={bulkImportOpen}
-          onClose={() => setBulkImportOpen(false)}
-          tenantSlug={tenantSlug}
-          onSuccess={() => fetchData(1)}
-        />
-      )}
-
-      {relationsMember?.person && (
-        <PersonRelationsDialog
-          open={relationsDialogOpen}
-          onOpenChange={setRelationsDialogOpen}
-          tenantSlug={tenantSlug}
-          personId={relationsMember.person.id}
-          personName={relationsMember.person.firstName + ' ' + relationsMember.person.lastName}
-          availablePersons={availablePersonsForRelations}
-        />
-      )}
     </div>
   );
 }
