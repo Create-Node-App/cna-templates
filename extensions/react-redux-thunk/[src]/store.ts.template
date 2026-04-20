@@ -1,49 +1,42 @@
-import createSagaMiddleware from 'redux-saga';
+import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
-import { applyMiddleware, createStore, compose } from 'redux';
-
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage';
 
-import { StoreType } from '<%= projectImportPath %>types/store';
-import reducers from '<%= projectImportPath %>reducers';
-import rootSaga from '<%= projectImportPath %>sagas';
+import rootReducer from '<%= projectImportPath %>reducers';
 
 const persistConfig = {
   key: 'root',
   storage,
   blacklist: [],
-  stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
 };
 
-const packages = [];
-const enhancers = [];
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Saga
-const sagaMiddleware = createSagaMiddleware();
+const middleware = (getDefaultMiddleware: ReturnType<typeof configureStore>['middleware']) => {
+  const middlewares = getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+    },
+  });
 
-// Push middleware that you need for both development and production
-packages.push(sagaMiddleware);
-
-if (import.meta.env.DEV) {
-  // Push the middleware that are specific for development
-  packages.push(createLogger());
-  if (window.__REDUX_DEVTOOLS_EXTENSION__) {
-    enhancers.push(window.__REDUX_DEVTOOLS_EXTENSION__());
+  if (import.meta.env.DEV) {
+    middlewares.concat(createLogger() as any);
   }
-}
 
-const middleware = applyMiddleware(...packages);
+  return middlewares;
+};
 
-export const store = createStore(
-  persistReducer<StoreType>(persistConfig, reducers()),
-  compose(middleware, ...enhancers),
-);
-
-sagaMiddleware.run(rootSaga);
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware,
+  devTools: import.meta.env.DEV,
+});
 
 export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export default {
   store,
