@@ -1,5 +1,18 @@
 {
-  "extends": "tsconfig/react-library.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["DOM", "ES2020"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "bundler",
+    "outDir": "./dist"
+  },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }
