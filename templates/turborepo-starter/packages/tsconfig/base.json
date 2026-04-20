@@ -10,6 +10,7 @@
     "inlineSources": false,
     "isolatedModules": false,
     "lib": ["ES2020", "DOM"],
+    "moduleResolution": "bundler",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
