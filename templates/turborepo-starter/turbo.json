@@ -14,7 +14,8 @@
     },
     "type-check": {
       "cache": false,
-      "inputs": []
+      "inputs": [],
+      "outputs": []
     },
     "storybook": {
       "dependsOn": ["^build"],
