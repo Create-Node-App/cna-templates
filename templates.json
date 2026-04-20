@@ -412,36 +412,6 @@
       ]
     },
     {
-      "name": "Easy State",
-      "slug": "easy-state",
-      "description": "Add Easy State, a lightweight state management solution with a simple API and automatic reactivity.",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-easy-state",
-      "type": "react",
-      "category": "State Management",
-      "labels": [
-        "Easy State",
-        "State Management",
-        "React Hooks",
-        "TypeScript",
-        "Cursor Rules"
-      ]
-    },
-    {
-      "name": "Global State",
-      "slug": "global-state",
-      "description": "Add Global State, a minimal state management solution for React applications with global state support.",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-global-state",
-      "type": "react",
-      "category": "State Management",
-      "labels": [
-        "Global State",
-        "State Management",
-        "React Hooks",
-        "TypeScript",
-        "Cursor Rules"
-      ]
-    },
-    {
       "name": "Hookstate",
       "slug": "hookstate",
       "description": "Add Hookstate, a modern state management solution with hooks-based API and TypeScript support.",
@@ -470,9 +440,9 @@
       ]
     },
     {
-      "name": "Teaful",
+      "name": "Teaful (Deprecated)",
       "slug": "teaful",
-      "description": "Add Teaful, a tiny and fast state management solution with a simple API and TypeScript support.",
+      "description": "Add Teaful, a tiny and fast state management solution with a simple API and TypeScript support. Note: Teaful has very low adoption (~126 weekly downloads) and may not receive future updates.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-teaful",
       "type": "react",
       "category": "State Management",
