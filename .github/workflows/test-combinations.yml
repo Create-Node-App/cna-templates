@@ -12,7 +12,8 @@ on:
       - synchronize
       - reopened
   schedule:
-    - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
+    - cron: "0 0 * * 0" # Weekly full matrix on Sunday at midnight UTC
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -126,3 +127,108 @@ jobs:
           SKIP_ENV_VALIDATION=true npm run build --if-present
 
           tree -I 'node_modules|dist|.git'
+
+  # Full matrix - tests ALL combinations (runs weekly, not on PRs)
+  generate-full-matrix:
+    name: Generate full test matrix
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate full combinations matrix
+        id: set-matrix
+        run: |
+          node <<EOF
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('./templates.json', 'utf8'));
+          const repoDir = process.cwd();
+
+          const extensions = data.extensions;
+
+          // Build local URL for each extension using its url path
+          const extLocalUrl = (ext) => {
+            const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
+            const dir = match ? match[1] : null;
+            return dir ? \`file://\${repoDir}?subdir=extensions/\${dir}\` : null;
+          };
+
+          // Generate ALL combinations (template x all compatible extensions)
+          const combinations = [];
+
+          for (const template of data.templates) {
+            const compatibleExtensions = extensions.filter(ext => {
+              const extTypes = Array.isArray(ext.type) ? ext.type : [ext.type];
+              return extTypes.includes(template.type);
+            });
+
+            // Test with ALL extensions for this template
+            if (compatibleExtensions.length > 0) {
+              const extUrls = compatibleExtensions.map(ext => extLocalUrl(ext)).filter(Boolean);
+
+              // Derive local template URL from the url field in templates.json
+              const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
+              const tplDir = tplMatch ? tplMatch[1] : null;
+              const templateUrl = tplDir ? \`file://\${repoDir}?subdir=templates/\${tplDir}\` : template.slug;
+
+              combinations.push({
+                template: template.slug,
+                templateUrl,
+                extensions: extUrls
+              });
+            }
+          }
+
+          const matrix = JSON.stringify(combinations);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'matrix=' + matrix + '\n');
+          console.log('Generated ' + combinations.length + ' full combinations');
+          EOF
+
+  test-full-matrix:
+    name: Full ${{ matrix.combination.template }}
+    needs: generate-full-matrix
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        combination: ${{ fromJson(needs.generate-full-matrix.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run full test
+        run: |
+          echo "Testing: ${{ matrix.combination.template }}"
+          echo "With ALL extensions: ${{ join(matrix.combination.extensions, ' ') }}"
+
+          ADDONS="${{ join(matrix.combination.extensions, ' ') }}"
+          ADDONS_FLAG=""
+          if [ -n "$ADDONS" ]; then
+            ADDONS_FLAG="--addons $ADDONS"
+          fi
+
+          CI=true npx create-awesome-node-app my-project \
+            -t "${{ matrix.combination.templateUrl }}" \
+            $ADDONS_FLAG
+
+          cd my-project
+          npm install
+          npm run format --if-present
+          npm run lint:fix --if-present
+          npm run lint --if-present
+          npm run type-check --if-present
+          SKIP_ENV_VALIDATION=true npm run build --if-present
