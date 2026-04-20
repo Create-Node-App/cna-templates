@@ -13,7 +13,7 @@
     "lint": "eslint **/*.ts*",
     "lint:fix": "eslint **/*.ts* --fix",
     "type-check": "echo 'Skipped - use build instead'",
-    "build": "tsup index.tsx --format esm,cjs --dts --external react --no-typescript",
+    "build": "tsup index.tsx --format esm,cjs --external react",
     "dev": "tsup index.tsx --format esm,cjs --watch --dts --external react"
   },
   "dependencies": {
