@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "outDir": "./dist"
   },
   "include": ["."],
