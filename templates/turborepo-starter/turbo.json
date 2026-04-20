@@ -13,6 +13,8 @@
       "outputs": []
     },
     "type-check": {
+      "cache": false,
+      "inputs": [],
       "outputs": []
     },
     "storybook": {

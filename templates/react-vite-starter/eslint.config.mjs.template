@@ -17,11 +17,12 @@ export default [
       '__mocks__/',
       '<%= srcDir %>/theme/',
       'tools/',
-      '*.d.ts',
+      '**/*.d.ts',
       'dist-electron/',
       'release/',
       '.prettierrc.js',
       'postcss.config.js',
+      'electron/',
     ],
   },
   {
@@ -43,7 +44,7 @@ export default [
     },
   },
   {
-    files: ['vite.config.ts', 'electron/**/*.ts'],
+    files: ['vite.config.ts'],
     ignores: ['**/*.d.ts'],
     languageOptions: {
       ecmaVersion: 2020,

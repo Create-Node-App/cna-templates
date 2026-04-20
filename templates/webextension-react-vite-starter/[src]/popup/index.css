@@ -1,15 +1,22 @@
 body {
-  width: 300px;
-  height: 260px;
+  --popup-background: #020617;
+  --popup-surface: rgba(15, 23, 42, 0.94);
+  --popup-border: rgba(148, 163, 184, 0.2);
+  --popup-text: #f8fafc;
+  --popup-muted: #cbd5e1;
+  --popup-accent: #93c5fd;
+  --popup-button-gradient-start: #3b82f6;
+  --popup-button-gradient-end: #2563eb;
+  --popup-button-text: #eff6ff;
+  width: 320px;
+  min-height: 280px;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  position: relative;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  color: var(--popup-text);
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.16), transparent 38%),
+    var(--popup-background);
 }

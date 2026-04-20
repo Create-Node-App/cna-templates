@@ -1,8 +1,37 @@
 import React from 'react';
-import Cracked from '<%= projectImportPath %>components/Animation/Cracked';
-
 import './Landing.css';
 
-const Landing = () => <Cracked><%= projectName %></Cracked>;
+const starterHighlights = [
+  'Feature-based structure ready for scale.',
+  'Routing is already wired so you can start adding screens.',
+  'Compatible addons can layer UI, state, tooling, and more.',
+];
+
+const Landing = () => (
+  <section className="landing">
+    <div className="landing__surface">
+      <span className="landing__eyebrow">Create Awesome Node App</span>
+      <h1 className="landing__title"><%= projectName %></h1>
+      <p className="landing__lead">
+        A lightweight React + Vite starter with a clean foundation for your next feature.
+      </p>
+
+      <div className="landing__meta">
+        <p>
+          Start editing <code><%= srcDir %>/pages/Landing.tsx</code>
+        </p>
+        <p>
+          Add features in <code><%= srcDir %>/features</code>
+        </p>
+      </div>
+
+      <ul className="landing__list">
+        {starterHighlights.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+);
 
 export default Landing;

@@ -18,7 +18,7 @@ export default [
       '__mocks__',
       '<%= srcDir %>/theme',
       'tools',
-      '*.d.ts',
+      '**/*.d.ts',
       'postcss.config.js',
     ],
   },

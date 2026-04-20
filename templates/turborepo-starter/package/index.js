@@ -1,4 +1,5 @@
 module.exports = function resolvePackage(setup, { appName, usePnpm }) {
+  const eslintConfigBaseName = `${setup.scope || ''}eslint-config-base`;
   const packageJson = {
     "name": appName,
     "version": "0.1.0",
@@ -17,7 +18,7 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
     },
     "devDependencies": {
       "@changesets/cli": "^2.25.0",
-      "eslint-config-base": "*",
+      [eslintConfigBaseName]: "0.0.0",
       "prettier": "^2.7.1",
       "turbo": "^1.5.5"
     },
