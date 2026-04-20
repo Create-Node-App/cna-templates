@@ -28,7 +28,7 @@ export const store = configureStore({
     }).concat(sagaMiddleware);
 
     if (import.meta.env.DEV) {
-      middlewares.concat(createLogger() as any);
+      return middlewares.concat(createLogger());
     }
 
     return middlewares;
