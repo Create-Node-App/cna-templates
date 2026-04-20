@@ -13,7 +13,8 @@
       "outputs": []
     },
     "type-check": {
-      "outputs": []
+      "cache": false,
+      "inputs": []
     },
     "storybook": {
       "dependsOn": ["^build"],
