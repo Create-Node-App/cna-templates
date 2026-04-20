@@ -386,19 +386,6 @@
       ]
     },
     {
-      "name": "Recoil.js (Deprecated)",
-      "slug": "recoil-js",
-      "description": "Extension to add Recoil.js, a state management library for React that lets you a data-flow graph that flows from atoms",
-      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
-      "type": "react",
-      "category": "State Management",
-      "labels": [
-        "Recoil.js",
-        "State Management",
-        "Atomic State Management"
-      ]
-    },
-    {
       "name": "Jotai",
       "slug": "jotai",
       "description": "Extension to add Jotai, a small and fast state management library for React",
@@ -407,6 +394,19 @@
       "category": "State Management",
       "labels": [
         "Jotai",
+        "State Management",
+        "Atomic State Management"
+      ]
+    },
+    {
+      "name": "Recoil.js (Deprecated)",
+      "slug": "recoil-js",
+      "description": "Extension to add Recoil.js, a state management library for React. Note: Recoil is no longer maintained by Meta (formerly Facebook Experimental) and may not receive future updates.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Recoil.js",
         "State Management",
         "Atomic State Management"
       ]
@@ -530,7 +530,7 @@
     {
       "name": "React Redux with Redux Saga",
       "slug": "react-redux-saga",
-      "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Saga",
+      "description": "Extension to add Redux Toolkit (RTK) with React Redux bindings and Redux Saga for side-effect management",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
       "type": "react",
       "category": "State Management",
@@ -544,9 +544,9 @@
       ]
     },
     {
-      "name": "React Redux with Redux Thunk",
+      "name": "React Redux with Redux Toolkit",
       "slug": "react-redux-thunk",
-      "description": "Extension to add the official React bindings for Redux with a fully configured store using Redux Thunk",
+      "description": "Extension to add Redux Toolkit (RTK) with React Redux bindings, redux-persist, and redux-logger for a fully configured store",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-thunk",
       "type": "react",
       "category": "State Management",

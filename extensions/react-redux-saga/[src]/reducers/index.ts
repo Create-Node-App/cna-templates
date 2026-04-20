@@ -1,6 +1,7 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from '@reduxjs/toolkit';
 
-export default () =>
-  combineReducers({
-    // Add your custom reducers here
-  });
+const rootReducer = combineReducers({
+  // Add your slice reducers here
+});
+
+export default rootReducer;

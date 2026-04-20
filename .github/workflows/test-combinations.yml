@@ -122,7 +122,7 @@ jobs:
           npm run format --if-present
           npm run lint:fix --if-present
           npm run lint --if-present
-          npm run type-check --if-present || true
+          npm run type-check --if-present
           SKIP_ENV_VALIDATION=true npm run build --if-present
 
           tree -I 'node_modules|dist|.git'
