@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => ({
   publicDir,
   resolve: {
     alias: {
-      '<%= projectImportPath%>': `${root}/`,
+      '<%= projectImportPath%>': root + '/',
     },
   },
   build: {
@@ -80,5 +80,5 @@ function regenerateCacheInvalidationKey() {
 }
 
 function generateKey(): string {
-  return `${Date.now()}`;
+  return Date.now().toString();
 }

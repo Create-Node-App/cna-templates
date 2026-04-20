@@ -50,7 +50,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '<%= projectImportPath%>': `${root}/`,
+      '<%= projectImportPath%>': root + '/',
     },
   },
   esbuild: {
