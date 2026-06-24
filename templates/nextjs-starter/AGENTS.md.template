@@ -15,6 +15,18 @@ Humans: read CONTRIBUTING.md and docs/.
 
 (.template files are materialized during project generation—still treat as authoritative.)
 
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start Next.js dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve production build |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript (`tsc --noEmit`) |
+
 ## 2. Operating Principles (AI Perspective)
 
 - Documentation-first

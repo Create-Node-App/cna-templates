@@ -11,6 +11,17 @@ This file is for AI assistants only. Humans: see CONTRIBUTING.md and docs/.
 
 (.template files are materialized during generation—treat as authoritative.)
 
+## Key Commands
+
+Run from the monorepo root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run build` | Build all packages (`turbo run build`) |
+| `npm run lint` | Lint all packages |
+| `npm run test` | Test all packages |
+| `npm run type-check` | Type-check all packages |
+
 ## 2. Operating Principles (AI Perspective)
 
 - Documentation-first

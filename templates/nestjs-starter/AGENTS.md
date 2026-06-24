@@ -11,6 +11,19 @@ Humans: read CONTRIBUTING.md and docs/.
 
 (Additional structured docs may be added over time—only reference, never duplicate.)
 
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Nest watch mode |
+| `npm run build` | Compile Nest app |
+| `npm run lint` | ESLint |
+| `npm run test` | Unit tests (Jest) |
+| `npm run test:e2e` | End-to-end tests |
+| `npm run type-check` | TypeScript (`tsc --noEmit`) |
+
 ## 2. Operating Principles (AI Perspective)
 
 - Documentation-first

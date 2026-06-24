@@ -11,6 +11,18 @@ AI assistants only. Humans: see CONTRIBUTING.md and docs/.
 | Running tests | docs/RUNNING_TESTS.md |
 | Writing tests | docs/WRITING_TESTS.md |
 
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run test` | Run WDIO suite (default mode) |
+| `npm run test:local` | Run tests against local Selenium |
+| `npm run test:remote` | Run tests against remote grid |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript (`tsc --noEmit`) |
+
 ## 2. Operating Principles (AI Perspective)
 
 - Documentation-first
