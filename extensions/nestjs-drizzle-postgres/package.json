@@ -1,14 +1,18 @@
 {
   "scripts": {
-    "drizzle:migrate": "drizzle-kit generate:pg"
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.744.0",
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "^0.45.1",
     "pg": "^8.13.3"
   },
   "devDependencies": {
     "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4"
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.8"
   }
 }

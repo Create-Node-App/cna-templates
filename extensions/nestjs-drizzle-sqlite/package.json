@@ -1,12 +1,15 @@
 {
   "scripts": {
-    "drizzle:migrate": "drizzle-kit generate:sqlite"
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "^0.45.1",
     "better-sqlite3": "^11.8.1"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.30.4"
+    "drizzle-kit": "^0.31.8"
   }
 }
