@@ -38,6 +38,7 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 
 The badge above reflects the [test-combinations workflow](./.github/workflows/test-combinations.yml):
 
+- **On push to `main`:** a randomized subset of template × extension combinations
 - **On every PR:** a randomized subset of template × extension combinations
 - **Weekly (Sunday UTC):** full matrix — every template with all compatible extensions
 
