@@ -1,0 +1,27 @@
+import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server';
+
+import { middlewareHandlers, normalizeMiddlewareResult } from '<%= projectImportPath%>middleware-handlers';
+
+export default async function middleware(request: NextRequest, event: NextFetchEvent) {
+  let selectedResponse: { response: Response; priority: number } | undefined;
+
+  for (const handler of middlewareHandlers) {
+    const result = normalizeMiddlewareResult(await handler(request, event));
+
+    if (
+      result.response &&
+      (!selectedResponse || result.priority > selectedResponse.priority)
+    ) {
+      selectedResponse = {
+        response: result.response,
+        priority: result.priority,
+      };
+    }
+  }
+
+  return selectedResponse?.response ?? NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};
