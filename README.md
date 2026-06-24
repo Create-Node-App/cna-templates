@@ -34,6 +34,15 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 | [docs/TESTING.md](./docs/TESTING.md) | Local testing and CI workflow |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to add templates and extensions |
 
+## CI compatibility matrix
+
+The badge above reflects the [test-combinations workflow](./.github/workflows/test-combinations.yml):
+
+- **On every PR:** a randomized subset of template × extension combinations
+- **Weekly (Sunday UTC):** full matrix — every template with all compatible extensions
+
+See the [Actions tab](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml) for the latest run results.
+
 ## Support
 
 - 📦 [NPM Package](https://www.npmjs.com/package/create-awesome-node-app)
