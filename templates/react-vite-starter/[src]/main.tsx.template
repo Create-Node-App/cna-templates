@@ -1,13 +1,19 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { AppErrorBoundary } from '<%= projectImportPath %>components/ErrorBoundary';
 import reportWebVitals from '<%= projectImportPath%>report-web-vitals';
+import { setupGlobalErrorHandlers } from '<%= projectImportPath %>utils/report-error';
 import App from '<%= projectImportPath%>App';
+
+setupGlobalErrorHandlers();
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <AppErrorBoundary>
+      <App />
+    </AppErrorBoundary>
   </React.StrictMode>,
 );
 

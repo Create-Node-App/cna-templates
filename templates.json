@@ -849,6 +849,21 @@
       ]
     },
     {
+      "name": "t3-env for Next.js",
+      "slug": "nextjs-t3-env",
+      "description": "Add type-safe environment variable validation with @t3-oss/env-nextjs and Zod, including server/client split and SKIP_ENV_VALIDATION for CI.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-t3-env",
+      "type": "nextjs",
+      "category": "Tooling",
+      "labels": [
+        "t3-env",
+        "Environment",
+        "Zod",
+        "Validation",
+        "TypeScript"
+      ]
+    },
+    {
       "name": "next-intl (i18n) for Next.js",
       "slug": "nextjs-i18n",
       "description": "Add internationalization to your Next.js project using next-intl with English and Spanish translations, middleware routing, and type-safe message access.",

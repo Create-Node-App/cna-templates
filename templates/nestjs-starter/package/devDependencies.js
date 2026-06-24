@@ -1,7 +1,7 @@
 module.exports = {
-  "@nestjs/cli": "^10.0.1",
-  "@nestjs/schematics": "^10.0.1",
-  "@nestjs/testing": "^10.0.0",
+  "@nestjs/cli": "^11.0.0",
+  "@nestjs/schematics": "^11.0.0",
+  "@nestjs/testing": "^11.0.0",
   "@swc/cli": "^0.1.62",
   "@swc/core": "^1.3.64",
   "@types/express": "^4.17.17",

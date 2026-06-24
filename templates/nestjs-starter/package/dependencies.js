@@ -1,8 +1,8 @@
 module.exports = {
-  "@nestjs/common": "^10.0.0",
-  "@nestjs/config": "^3.0.0",
-  "@nestjs/core": "^10.0.0",
-  "@nestjs/platform-express": "^10.0.0",
-  "reflect-metadata": "^0.1.13",
+  "@nestjs/common": "^11.1.0",
+  "@nestjs/config": "^4.0.0",
+  "@nestjs/core": "^11.1.0",
+  "@nestjs/platform-express": "^11.1.0",
+  "reflect-metadata": "^0.2.2",
   "rxjs": "^7.8.1"
 };
