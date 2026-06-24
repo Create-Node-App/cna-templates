@@ -3,15 +3,17 @@ import { BrowserRouter } from 'react-router-dom';
 
 import '<%= projectImportPath %>theme';
 
+import { composeAppProviders } from '<%= projectImportPath %>app-providers';
 import Loading from '<%= projectImportPath %>components/Loading';
 import AppRoutes from '<%= projectImportPath %>routes/AppRoutes';
 
-const App = () => (
-  <Suspense fallback={<Loading />}>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <AppRoutes />
-    </BrowserRouter>
-  </Suspense>
-);
+const App = () =>
+  composeAppProviders(
+    <Suspense fallback={<Loading />}>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <AppRoutes />
+      </BrowserRouter>
+    </Suspense>,
+  );
 
 export default App;

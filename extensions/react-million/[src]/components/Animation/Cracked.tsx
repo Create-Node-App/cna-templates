@@ -12,11 +12,11 @@ export interface SlicerProps {
   children?: React.ReactNode;
 }
 
-const Slicer: FC<SlicerProps> = block(({ i, children }) => (
+const Slicer = block(({ i, children }: SlicerProps) => (
   <div key={`slice-${i + 1}`} className="text">
     {children}
   </div>
-));
+)) as unknown as FC<SlicerProps>;
 
 const Cracked: FC<CrackedProps> = ({ children }) => (
   <div className="bg-text">

@@ -1,0 +1,12 @@
+
+import { QueryClient, QueryClientProvider as ReactQueryProvider } from '@tanstack/react-query';
+import { ReactQueryDevTools } from '<%= projectImportPath %>components/DevTools/ReactQueryDevTools';
+
+const reactQueryClient = new QueryClient();
+
+appProviders.push((children) => (
+  <ReactQueryProvider client={reactQueryClient}>
+    {children}
+    {import.meta.env.DEV && <ReactQueryDevTools />}
+  </ReactQueryProvider>
+));

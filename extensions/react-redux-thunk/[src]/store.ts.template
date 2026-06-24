@@ -13,23 +13,21 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = (getDefaultMiddleware: ReturnType<typeof configureStore>['middleware']) => {
-  const middlewares = getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-    },
-  });
-
-  if (import.meta.env.DEV) {
-    middlewares.concat(createLogger() as any);
-  }
-
-  return middlewares;
-};
-
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware,
+  middleware: (getDefaultMiddleware) => {
+    const middlewares = getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+      },
+    });
+
+    if (import.meta.env.DEV) {
+      return middlewares.concat(createLogger());
+    }
+
+    return middlewares;
+  },
   devTools: import.meta.env.DEV,
 });
 

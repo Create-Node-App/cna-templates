@@ -1,0 +1,7 @@
+
+import { Provider as ReduxThunkProvider } from 'react-redux';
+import { store as reduxThunkStore } from '<%= projectImportPath %>store';
+
+appProviders.push((children) => (
+  <ReduxThunkProvider store={reduxThunkStore}>{children}</ReduxThunkProvider>
+));

@@ -1,0 +1,10 @@
+
+import { RecoilRoot } from 'recoil';
+import { RecoilDevTools } from '<%= projectImportPath %>components/DevTools/RecoilDevTools';
+
+appProviders.push((children) => (
+  <RecoilRoot>
+    {children}
+    {import.meta.env.DEV && <RecoilDevTools />}
+  </RecoilRoot>
+));
