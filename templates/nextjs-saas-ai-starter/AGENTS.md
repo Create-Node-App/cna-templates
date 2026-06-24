@@ -43,6 +43,21 @@ Before changing code, **read the relevant doc** from the table below for that to
 
 ---
 
+## Key Commands
+
+Run from the project root after installing dependencies (uses `pnpm` in this template):
+
+| Command | Purpose |
+|---------|---------|
+| `pnpm dev` | Next.js dev server (Turbopack) |
+| `pnpm build` | Production build |
+| `pnpm lint` | ESLint |
+| `pnpm type-check` | TypeScript (`tsc --noEmit`) |
+| `pnpm test` | Jest unit tests |
+| `pnpm db:migrate` | Apply Drizzle migrations |
+
+---
+
 ## 3. Operating Principles
 
 - **Documentation-first:** Read the doc for the topic before proposing code.

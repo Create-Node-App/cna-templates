@@ -14,6 +14,19 @@ AI assistants only. Humans: see CONTRIBUTING.md and docs/.
 
 (.template files materialize during generation—still authoritative.)
 
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Vite watch build + reload server |
+| `npm run build` | Type-check and extension build |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript (app + node configs) |
+| `npm run web-ext:chromium` | Load extension in Chromium |
+| `npm run web-ext:firefox` | Load extension in Firefox |
+
 ## 2. Operating Principles (AI Perspective)
 
 - Documentation-first
