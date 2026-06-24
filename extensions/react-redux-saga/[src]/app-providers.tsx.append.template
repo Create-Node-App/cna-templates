@@ -1,5 +1,7 @@
 
 import { Provider as ReduxSagaProvider } from 'react-redux';
-import { store } from '<%= projectImportPath %>store';
+import { store as reduxSagaStore } from '<%= projectImportPath %>store';
 
-appProviders.push((children) => <ReduxSagaProvider store={store}>{children}</ReduxSagaProvider>);
+appProviders.push((children) => (
+  <ReduxSagaProvider store={reduxSagaStore}>{children}</ReduxSagaProvider>
+));
