@@ -11,6 +11,7 @@ const eslintIgnore = [
   "dist/",
   "build/",
   "coverage/",
+  "tools/",
   "*.min.js",
   "*.config.js",
   "*.d.ts",
