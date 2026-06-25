@@ -4,6 +4,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import superjson from 'superjson';
 
@@ -38,7 +39,7 @@ function getBaseUrl() {
   return 'http://localhost:3000';
 }
 
-export function TRPCReactProvider(props: Readonly<{ children: React.ReactNode }>) {
+export function TRPCReactProvider(props: Readonly<{ children: ReactNode }>) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>

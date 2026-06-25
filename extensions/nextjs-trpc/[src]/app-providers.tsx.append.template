@@ -1,0 +1,4 @@
+
+import { TRPCReactProvider } from '<%= projectImportPath %>utils/trpc';
+
+appProviders.push((children) => <TRPCReactProvider>{children}</TRPCReactProvider>);
