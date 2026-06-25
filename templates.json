@@ -896,6 +896,21 @@
       ]
     },
     {
+      "name": "tRPC for Next.js",
+      "slug": "nextjs-trpc",
+      "description": "Add tRPC v11 with TanStack Query and App Router fetch adapter for end-to-end type-safe APIs without code generation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-trpc",
+      "type": "nextjs",
+      "category": "API",
+      "labels": [
+        "tRPC",
+        "TanStack Query",
+        "TypeScript",
+        "App Router",
+        "API"
+      ]
+    },
+    {
       "name": "next-intl (i18n) for Next.js",
       "slug": "nextjs-i18n",
       "description": "Add internationalization to your Next.js project using next-intl with English and Spanish translations, middleware routing, and type-safe message access.",

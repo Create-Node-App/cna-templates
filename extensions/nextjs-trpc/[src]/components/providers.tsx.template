@@ -1,0 +1,7 @@
+'use client';
+
+import { composeAppProviders } from '<%= projectImportPath %>app-providers';
+
+export function Providers({ children }: Readonly<{ children: React.ReactNode }>) {
+  return composeAppProviders(children);
+}

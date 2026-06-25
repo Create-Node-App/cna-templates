@@ -1,0 +1,14 @@
+'use client';
+
+import type { ReactNode } from 'react';
+
+import { TRPCReactProvider } from '<%= projectImportPath %>utils/trpc';
+
+type AppProvider = (children: ReactNode) => ReactNode;
+
+export const appProviders: AppProvider[] = [
+  (children) => <TRPCReactProvider>{children}</TRPCReactProvider>,
+];
+
+export const composeAppProviders = (children: ReactNode) =>
+  appProviders.reduceRight((currentChildren, provider) => provider(currentChildren), children);
