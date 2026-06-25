@@ -343,6 +343,38 @@
       ]
     },
     {
+      "name": "Vitest + React Testing Library",
+      "slug": "vitest-react-testing-library",
+      "description": "Add Vitest and React Testing Library for fast Vite-native unit and integration testing in React projects.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-vitest",
+      "type": "react",
+      "category": "Testing",
+      "labels": [
+        "Vitest",
+        "React Testing Library",
+        "Unit Testing",
+        "Integration Testing",
+        "Vite"
+      ]
+    },
+    {
+      "name": "Playwright E2E",
+      "slug": "react-playwright",
+      "description": "Add Playwright end-to-end browser testing with multi-browser config, dev-server bootstrap, and CI workflow.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-playwright",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Testing",
+      "labels": [
+        "Playwright",
+        "E2E",
+        "Browser Testing",
+        "CI"
+      ]
+    },
+    {
       "name": "React i18n",
       "slug": "react-i18n",
       "description": "Add internationalization support to your React app with react-i18n and async backend.",
