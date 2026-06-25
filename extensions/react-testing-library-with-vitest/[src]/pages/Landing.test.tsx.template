@@ -1,12 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import Landing from '<%= projectImportPath %>pages/Landing';
 
 describe('Landing', () => {
   it('renders the project title', () => {
-    render(<Landing />);
+    const { getByRole } = render(<Landing />);
 
-    expect(screen.getByRole('heading', { level: 1, name: '<%= projectName %>' })).toBeInTheDocument();
+    expect(getByRole('heading', { level: 1, name: '<%= projectName %>' })).toBeInTheDocument();
   });
 });

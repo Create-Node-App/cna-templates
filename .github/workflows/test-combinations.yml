@@ -102,6 +102,8 @@ jobs:
           node-version: 22
 
       - name: Run tests for combination
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
         run: |
           echo "Testing template: ${{ matrix.combination.template }}"
           echo "Template URL: ${{ matrix.combination.templateUrl }}"
@@ -211,6 +213,8 @@ jobs:
           node-version: 22
 
       - name: Run full test
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
         run: |
           echo "Testing: ${{ matrix.combination.template }}"
           echo "With ALL extensions: ${{ join(matrix.combination.extensions, ' ') }}"
