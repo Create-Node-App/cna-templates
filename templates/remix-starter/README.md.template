@@ -1,0 +1,21 @@
+# <%= projectName %>
+
+A React Router v7 application created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+
+## Getting Started
+
+```bash
+<%= installCommand %>
+<%= runCommand %> dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) to see your app.
+
+## Available Scripts
+
+- `<%= runCommand %> dev` — start the development server
+- `<%= runCommand %> build` — build for production
+- `<%= runCommand %> start` — start the production server
+- `<%= runCommand %> format` — format code with Prettier
+- `<%= runCommand %> lint` — lint code with ESLint
+- `<%= runCommand %> type-check` — run TypeScript type checking

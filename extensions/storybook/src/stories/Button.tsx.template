@@ -1,0 +1,27 @@
+'use client';
+
+import React from 'react';
+
+interface ButtonProps {
+  label: string;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary';
+}
+
+export function Button({ label, onClick, variant = 'primary' }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: '0.5rem 1rem',
+        background: variant === 'primary' ? '#0070f3' : '#eaeaea',
+        color: variant === 'primary' ? '#fff' : '#000',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+      }}
+    >
+      {label}
+    </button>
+  );
+}

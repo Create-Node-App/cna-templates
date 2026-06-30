@@ -209,6 +209,53 @@
         "i18n",
         "Production-ready"
       ]
+    },
+    {
+      "name": "Remix / React Router v7 Starter",
+      "slug": "remix-starter",
+      "description": "A React Router v7 application with file-based routing, SSR, TypeScript, and modern React patterns for full-stack web apps.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/remix-starter",
+      "type": "remix",
+      "category": "fullstack-applications",
+      "labels": [
+        "Remix",
+        "React Router",
+        "FullStack",
+        "TypeScript",
+        "SSR",
+        "File-based Routing"
+      ]
+    },
+    {
+      "name": "Astro Starter",
+      "slug": "astro-starter",
+      "description": "An Astro site starter with static site generation, TypeScript, and component-based architecture for content-focused websites.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/astro-starter",
+      "type": "astro",
+      "category": "frontend-applications",
+      "labels": [
+        "Astro",
+        "Static Site",
+        "TypeScript",
+        "Frontend",
+        "Content"
+      ]
+    },
+    {
+      "name": "Hono Starter",
+      "slug": "hono-starter",
+      "description": "A lightweight Hono API starter with TypeScript support, ideal for edge computing, serverless, and small-to-medium APIs.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/hono-starter",
+      "type": "hono",
+      "category": "backend-applications",
+      "labels": [
+        "Hono",
+        "API",
+        "Backend",
+        "TypeScript",
+        "Serverless",
+        "Edge"
+      ]
     }
   ],
   "extensions": [
@@ -868,7 +915,7 @@
     {
       "name": "Auth.js v5 for Next.js",
       "slug": "nextjs-auth",
-      "description": "Add Auth.js v5 (next-auth beta) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session.",
+      "description": "Add Auth.js v5 (next-auth@beta, latest: 5.0.0-beta.31) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session. Note: v5 remains in beta as of 2026 — see https://authjs.dev for updates.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-auth",
       "type": "nextjs",
       "category": "Auth",
@@ -922,6 +969,100 @@
         "Internationalization",
         "next-intl",
         "Localization"
+      ]
+    },
+    {
+      "name": "Sentry for Next.js",
+      "slug": "sentry",
+      "description": "Add Sentry error tracking and performance monitoring to your Next.js project with client/server configuration and source map upload support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/sentry",
+      "type": "nextjs",
+      "category": "Monitoring",
+      "labels": [
+        "Sentry",
+        "Error Tracking",
+        "Performance",
+        "Monitoring"
+      ]
+    },
+    {
+      "name": "Apollo Client for React",
+      "slug": "apollo-client",
+      "description": "Add Apollo Client for GraphQL data fetching, caching, and state management in React applications.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-apollo",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Data Fetching",
+      "labels": [
+        "Apollo",
+        "GraphQL",
+        "Data Fetching",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Storybook",
+      "slug": "storybook",
+      "description": "Add Storybook for isolated component development, visual testing, and interactive documentation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/storybook",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Storybook",
+        "Components",
+        "Documentation",
+        "Visual Testing"
+      ]
+    },
+    {
+      "name": "React Query for Next.js",
+      "slug": "nextjs-react-query",
+      "description": "Add TanStack React Query with SSR-compatible setup for Next.js App Router, including hydration support and query client factory.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-react-query",
+      "type": "nextjs",
+      "category": "Data Fetching",
+      "labels": [
+        "TanStack Query",
+        "React Query",
+        "Data Fetching",
+        "SSR",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Prisma for Next.js",
+      "slug": "nextjs-prisma",
+      "description": "Add Prisma ORM with PostgreSQL for type-safe database access, schema management, and migrations in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-prisma",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Prisma",
+        "PostgreSQL",
+        "ORM",
+        "Database",
+        "Migrations"
+      ]
+    },
+    {
+      "name": "Turso/libSQL for Next.js",
+      "slug": "nextjs-turso",
+      "description": "Add Turso (libSQL) database client with Drizzle ORM for edge-ready SQLite database access in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-turso",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Turso",
+        "libSQL",
+        "SQLite",
+        "Database",
+        "Edge",
+        "Drizzle"
       ]
     }
   ]

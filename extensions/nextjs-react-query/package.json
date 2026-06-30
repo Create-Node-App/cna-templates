@@ -1,0 +1,7 @@
+{
+  "name": "nextjs-react-query-extension",
+  "dependencies": {
+    "@tanstack/react-query": "^5.75.5",
+    "@tanstack/react-query-devtools": "^5.75.5"
+  }
+}

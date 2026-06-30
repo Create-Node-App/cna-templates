@@ -1,0 +1,26 @@
+# <%= projectName %>
+
+A Hono application created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+
+## Getting Started
+
+```bash
+<%= installCommand %>
+<%= runCommand %> dev
+```
+
+The server starts on [http://localhost:3000](http://localhost:3000).
+
+## Available Scripts
+
+- `<%= runCommand %> dev` — start the development server with hot reload
+- `<%= runCommand %> build` — compile TypeScript
+- `<%= runCommand %> start` — start the production server
+- `<%= runCommand %> format` — format code with Prettier
+- `<%= runCommand %> lint` — lint code with ESLint
+- `<%= runCommand %> type-check` — run TypeScript type checking
+
+## Endpoints
+
+- `GET /` — welcome message
+- `GET /health` — health check

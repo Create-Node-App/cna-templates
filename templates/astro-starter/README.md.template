@@ -1,0 +1,21 @@
+# <%= projectName %>
+
+An Astro project created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+
+## Getting Started
+
+```bash
+<%= installCommand %>
+<%= runCommand %> dev
+```
+
+Open [http://localhost:4321](http://localhost:4321) to see your site.
+
+## Available Scripts
+
+- `<%= runCommand %> dev` — start the development server
+- `<%= runCommand %> build` — build for production
+- `<%= runCommand %> preview` — preview the production build
+- `<%= runCommand %> format` — format code with Prettier
+- `<%= runCommand %> lint` — lint code with ESLint
+- `<%= runCommand %> type-check` — run Astro type checking

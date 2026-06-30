@@ -1,6 +1,6 @@
 # React Recoil Extension
 
-> **Deprecation notice:** Recoil has had limited maintenance in recent years and Meta has not announced a successor. This extension remains available for legacy projects, but **new projects should prefer [Jotai](../react-jotai) or [Zustand](../react-zustand)**. This extension may be removed in a future major release of the template catalog.
+> **Deprecation notice:** Recoil has had limited maintenance in recent years and Meta has not announced a successor. This extension remains available for legacy projects, but **new projects should prefer [Jotai](../react-jotai), [Zustand](../react-zustand), or Preact Signals** (via `@preact/signals-react`). This extension may be removed in a future major release of the template catalog.
 
 This extension adds Recoil state management to your React application with atomic state management and fine-grained reactivity.
 
