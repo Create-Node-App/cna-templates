@@ -209,6 +209,53 @@
         "i18n",
         "Production-ready"
       ]
+    },
+    {
+      "name": "Remix / React Router v7 Starter",
+      "slug": "remix-starter",
+      "description": "A React Router v7 application with file-based routing, SSR, TypeScript, and modern React patterns for full-stack web apps.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/remix-starter",
+      "type": "remix",
+      "category": "fullstack-applications",
+      "labels": [
+        "Remix",
+        "React Router",
+        "FullStack",
+        "TypeScript",
+        "SSR",
+        "File-based Routing"
+      ]
+    },
+    {
+      "name": "Astro Starter",
+      "slug": "astro-starter",
+      "description": "An Astro site starter with static site generation, TypeScript, and component-based architecture for content-focused websites.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/astro-starter",
+      "type": "astro",
+      "category": "frontend-applications",
+      "labels": [
+        "Astro",
+        "Static Site",
+        "TypeScript",
+        "Frontend",
+        "Content"
+      ]
+    },
+    {
+      "name": "Hono Starter",
+      "slug": "hono-starter",
+      "description": "A lightweight Hono API starter with TypeScript support, ideal for edge computing, serverless, and small-to-medium APIs.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/hono-starter",
+      "type": "hono",
+      "category": "backend-applications",
+      "labels": [
+        "Hono",
+        "API",
+        "Backend",
+        "TypeScript",
+        "Serverless",
+        "Edge"
+      ]
     }
   ],
   "extensions": [

@@ -1,0 +1,14 @@
+import type { Route } from "./+types/_index";
+
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "<%= projectName %>" }];
+}
+
+export default function Home() {
+  return (
+    <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
+      <h1>Welcome to <%= projectName %></h1>
+      <p>Built with React Router v7</p>
+    </main>
+  );
+}

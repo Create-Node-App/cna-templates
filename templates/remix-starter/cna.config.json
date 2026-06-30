@@ -1,0 +1,10 @@
+{
+  "customOptions": [
+    {
+      "name": "srcDir",
+      "type": "text",
+      "message": "Subdirectory for source content (e.g., `app`). Leave blank to use the root directory.",
+      "initial": "app"
+    }
+  ]
+}

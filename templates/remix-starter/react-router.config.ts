@@ -1,0 +1,6 @@
+import type { Config } from "@react-router/dev/config";
+
+export default {
+  appDirectory: "<%= srcDir %>",
+  ssr: true,
+} satisfies Config;
