@@ -3,9 +3,9 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.7.1",
-    "@commitlint/config-conventional": "^19.7.1",
+    "@commitlint/cli": "^21.2.0",
+    "@commitlint/config-conventional": "^21.2.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3"
+    "lint-staged": "^17.0.8"
   }
 }
