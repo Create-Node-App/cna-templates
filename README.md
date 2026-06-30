@@ -1,6 +1,9 @@
 # CNA Templates
 
 [![Validation](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml)
+[![Smoke Test](https://github.com/Create-Node-App/cna-templates/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/smoke-test.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Node Version](https://img.shields.io/badge/node-22+-green.svg)
 
 This repository contains official templates and extensions for [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
 
@@ -21,6 +24,9 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 | [React Vite](./templates/react-vite-starter) | `react` | Frontend apps |
 | [Next.js](./templates/nextjs-starter) | `nextjs` | Full-stack apps |
 | [NestJS](./templates/nestjs-starter) | `nestjs-backend` | Backend APIs |
+| [Remix / React Router v7](./templates/remix-starter) | `remix` | Full-stack apps |
+| [Astro](./templates/astro-starter) | `astro` | Content sites |
+| [Hono](./templates/hono-starter) | `hono` | Lightweight APIs |
 | [Turborepo](./templates/turborepo-starter) | `monorepo` | Monorepos |
 | [WebdriverIO](./templates/wdio-starter) | `webdriverio` | E2E testing |
 | [WebExtension](./templates/webextension-react-vite-starter) | `webextension-react` | Browser extensions |
@@ -36,10 +42,15 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 
 ## CI compatibility matrix
 
-The badge above reflects the [test-combinations workflow](./.github/workflows/test-combinations.yml):
+The badges above reflect the CI workflows:
+
+| Workflow | Trigger | Scope |
+|----------|---------|-------|
+| [Test Combinations](./.github/workflows/test-combinations.yml) | Push to `main`, PR, weekly | Randomized & full matrix of template × extension combinations |
+| [Smoke Test](./.github/workflows/smoke-test.yml) | PRs to `main` | Quick end-to-end validation of scaffolded projects |
 
 - **On push to `main`:** a randomized subset of template × extension combinations
-- **On every PR:** a randomized subset of template × extension combinations
+- **On every PR:** a randomized subset + smoke test of scaffolded projects
 - **Weekly (Sunday UTC):** full matrix — every template with all compatible extensions
 
 See the [Actions tab](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml) for the latest run results.
