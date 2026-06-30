@@ -5,8 +5,8 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "electron": "^27.0.1",
-    "electron-builder": "^24.6.4",
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
     "vite-electron-plugin": "^0.8.2"
   }
 }
