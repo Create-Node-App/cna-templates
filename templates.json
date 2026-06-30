@@ -923,6 +923,100 @@
         "next-intl",
         "Localization"
       ]
+    },
+    {
+      "name": "Sentry for Next.js",
+      "slug": "sentry",
+      "description": "Add Sentry error tracking and performance monitoring to your Next.js project with client/server configuration and source map upload support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/sentry",
+      "type": "nextjs",
+      "category": "Monitoring",
+      "labels": [
+        "Sentry",
+        "Error Tracking",
+        "Performance",
+        "Monitoring"
+      ]
+    },
+    {
+      "name": "Apollo Client for React",
+      "slug": "apollo-client",
+      "description": "Add Apollo Client for GraphQL data fetching, caching, and state management in React applications.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-apollo",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Data Fetching",
+      "labels": [
+        "Apollo",
+        "GraphQL",
+        "Data Fetching",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Storybook",
+      "slug": "storybook",
+      "description": "Add Storybook for isolated component development, visual testing, and interactive documentation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/storybook",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Storybook",
+        "Components",
+        "Documentation",
+        "Visual Testing"
+      ]
+    },
+    {
+      "name": "React Query for Next.js",
+      "slug": "nextjs-react-query",
+      "description": "Add TanStack React Query with SSR-compatible setup for Next.js App Router, including hydration support and query client factory.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-react-query",
+      "type": "nextjs",
+      "category": "Data Fetching",
+      "labels": [
+        "TanStack Query",
+        "React Query",
+        "Data Fetching",
+        "SSR",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Prisma for Next.js",
+      "slug": "nextjs-prisma",
+      "description": "Add Prisma ORM with PostgreSQL for type-safe database access, schema management, and migrations in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-prisma",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Prisma",
+        "PostgreSQL",
+        "ORM",
+        "Database",
+        "Migrations"
+      ]
+    },
+    {
+      "name": "Turso/libSQL for Next.js",
+      "slug": "nextjs-turso",
+      "description": "Add Turso (libSQL) database client with Drizzle ORM for edge-ready SQLite database access in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-turso",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Turso",
+        "libSQL",
+        "SQLite",
+        "Database",
+        "Edge",
+        "Drizzle"
+      ]
     }
   ]
 }

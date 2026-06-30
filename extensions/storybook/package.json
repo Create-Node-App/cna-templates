@@ -1,0 +1,17 @@
+{
+  "name": "storybook-extension",
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-interactions": "^8.6.12",
+    "@storybook/addon-links": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/nextjs": "^8.6.12",
+    "@storybook/react": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "storybook": "^8.6.12"
+  },
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build"
+  }
+}
