@@ -13,8 +13,10 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
+    "esbuild": "^0.28.1",
+    "esbuild-node-externals": "^1.23.1",
     "serverless": "^4.38.1",
-    "serverless-bundle": "^6.0.0",
+    "serverless-esbuild": "^1.57.2",
     "serverless-offline": "^14.7.4"
   }
 }

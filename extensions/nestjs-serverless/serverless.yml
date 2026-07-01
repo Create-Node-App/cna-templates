@@ -1,9 +1,9 @@
 service: ${env:SERVICE_NAME, 'nestjs-serverless'}
 
-frameworkVersion: '3'
+frameworkVersion: '4'
 
 plugins:
-  - serverless-bundle
+  - serverless-esbuild
   - serverless-offline
 
 useDotenv: true
@@ -18,14 +18,14 @@ custom:
     port: 3000
     noPrependStageInUrl: true
     reloadHandler: true
-  bundle:
-    sourcemaps: true
-    tsConfig: "./tsconfig.bundle.json"
-    caching: false
-    linting: true
-    minifyOptions:
-      keepNames: true
-    ignorePackages:
+  esbuild:
+    sourcemap: true
+    minify: false
+    target: node18
+    platform: node
+    bundle: true
+    external:
+      - "aws-sdk"
       - "@nestjs/microservices"
       - "@nestjs/microservices/microservices-module"
       - "@nestjs/websockets/socket-module"
@@ -35,8 +35,6 @@ custom:
       - "@apollo/subgraph"
       - "@apollo/subgraph/dist/directives"
       - "apollo-server-fastify"
-    forceExclude:
-      - "aws-sdk"
 
 provider:
   name: aws

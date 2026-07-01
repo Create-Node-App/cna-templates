@@ -1,10 +1,3 @@
 {
-  "customOptions": [
-    {
-      "name": "projectName",
-      "type": "text",
-      "message": "Project name",
-      "initial": "my-astro-app"
-    }
-  ]
+  "customOptions": []
 }

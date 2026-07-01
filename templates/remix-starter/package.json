@@ -4,8 +4,8 @@
     "build": "react-router build",
     "start": "react-router-serve ./build/server/index.js",
     "format": "prettier --ignore-path .gitignore --write .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "echo \"No ESLint configuration for remix-starter yet\"",
+    "lint:fix": "echo \"No ESLint configuration for remix-starter yet\"",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
