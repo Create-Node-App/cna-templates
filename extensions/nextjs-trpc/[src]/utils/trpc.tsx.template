@@ -33,7 +33,7 @@ function getBaseUrl() {
   }
 
   if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+    return 'https://' + process.env.VERCEL_URL;
   }
 
   return 'http://localhost:3000';
@@ -46,7 +46,7 @@ export function TRPCReactProvider(props: Readonly<{ children: ReactNode }>) {
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          url: '' + getBaseUrl() + '/api/trpc',
           transformer: superjson,
         }),
       ],
