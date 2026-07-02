@@ -12,9 +12,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "baseUrl": ".",
+    "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./<%= srcDir %>/*"]
     }
   },
-  "include": ["<%= srcDir %>"]
+  "include": [".react-router/types/**/*", "<%= srcDir %>"]
 }
