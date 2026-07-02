@@ -9,14 +9,18 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@hono/node-server": "^1.13.8",
     "hono": "^4.7.6"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/node": "^22.13.14",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
+    "globals": "^16.4.0",
     "prettier": "^3.5.3",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.46.2"
   }
 }
