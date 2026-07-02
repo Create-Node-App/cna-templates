@@ -18,13 +18,7 @@ export const ExampleComponent = () => {
       <form onSubmit={handleSubmit}>
         <div className={styles.field}>
           <label htmlFor="value">Value</label>
-          <input
-            id="value"
-            type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            required
-          />
+          <input id="value" type="text" value={value} onChange={(e) => setValue(e.target.value)} required />
         </div>
         <button type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Submit'}
