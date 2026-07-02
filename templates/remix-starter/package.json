@@ -9,8 +9,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "isbot": "^5.1.31",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "@react-router/node": "^7.6.2",
     "react-router": "^7.6.2"
   },
   "devDependencies": {
@@ -22,6 +24,8 @@
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vite": "^6.4.1",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
