@@ -7,7 +7,6 @@
     "@storybook/blocks": "^8.6.18",
     "@storybook/nextjs": "^8.6.18",
     "@storybook/react": "^8.6.18",
-    "@storybook/react-vite": "^8.6.18",
     "@storybook/test": "^8.6.18",
     "storybook": "^8.6.18"
   },
