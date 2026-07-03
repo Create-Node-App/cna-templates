@@ -22,6 +22,7 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
       "prettier": "^3.9.4",
       "turbo": "^2.10.2"
     },
+    "packageManager": "npm@10.9.0",
     "dependencies": {
       "tsup": "^6.2.3"
     },

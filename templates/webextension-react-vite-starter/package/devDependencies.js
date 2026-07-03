@@ -1,5 +1,5 @@
 module.exports = {
-  '@eslint/js': '^10.0.1',
+  '@eslint/js': '^9.39.4',
   '@types/node': '^26.1.0',
   '@types/react': '^19.2.17',
   '@types/react-dom': '^19.2.3',
