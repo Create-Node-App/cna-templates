@@ -1,4 +1,4 @@
-@import '@/assets/style/theme.scss';
+@use '@/assets/style/theme.scss' as *;
 
 .content-view {
   font-size: 30px;
