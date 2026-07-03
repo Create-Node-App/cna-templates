@@ -28,7 +28,7 @@ export default [
   },
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['vite.config.ts', 'vite.config.d.ts', 'electron/**/*', '.storybook/**/*', 'playwright.config.ts'],
+    ignores: ['vite.config.ts', 'vite.config.d.ts', 'vitest.config.ts', 'electron/**/*', '.storybook/**/*', 'playwright.config.ts'],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
