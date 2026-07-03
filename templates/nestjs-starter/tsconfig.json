@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "allowJs": false,
     "esModuleInterop": true,
+    "types": ["jest", "node"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0"
