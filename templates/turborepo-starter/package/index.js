@@ -17,10 +17,10 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
       "type-check": "turbo run type-check"
     },
     "devDependencies": {
-      "@changesets/cli": "^2.25.0",
+      "@changesets/cli": "^2.31.0",
       [eslintConfigBaseName]: "0.0.0",
-      "prettier": "^2.7.1",
-      "turbo": "^1.5.5"
+      "prettier": "^3.9.4",
+      "turbo": "^2.10.2"
     },
     "dependencies": {
       "tsup": "^6.2.3"

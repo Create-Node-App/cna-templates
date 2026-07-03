@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/react": "^18.0.22",
     "<%= scope%>eslint-config-react": "*",
-    "eslint": "^7.32.0",
+    "eslint": "^9.39.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsconfig": "*",
