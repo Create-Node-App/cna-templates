@@ -3,7 +3,7 @@ module.exports = {
   '@types/node': '^22.13.4',
   '@types/react': '^19.0.8',
   '@types/react-dom': '^19.0.3',
-  '@types/webextension-polyfill': '^0.12.1',
+  '@types/webextension-polyfill': '^0.12.5',
   '@types/ws': '^8.5.4',
   '@vitejs/plugin-react': '^4.3.4',
   chokidar: '^4.0.3',
@@ -20,6 +20,6 @@ module.exports = {
   'typescript-eslint': '^8.24.0',
   vite: '^6.1.0',
   'vite-plugin-eslint': '^1.8.1',
-  'web-ext': '^8.4.0',
+  'web-ext': '^9.4.0',
   ws: '^8.18.0',
 };
