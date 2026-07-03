@@ -7,9 +7,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const Button: React.FC<ButtonProps> = ({ children, loading, className = '', ...rest }) => (
   <button
-    className={
-      ('btn-primary ' + (loading ? 'opacity-70 cursor-wait' : '') + ' ' + className).trim()
-    }
+    className={('btn-primary ' + (loading ? 'opacity-70 cursor-wait' : '') + ' ' + className).trim()}
     disabled={rest.disabled || loading}
     {...rest}
   >
