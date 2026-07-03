@@ -12,9 +12,7 @@ const Landing = () => (
     <div className="landing__surface">
       <span className="landing__eyebrow">Create Awesome Node App</span>
       <h1 className="landing__title"><%= projectName %></h1>
-      <p className="landing__lead">
-        A lightweight React + Vite starter with a clean foundation for your next feature.
-      </p>
+      <p className="landing__lead">A lightweight React + Vite starter with a clean foundation for your next feature.</p>
 
       <div className="landing__meta">
         <p>

@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 const { PORT = '3000' } = process.env;
 
-const root = path.resolve(__dirname, '<%= srcDir%>');
+const root = path.resolve(__dirname, '<%= srcDir %>');
 
 const vitePluginPWA = () =>
   VitePWA({
@@ -16,9 +16,9 @@ const vitePluginPWA = () =>
       enabled: true,
     },
     manifest: {
-      name: '<%= projectName%>',
-      short_name: '<%= projectName%>',
-      description: '<%= projectName%>',
+      name: '<%= projectName %>',
+      short_name: '<%= projectName %>',
+      description: '<%= projectName %>',
       theme_color: '#ffffff',
       icons: [
         {
@@ -57,12 +57,12 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '<%= projectImportPath%>': root + '/',
+      '<%= projectImportPath %>': root + '/',
     },
   },
   esbuild: {
     loader: 'tsx',
-    include: '<%= srcDir%>/**/*.{ts,tsx,js,jsx}',
+    include: '<%= srcDir %>/**/*.{ts,tsx,js,jsx}',
   },
   optimizeDeps: {
     esbuildOptions: {

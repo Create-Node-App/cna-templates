@@ -10,9 +10,7 @@ let reportErrorImpl: (error: unknown, context?: ErrorContext) => void = (error, 
   }
 };
 
-export function setErrorReporter(
-  reporter: (error: unknown, context?: ErrorContext) => void,
-): void {
+export function setErrorReporter(reporter: (error: unknown, context?: ErrorContext) => void): void {
   reportErrorImpl = reporter;
 }
 
