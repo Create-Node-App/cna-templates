@@ -64,6 +64,9 @@ export default defineConfig({
     loader: 'tsx',
     include: '<%= srcDir %>/**/*.{ts,tsx,js,jsx}',
   },
+  build: {
+    cssMinify: false,
+  },
   optimizeDeps: {
     esbuildOptions: {
       loader: {
