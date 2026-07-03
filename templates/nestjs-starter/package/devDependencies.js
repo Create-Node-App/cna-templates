@@ -1,4 +1,5 @@
 module.exports = {
+  "@eslint/js": "^9.39.4",
   "@nestjs/cli": "^11.0.23",
   "@nestjs/schematics": "^11.1.0",
   "@nestjs/testing": "^11.1.27",
@@ -21,5 +22,6 @@ module.exports = {
   "ts-loader": "^9.6.2",
   "ts-node": "^10.9.2",
   "tsconfig-paths": "^4.2.0",
-  "typescript": "^6.0.3"
+  "typescript": "^6.0.3",
+  "typescript-eslint": "^8.62.1"
 };
