@@ -7,7 +7,7 @@ import path from 'path';
 
 @Injectable()
 export class DrizzleProvider implements OnModuleInit {
-  db: BetterSQLite3Database;
+  db!: BetterSQLite3Database;
 
   constructor(private readonly configService: ConfigService) {}
 
