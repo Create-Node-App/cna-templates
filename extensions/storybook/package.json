@@ -1,14 +1,15 @@
 {
   "name": "storybook-extension",
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.6.12",
-    "@storybook/addon-interactions": "^8.6.12",
-    "@storybook/addon-links": "^8.6.12",
-    "@storybook/blocks": "^8.6.12",
-    "@storybook/nextjs": "^8.6.12",
-    "@storybook/react": "^8.6.12",
-    "@storybook/test": "^8.6.12",
-    "storybook": "^8.6.12"
+    "@storybook/addon-essentials": "^10.4.6",
+    "@storybook/addon-interactions": "^10.4.6",
+    "@storybook/addon-links": "^10.4.6",
+    "@storybook/blocks": "^10.4.6",
+    "@storybook/nextjs": "^10.4.6",
+    "@storybook/react": "^10.4.6",
+    "@storybook/react-vite": "^10.4.6",
+    "@storybook/test": "^10.4.6",
+    "storybook": "^10.4.6"
   },
   "scripts": {
     "storybook": "storybook dev -p 6006",
