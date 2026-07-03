@@ -21,12 +21,12 @@
     "tsup": "^6.2.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.22",
+    "@types/react": "^18.3.31",
     "<%= scope%>eslint-config-react": "*",
     "eslint": "^9.39.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tsconfig": "*",
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.3"
   }
 }

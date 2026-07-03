@@ -10,6 +10,6 @@
   "dependencies": {
     "eslint": "^9.39.4",
     "<%= scope%>eslint-config-ts": "*",
-    "eslint-config-next": "^15.5.4"
+    "eslint-config-next": "^16.2.10"
   }
 }
