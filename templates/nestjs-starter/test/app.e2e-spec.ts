@@ -23,6 +23,18 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect(({ body }) => {
+        expect(body).toMatchObject({
+          status: 'ok',
+          message: 'NestJS starter API is running.',
+          routes: {
+            root: '/',
+            health: '/health',
+          },
+        });
+
+        expect(body.timestamp).toEqual(expect.any(String));
+        expect(body.nextSteps).toEqual(expect.arrayContaining([expect.any(String)]));
+      });
   });
 });
