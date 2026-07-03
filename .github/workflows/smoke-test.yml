@@ -19,14 +19,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        template:
-          - nextjs-starter
-          - react-vite-boilerplate
-          - nestjs-boilerplate
-          - react-vite-boilerplate
-        addons:
-          - ""
-          - "--addons material-ui zustand"
+        include:
+          - template: nextjs-starter
+            addons: ""
+          - template: nestjs-boilerplate
+            addons: ""
+          - template: react-vite-boilerplate
+            addons: '--addons "file://${PWD}?subdir=extensions/react-material-ui" "file://${PWD}?subdir=extensions/react-zustand"'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
