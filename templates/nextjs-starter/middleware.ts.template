@@ -1,4 +1,4 @@
-import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server';
+import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server';
 
 import { middlewareHandlers, normalizeMiddlewareResult } from '<%= projectImportPath%>middleware-handlers';
 

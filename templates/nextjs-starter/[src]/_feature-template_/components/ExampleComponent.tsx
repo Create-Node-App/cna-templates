@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useExample } from '../hooks';
 import styles from './ExampleComponent.module.css';
+import { useExample } from '../hooks';
 
 export const ExampleComponent = () => {
   const [value, setValue] = useState('');
