@@ -4,10 +4,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: [
-    './index.html',
-    '<%= srcDir %>/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./index.html', '<%= srcDir %>/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -21,13 +18,13 @@ module.exports = {
           600: '#1559e6',
           700: '#0f44b4',
           800: '#0d378f',
-          900: '#0c2f75'
-        }
+          900: '#0c2f75',
+        },
       },
       borderRadius: {
-        xl: '1rem'
-      }
-    }
+        xl: '1rem',
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
