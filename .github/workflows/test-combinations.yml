@@ -229,7 +229,6 @@ jobs:
               });
             }
           }
-          }
 
           const matrix = JSON.stringify(combinations);
           fs.appendFileSync(process.env.GITHUB_OUTPUT, 'matrix=' + matrix + '\n');
