@@ -44,7 +44,8 @@
           "url": { "type": "string" },
           "type": { "oneOf": [ { "type": "string" }, { "type": "array", "items": { "type": "string" } } ] },
           "category": { "type": "string" },
-          "labels": { "type": "array", "items": { "type": "string" } }
+          "labels": { "type": "array", "items": { "type": "string" } },
+          "incompatibleWith": { "type": "array", "items": { "type": "string" }, "description": "Slugs of extensions that cannot be combined with this extension." }
         },
         "required": ["name", "slug", "description", "url", "type", "category", "labels"]
       }
