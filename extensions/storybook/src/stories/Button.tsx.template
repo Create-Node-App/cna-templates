@@ -14,8 +14,8 @@ export function Button({ label, onClick, variant = 'primary' }: ButtonProps) {
       onClick={onClick}
       style={{
         padding: '0.5rem 1rem',
-        background: variant === 'primary' ? '#0070f3' : '#eaeaea',
-        color: variant === 'primary' ? '#fff' : '#000',
+        background: variant === 'primary' ? '#f59e0b' : '#f1f5f9',
+        color: variant === 'primary' ? '#fff' : '#0f172a',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
