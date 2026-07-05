@@ -16,5 +16,5 @@
       "~/*": ["./<%= srcDir %>/*"]
     }
   },
-  "include": [".react-router/types/**/*", "<%= srcDir %>"]
+  "include": [".react-router/types/**/*", "<%= srcDir %>", "<%= srcDir %>/**/*.ts"]
 }
