@@ -62,18 +62,6 @@ jobs:
             return false;
           };
 
-          const hasIncompatibility = (selected, candidate) => {
-            const candidateSlugs = new Set([candidate.slug]);
-            const selectedSlugs = new Set(selected.map(e => e.slug));
-            for (const ext of selected) {
-              const incompatible = ext.incompatibleWith || [];
-              if (incompatible.some(s => candidateSlugs.has(s))) return true;
-              const candidateIncompatible = candidate.incompatibleWith || [];
-              if (candidateIncompatible.some(s => selectedSlugs.has(s))) return true;
-            }
-            return false;
-          };
-
           const randomCombinations = data.templates.map(template => {
             const compatibleExtensions = extensions.filter(ext => {
               const extTypes = Array.isArray(ext.type) ? ext.type : [ext.type];
@@ -228,7 +216,6 @@ jobs:
                 extensions: extUrls
               });
             }
-          }
           }
 
           const matrix = JSON.stringify(combinations);
