@@ -54,16 +54,16 @@ export default function Home() {
       <main className={styles.main}>
         <section className={styles.hero} style={{ "--index": 0 } as React.CSSProperties}>
           <span className={styles.eyebrow}>Your project is ready</span>
-          <h1 className={styles.title}>Next.js Starter</h1>
+          <h1 className={styles.title}><%= projectName %></h1>
           <p className={styles.lead}>
             A cozy Next.js starter with a feature-based foundation. Everything you need to start building your next
             page.
           </p>
           <div className={styles.actions}>
-            <a href="src/app/page.tsx" className={`${styles.button} ${styles.buttonPrimary}`}>
+            <a href="<%- srcDir %>/app/page.tsx" className={styles.button + " " + styles.buttonPrimary}>
               Start editing
             </a>
-            <a href="./docs/README.md" className={`${styles.button} ${styles.buttonSecondary}`}>
+            <a href="./docs/README.md" className={styles.button + " " + styles.buttonSecondary}>
               Read the docs
             </a>
           </div>
