@@ -1,35 +1,118 @@
 import React from 'react';
 import './Landing.css';
 
-const starterHighlights = [
-  'Feature-based structure ready for scale.',
-  'Routing is already wired so you can start adding screens.',
-  'Compatible addons can layer UI, state, tooling, and more.',
+interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const features: Feature[] = [
+  {
+    icon: '⚡',
+    title: 'Vite 8',
+    description: 'Instant HMR and a fast, opinionated build pipeline.',
+  },
+  {
+    icon: '⚛️',
+    title: 'React 19',
+    description: 'Latest React with modern patterns and future-ready APIs.',
+  },
+  {
+    icon: '🧭',
+    title: 'React Router 7',
+    description: 'Client-side routing already wired for nested routes.',
+  },
+  {
+    icon: '🛡️',
+    title: 'TypeScript + ESLint + Prettier',
+    description: 'Static typing and consistent, automated code style.',
+  },
+  {
+    icon: '📦',
+    title: 'Feature-based structure',
+    description: 'Scale by co-locating routes, state, and components.',
+  },
+  {
+    icon: '🧩',
+    title: 'Addon ready',
+    description: 'Layer UI libraries, state tools, testing, and deployment.',
+  },
 ];
 
+const docs = [
+  { label: 'Project overview', href: '/docs/README.md' },
+  { label: 'Project structure', href: '/docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: '/docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: '/docs/STATE_MANAGEMENT.md' },
+];
+
+const withIndex = (index: number) => ({ '--index': index }) as React.CSSProperties;
+
 const Landing = () => (
-  <section className="landing">
-    <div className="landing__surface">
-      <span className="landing__eyebrow">Create Awesome Node App</span>
-      <h1 className="landing__title"><%= projectName %></h1>
-      <p className="landing__lead">A lightweight React + Vite starter with a clean foundation for your next feature.</p>
+  <div className="cna-landing">
+    <header className="cna-landing__header">
+      <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
+      <span className="cna-landing__brand">Create Awesome Node App</span>
+    </header>
 
-      <div className="landing__meta">
-        <p>
-          Start editing <code><%= srcDir %>/pages/Landing.tsx</code>
+    <main className="cna-landing__main">
+      <section className="cna-landing__hero" style={withIndex(0)}>
+        <span className="cna-landing__eyebrow">Your project is ready</span>
+        <h1 className="cna-landing__title"><%= projectName %></h1>
+        <p className="cna-landing__lead">
+          A cozy React + Vite starter with a feature-based foundation. Everything you need to start building your next
+          screen.
         </p>
-        <p>
-          Add features in <code><%= srcDir %>/features</code>
-        </p>
-      </div>
+        <div className="cna-landing__actions">
+          <span className="cna-landing__button cna-landing__button--primary">
+            Start editing <code className="cna-landing__code"><%= srcDir %>/pages/Landing.tsx</code>
+          </span>
+          <a href="/docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+            Read the docs
+          </a>
+        </div>
+      </section>
 
-      <ul className="landing__list">
-        {starterHighlights.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </div>
-  </section>
+      <section className="cna-landing__features">
+        <h2 className="cna-landing__section-title">What is inside</h2>
+        <div className="cna-landing__grid">
+          {features.map((feature, index) => (
+            <article key={feature.title} className="cna-landing__card" style={withIndex(index + 1)}>
+              <span className="cna-landing__card-icon" aria-hidden="true">
+                {feature.icon}
+              </span>
+              <h3 className="cna-landing__card-title">{feature.title}</h3>
+              <p className="cna-landing__card-text">{feature.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="cna-landing__docs" style={withIndex(features.length + 1)}>
+        <h2 className="cna-landing__section-title">Next steps</h2>
+        <nav className="cna-landing__doc-list" aria-label="Documentation">
+          {docs.map((doc) => (
+            <a key={doc.label} href={doc.href} className="cna-landing__doc-link">
+              <span className="cna-landing__doc-label">{doc.label}</span>
+              <span className="cna-landing__doc-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          ))}
+        </nav>
+      </section>
+    </main>
+
+    <footer className="cna-landing__footer" style={withIndex(features.length + 2)}>
+      <p>
+        Generated with{' '}
+        <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
+          create-awesome-node-app
+        </a>
+      </p>
+    </footer>
+  </div>
 );
 
 export default Landing;
