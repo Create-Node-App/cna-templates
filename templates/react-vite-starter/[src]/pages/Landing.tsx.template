@@ -1,6 +1,5 @@
 import React from 'react';
 import './Landing.css';
-import logo from '/logo.svg';
 
 interface Feature {
   icon: string;
@@ -42,21 +41,23 @@ const features: Feature[] = [
 ];
 
 const docs = [
-  { label: 'Project overview', href: './docs/README.md' },
-  { label: 'Project structure', href: './docs/PROJECT_STRUCTURE.md' },
-  { label: 'Components & styling', href: './docs/COMPONENTS_AND_STYLING.md' },
-  { label: 'State management', href: './docs/STATE_MANAGEMENT.md' },
+  { label: 'Project overview', href: '/docs/README.md' },
+  { label: 'Project structure', href: '/docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: '/docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: '/docs/STATE_MANAGEMENT.md' },
 ];
+
+const withIndex = (index: number) => ({ '--index': index }) as React.CSSProperties;
 
 const Landing = () => (
   <div className="cna-landing">
     <header className="cna-landing__header">
-      <img src={logo} alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
+      <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
       <span className="cna-landing__brand">Create Awesome Node App</span>
     </header>
 
     <main className="cna-landing__main">
-      <section className="cna-landing__hero" style={{ '--index': 0 } as React.CSSProperties}>
+      <section className="cna-landing__hero" style={withIndex(0)}>
         <span className="cna-landing__eyebrow">Your project is ready</span>
         <h1 className="cna-landing__title"><%= projectName %></h1>
         <p className="cna-landing__lead">
@@ -64,10 +65,10 @@ const Landing = () => (
           screen.
         </p>
         <div className="cna-landing__actions">
-          <a href={`<%= srcDir %>/pages/Landing.tsx`} className="cna-landing__button cna-landing__button--primary">
-            Start editing
-          </a>
-          <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+          <span className="cna-landing__button cna-landing__button--primary">
+            Start editing <code className="cna-landing__code"><%= srcDir %>/pages/Landing.tsx</code>
+          </span>
+          <a href="/docs/README.md" className="cna-landing__button cna-landing__button--secondary">
             Read the docs
           </a>
         </div>
@@ -77,11 +78,7 @@ const Landing = () => (
         <h2 className="cna-landing__section-title">What is inside</h2>
         <div className="cna-landing__grid">
           {features.map((feature, index) => (
-            <article
-              key={feature.title}
-              className="cna-landing__card"
-              style={{ '--index': index + 1 } as React.CSSProperties}
-            >
+            <article key={feature.title} className="cna-landing__card" style={withIndex(index + 1)}>
               <span className="cna-landing__card-icon" aria-hidden="true">
                 {feature.icon}
               </span>
@@ -92,7 +89,7 @@ const Landing = () => (
         </div>
       </section>
 
-      <section className="cna-landing__docs" style={{ '--index': features.length + 1 } as React.CSSProperties}>
+      <section className="cna-landing__docs" style={withIndex(features.length + 1)}>
         <h2 className="cna-landing__section-title">Next steps</h2>
         <nav className="cna-landing__doc-list" aria-label="Documentation">
           {docs.map((doc) => (
@@ -107,7 +104,7 @@ const Landing = () => (
       </section>
     </main>
 
-    <footer className="cna-landing__footer" style={{ '--index': features.length + 2 } as React.CSSProperties}>
+    <footer className="cna-landing__footer" style={withIndex(features.length + 2)}>
       <p>
         Generated with{' '}
         <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">

@@ -37,7 +37,7 @@
 | `text` | `#1f2937` | `#f8fafc` | Primary text |
 | `text-muted` | `#6b7280` | `#94a3b8` | Secondary text |
 | `border` | `#fed7aa` | `#334155` | Subtle borders |
-| `glow` | `rgba(245, 158, 11, 0.15)` | `rgba(245, 158, 11, 0.12)` | Ambient glows |
+| `glow` | `rgba(245, 158, 11, 0.08)` | `rgba(245, 158, 11, 0.12)` | Ambient glows |
 
 ### Semantic colors
 
@@ -197,7 +197,7 @@ When updating the identity, edit the master files first, then copy the new versi
 
 Every template landing should follow this layout:
 
-```
+```text
 +----------------------------------+
 |  [Mark]  Create Awesome Node App |
 +----------------------------------+
@@ -223,7 +223,7 @@ Each feature card contains:
 1. A small amber or teal icon.
 2. A short title.
 3. One-sentence description.
-4. Optional doc link.
+4. Optional doc link rendered as a plain link with a label and arrow.
 
 Example cards per template:
 
@@ -241,7 +241,7 @@ Link to the generated docs folder using relative paths:
 - `docs/COMPONENTS_AND_STYLING.md`
 - `docs/STATE_MANAGEMENT.md`
 
-Use a `DocsLink` helper component with an icon + label.
+Use a simple link with a label and an arrow. A shared `DocsLink` helper is optional when the template already has a component library installed.
 
 ---
 
