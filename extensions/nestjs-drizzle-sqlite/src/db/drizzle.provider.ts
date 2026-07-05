@@ -7,20 +7,30 @@ import path from 'path';
 
 @Injectable()
 export class DrizzleProvider implements OnModuleInit {
-  db!: BetterSQLite3Database;
+  private database!: Database.Database;
+  private _db: BetterSQLite3Database | undefined;
 
   constructor(private readonly configService: ConfigService) {}
 
+  get db(): BetterSQLite3Database {
+    if (!this._db) {
+      throw new Error('DrizzleProvider has not been initialized. Wait for onModuleInit() to complete.');
+    }
+    return this._db;
+  }
+
   async onModuleInit() {
-    this.db = drizzle(this.createDb());
+    this.database = this.createDb();
+    this._db = drizzle(this.database);
     // IMPORTANT: After defining the database schema, run the command "npm run migrate"
     // then uncomment the following line!
     // this.migrateDb();
   }
 
   private createDb() {
-    const sqlite_db_name = this.configService.get<string>('SQLITE_DATABASE_NAME') + '.db';
-    return new Database(sqlite_db_name);
+    const sqliteDbName = this.configService.get<string>('SQLITE_DATABASE_NAME') || 'database';
+    const sqliteDbPath = `${sqliteDbName}.db`;
+    return new Database(sqliteDbPath);
   }
 
   private getMigrationsFolder() {
@@ -30,6 +40,6 @@ export class DrizzleProvider implements OnModuleInit {
 
   private migrateDb() {
     const migrationsFolder = this.getMigrationsFolder();
-    migrate(this.db, { migrationsFolder: migrationsFolder });
+    migrate(this.db, { migrationsFolder });
   }
 }
