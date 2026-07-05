@@ -24,9 +24,9 @@
 .popup__logo {
   width: 52px;
   height: 52px;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border-radius: 0.95rem;
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(245, 158, 11, 0.12);
 }
 
 .popup__eyebrow {
