@@ -51,11 +51,18 @@ export function AppLogo({ size = 'md', showText = true, href = '/', className, a
       ) : (
         <div
           className={cn(
-            'flex items-center justify-center rounded-xl brand-gradient shadow-sm transition-transform duration-300 group-hover:rotate-3',
+            'flex items-center justify-center rounded-xl overflow-hidden transition-transform duration-300 group-hover:rotate-3',
             s.icon,
           )}
         >
-          <span className={cn('font-bold text-white', s.iconText)}>A</span>
+          <Image
+            src="/logo.svg"
+            alt={displayName}
+            width={s.imgSize}
+            height={s.imgSize}
+            className="object-contain"
+            unoptimized
+          />
         </div>
       )}
       {showText && <span className={cn('font-bold brand-gradient-text', s.textMain)}>{displayName}</span>}
