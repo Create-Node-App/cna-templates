@@ -47,7 +47,19 @@ jobs:
           const extLocalUrl = (ext) => {
             const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
             const dir = match ? match[1] : null;
-            return dir ? \`file://\${repoDir}?subdir=extensions/\${dir}\` : null;
+            return dir ? \`file://${repoDir}?subdir=extensions/${dir}\` : null;
+          };
+
+          const hasIncompatibility = (selected, candidate) => {
+            const candidateSlugs = new Set([candidate.slug]);
+            const selectedSlugs = new Set(selected.map(e => e.slug));
+            for (const ext of selected) {
+              const incompatible = ext.incompatibleWith || [];
+              if (incompatible.some(s => candidateSlugs.has(s))) return true;
+              const candidateIncompatible = candidate.incompatibleWith || [];
+              if (candidateIncompatible.some(s => selectedSlugs.has(s))) return true;
+            }
+            return false;
           };
 
           const randomCombinations = data.templates.map(template => {
@@ -57,22 +69,21 @@ jobs:
             });
 
             const categories = [...new Set(compatibleExtensions.map(e => e.category))];
-            const selectedExtensions = categories
-              .map(category => {
-                const categoryExtensions = compatibleExtensions.filter(e => e.category === category);
-                const ext = categoryExtensions[Math.floor(Math.random() * categoryExtensions.length)];
-                if (!ext) return null;
-                const url = extLocalUrl(ext);
-                return url;
-              })
-              .filter(Boolean);
+            const selectedExtensions = [];
+            for (const category of categories) {
+              const categoryExtensions = compatibleExtensions.filter(e => e.category === category);
+              const available = categoryExtensions.filter(e => !hasIncompatibility(selectedExtensions, e));
+              if (available.length === 0) continue;
+              const ext = available[Math.floor(Math.random() * available.length)];
+              if (ext) selectedExtensions.push(ext);
+            }
 
             // Derive local template URL from the url field in templates.json
             const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
             const tplDir = tplMatch ? tplMatch[1] : null;
-            const templateUrl = tplDir ? \`file://\${repoDir}?subdir=templates/\${tplDir}\` : template.slug;
+            const templateUrl = tplDir ? \`file://${repoDir}?subdir=templates/${tplDir}\` : template.slug;
 
-            return { template: template.slug, templateUrl, extensions: selectedExtensions };
+            return { template: template.slug, templateUrl, extensions: selectedExtensions.map(extLocalUrl).filter(Boolean) };
           });
 
           const matrix = JSON.stringify(randomCombinations);
@@ -162,7 +173,19 @@ jobs:
             return dir ? \`file://\${repoDir}?subdir=extensions/\${dir}\` : null;
           };
 
-          // Generate ALL combinations (template x all compatible extensions)
+          const hasIncompatibility = (selected, candidate) => {
+            const candidateSlugs = new Set([candidate.slug]);
+            const selectedSlugs = new Set(selected.map(e => e.slug));
+            for (const ext of selected) {
+              const incompatible = ext.incompatibleWith || [];
+              if (incompatible.some(s => candidateSlugs.has(s))) return true;
+              const candidateIncompatible = candidate.incompatibleWith || [];
+              if (candidateIncompatible.some(s => selectedSlugs.has(s))) return true;
+            }
+            return false;
+          };
+
+          // Generate ALL non-conflicting combinations (template x all compatible extensions)
           const combinations = [];
 
           for (const template of data.templates) {
@@ -171,14 +194,21 @@ jobs:
               return extTypes.includes(template.type);
             });
 
-            // Test with ALL extensions for this template
-            if (compatibleExtensions.length > 0) {
-              const extUrls = compatibleExtensions.map(ext => extLocalUrl(ext)).filter(Boolean);
+            // Test with all mutually-compatible extensions for this template
+            const selectedExtensions = [];
+            for (const ext of compatibleExtensions) {
+              if (!hasIncompatibility(selectedExtensions, ext)) {
+                selectedExtensions.push(ext);
+              }
+            }
+
+            if (selectedExtensions.length > 0) {
+              const extUrls = selectedExtensions.map(ext => extLocalUrl(ext)).filter(Boolean);
 
               // Derive local template URL from the url field in templates.json
               const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
               const tplDir = tplMatch ? tplMatch[1] : null;
-              const templateUrl = tplDir ? \`file://\${repoDir}?subdir=templates/\${tplDir}\` : template.slug;
+              const templateUrl = tplDir ? \`file://${repoDir}?subdir=templates/${tplDir}\` : template.slug;
 
               combinations.push({
                 template: template.slug,
@@ -186,6 +216,7 @@ jobs:
                 extensions: extUrls
               });
             }
+          }
           }
 
           const matrix = JSON.stringify(combinations);
