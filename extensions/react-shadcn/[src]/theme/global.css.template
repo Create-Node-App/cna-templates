@@ -5,12 +5,12 @@
 
 :root {
   --radius: 8px;
-  --color-bg: 255 255 255;
-  --color-fg: 24 24 27;
+  --color-bg: 255 252 245;
+  --color-fg: 31 41 55;
 }
 .dark {
-  --color-bg: 24 24 27;
-  --color-fg: 244 244 245;
+  --color-bg: 15 23 42;
+  --color-fg: 248 250 252;
 }
 
 body { @apply bg-bg text-fg antialiased; }
