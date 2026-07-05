@@ -39,7 +39,7 @@ jobs:
           const templates = data.templates.map(t => ({
             slug: t.slug,
             type: t.type,
-            localUrl: \`file://\${repoDir}?subdir=templates/\${t.slug.replace(/-boilerplate$|-starter$/, '') + '-starter'}\`,
+            localUrl: \`file://${repoDir}?subdir=templates/\${t.slug.replace(/-boilerplate$|-starter$/, '') + '-starter'}\`,
           }));
           const extensions = data.extensions;
 
@@ -170,7 +170,7 @@ jobs:
           const extLocalUrl = (ext) => {
             const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
             const dir = match ? match[1] : null;
-            return dir ? \`file://\${repoDir}?subdir=extensions/\${dir}\` : null;
+            return dir ? \`file://${repoDir}?subdir=extensions/\${dir}\` : null;
           };
 
           const hasIncompatibility = (selected, candidate) => {
