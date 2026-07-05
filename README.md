@@ -38,6 +38,7 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System overview, type system, generation flow |
 | [docs/AUTHORING.md](./docs/AUTHORING.md) | File conventions, EJS variables, `package/` system |
 | [docs/TESTING.md](./docs/TESTING.md) | Local testing and CI workflow |
+| [docs/MAINTENANCE_RUNBOOK.md](./docs/MAINTENANCE_RUNBOOK.md) | Operational procedures for maintaining templates, extensions, CI, dependencies, security, and releases |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to add templates and extensions |
 
 ## CI compatibility matrix
@@ -54,6 +55,31 @@ The badges above reflect the CI workflows:
 - **Weekly (Sunday UTC):** full matrix — every template with all compatible extensions
 
 See the [Actions tab](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml) for the latest run results.
+
+## For AI assistants: copy-paste to start a maintenance session
+
+If you are an AI agent beginning work on this repository, paste the following prompt exactly (after reading any prior conversation context the user provides):
+
+```text
+You are maintaining the Create-Node-App ecosystem: the `create-node-app` CLI monorepo and the `cna-templates` template/extension bank.
+
+Follow the maintenance runbook at `docs/MAINTENANCE_RUNBOOK.md` and its companion guides (`docs/MAINTENANCE_TEMPLATES.md`, `docs/MAINTENANCE_DEPENDENCIES.md`, `docs/MAINTENANCE_SECURITY.md`, `docs/MAINTENANCE_CI.md`, `docs/MAINTENANCE_RELEASE.md`).
+
+Always:
+1. Run the pre-flight checklist in `docs/MAINTENANCE_RUNBOOK.md` Section 3 before changing code.
+2. Scope work to one fix per PR with a `Closes #<issue>` link when applicable.
+3. Write commits, PRs, issues, and docs in English.
+4. Validate locally with `file://` URLs before pushing (see `docs/MAINTENANCE_TEMPLATES.md` Section 9).
+5. Run the relevant full CI workflow manually after risky merges and watch it to completion.
+6. Update `knowledge/processes/create-node-app-maintenance.md` in the workspace if you discover a new pattern or decision.
+
+Current known constraints:
+- Storybook extension is pinned to `^8.6.18` with `legacy-peer-deps=true` in `extensions/storybook/.npmrc`; do not upgrade to Storybook v10 without resolving issue #161 first.
+- The `test-combinations.yml` generator uses JS variables `repoDir` and `tplDir` unescaped; never prefix them with a backslash inside the heredoc.
+- `create-node-app` releases use npm Trusted Publishing via OIDC; do not use a manual `NPM_TOKEN`.
+
+If the user only says "continue" or asks "what should I do next", summarize the current CI/issues state and propose the next action.
+```
 
 ## Support
 
