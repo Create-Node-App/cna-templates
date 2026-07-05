@@ -45,7 +45,7 @@
 }
 
 .hero,
-.features .grid,
+.card,
 .docs,
 .footer {
   animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -66,7 +66,7 @@
   margin-bottom: 1rem;
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.12);
+  background: var(--cna-glow);
   color: var(--cna-amber-soft);
   font-size: 0.8125rem;
   font-weight: 700;
@@ -115,7 +115,7 @@
 }
 
 .buttonPrimary {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 55%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--cna-amber) 0%, var(--cna-amber-dark) 55%, var(--cna-teal) 100%);
   color: #fff;
   box-shadow: var(--cna-shadow-md);
 }
@@ -172,7 +172,7 @@
   height: 2.25rem;
   margin-bottom: 0.75rem;
   border-radius: 0.625rem;
-  background: rgba(245, 158, 11, 0.12);
+  background: var(--cna-glow);
   color: var(--cna-amber-soft);
   font-size: 1.125rem;
 }
