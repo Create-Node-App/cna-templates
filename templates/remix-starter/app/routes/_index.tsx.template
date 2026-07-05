@@ -1,12 +1,93 @@
-export function meta() {
-  return [{ title: "<%= projectName %>" }];
-}
+import type { MetaFunction } from "react-router";
+
+const features = [
+  { icon: "🧭", title: "React Router v7", description: "Modern data APIs and fast client-side navigation." },
+  { icon: "⚛️", title: "React 19", description: "Latest React with modern patterns and future-ready APIs." },
+  { icon: "🛡️", title: "TypeScript", description: "Static typing across routes and components." },
+  { icon: "⚡", title: "Vite", description: "Fast builds and instant HMR for rapid development." },
+  { icon: "📦", title: "Feature-based structure", description: "Scale by co-locating routes, state, and components." },
+  { icon: "🧩", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
+];
+
+const docs = [
+  { label: "Project overview", href: "./docs/README.md" },
+  { label: "Project structure", href: "./docs/PROJECT_STRUCTURE.md" },
+  { label: "Components & styling", href: "./docs/COMPONENTS_AND_STYLING.md" },
+  { label: "State management", href: "./docs/STATE_MANAGEMENT.md" },
+];
+
+export const meta: MetaFunction = () => {
+  return [{ title: "<%= projectName %> - Create Awesome Node App" }];
+};
 
 export default function Home() {
   return (
-    <main style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
-      <h1>Welcome to <%= projectName %></h1>
-      <p>Built with React Router v7</p>
-    </main>
+    <div className="cna-landing">
+      <header className="cna-landing__header">
+        <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
+        <span className="cna-landing__brand">Create Awesome Node App</span>
+      </header>
+
+      <main className="cna-landing__main">
+        <section className="cna-landing__hero" style={{ "--index": 0 } as React.CSSProperties}>
+          <span className="cna-landing__eyebrow">Your project is ready</span>
+          <h1 className="cna-landing__title"><%= projectName %></h1>
+          <p className="cna-landing__lead">
+            A cozy React Router starter with feature-based folders. Everything you need to start building your next
+            route.
+          </p>
+          <div className="cna-landing__actions">
+            <a href="/app/routes/_index.tsx" className="cna-landing__button cna-landing__button--primary">
+              Start editing
+            </a>
+            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+              Read the docs
+            </a>
+          </div>
+        </section>
+
+        <section className="cna-landing__features">
+          <h2 className="cna-landing__section-title">What is inside</h2>
+          <div className="cna-landing__grid">
+            {features.map((feature, index) => (
+              <article
+                key={feature.title}
+                className="cna-landing__card"
+                style={{ "--index": index + 1 } as React.CSSProperties}
+              >
+                <span className="cna-landing__card-icon" aria-hidden="true">
+                  {feature.icon}
+                </span>
+                <h3 className="cna-landing__card-title">{feature.title}</h3>
+                <p className="cna-landing__card-text">{feature.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="cna-landing__docs" style={{ "--index": features.length + 1 } as React.CSSProperties}>
+          <h2 className="cna-landing__section-title">Next steps</h2>
+          <nav className="cna-landing__doc-list" aria-label="Documentation">
+            {docs.map((doc) => (
+              <a key={doc.label} href={doc.href} className="cna-landing__doc-link">
+                <span className="cna-landing__doc-label">{doc.label}</span>
+                <span className="cna-landing__doc-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))}
+          </nav>
+        </section>
+      </main>
+
+      <footer className="cna-landing__footer" style={{ "--index": features.length + 2 } as React.CSSProperties}>
+        <p>
+          Generated with{" "}
+          <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
+            create-awesome-node-app
+          </a>
+        </p>
+      </footer>
+    </div>
   );
 }
