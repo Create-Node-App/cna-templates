@@ -30,11 +30,13 @@ const features = [
 ];
 
 const docs = [
-  { label: "Project overview", href: "./docs/README.md" },
-  { label: "Project structure", href: "./docs/PROJECT_STRUCTURE.md" },
-  { label: "Components & styling", href: "./docs/COMPONENTS_AND_STYLING.md" },
-  { label: "State management", href: "./docs/STATE_MANAGEMENT.md" },
+  { label: "Project overview", href: "/docs/README.md" },
+  { label: "Project structure", href: "/docs/PROJECT_STRUCTURE.md" },
+  { label: "Components & styling", href: "/docs/COMPONENTS_AND_STYLING.md" },
+  { label: "State management", href: "/docs/STATE_MANAGEMENT.md" },
 ];
+
+const withIndex = (index: number) => ({ "--index": index }) as React.CSSProperties;
 
 export default function Home() {
   return (
@@ -52,18 +54,18 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <section className={styles.hero} style={{ "--index": 0 } as React.CSSProperties}>
+        <section className={styles.hero} style={withIndex(0)}>
           <span className={styles.eyebrow}>Your project is ready</span>
-          <h1 className={styles.title}>Next.js Starter</h1>
+          <h1 className={styles.title}><%= projectName %></h1>
           <p className={styles.lead}>
             A cozy Next.js starter with a feature-based foundation. Everything you need to start building your next
             page.
           </p>
           <div className={styles.actions}>
-            <a href="src/app/page.tsx" className={`${styles.button} ${styles.buttonPrimary}`}>
+            <a href="/<%= srcDir %>/app/page.tsx" className={styles.button + " " + styles.buttonPrimary}>
               Start editing
             </a>
-            <a href="./docs/README.md" className={`${styles.button} ${styles.buttonSecondary}`}>
+            <a href="/docs/README.md" className={styles.button + " " + styles.buttonSecondary}>
               Read the docs
             </a>
           </div>
@@ -76,7 +78,7 @@ export default function Home() {
               <article
                 key={feature.title}
                 className={styles.card}
-                style={{ "--index": index + 1 } as React.CSSProperties}
+                style={withIndex(index + 1)}
               >
                 <span className={styles.cardIcon} aria-hidden="true">
                   {feature.icon}
@@ -90,7 +92,7 @@ export default function Home() {
 
         <section
           className={styles.docs}
-          style={{ "--index": features.length + 1 } as React.CSSProperties}
+          style={withIndex(features.length + 1)}
         >
           <h2 className={styles.sectionTitle}>Next steps</h2>
           <nav className={styles.docList} aria-label="Documentation">
@@ -108,7 +110,7 @@ export default function Home() {
 
       <footer
         className={styles.footer}
-        style={{ "--index": features.length + 2 } as React.CSSProperties}
+        style={withIndex(features.length + 2)}
       >
         <p>
           Generated with{" "}
