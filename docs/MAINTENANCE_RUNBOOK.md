@@ -21,13 +21,17 @@ Both have automated CI, automated releases, and a large surface area of dependen
 
 Read these before any change:
 
+- **Start with an issue.** Every significant fix, dependency update, security hardening, or new template/extension must begin as a GitHub issue. Break complex work into sub-issues when needed. The issue is the canonical place for analysis and decision history before any code is written.
+- **If unsure, open an issue.** Do not start implementation when the solution is unclear. Use the issue to document the problem, options, and the chosen path.
 - **One fix per PR.** If two issues are unrelated, open two PRs.
+- **PRs must be ready for review.** Do not open PRs as drafts. Open them as **ready for review** so automated reviewers (CodeRabbit, AI tools, etc.) can inspect them.
+- **Wait for AI review comments before merging.** After CI passes, allow a reasonable window for CodeRabbit or any configured AI reviewer to comment. If a blocking comment is raised, resolve it before merging. Only merge once both CI and AI reviews are quiet.
 - **Link issues.** PR bodies must include `Closes #<issue>` when applicable.
 - **English for all artifacts.** Commits, PRs, issues, docs, and comments are written in English.
 - **Do not commit directly to `main`.** Always open a PR and let CI pass before merging.
 - **Do not leave CI red on `main`.** If a merge breaks `main`, treat it as the next P0 fix.
 - **Prefer minimal changes.** Do not refactor unrelated code while fixing a bug.
-- **Document decisions.** If a choice is non-obvious (e.g., pinning Storybook to v8, using `.npmrc` with `legacy-peer-deps`, or adding `incompatibleWith`), document the rationale in the PR and, if recurrent, in this runbook.
+- **Document decisions.** If a choice is non-obvious (e.g., pinning Storybook to v8, using `.npmrc` with `legacy-peer-deps`, or adding `incompatibleWith`), document the rationale in the issue, the PR, and—if recurrent—in this runbook.
 
 ---
 
@@ -87,11 +91,13 @@ Need to publish a release
 
 Every task should follow these phases:
 
-### 5.1 Discovery
+### 5.1 Discovery and issue creation
 
+- Open a GitHub issue that describes the problem, its impact, and any known context. For large items, create sub-issues.
 - Reproduce the failure locally when possible.
 - Collect exact error messages, CI run IDs, and package versions.
 - Check whether the issue is a regression (recent PR) or an external change (new dependency release).
+- If the fix is not obvious, keep the analysis in the issue and ask for human input before coding.
 
 ### 5.2 Plan
 
@@ -112,9 +118,11 @@ Every task should follow these phases:
 
 ### 5.5 Open PR
 
+- Open the PR as **ready for review** (not draft).
 - Use a descriptive title.
 - Include `Closes #<issue>` and a clear description of the change, validation performed, and risks.
 - Ensure CI passes on the PR branch.
+- Wait for automated AI reviews (e.g., CodeRabbit) to finish before merging. Address any blocking feedback; do not bypass it silently.
 
 ### 5.6 Merge and monitor
 

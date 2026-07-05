@@ -67,11 +67,13 @@ Follow the maintenance runbook at `docs/MAINTENANCE_RUNBOOK.md` and its companio
 
 Always:
 1. Run the pre-flight checklist in `docs/MAINTENANCE_RUNBOOK.md` Section 3 before changing code.
-2. Scope work to one fix per PR with a `Closes #<issue>` link when applicable.
-3. Write commits, PRs, issues, and docs in English.
-4. Validate locally with `file://` URLs before pushing (see `docs/MAINTENANCE_TEMPLATES.md` Section 9).
-5. Run the relevant full CI workflow manually after risky merges and watch it to completion.
-6. Update `knowledge/processes/create-node-app-maintenance.md` in the workspace if you discover a new pattern or decision.
+2. Start every significant task with a GitHub issue. If the solution is not obvious, use the issue to analyze options before writing code.
+3. Scope work to one fix per PR with a `Closes #<issue>` link when applicable.
+4. Open PRs as **ready for review** (not drafts) and wait for automated AI reviewers such as CodeRabbit to finish before merging.
+5. Write commits, PRs, issues, and docs in English.
+6. Validate locally with `file://` URLs before pushing (see `docs/MAINTENANCE_TEMPLATES.md` Section 9).
+7. Run the relevant full CI workflow manually after risky merges and watch it to completion.
+8. Update `knowledge/processes/create-node-app-maintenance.md` in the workspace if you discover a new pattern or decision.
 
 Current known constraints:
 - Storybook extension is pinned to `^8.6.18` with `legacy-peer-deps=true` in `extensions/storybook/.npmrc`; do not upgrade to Storybook v10 without resolving issue #161 first.
