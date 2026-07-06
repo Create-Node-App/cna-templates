@@ -74,7 +74,7 @@ function auditTemplate(config) {
 
   // 1. Feature cards: count === 6
   const cardDataStart = content.match(/const\s+features\s*[=:]/);
-  const cardDataEnd = content.match(/(?:const\s+docs|href:\s*['"](?:\/docs|\.\/docs))/);
+  const cardDataEnd = content.match(/const\s+docs\s*[=:]/);
   const featuresSlice = cardDataStart && cardDataEnd
     ? content.slice(cardDataStart.index, cardDataEnd.index)
     : content;
