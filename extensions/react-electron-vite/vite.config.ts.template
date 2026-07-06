@@ -66,16 +66,5 @@ export default defineConfig({
       '<%= projectImportPath%>': root + '/',
     },
   },
-  esbuild: {
-    loader: 'tsx',
-    include: '<%= srcDir%>/**/*.{ts,tsx,js,jsx}',
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-        '.ts': 'tsx',
-      },
-    },
-  },
+
 });
