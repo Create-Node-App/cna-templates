@@ -64,11 +64,11 @@ jobs:
         working-directory: visual-test-project
         run: |
           npm install
-          PORT=${{ matrix.template == 'nextjs-starter' && '3000' || matrix.template == 'astro-starter' && '4321' || '5173' }} \
-            npm run dev -- --host 0.0.0.0 --port $PORT &
+          PORT=${{ matrix.template == 'nextjs-starter' && '3000' || matrix.template == 'astro-starter' && '4321' || '5173' }}
+          npm run dev -- --host 0.0.0.0 --port "$PORT" &
           echo "Waiting for dev server on port $PORT..."
           for i in $(seq 1 30); do
-            curl -sf http://localhost:$PORT > /dev/null 2>&1 && echo "Server ready on port $PORT" && break
+            curl -sf "http://localhost:$PORT" > /dev/null 2>&1 && echo "Server ready on port $PORT" && break
             sleep 1
           done
           echo "Dev server started (or timeout)"
