@@ -191,6 +191,8 @@ npm run lint
 | [docs/AUTHORING.md](./AUTHORING.md) | File conventions, EJS, `package/index.js`, `customOptions` |
 | [docs/TESTING.md](./TESTING.md) | Local test commands |
 | [docs/MAINTENANCE_TEMPLATES.md](./MAINTENANCE_TEMPLATES.md) | Working with templates and extensions |
+| [docs/DEFAULT_LANDING_GUIDE.md](./DEFAULT_LANDING_GUIDE.md) | Building and maintaining default landing pages |
+| [docs/DEFAULT_LANDING_DESIGN.md](./DEFAULT_LANDING_DESIGN.md) | Design tokens, typography, and motion |
 | [docs/MAINTENANCE_DEPENDENCIES.md](./MAINTENANCE_DEPENDENCIES.md) | Updating and resolving dependencies |
 | [docs/MAINTENANCE_SECURITY.md](./MAINTENANCE_SECURITY.md) | Security alerts, audits, Dependabot |
 | [docs/MAINTENANCE_CI.md](./MAINTENANCE_CI.md) | CI workflows, troubleshooting, YAML/JS scripts |

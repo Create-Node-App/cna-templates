@@ -2,31 +2,12 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 const features = [
-  {
-    icon: "▲",
-    title: "Next.js 16 App Router",
-    description: "File-system routing, layouts, and latest React features out of the box.",
-  },
-  {
-    icon: "🛡️",
-    title: "TypeScript + ESLint + Prettier",
-    description: "Static typing and consistent, automated code style.",
-  },
-  {
-    icon: "📦",
-    title: "Feature-based structure",
-    description: "Scale by co-locating routes, state, and components.",
-  },
-  {
-    icon: "🔐",
-    title: "Login example",
-    description: "A ready-made auth route to kickstart protected flows.",
-  },
-  {
-    icon: "🧩",
-    title: "Addon ready",
-    description: "Layer UI libraries, state tools, testing, and deployment.",
-  },
+  { icon: "\u25B2", title: "Next.js App Router", description: "File-system routing, layouts, and latest React features out of the box." },
+  { icon: "\u269B\uFE0F", title: "React", description: "Latest React with modern patterns and future-ready APIs." },
+  { icon: "\uD83D\uDEE1\uFE0F", title: "TypeScript + ESLint + Prettier", description: "Static typing and consistent, automated code style." },
+  { icon: "\uD83D\uDCE6", title: "Feature-based structure", description: "Scale by co-locating routes, state, and components." },
+  { icon: "\uD83D\uDD10", title: "Login example", description: "A ready-made auth route to kickstart protected flows." },
+  { icon: "\uD83E\uDDE9", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
 ];
 
 const docs = [
@@ -62,9 +43,9 @@ export default function Home() {
             page.
           </p>
           <div className={styles.actions}>
-            <a href="/<%= srcDir %>/app/page.tsx" className={styles.button + " " + styles.buttonPrimary}>
-              Start editing
-            </a>
+            <span className={styles.button + " " + styles.buttonPrimary}>
+              Start editing <code className={styles.code}><%= srcDir %>/app/page.tsx</code>
+            </span>
             <a href="/docs/README.md" className={styles.button + " " + styles.buttonSecondary}>
               Read the docs
             </a>

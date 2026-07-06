@@ -1,19 +1,19 @@
 import type { MetaFunction } from "react-router";
 
 const features = [
-  { icon: "🧭", title: "React Router v7", description: "Modern data APIs and fast client-side navigation." },
-  { icon: "⚛️", title: "React 19", description: "Latest React with modern patterns and future-ready APIs." },
-  { icon: "🛡️", title: "TypeScript", description: "Static typing across routes and components." },
-  { icon: "⚡", title: "Vite", description: "Fast builds and instant HMR for rapid development." },
-  { icon: "📦", title: "Feature-based structure", description: "Scale by co-locating routes, state, and components." },
-  { icon: "🧩", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
+  { icon: "\uD83E\uDDED", title: "React Router v7", description: "Modern data APIs and fast client-side navigation." },
+  { icon: "\u269B\uFE0F", title: "React", description: "Latest React with modern patterns and future-ready APIs." },
+  { icon: "\uD83D\uDEE1\uFE0F", title: "TypeScript", description: "Static typing across routes and components." },
+  { icon: "\u26A1", title: "Vite", description: "Fast builds and instant HMR for rapid development." },
+  { icon: "\uD83D\uDCE6", title: "Feature-based structure", description: "Scale by co-locating routes, state, and components." },
+  { icon: "\uD83E\uDDE9", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
 ];
 
 const docs = [
-  { label: "Project overview", href: "./docs/README.md" },
-  { label: "Project structure", href: "./docs/PROJECT_STRUCTURE.md" },
-  { label: "Components & styling", href: "./docs/COMPONENTS_AND_STYLING.md" },
-  { label: "State management", href: "./docs/STATE_MANAGEMENT.md" },
+  { label: "Project overview", href: "/docs/README.md" },
+  { label: "Project structure", href: "/docs/PROJECT_STRUCTURE.md" },
+  { label: "Components & styling", href: "/docs/COMPONENTS_AND_STYLING.md" },
+  { label: "State management", href: "/docs/STATE_MANAGEMENT.md" },
 ];
 
 export const meta: MetaFunction = () => {
@@ -37,10 +37,10 @@ export default function Home() {
             route.
           </p>
           <div className="cna-landing__actions">
-            <a href="/app/routes/_index.tsx" className="cna-landing__button cna-landing__button--primary">
-              Start editing
-            </a>
-            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+            <span className="cna-landing__button cna-landing__button--primary">
+              Start editing <code className="cna-landing__code">app/routes/_index.tsx</code>
+            </span>
+            <a href="/docs/README.md" className="cna-landing__button cna-landing__button--secondary">
               Read the docs
             </a>
           </div>

@@ -87,7 +87,8 @@
 .cna-landing__hero,
 .cna-landing__features,
 .cna-landing__docs,
-.cna-landing__footer {
+.cna-landing__footer,
+.cna-landing__card {
   animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(var(--index, 0) * 80ms);
 }
@@ -164,7 +165,7 @@
 }
 
 .cna-landing__button--primary {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 55%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--cna-amber), var(--cna-amber-dark) 55%, var(--cna-teal));
   color: #fff;
   box-shadow: var(--cna-shadow-md);
 }

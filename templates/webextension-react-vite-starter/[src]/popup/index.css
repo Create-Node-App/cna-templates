@@ -4,9 +4,9 @@ body {
   --popup-border: rgba(254, 215, 170, 0.2);
   --popup-text: #f8fafc;
   --popup-muted: #94a3b8;
-  --popup-accent: #fbbf24;
-  --popup-button-gradient-start: #f59e0b;
-  --popup-button-gradient-end: #0d9488;
+  --popup-accent: var(--cna-amber-soft, #fbbf24);
+  --popup-button-gradient-start: var(--cna-amber, #f59e0b);
+  --popup-button-gradient-end: var(--cna-teal, #0d9488);
   --popup-button-text: #ffffff;
   width: 320px;
   min-height: 280px;
@@ -16,6 +16,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--popup-text);
   background:
-    radial-gradient(circle at top, rgba(245, 158, 11, 0.14), transparent 38%),
+    radial-gradient(circle at top, var(--cna-glow, rgba(245, 158, 11, 0.14)), transparent 38%),
     var(--popup-background);
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    --popup-background: #fffcf5;
+    --popup-surface: rgba(255, 255, 255, 0.96);
+    --popup-border: rgba(254, 215, 170, 0.6);
+    --popup-text: #1f2937;
+    --popup-muted: #6b7280;
+    --popup-accent: #d97706;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

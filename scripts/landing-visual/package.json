@@ -1,0 +1,12 @@
+{
+  "name": "cna-landing-visual",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:update": "UPDATE_SNAPSHOTS=true playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0"
+  }
+}

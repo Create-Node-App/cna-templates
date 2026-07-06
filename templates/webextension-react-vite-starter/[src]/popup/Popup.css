@@ -26,7 +26,7 @@
   height: 52px;
   padding: 0.5rem;
   border-radius: 0.95rem;
-  background: rgba(245, 158, 11, 0.12);
+  background: var(--cna-glow, rgba(245, 158, 11, 0.12));
 }
 
 .popup__eyebrow {

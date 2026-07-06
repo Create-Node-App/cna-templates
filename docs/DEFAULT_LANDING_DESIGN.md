@@ -22,10 +22,10 @@
 
 | Token | Hex | Usage |
 |---|---|---|
-| `brand-amber` | `#f59e0b` | Primary accent, highlights, CTAs |
-| `brand-amber-dark` | `#d97706` | Hover states, secondary accents |
-| `brand-teal` | `#0d9488` | Success, links, secondary accent |
-| `brand-teal-soft` | `#14b8a6` | Soft teal surfaces |
+| `--cna-amber` | `#f59e0b` | Primary accent, highlights, CTAs |
+| `--cna-amber-dark` | `#d97706` | Hover states, secondary accents |
+| `--cna-teal` | `#0d9488` | Success, links, secondary accent |
+| `--cna-teal-soft` | `#14b8a6` | Soft teal surfaces |
 
 ### Neutral colors
 
@@ -104,13 +104,13 @@ font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Me
 ### Shadows
 
 ```css
---shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
---shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
---shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
---shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.25);
+--cna-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+--cna-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+--cna-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+--cna-shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.25);
 ```
 
-Use `shadow-glow` sparingly on hero containers.
+Use `--cna-shadow-glow` sparingly on hero containers.
 
 ---
 
@@ -119,7 +119,7 @@ Use `shadow-glow` sparingly on hero containers.
 ### Entrance animation
 
 ```css
-@keyframes fade-in-up {
+@keyframes cna-fade-in-up {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -134,8 +134,8 @@ Use `shadow-glow` sparingly on hero containers.
 Apply with staggered delays:
 
 ```css
-animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-animation-delay: calc(var(--index) * 80ms);
+animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+animation-delay: calc(var(--index, 0) * 80ms);
 ```
 
 ### Hover transitions
@@ -147,9 +147,9 @@ transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s eas
 Card hover:
 
 ```css
-.feature-card:hover {
+.cna-landing__card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  box-shadow: var(--cna-shadow-lg), var(--cna-shadow-glow);
 }
 ```
 
@@ -208,7 +208,7 @@ Every template landing should follow this layout:
 |  [Primary CTA]  [Secondary]      |
 |                                  |
 +----------------------------------+
-|  Feature cards (3-6 items)       |
+|  Feature cards (6 items)         |
 +----------------------------------+
 |  Docs + next steps               |
 +----------------------------------+
@@ -225,21 +225,22 @@ Each feature card contains:
 3. One-sentence description.
 4. Optional doc link rendered as a plain link with a label and arrow.
 
-Example cards per template:
+Each template has exactly **6 feature cards** with consistent icons and tone. Canonical data is in [`shared/landings/features.ts`](../shared/landings/features.ts).
 
-- **React Vite**: React 19, Vite 8, React Router 7, TypeScript, ESLint + Prettier, feature-based structure.
-- **Next.js**: Next.js 16 App Router, TypeScript, feature-based structure, login example, ESLint + Prettier.
-- **Remix**: React Router v7, TypeScript, ESLint + Prettier, fast builds.
-- **Astro**: Astro 7, static output, partial hydration, TypeScript.
+- **React Vite**: Vite, React, React Router v7, TypeScript + ESLint + Prettier, feature-based structure, addon ready.
+- **Next.js**: Next.js App Router, React, TypeScript + ESLint + Prettier, feature-based structure, login example, addon ready.
+- **Remix**: React Router v7, React, TypeScript, Vite, feature-based structure, addon ready.
+- **Astro**: Astro, React-ready, TypeScript, feature-based structure, static output, addon ready.
+- **WebExtension**: Browser extension shell, React + Vite, TypeScript, feature-based structure, CNA identity, addon ready.
 
 ### Documentation links
 
-Link to the generated docs folder using relative paths:
+Link to the generated docs folder using root-absolute paths:
 
-- `docs/README.md`
-- `docs/PROJECT_STRUCTURE.md`
-- `docs/COMPONENTS_AND_STYLING.md`
-- `docs/STATE_MANAGEMENT.md`
+- `/docs/README.md`
+- `/docs/PROJECT_STRUCTURE.md`
+- `/docs/COMPONENTS_AND_STYLING.md`
+- `/docs/STATE_MANAGEMENT.md`
 
 Use a simple link with a label and an arrow. A shared `DocsLink` helper is optional when the template already has a component library installed.
 
@@ -266,7 +267,7 @@ Use a simple link with a label and an arrow. A shared `DocsLink` helper is optio
 
 ### Astro
 
-- Use scoped `<style>` inside `index.astro`.
+- Use `<style is:global>` inside `index.astro`.
 - Use CSS variables on `:root` for theming.
 
 ### WebExtension

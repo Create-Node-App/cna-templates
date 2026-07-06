@@ -10,23 +10,69 @@ on:
       - reopened
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
+  validate-registry:
+    name: Validate template registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - name: Validate templates.json
+        run: node scripts/validate-templates.js
+
+  landing-audit:
+    name: Landing page audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - name: Audit landing pages
+        run: node scripts/landing-audit.js
+
   smoke-test:
-    name: Smoke test scaffolded projects
+    name: Smoke test ${{ matrix.template }}
+    needs: [validate-registry, landing-audit]
     strategy:
       fail-fast: false
       matrix:
         include:
+          - template: react-vite-starter
+            addons: ""
+            build-env: ""
           - template: nextjs-starter
             addons: ""
-          - template: nestjs-boilerplate
+            build-env: ""
+          - template: astro-starter
             addons: ""
-          - template: react-vite-boilerplate
-            addons: '--addons "file://${PWD}?subdir=extensions/react-material-ui" "file://${PWD}?subdir=extensions/react-zustand"'
+            build-env: ""
+          - template: remix-starter
+            addons: ""
+            build-env: ""
+          - template: webextension-react-vite-starter
+            addons: ""
+            build-env: ""
+          - template: turborepo-starter
+            addons: ""
+            build-env: ""
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -37,6 +83,7 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 22
+          cache: 'npm'
 
       - name: Scaffold project
         run: |
@@ -47,6 +94,8 @@ jobs:
 
       - name: Run basic checks
         working-directory: smoke-test-project
+        env:
+          SKIP_ENV_VALIDATION: ${{ matrix.build-env == 'skip-env' && 'true' || 'true' }}
         run: |
           npm install
           npm run format --if-present
@@ -55,3 +104,50 @@ jobs:
           npm run type-check --if-present || echo "Type-check warnings found (non-blocking)"
           SKIP_ENV_VALIDATION=true npm run build --if-present || echo "Build warnings found (non-blocking)"
           echo "Smoke test passed for ${{ matrix.template }}"
+
+  extension-isolation:
+    name: Isolate ${{ matrix.combination.template }} + ${{ matrix.combination.extension }}
+    needs: [validate-registry, landing-audit]
+    strategy:
+      fail-fast: false
+      matrix:
+        combination:
+          - template: react-vite-starter
+            extension: react-tailwindcss
+          - template: react-vite-starter
+            extension: react-shadcn
+          - template: react-vite-starter
+            extension: react-material-ui
+          - template: nextjs-starter
+            extension: nextjs-tailwindcss
+          - template: nextjs-starter
+            extension: nextjs-shadcn
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Scaffold with extension
+        run: |
+          CI=true npx create-awesome-node-app isolate-test-project \
+            -t "file://${PWD}?subdir=templates/${{ matrix.combination.template }}" \
+            --addons "file://${PWD}?subdir=extensions/${{ matrix.combination.extension }}"
+          echo "Project scaffolded with ${{ matrix.combination.extension }}"
+
+      - name: Run basic checks
+        working-directory: isolate-test-project
+        run: |
+          npm install
+          npm run format --if-present
+          npm run lint:fix --if-present
+          npm run lint --if-present || echo "Lint warnings found (non-blocking)"
+          npm run type-check --if-present || echo "Type-check warnings found (non-blocking)"
+          SKIP_ENV_VALIDATION=true npm run build --if-present || echo "Build warnings found (non-blocking)"
+          echo "Isolated test passed for ${{ matrix.combination.template }} + ${{ matrix.combination.extension }}"

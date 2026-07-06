@@ -26,6 +26,7 @@
     --cna-text: #1f2937;
     --cna-text-muted: #6b7280;
     --cna-border: #fed7aa;
+    --cna-amber-soft: #d97706;
     --cna-glow: rgba(245, 158, 11, 0.08);
     --cna-shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.18);
   }
@@ -93,7 +94,8 @@ body {
 .cna-landing__hero,
 .cna-landing__features,
 .cna-landing__docs,
-.cna-landing__footer {
+.cna-landing__footer,
+.cna-landing__card {
   animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(var(--index, 0) * 80ms);
 }
@@ -112,7 +114,7 @@ body {
   margin-bottom: 1rem;
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.12);
+  background: var(--cna-glow);
   color: var(--cna-amber-soft);
   font-size: 0.8125rem;
   font-weight: 700;
@@ -146,6 +148,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 700;
@@ -154,12 +157,21 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
+.cna-landing__code {
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.25);
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .cna-landing__button:hover {
   transform: translateY(-2px);
 }
 
 .cna-landing__button--primary {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 55%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--cna-amber), var(--cna-amber-dark) 55%, var(--cna-teal));
   color: #fff;
   box-shadow: var(--cna-shadow-md);
 }
@@ -215,7 +227,7 @@ body {
   height: 2.25rem;
   margin-bottom: 0.75rem;
   border-radius: 0.625rem;
-  background: rgba(245, 158, 11, 0.12);
+  background: var(--cna-glow);
   font-size: 1.125rem;
 }
 

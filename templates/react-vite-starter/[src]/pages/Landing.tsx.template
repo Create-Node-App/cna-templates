@@ -8,36 +8,12 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  {
-    icon: '⚡',
-    title: 'Vite 8',
-    description: 'Instant HMR and a fast, opinionated build pipeline.',
-  },
-  {
-    icon: '⚛️',
-    title: 'React 19',
-    description: 'Latest React with modern patterns and future-ready APIs.',
-  },
-  {
-    icon: '🧭',
-    title: 'React Router 7',
-    description: 'Client-side routing already wired for nested routes.',
-  },
-  {
-    icon: '🛡️',
-    title: 'TypeScript + ESLint + Prettier',
-    description: 'Static typing and consistent, automated code style.',
-  },
-  {
-    icon: '📦',
-    title: 'Feature-based structure',
-    description: 'Scale by co-locating routes, state, and components.',
-  },
-  {
-    icon: '🧩',
-    title: 'Addon ready',
-    description: 'Layer UI libraries, state tools, testing, and deployment.',
-  },
+  { icon: '⚡', title: 'Vite', description: 'Instant HMR and a fast, opinionated build pipeline.' },
+  { icon: '⚛️', title: 'React', description: 'Latest React with modern patterns and future-ready APIs.' },
+  { icon: '🧭', title: 'React Router v7', description: 'Client-side routing already wired for nested routes.' },
+  { icon: '🛡️', title: 'TypeScript + ESLint + Prettier', description: 'Static typing and consistent, automated code style.' },
+  { icon: '📦', title: 'Feature-based structure', description: 'Scale by co-locating routes, state, and components.' },
+  { icon: '🧩', title: 'Addon ready', description: 'Layer UI libraries, state tools, testing, and deployment.' },
 ];
 
 const docs = [

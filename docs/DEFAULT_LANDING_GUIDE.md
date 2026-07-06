@@ -31,7 +31,7 @@ Every default landing should contain:
 
 1. **Header** with the CNA mark and brand name.
 2. **Hero** with an eyebrow, project name, one-line description, primary CTA, and secondary docs link.
-3. **Feature cards** (3–6 items) highlighting what the template includes.
+3. **Feature cards** (6 items) highlighting what the template includes.
 4. **Documentation links** pointing to `docs/README.md`, `docs/PROJECT_STRUCTURE.md`, `docs/COMPONENTS_AND_STYLING.md`, and `docs/STATE_MANAGEMENT.md`.
 5. **Footer** with a link back to `create-awesome-node-app` on npm.
 
@@ -80,7 +80,7 @@ Respect `prefers-reduced-motion` by collapsing animation and transition duration
 
 ### CTAs
 
-Primary CTA should point to the main editable file of the template (e.g. `src/pages/Landing.tsx`, `src/app/page.tsx`). The secondary CTA should link to `./docs/README.md`.
+Primary CTA should be a non-navigable `<span>` with a `<code>` snippet showing the main editable file of the template (e.g. `src/pages/Landing.tsx`). The secondary CTA should link to `/docs/README.md`.
 
 ### Interpolation in `.template` files
 
@@ -104,16 +104,35 @@ className={`${styles.button} ${styles.buttonPrimary}`}
 | `nextjs-starter` | `src/app/page.tsx.template`, `page.module.css`, `globals.css` | CSS Modules | Use `Image` with `unoptimized` for SVG; add `favicon.svg` to `src/app/` |
 | `nextjs-saas-ai-starter` | Brand component only | Existing design system | Full SaaS landing out of scope; align fallback logo only |
 | `remix-starter` | `app/routes/_index.tsx.template`, `app/styles/landing.css` | Plain CSS + import | Add `app/types/css.d.ts` for CSS side-effect imports |
-| `astro-starter` | `src/pages/index.astro` | Scoped global `<style>` | Copy SVG mark/favicon to `public/` |
+| `astro-starter` | `src/pages/index.astro` | Global `<style is:global>` | Copy SVG mark/favicon to `public/` |
 | `webextension-react-vite-starter` | `src/newtab/Newtab.tsx.template`, `src/popup/Popup.tsx.template` | Plain CSS | Keep popup compact; newtab can use full landing layout |
 | `turborepo-starter` | `apps/playground/src/stories/Introduction.stories.mdx` | Storybook docs | Update intro copy and page styling only |
 
 ---
 
-## 6. Testing checklist
+## 6. CI automation
+
+Landing pages are checked automatically on every PR:
+
+- **`landing-audit`** — statically verifies feature card count, docs link paths, CSS token usage, reduced-motion support, and CTA structure. Runs as part of `smoke-test.yml`.
+- **`landing-visual`** — Playwright screenshot comparison for dark mode, light mode, and reduced-motion across all UI templates. Blocking on PRs that touch landing or asset files.
+- **`validate-registry`** — `scripts/validate-templates.js` checks schema, slugs, and directory references.
+
+To update visual baselines locally:
+
+```bash
+cd scripts/landing-visual
+npm ci
+UPDATE_SNAPSHOTS=true npx playwright test --project=chromium
+# Commit the updated __screenshots__/ baselines
+```
+
+## 8. Updating the system
 
 For every new or updated landing:
 
+- [ ] CI landing-audit passes.
+- [ ] CI visual regression passes (or baselines updated intentionally).
 - [ ] `CI=true npx create-awesome-node-app@latest <test-dir> -t "file://...?subdir=templates/<name>"` succeeds.
 - [ ] `npm run lint` passes.
 - [ ] `npm run type-check` passes.
@@ -124,17 +143,18 @@ For every new or updated landing:
 
 ---
 
-## 7. Updating the system
+## 9. Updating the system
 
 1. Open an issue describing the change and affected templates.
 2. Update `shared/assets/` and `DEFAULT_LANDING_DESIGN.md` first.
-3. Copy assets and update each affected landing.
-4. Run the template-specific checklist above.
-5. Run the full CI matrix before merging.
+3. Copy assets and update each affected landing (or run `node scripts/sync-assets.js`).
+4. Run `node scripts/landing-audit.js` and `node scripts/validate-templates.js`.
+5. Update visual baselines if the landing appearance changed: `cd scripts/landing-visual && npm ci && UPDATE_SNAPSHOTS=true npx playwright test --project=chromium`.
+6. Run the full CI matrix before merging.
 
 ---
 
-## 8. Related documents
+## 10. Related documents
 
 - [`DEFAULT_LANDING_DESIGN.md`](./DEFAULT_LANDING_DESIGN.md) — tokens, typography, motion, logo rules
 - [`docs/TESTING.md`](./TESTING.md) — local testing commands and CI details

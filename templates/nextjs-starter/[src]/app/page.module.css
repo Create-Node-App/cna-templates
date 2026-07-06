@@ -1,4 +1,4 @@
-@keyframes fade-in-up {
+@keyframes cna-fade-in-up {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -21,7 +21,7 @@
   gap: 0.75rem;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--cna-border);
-  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .logo {
@@ -45,10 +45,11 @@
 }
 
 .hero,
-.card,
+.features,
 .docs,
-.footer {
-  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+.footer,
+.card {
+  animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(var(--index, 0) * 80ms);
 }
 
@@ -102,6 +103,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 700;
@@ -115,7 +117,7 @@
 }
 
 .buttonPrimary {
-  background: linear-gradient(135deg, var(--cna-amber) 0%, var(--cna-amber-dark) 55%, var(--cna-teal) 100%);
+  background: linear-gradient(135deg, var(--cna-amber), var(--cna-amber-dark) 55%, var(--cna-teal));
   color: #fff;
   box-shadow: var(--cna-shadow-md);
 }
@@ -133,6 +135,15 @@
 
 .buttonSecondary:hover {
   background: var(--cna-border);
+}
+
+.code {
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.375rem;
+  background: rgba(0, 0, 0, 0.25);
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .sectionTitle {
@@ -260,5 +271,15 @@
 
   .button {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

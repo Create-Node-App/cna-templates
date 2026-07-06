@@ -2,19 +2,19 @@ import logo from '@/assets/img/logo.svg';
 import './Newtab.css';
 
 const features = [
-  { icon: '🔌', title: 'Browser extension shell', description: 'Popup, options, background, and content scripts already wired.' },
-  { icon: '⚛️', title: 'React + Vite', description: 'Fast HMR and a modern component model for every extension page.' },
-  { icon: '🛡️', title: 'TypeScript', description: 'Typed APIs and extension messaging from day one.' },
-  { icon: '📦', title: 'Feature-based structure', description: 'Keep content, background, and UI organized as you grow.' },
-  { icon: '🎨', title: 'CNA identity', description: 'Cozy amber + teal palette with dark/light support.' },
-  { icon: '🧩', title: 'Addon ready', description: 'Layer state tools, storage wrappers, and deployment configs.' },
+  { icon: '\uD83D\uDD0C', title: 'Browser extension shell', description: 'Popup, options, background, and content scripts already wired.' },
+  { icon: '\u269B\uFE0F', title: 'React + Vite', description: 'Fast HMR and a modern component model for every extension page.' },
+  { icon: '\uD83D\uDEE1\uFE0F', title: 'TypeScript', description: 'Typed APIs and extension messaging from day one.' },
+  { icon: '\uD83D\uDCE6', title: 'Feature-based structure', description: 'Keep content, background, and UI organized as you grow.' },
+  { icon: '\uD83C\uDFA8', title: 'CNA identity', description: 'Cozy amber + teal palette with dark/light support.' },
+  { icon: '\uD83E\uDDE9', title: 'Addon ready', description: 'Layer state tools, storage wrappers, and deployment configs.' },
 ];
 
 const docs = [
-  { label: 'Project overview', href: './docs/README.md' },
-  { label: 'Project structure', href: './docs/PROJECT_STRUCTURE.md' },
-  { label: 'Components & styling', href: './docs/COMPONENTS_AND_STYLING.md' },
-  { label: 'State management', href: './docs/STATE_MANAGEMENT.md' },
+  { label: 'Project overview', href: '/docs/README.md' },
+  { label: 'Project structure', href: '/docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: '/docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: '/docs/STATE_MANAGEMENT.md' },
 ];
 
 const Newtab = () => {
@@ -34,10 +34,10 @@ const Newtab = () => {
             scripts, and content scripts as your product evolves.
           </p>
           <div className="cna-landing__actions">
-            <a href="/<%= srcDir %>/popup/Popup.tsx" className="cna-landing__button cna-landing__button--primary">
-              Start editing
-            </a>
-            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+            <span className="cna-landing__button cna-landing__button--primary">
+              Start editing <code className="cna-landing__code"><%= srcDir %>/newtab/Newtab.tsx</code>
+            </span>
+            <a href="/docs/README.md" className="cna-landing__button cna-landing__button--secondary">
               Read the docs
             </a>
           </div>
