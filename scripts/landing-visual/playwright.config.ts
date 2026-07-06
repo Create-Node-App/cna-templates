@@ -10,7 +10,7 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? 'github' : 'list',
   snapshotDir: '__screenshots__',
-  updateSnapshots: process.env.UPDATE_SNAPSHOTS === 'true' ? 'all' : 'never',
+  updateSnapshots: process.env.UPDATE_SNAPSHOTS === 'true' ? 'all' : 'none',
   use: {
     baseURL: BASE_URL,
     trace: process.env.CI ? 'retain-on-failure' : 'off',

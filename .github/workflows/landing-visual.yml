@@ -75,25 +75,32 @@ jobs:
             webextension-react-vite-starter)
               npm run build
               npx vite preview --port "${{ matrix.port }}" &
+              HEALTH_URL="http://localhost:${{ matrix.port }}/newtab/"
               ;;
             nextjs-starter)
               npm run dev -- --port "${{ matrix.port }}" &
+              HEALTH_URL="http://localhost:${{ matrix.port }}"
               ;;
             *)
               npm run dev -- --host 0.0.0.0 --port "${{ matrix.port }}" &
+              HEALTH_URL="http://localhost:${{ matrix.port }}"
               ;;
           esac
           echo "Waiting for dev server on port ${{ matrix.port }}..."
           for i in $(seq 1 30); do
-            curl -sf "http://localhost:${{ matrix.port }}" > /dev/null 2>&1 && echo "Server ready on port ${{ matrix.port }}" && break
+            curl -sf "$HEALTH_URL" > /dev/null 2>&1 && echo "Server ready on port ${{ matrix.port }}" && break
             sleep 1
           done
-          curl -sf "http://localhost:${{ matrix.port }}" > /dev/null 2>&1 || { echo "Server failed to start on port ${{ matrix.port }}"; exit 1; }
+          curl -sf "$HEALTH_URL" > /dev/null 2>&1 || { echo "Server failed to start on port ${{ matrix.port }}"; exit 1; }
 
       - name: Run visual tests
         if: steps.scaffold.outcome == 'success'
         working-directory: scripts/landing-visual
         run: |
+          export LANDING_PATH="/"
+          if [ "${{ matrix.template }}" = "webextension-react-vite-starter" ]; then
+            export LANDING_PATH="/newtab/"
+          fi
           npx playwright test --project=chromium
         env:
           TEMPLATE: ${{ matrix.template }}
