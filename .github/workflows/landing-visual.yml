@@ -60,7 +60,6 @@ jobs:
 
       - name: Scaffold test project
         id: scaffold
-        continue-on-error: true
         run: |
           CI=true npx create-awesome-node-app visual-test-project \
             -t "file://${PWD}?subdir=templates/${{ matrix.template }}"

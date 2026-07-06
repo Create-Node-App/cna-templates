@@ -45,6 +45,7 @@ function syncAssets() {
 
       if (!fs.existsSync(sourceFile)) {
         console.error(`  SKIP  ${asset} → ${template}/${targetPath} (source not found)`);
+        errors++;
         continue;
       }
 

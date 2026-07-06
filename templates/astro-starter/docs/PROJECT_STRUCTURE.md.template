@@ -1,12 +1,12 @@
 # 🗄️ Project Structure
 
-This project follows a Feature-Based Architecture adapted for Next.js App Router, combining the best practices of Feature-Based Architecture with Next.js conventions. The main goal is to organize code around business capabilities while leveraging Next.js's powerful routing and server components.
+This project follows a Feature-Based Architecture adapted for Astro, combining the best practices of Feature-Based Architecture with Astro conventions. The main goal is to organize code around business capabilities while leveraging Astro's file-based routing and islands architecture.
 
 ## Architecture Overview
 
 The codebase is organized into three main categories:
 
-1. **App Router** (`<%= srcDir%>/app/`) - Next.js routing and layouts
+1. **Pages** (`<%= srcDir%>/pages/`) - Astro file-based routing
 2. **Features** (`<%= srcDir%>/features/`) - Business capabilities
 3. **Shared Infrastructure** (`<%= srcDir%>/shared/`) - Common utilities and components
 
@@ -15,29 +15,24 @@ The codebase is organized into three main categories:
 ```sh
 <%= srcDir%>
 |
-+-- app # Next.js App Router
++-- pages # Astro file-based routing
 |   |
-|   +-- (auth) # Auth group route
-|   |   +-- login
-|   |   |   +-- page.tsx
-|   |   +-- register
-|   |   |   +-- page.tsx
-|   |   +-- layout.tsx
-|   |
-|   +-- (dashboard) # Dashboard group route
-|   |   +-- page.tsx
-|   |   +-- layout.tsx
-|   |
-|   +-- layout.tsx # Root layout
-|   +-- page.tsx # Home page
+|   +-- index.astro # Home page
+|   +-- login.astro # Login page
+|   +-- register.astro # Register page
+|   +-- dashboard.astro # Dashboard page
+|   +-- layouts # Layout components
+|   |   +-- BaseLayout.astro
+|   |   +-- AuthLayout.astro
+|   +-- components # Page-specific components
 |
 +-- features # Feature modules
 |   |
 |   +-- auth # Authentication feature
 |   |   |
 |   |   +-- components # Feature-specific components
-|   |   |   +-- LoginForm.tsx
-|   |   |   +-- RegisterForm.tsx
+|   |   |   +-- LoginForm.astro
+|   |   |   +-- RegisterForm.astro
 |   |   |
 |   |   +-- hooks # Feature-specific hooks
 |   |   |   +-- useAuth.ts
@@ -66,12 +61,12 @@ The codebase is organized into three main categories:
     |
     +-- components # Shared components
     |   +-- ui # UI components
-    |   |   +-- Button.tsx
-    |   |   +-- Input.tsx
+    |   |   +-- Button.astro
+    |   |   +-- Input.astro
     |   |
     |   +-- layout # Layout components
-    |   |   +-- Header.tsx
-    |   |   +-- Footer.tsx
+    |   |   +-- Header.astro
+    |   |   +-- Footer.astro
     |
     +-- hooks # Shared hooks
     |   +-- useMediaQuery.ts
@@ -88,6 +83,9 @@ The codebase is organized into three main categories:
     +-- utils # Shared utilities
     |   +-- format.ts
     |   +-- validation.ts
+
++-- public # Static assets
+    +-- favicon.ico
 ```
 
 ## Key Principles
@@ -97,10 +95,10 @@ The codebase is organized into three main categories:
    - Features should not depend on the internal structure of other features
    - All feature exports should go through the `index.ts` file
 
-2. **Next.js Integration**
-   - Use route groups (folders in parentheses) to organize related routes
-   - Leverage server components for data fetching and server-side rendering
-   - Keep page components thin, delegating logic to features
+2. **Astro Integration**
+   - Use `src/pages/` for file-based routing — each `.astro` file becomes a route
+   - Leverage Astro's islands architecture for interactive components
+   - Use `client:load`, `client:idle`, or `client:visible` directives to hydrate framework components
 
 3. **Public API**
    - Features expose their functionality through a public API (`index.ts`)
@@ -131,8 +129,8 @@ The codebase is organized into three main categories:
 ## Best Practices
 
 1. **Route Organization**
-   - Use route groups to organize related routes
-   - Keep page components focused on routing and layout
+   - Use `src/pages/` to organize routes by file naming conventions
+   - Keep page components focused on layout and composition
    - Delegate business logic to features
 
 2. **Feature Development**
@@ -140,58 +138,41 @@ The codebase is organized into three main categories:
    - Minimize dependencies between features
    - Use the shared infrastructure for common functionality
 
-3. **Server Components**
-   - Use server components for data fetching and server-side rendering
-   - Keep client components minimal and focused on interactivity
-   - Leverage Next.js's built-in optimizations
+3. **Islands Architecture**
+   - Use static `.astro` components for content and layout
+   - Only add interactivity with framework components (React, Vue, Svelte) where needed
+   - Use `client:*` directives to control hydration behavior
 
 4. **State Management**
-   - Use React Server Components for server state
-   - Use React Context for client state when needed
-   - Consider using libraries like Zustand for complex client state
+   - Prefer static generation and server-side rendering where possible
+   - Use Astro's `Astro.props` for passing data between components
+   - Use framework-specific state management (React hooks, etc.) for interactive islands
 
 5. **Data Fetching**
-   - Use Next.js's built-in data fetching methods
-   - Keep data fetching logic in features
-   - Use React Query for client-side data fetching when needed
+   - Fetch data at the page level using Astro's top-level `await`
+   - Pass data down to components via props
+   - Use client-side fetching only for dynamic, post-hydration data
 
 ## Example: Auth Feature
 
 Here's how a typical feature might be structured:
 
-```typescript
-// features/auth/index.ts
-export * from './components';
-export * from './hooks';
-export * from './services';
-export * from './types';
-
-// features/auth/components/LoginForm.tsx
-import { useAuth } from '../hooks';
-import { login } from '../services';
-
-export const LoginForm = () => {
-  const { login } = useAuth();
-  // Component implementation
-};
-
-// app/(auth)/login/page.tsx
+```astro
+---
+// src/pages/login.astro
+import Layout from '<%= projectImportPath%>pages/layouts/BaseLayout.astro';
 import { LoginForm } from '<%= projectImportPath%>features/auth';
+---
 
-export default function LoginPage() {
-  return (
-    <div>
-      <h1>Login</h1>
-      <LoginForm />
-    </div>
-  );
-}
+<Layout title="Login">
+  <LoginForm client:load />
+</Layout>
 ```
 
 ## Benefits
 
 1. **Maintainability**: Changes to a feature are isolated and don't affect other parts of the application
 2. **Scalability**: New features can be added without modifying existing code
-3. **Performance**: Leverages Next.js's built-in optimizations
+3. **Performance**: Static by default, interactive only where needed via islands
 4. **Developer Experience**: Clear organization and separation of concerns
 5. **Type Safety**: Full TypeScript support throughout the application

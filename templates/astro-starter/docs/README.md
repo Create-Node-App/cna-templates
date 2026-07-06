@@ -1,6 +1,6 @@
 # Extra Documentation
 
-This folder contains detailed documentation for the Next.js Starter template. Each document focuses on a specific aspect of the project:
+This folder contains detailed documentation for the Astro Starter template. Each document focuses on a specific aspect of the project:
 
 ## Core Documentation
 
@@ -11,7 +11,7 @@ This folder contains detailed documentation for the Next.js Starter template. Ea
 
 ## Additional Resources
 
-- [Next.js Documentation](https://nextjs.org/docs)
+- [Astro Documentation](https://docs.astro.build)
 - [React Documentation](https://reactjs.org/docs/getting-started.html)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 
@@ -19,6 +19,5 @@ This folder contains detailed documentation for the Next.js Starter template. Ea
 
 If you need additional help or have questions:
 
-1. Check the [Next.js GitHub Discussions](https://github.com/vercel/next.js/discussions)
-2. Join the [Next.js Discord](https://discord.gg/nextjs)
-3. Open an issue in this repository
+1. Check the [Astro Discord](https://astro.build/chat)
+2. Open an issue in this repository

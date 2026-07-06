@@ -159,7 +159,8 @@
   font-weight: 600;
 }
 
-.cna-landing__button:hover {
+a.cna-landing__button:hover,
+button.cna-landing__button:hover {
   transform: translateY(-2px);
 }
 

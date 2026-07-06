@@ -1,12 +1,12 @@
 # 🗄️ Project Structure
 
-This project follows a Feature-Based Architecture adapted for Next.js App Router, combining the best practices of Feature-Based Architecture with Next.js conventions. The main goal is to organize code around business capabilities while leveraging Next.js's powerful routing and server components.
+This project follows a Feature-Based Architecture adapted for Remix, combining the best practices of Feature-Based Architecture with Remix conventions. The main goal is to organize code around business capabilities while leveraging Remix's file-based routing, loaders, and actions.
 
 ## Architecture Overview
 
 The codebase is organized into three main categories:
 
-1. **App Router** (`<%= srcDir%>/app/`) - Next.js routing and layouts
+1. **Routes** (`<%= srcDir%>/routes/`) - Remix file-based routing and nested layouts
 2. **Features** (`<%= srcDir%>/features/`) - Business capabilities
 3. **Shared Infrastructure** (`<%= srcDir%>/shared/`) - Common utilities and components
 
@@ -15,21 +15,15 @@ The codebase is organized into three main categories:
 ```sh
 <%= srcDir%>
 |
-+-- app # Next.js App Router
++-- routes # Remix file-based routing
 |   |
-|   +-- (auth) # Auth group route
-|   |   +-- login
-|   |   |   +-- page.tsx
-|   |   +-- register
-|   |   |   +-- page.tsx
-|   |   +-- layout.tsx
-|   |
-|   +-- (dashboard) # Dashboard group route
-|   |   +-- page.tsx
-|   |   +-- layout.tsx
-|   |
-|   +-- layout.tsx # Root layout
-|   +-- page.tsx # Home page
+|   +-- _auth.login.tsx # Login route
+|   +-- _auth.register.tsx # Register route
+|   +-- _auth.tsx # Auth layout
+|   +-- dashboard.tsx # Dashboard route
+|   +-- dashboard._index.tsx # Dashboard index
+|   +-- _index.tsx # Home page
+|   +-- _layout.tsx # Root layout
 |
 +-- features # Feature modules
 |   |
@@ -97,10 +91,10 @@ The codebase is organized into three main categories:
    - Features should not depend on the internal structure of other features
    - All feature exports should go through the `index.ts` file
 
-2. **Next.js Integration**
-   - Use route groups (folders in parentheses) to organize related routes
-   - Leverage server components for data fetching and server-side rendering
-   - Keep page components thin, delegating logic to features
+2. **Remix Integration**
+   - Use `app/routes/` for file-based routing with flat route conventions
+   - Leverage loaders for server-side data fetching and actions for mutations
+   - Use nested layouts via the `_layout` route naming convention
 
 3. **Public API**
    - Features expose their functionality through a public API (`index.ts`)
@@ -131,8 +125,8 @@ The codebase is organized into three main categories:
 ## Best Practices
 
 1. **Route Organization**
-   - Use route groups to organize related routes
-   - Keep page components focused on routing and layout
+   - Use Remix's flat route conventions for file-based routing
+   - Keep route modules focused on data loading and rendering
    - Delegate business logic to features
 
 2. **Feature Development**
@@ -140,43 +134,41 @@ The codebase is organized into three main categories:
    - Minimize dependencies between features
    - Use the shared infrastructure for common functionality
 
-3. **Server Components**
-   - Use server components for data fetching and server-side rendering
-   - Keep client components minimal and focused on interactivity
-   - Leverage Next.js's built-in optimizations
+3. **Loaders and Actions**
+   - Use `loader` functions to fetch data on the server
+   - Use `action` functions for form submissions and mutations
+   - Keep route modules thin — delegate to feature services
 
 4. **State Management**
-   - Use React Server Components for server state
-   - Use React Context for client state when needed
-   - Consider using libraries like Zustand for complex client state
+   - Use Remix's built-in state management via loaders and actions
+   - Leverage URL search params and form data for client state
+   - Use React Context or Zustand for complex client-only state
 
 5. **Data Fetching**
-   - Use Next.js's built-in data fetching methods
-   - Keep data fetching logic in features
-   - Use React Query for client-side data fetching when needed
+   - Fetch data in loaders on the server — no API routes needed for your own data
+   - Use Remix's caching and revalidation strategies
+   - Keep data fetching logic in feature services
 
 ## Example: Auth Feature
 
 Here's how a typical feature might be structured:
 
 ```typescript
-// features/auth/index.ts
-export * from './components';
-export * from './hooks';
-export * from './services';
-export * from './types';
-
-// features/auth/components/LoginForm.tsx
-import { useAuth } from '../hooks';
-import { login } from '../services';
-
-export const LoginForm = () => {
-  const { login } = useAuth();
-  // Component implementation
-};
-
-// app/(auth)/login/page.tsx
+// app/routes/_auth.login.tsx
+import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { LoginForm } from '<%= projectImportPath%>features/auth';
+import { requireGuest } from '<%= projectImportPath%>features/auth/services';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  await requireGuest(request);
+  return null;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  // Handle login mutation
+}
 
 export default function LoginPage() {
   return (
@@ -192,6 +184,6 @@ export default function LoginPage() {
 
 1. **Maintainability**: Changes to a feature are isolated and don't affect other parts of the application
 2. **Scalability**: New features can be added without modifying existing code
-3. **Performance**: Leverages Next.js's built-in optimizations
+3. **Performance**: Leverages Remix's server-side rendering and data loading
 4. **Developer Experience**: Clear organization and separation of concerns
 5. **Type Safety**: Full TypeScript support throughout the application

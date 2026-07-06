@@ -57,6 +57,17 @@ function success(template, message) {
   console.log(`  OK     [${template}] ${message}`);
 }
 
+function extractBalancedBlock(str, startIndex) {
+  let depth = 0;
+  let i = startIndex;
+  while (i < str.length) {
+    if (str[i] === '{') depth++;
+    if (str[i] === '}') { depth--; if (depth === 0) return str.slice(startIndex + 1, i); }
+    i++;
+  }
+  return '';
+}
+
 function readFile(templateDir, filePath) {
   const fullPath = path.join(templateDir, filePath);
   if (!fs.existsSync(fullPath)) return null;
@@ -133,9 +144,12 @@ function auditTemplate(config) {
       }
 
       // Check for --cna-amber-soft in light mode
-      const lightModeBlock = css.match(/@media\s*\(prefers-color-scheme:\s*light\)\s*\{([^}]*)\}/);
-      if (lightModeBlock && !lightModeBlock[1].includes('--cna-amber-soft')) {
-        error(config.name, 'Light mode block does not override --cna-amber-soft');
+      const lightMediaMatch = css.match(/@media\s*\(prefers-color-scheme:\s*light\)\s*\{/);
+      if (lightMediaMatch) {
+        const blockContent = extractBalancedBlock(css, lightMediaMatch.index + lightMediaMatch[0].length - 1);
+        if (!blockContent.includes('--cna-amber-soft')) {
+          error(config.name, 'Light mode block does not override --cna-amber-soft');
+        }
       }
 
       // Check animation selector includes the card class
