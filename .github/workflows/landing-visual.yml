@@ -66,16 +66,23 @@ jobs:
             -t "file://${PWD}?subdir=templates/${{ matrix.template }}"
           echo "Project scaffolded"
 
-      - name: Start dev server
+      - name: Install and start dev server
         if: steps.scaffold.outcome == 'success'
         working-directory: visual-test-project
         run: |
           npm install
-          if [ "${{ matrix.template }}" = "nextjs-starter" ]; then
-            npm run dev -- --port "${{ matrix.port }}" &
-          else
-            npm run dev -- --host 0.0.0.0 --port "${{ matrix.port }}" &
-          fi
+          case "${{ matrix.template }}" in
+            webextension-react-vite-starter)
+              npm run build
+              npx vite preview --port "${{ matrix.port }}" &
+              ;;
+            nextjs-starter)
+              npm run dev -- --port "${{ matrix.port }}" &
+              ;;
+            *)
+              npm run dev -- --host 0.0.0.0 --port "${{ matrix.port }}" &
+              ;;
+          esac
           echo "Waiting for dev server on port ${{ matrix.port }}..."
           for i in $(seq 1 30); do
             curl -sf "http://localhost:${{ matrix.port }}" > /dev/null 2>&1 && echo "Server ready on port ${{ matrix.port }}" && break
