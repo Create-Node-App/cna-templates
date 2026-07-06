@@ -5,6 +5,12 @@
       "type": "text",
       "message": "Subdirectory for source content (e.g., `app`). Leave blank to use the root directory.",
       "initial": "app"
+    },
+    {
+      "name": "projectImportPath",
+      "type": "text",
+      "message": "Import alias to use for the project, e.g., `@/`",
+      "initial": "@/"
     }
   ]
 }
