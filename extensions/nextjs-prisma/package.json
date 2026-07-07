@@ -1,7 +1,7 @@
 {
   "name": "nextjs-prisma-extension",
   "dependencies": {
-    "@prisma/client": "^6.7.0"
+    "@prisma/client": "^7.8.0"
   },
   "devDependencies": {
     "prisma": "^6.7.0"
