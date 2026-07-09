@@ -15,7 +15,7 @@
     "allowJs": false,
     "esModuleInterop": true,
     "types": ["jest", "node"],
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0"
   },
