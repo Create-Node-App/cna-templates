@@ -51,7 +51,7 @@ jobs:
           npm install
           npm run format --if-present
           npm run lint:fix --if-present
-          npm run lint --if-present || echo "Lint warnings found (non-blocking)"
-          npm run type-check --if-present || echo "Type-check warnings found (non-blocking)"
-          SKIP_ENV_VALIDATION=true npm run build --if-present || echo "Build warnings found (non-blocking)"
+          npm run lint --if-present
+          npm run type-check --if-present
+          SKIP_ENV_VALIDATION=true npm run build --if-present
           echo "Smoke test passed for ${{ matrix.template }}"
