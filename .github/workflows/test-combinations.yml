@@ -47,7 +47,7 @@ jobs:
           const extLocalUrl = (ext) => {
             const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
             const dir = match ? match[1] : null;
-            return dir ? \`file://${repoDir}?subdir=extensions/${dir}\` : null;
+            return dir ? 'file://' + repoDir + '?subdir=extensions/' + dir : null;
           };
 
           const hasIncompatibility = (selected, candidate) => {
@@ -81,7 +81,7 @@ jobs:
             // Derive local template URL from the url field in templates.json
             const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
             const tplDir = tplMatch ? tplMatch[1] : null;
-            const templateUrl = tplDir ? \`file://${repoDir}?subdir=templates/${tplDir}\` : template.slug;
+            const templateUrl = tplDir ? 'file://' + repoDir + '?subdir=templates/' + tplDir : template.slug;
 
             return { template: template.slug, templateUrl, extensions: selectedExtensions.map(extLocalUrl).filter(Boolean) };
           });
@@ -170,7 +170,7 @@ jobs:
           const extLocalUrl = (ext) => {
             const match = ext.url.match(/\/extensions\/([^/]+)(?:\/|$)/);
             const dir = match ? match[1] : null;
-            return dir ? \`file://${repoDir}?subdir=extensions/\${dir}\` : null;
+            return dir ? 'file://' + repoDir + '?subdir=extensions/' + dir : null;
           };
 
           const hasIncompatibility = (selected, candidate) => {
@@ -208,7 +208,7 @@ jobs:
               // Derive local template URL from the url field in templates.json
               const tplMatch = template.url.match(/\/templates\/([^/]+)(?:\/|$)/);
               const tplDir = tplMatch ? tplMatch[1] : null;
-              const templateUrl = tplDir ? \`file://${repoDir}?subdir=templates/${tplDir}\` : template.slug;
+              const templateUrl = tplDir ? 'file://' + repoDir + '?subdir=templates/' + tplDir : template.slug;
 
               combinations.push({
                 template: template.slug,
