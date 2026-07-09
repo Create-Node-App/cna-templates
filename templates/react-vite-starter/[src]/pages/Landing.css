@@ -56,6 +56,22 @@
   line-height: 1.65;
 }
 
+/* React Vite: warm amber-forward glow (SPA / HMR energy) */
+.cna-landing--react-vite {
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(245, 158, 11, 0.22), transparent 55%),
+    radial-gradient(circle at 90% 85%, rgba(217, 119, 6, 0.12), transparent 45%),
+    var(--cna-bg);
+}
+
+.cna-landing--react-vite .cna-landing__hero {
+  border-top: 3px solid var(--cna-amber);
+}
+
+.cna-landing--react-vite .cna-landing__card-icon {
+  background: rgba(245, 158, 11, 0.18);
+}
+
 .cna-landing__header {
   display: flex;
   align-items: center;
@@ -182,6 +198,17 @@
 
 .cna-landing__button--secondary:hover {
   background: var(--cna-border);
+}
+
+.cna-landing__button--ghost {
+  background: transparent;
+  color: var(--cna-teal);
+  border: 1px solid var(--cna-border);
+}
+
+.cna-landing__button--ghost:hover {
+  border-color: var(--cna-teal);
+  background: rgba(20, 184, 166, 0.08);
 }
 
 .cna-landing__section-title {

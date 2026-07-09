@@ -3,12 +3,36 @@
 const projectName = "<%= projectName %>";
 
 const features = [
-  { icon: "🚀", title: "Astro 7", description: "Fast static sites with partial hydration and content islands." },
-  { icon: "⚛️", title: "React-ready", description: "Add interactive islands with React, Preact, or Solid when needed." },
-  { icon: "🛡️", title: "TypeScript", description: "Type-safe components and pages out of the box." },
-  { icon: "📦", title: "Feature-based structure", description: "Organize components and pages as the project grows." },
-  { icon: "✨", title: "Static output", description: "Ship pre-rendered HTML with zero runtime by default." },
-  { icon: "🧩", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
+  {
+    icon: "📄",
+    title: "HTML-first output",
+    description: "Ship pre-rendered pages by default — zero client JS until you opt in.",
+  },
+  {
+    icon: "🏝️",
+    title: "Content islands",
+    description: "Hydrate React, Preact, or Solid only on the interactive bits.",
+  },
+  {
+    icon: "🚀",
+    title: "Astro 7",
+    description: "File-based pages, content collections–ready structure, and fast builds.",
+  },
+  {
+    icon: "🛡️",
+    title: "TypeScript",
+    description: "Typed components and pages without a heavy SPA toolchain.",
+  },
+  {
+    icon: "📚",
+    title: "Docs & marketing fit",
+    description: "Ideal when the site is mostly content and a few interactive widgets.",
+  },
+  {
+    icon: "🧩",
+    title: "Addon surface",
+    description: "Layer UI, testing, or deployment extensions as the site grows.",
+  },
 ];
 
 const docs = [
@@ -27,7 +51,7 @@ const docs = [
     <title>{projectName} - Create Awesome Node App</title>
   </head>
   <body>
-    <div class="cna-landing">
+    <div class="cna-landing cna-landing--astro">
       <header class="cna-landing__header">
         <img src="/logo.svg" alt="Create Awesome Node App" class="cna-landing__logo" width="40" height="40" />
         <span class="cna-landing__brand">Create Awesome Node App</span>
@@ -35,19 +59,30 @@ const docs = [
 
       <main class="cna-landing__main">
         <section class="cna-landing__hero" style="--index: 0">
-          <span class="cna-landing__eyebrow">Your project is ready</span>
+          <span class="cna-landing__eyebrow">Astro · static-first</span>
           <h1 class="cna-landing__title">{projectName}</h1>
           <p class="cna-landing__lead">
-            A cozy Astro starter with static-first performance and a feature-based foundation.
+            Content-first Astro with islands when you need them. Choose this for docs, marketing, and sites that
+            should ship HTML before JavaScript.
           </p>
           <div class="cna-landing__actions">
-            <a href="/src/pages/index.astro" class="cna-landing__button cna-landing__button--primary">Start editing</a>
-            <a href="./docs/README.md" class="cna-landing__button cna-landing__button--secondary">Read the docs</a>
+            <a href="./docs/README.md" class="cna-landing__button cna-landing__button--primary">Read the docs</a>
+            <span class="cna-landing__button cna-landing__button--secondary">
+              Run <code class="cna-landing__code">npm run dev</code>
+            </span>
+            <a
+              href="https://create-awesome-node-app.vercel.app/templates"
+              class="cna-landing__button cna-landing__button--ghost"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Template docs
+            </a>
           </div>
         </section>
 
         <section class="cna-landing__features">
-          <h2 class="cna-landing__section-title">What is inside</h2>
+          <h2 class="cna-landing__section-title">Built for content sites</h2>
           <div class="cna-landing__grid">
             {
               features.map((feature, index) => (
@@ -146,6 +181,22 @@ const docs = [
     line-height: 1.65;
   }
 
+  /* Astro: soft dual glow + bottom accent (content / islands) */
+  .cna-landing--astro {
+    background:
+      radial-gradient(ellipse 80% 35% at 50% -5%, rgba(251, 191, 36, 0.14), transparent 50%),
+      radial-gradient(circle at 70% 100%, rgba(20, 184, 166, 0.14), transparent 40%),
+      var(--cna-bg);
+  }
+
+  .cna-landing--astro .cna-landing__hero {
+    border-bottom: 3px solid var(--cna-amber-soft);
+  }
+
+  .cna-landing--astro .cna-landing__card-icon {
+    background: rgba(251, 191, 36, 0.14);
+  }
+
   .cna-landing__header {
     display: flex;
     align-items: center;
@@ -230,12 +281,23 @@ const docs = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     padding: 0.75rem 1.25rem;
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 0.9375rem;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+
+  .cna-landing__code {
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.375rem;
+    background: rgba(0, 0, 0, 0.25);
+    font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
   }
 
   .cna-landing__button:hover {
@@ -261,6 +323,17 @@ const docs = [
 
   .cna-landing__button--secondary:hover {
     background: var(--cna-border);
+  }
+
+  .cna-landing__button--ghost {
+    background: transparent;
+    color: var(--cna-teal);
+    border: 1px solid var(--cna-border);
+  }
+
+  .cna-landing__button--ghost:hover {
+    border-color: var(--cna-teal);
+    background: rgba(20, 184, 166, 0.08);
   }
 
   .cna-landing__section-title {

@@ -4,28 +4,33 @@ import styles from "./page.module.css";
 const features = [
   {
     icon: "▲",
-    title: "Next.js 16 App Router",
-    description: "File-system routing, layouts, and latest React features out of the box.",
+    title: "App Router first",
+    description: "Layouts, nested routes, and React Server Components without a pages/ rewrite.",
+  },
+  {
+    icon: "🖥️",
+    title: "Server + client",
+    description: "Keep data close to the server; hydrate interactive islands only where needed.",
   },
   {
     icon: "🛡️",
-    title: "TypeScript + ESLint + Prettier",
-    description: "Static typing and consistent, automated code style.",
-  },
-  {
-    icon: "📦",
-    title: "Feature-based structure",
-    description: "Scale by co-locating routes, state, and components.",
+    title: "TypeScript + lint",
+    description: "ESLint and Prettier configured so full-stack changes stay consistent.",
   },
   {
     icon: "🔐",
-    title: "Login example",
-    description: "A ready-made auth route to kickstart protected flows.",
+    title: "Auth route sample",
+    description: "A login example under (auth) so protected flows have a starting point.",
+  },
+  {
+    icon: "📦",
+    title: "Feature folders",
+    description: "Grow by co-locating routes, UI, and domain logic per feature.",
   },
   {
     icon: "🧩",
-    title: "Addon ready",
-    description: "Layer UI libraries, state tools, testing, and deployment.",
+    title: "Addon surface",
+    description: "Add Tailwind, Auth.js, Drizzle, tRPC, or i18n when the product needs them.",
   },
 ];
 
@@ -40,7 +45,7 @@ const withIndex = (index: number) => ({ "--index": index }) as React.CSSProperti
 
 export default function Home() {
   return (
-    <div className={styles.landing}>
+    <div className={styles.landing + " " + styles.landingNext}>
       <header className={styles.header}>
         <Image
           src="/logo.svg"
@@ -55,24 +60,32 @@ export default function Home() {
 
       <main className={styles.main}>
         <section className={styles.hero} style={withIndex(0)}>
-          <span className={styles.eyebrow}>Your project is ready</span>
+          <span className={styles.eyebrow}>Next.js App Router</span>
           <h1 className={styles.title}><%= projectName %></h1>
           <p className={styles.lead}>
-            A cozy Next.js starter with a feature-based foundation. Everything you need to start building your next
-            page.
+            A full-stack Next.js foundation with server components and feature folders. Choose it when UI and
+            server routes should live in one App Router codebase.
           </p>
           <div className={styles.actions}>
-            <a href="/<%= srcDir %>/app/page.tsx" className={styles.button + " " + styles.buttonPrimary}>
-              Start editing
-            </a>
-            <a href="/docs/README.md" className={styles.button + " " + styles.buttonSecondary}>
+            <a href="/docs/README.md" className={styles.button + " " + styles.buttonPrimary}>
               Read the docs
+            </a>
+            <span className={styles.button + " " + styles.buttonSecondary}>
+              Run <code className={styles.code}>npm run dev</code>
+            </span>
+            <a
+              href="https://create-awesome-node-app.vercel.app/templates"
+              className={styles.button + " " + styles.buttonGhost}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Template docs
             </a>
           </div>
         </section>
 
         <section className={styles.features}>
-          <h2 className={styles.sectionTitle}>What is inside</h2>
+          <h2 className={styles.sectionTitle}>Built for App Router apps</h2>
           <div className={styles.grid}>
             {features.map((feature, index) => (
               <article

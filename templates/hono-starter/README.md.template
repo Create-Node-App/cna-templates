@@ -1,8 +1,12 @@
 # <%= projectName %>
 
-A Hono application created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+Welcome — this is a **Hono API** scaffolded with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
 
-## Getting Started
+A lean TypeScript HTTP service for edge, serverless, or small APIs. No fake web UI — start the server and call the routes.
+
+Browse templates and extensions: [create-awesome-node-app.vercel.app](https://create-awesome-node-app.vercel.app)
+
+## Next commands
 
 ```bash
 <%= installCommand %>
@@ -11,14 +15,14 @@ A Hono application created with [create-awesome-node-app](https://www.npmjs.com/
 
 The server starts on [http://localhost:3000](http://localhost:3000).
 
-## Available Scripts
+## Available scripts
 
-- `<%= runCommand %> dev` — start the development server with hot reload
+- `<%= runCommand %> dev` — development server with hot reload
 - `<%= runCommand %> build` — compile TypeScript
-- `<%= runCommand %> start` — start the production server
-- `<%= runCommand %> format` — format code with Prettier
-- `<%= runCommand %> lint` — lint code with ESLint
-- `<%= runCommand %> type-check` — run TypeScript type checking
+- `<%= runCommand %> start` — production server
+- `<%= runCommand %> format` — format with Prettier
+- `<%= runCommand %> lint` — lint with ESLint
+- `<%= runCommand %> type-check` — TypeScript type checking
 
 ## Endpoints
 
