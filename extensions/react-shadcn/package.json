@@ -5,8 +5,8 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.451.0",
-    "tailwind-merge": "^2.5.2",
+    "lucide-react": "^1.23.0",
+    "tailwind-merge": "^3.6.0",
     "@radix-ui/react-slot": "^1.1.0"
   }
 }
