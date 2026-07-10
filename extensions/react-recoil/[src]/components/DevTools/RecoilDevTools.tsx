@@ -1,9 +1,12 @@
 import React from 'react';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { RecoilLogger } from 'recoil-devtools-logger';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import LogMonitor from 'recoil-devtools-log-monitor';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import DockMonitor from 'recoil-devtools-dock';
 
 export const RecoilDevTools = () => {

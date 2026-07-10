@@ -1,6 +1,8 @@
-// @ts-expect-error -- @apollo/client v3; types may not resolve with bundler mode in TS6
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
-// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { onError } from '@apollo/client/link/error';
 
 const httpLink = new HttpLink({

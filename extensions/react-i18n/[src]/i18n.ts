@@ -1,10 +1,14 @@
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import i18n from 'i18next';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import Backend from 'i18next-http-backend';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import LanguageDetector from 'i18next-browser-languagedetector';
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { initReactI18next } from 'react-i18next';
 
 i18n

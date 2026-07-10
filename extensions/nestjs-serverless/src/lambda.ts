@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import serverlessExpress from '@vendia/serverless-express';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { Context, Handler } from 'aws-lambda';
 import express from 'express';
 

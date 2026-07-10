@@ -1,4 +1,5 @@
-// @ts-expect-error -- @playwright/test types; install playwright separately with npx playwright install
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { test, expect } from '@playwright/test';
 
 test.describe('App smoke test', () => {

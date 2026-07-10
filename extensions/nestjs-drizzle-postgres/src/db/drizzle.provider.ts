@@ -1,10 +1,13 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { ConfigService } from '@nestjs/config';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { Pool } from 'pg';
 import path from 'path';
 import * as schema from './schema';

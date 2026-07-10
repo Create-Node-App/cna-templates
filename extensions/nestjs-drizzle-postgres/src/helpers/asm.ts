@@ -1,4 +1,5 @@
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
