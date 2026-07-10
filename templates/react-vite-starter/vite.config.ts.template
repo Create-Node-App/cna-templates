@@ -63,8 +63,16 @@ export default defineConfig({
   build: {
     cssMinify: false,
     rolldownOptions: {
-      // Prevent bundling of packages that are dev-only, CJS-only, or SW-specific
-      external: [/^@storybook\//, /^recoil-devtools/, /^workbox-/],
+      // Prevent bundling of dev-only, CJS-only, or test-only packages
+      external: [
+        /^@storybook\//,
+        /^recoil-devtools/,
+        /^workbox-/,
+        /^vitest/,
+        /^jsdom/,
+        /^@testing-library\//,
+        /^@vitest\//,
+      ],
     },
   },
 });
