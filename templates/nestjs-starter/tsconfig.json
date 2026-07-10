@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -14,8 +14,11 @@
     "skipLibCheck": true,
     "allowJs": false,
     "esModuleInterop": true,
-    "types": ["jest", "node"],
-    "moduleResolution": "bundler",
+    "types": [
+      "jest",
+      "node"
+    ],
+    "moduleResolution": "node16",
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0"
   },
@@ -25,6 +28,7 @@
     "*coverage",
     "logs",
     "scripts",
-    "./tools/**/*"
+    "./tools/**/*",
+    "drizzle.config.ts"
   ]
 }
