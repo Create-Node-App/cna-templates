@@ -31,13 +31,13 @@ export class DrizzleProvider implements OnModuleInit {
   }
 
   private createDb() {
-    const sqliteDbName = this.configService.get<string>('SQLITE_DATABASE_NAME') || 'database';
+    const sqliteDbName = this.configService.get<string>('SQLITE_DATABASE_NAME')! || 'database';
     const sqliteDbPath = `${sqliteDbName}.db`;
     return new Database(sqliteDbPath);
   }
 
   private getMigrationsFolder() {
-    const stage = this.configService.get<string>('STAGE');
+    const stage = this.configService.get<string>('STAGE')!;
     return stage === 'local' ? './src/db/migrations' : path.join(__dirname, 'migrations');
   }
 
