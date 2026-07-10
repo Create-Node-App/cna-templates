@@ -1,10 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-// @ts-ignore -- drizzle-orm ESM package; CTS types loaded at runtime via require condition
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { ConfigService } from '@nestjs/config';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { Pool } from 'pg';
 import path from 'path';
 import * as schema from './schema';

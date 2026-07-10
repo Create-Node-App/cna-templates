@@ -1,6 +1,10 @@
+// @ts-expect-error -- types may not resolve with TS6 bundler mode
 import i18n from 'i18next';
+// @ts-expect-error -- types may not resolve with TS6 bundler mode
 import Backend from 'i18next-http-backend';
+// @ts-expect-error -- types may not resolve with TS6 bundler mode
 import LanguageDetector from 'i18next-browser-languagedetector';
+// @ts-expect-error -- types may not resolve with TS6 bundler mode
 import { initReactI18next } from 'react-i18next';
 
 i18n

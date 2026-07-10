@@ -1,3 +1,4 @@
+// @ts-expect-error -- @playwright/test types; install playwright separately with npx playwright install
 import { test, expect } from '@playwright/test';
 
 test.describe('App smoke test', () => {

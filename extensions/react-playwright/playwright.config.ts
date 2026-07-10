@@ -1,3 +1,4 @@
+// @ts-expect-error -- @playwright/test types; install playwright separately with npx playwright install
 import { defineConfig, devices } from '@playwright/test';
 
 const port = process.env.PORT ?? '3000';

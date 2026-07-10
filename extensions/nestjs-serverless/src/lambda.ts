@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import serverlessExpress from '@vendia/serverless-express';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { Context, Handler } from 'aws-lambda';
 import express from 'express';
 
