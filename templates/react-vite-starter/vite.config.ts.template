@@ -67,8 +67,11 @@ export default defineConfig({
       // dev-only/test/Node.js packages as "unintended browser bundling"
       external: (id: string) => {
         try {
+          // Use absolute path to ensure we load the project's package.json
           // eslint-disable-next-line @typescript-eslint/no-require-imports
-          const pkg = require('./package.json') as { devDependencies?: Record<string, string> };
+          const pkgPath = path.resolve(__dirname, 'package.json');
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const pkg = require(pkgPath) as { devDependencies?: Record<string, string> };
           const devDeps = Object.keys(pkg.devDependencies ?? {});
           return devDeps.some(dep => id === dep || id.startsWith(dep + '/'));
         } catch {
