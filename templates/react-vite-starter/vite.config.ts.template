@@ -72,6 +72,8 @@ export default defineConfig({
         /^jsdom/,
         /^@testing-library\//,
         /^@vitest\//,
+        /^@playwright\//,
+        /^playwright$/,
       ],
     },
   },
