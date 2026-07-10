@@ -1,1 +1,1 @@
-import './semantic-ui/semantic.less';
+import 'semantic-ui-css/semantic.min.css';
