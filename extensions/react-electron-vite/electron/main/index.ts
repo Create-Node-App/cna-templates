@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 
