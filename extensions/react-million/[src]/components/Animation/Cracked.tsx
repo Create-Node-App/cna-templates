@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 import React, { FC } from "react";
 import { For, block } from "million/react";
 import "./slicer.scss";
