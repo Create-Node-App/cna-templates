@@ -63,10 +63,12 @@ export default defineConfig({
   build: {
     cssMinify: false,
     rolldownOptions: {
-      // Downgrade Rolldown errors to warnings so that CJS-only packages from
-      // extension devDependencies (jest, playwright, storybook, etc.) that are
-      // transitively imported don't fail the production build.
-      logLevel: 'warn',
+      // Suppress the "unintended bundling" error that Rolldown raises for
+      // CJS-only packages from extension test/dev dependencies.
+      // Using onLog to intercept the specific error message.
+      onLog(level: string, log: { message?: string }) {
+        if (log.message && log.message.includes('unintended')) return;
+      },
     },
   },
 });
