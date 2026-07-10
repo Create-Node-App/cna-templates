@@ -152,6 +152,7 @@ const docs = [
       --cna-text: #1f2937;
       --cna-text-muted: #6b7280;
       --cna-border: #fed7aa;
+      --cna-amber-soft: #d97706;
       --cna-glow: rgba(245, 158, 11, 0.08);
       --cna-shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.18);
     }
@@ -256,6 +257,7 @@ const docs = [
   }
 
   .cna-landing__title {
+    overflow-wrap: anywhere;
     margin: 0 0 0.75rem;
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
@@ -345,7 +347,7 @@ const docs = [
 
   .cna-landing__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
     gap: 1rem;
   }
 

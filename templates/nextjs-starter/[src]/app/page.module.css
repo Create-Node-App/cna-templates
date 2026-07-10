@@ -92,6 +92,7 @@
 }
 
 .title {
+  overflow-wrap: anywhere;
   margin: 0 0 0.75rem;
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
@@ -117,8 +118,10 @@
 
 .button {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 700;
@@ -182,7 +185,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 1rem;
 }
 
