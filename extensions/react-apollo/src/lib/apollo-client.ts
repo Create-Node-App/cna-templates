@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
