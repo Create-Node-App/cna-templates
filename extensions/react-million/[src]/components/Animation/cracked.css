@@ -1,0 +1,10 @@
+.bg-text {
+  position: relative;
+  overflow: hidden;
+}
+
+.slicer-gradient {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
