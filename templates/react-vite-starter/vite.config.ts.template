@@ -63,8 +63,8 @@ export default defineConfig({
   build: {
     cssMinify: false,
     rolldownOptions: {
-      // Prevent bundling of Storybook packages in production — they are dev-only
-      external: [/^@storybook\//],
+      // Prevent bundling of packages that are dev-only or CJS-only tools
+      external: [/^@storybook\//, /^recoil-devtools/],
     },
   },
 });
