@@ -1,7 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+// @ts-ignore -- drizzle-orm ESM package; CTS types loaded at runtime via require condition
 import { NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
+// @ts-ignore
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { ConfigService } from '@nestjs/config';
+// @ts-ignore
 import { Pool } from 'pg';
 import path from 'path';
 import * as schema from './schema';
