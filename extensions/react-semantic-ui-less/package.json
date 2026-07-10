@@ -4,7 +4,7 @@
     "semantic-ui-react": "^2.1.5"
   },
   "devDependencies": {
-    "less": "4.6.7",
-    "less-loader": "^13.0.0"
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0"
   }
 }
