@@ -1,8 +1,11 @@
-/** PostCSS Config (templated, shadcn) */
 // eslint-disable-next-line @typescript-eslint/no-require-imports
+const { resolve } = require('path');
+const cwd = process.cwd();
 module.exports = {
   plugins: [
-    require('tailwindcss'),
-    require('autoprefixer'),
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require(resolve(require.resolve('tailwindcss', { paths: [cwd] }))),
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require(resolve(require.resolve('autoprefixer', { paths: [cwd] }))),
   ],
 };
