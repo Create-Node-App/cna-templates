@@ -1,9 +1,9 @@
-// @ts-ignore -- drizzle-orm ESM package; CTS types loaded at runtime via require condition
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { drizzle, BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-// @ts-ignore
+// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
 import Database from 'better-sqlite3';
 import { ConfigService } from '@nestjs/config';
 import path from 'path';

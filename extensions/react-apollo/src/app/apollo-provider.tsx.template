@@ -1,5 +1,6 @@
 'use client';
 
+// @ts-expect-error -- @apollo/client v3; types may not resolve with bundler mode in TS6
 import { ApolloProvider as Provider } from '@apollo/client';
 import { apolloClient } from '<%= projectImportPath %>lib/apollo-client';
 

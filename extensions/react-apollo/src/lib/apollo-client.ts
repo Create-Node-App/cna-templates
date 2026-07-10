@@ -1,4 +1,6 @@
+// @ts-expect-error -- @apollo/client v3; types may not resolve with bundler mode in TS6
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
+// @ts-expect-error
 import { onError } from '@apollo/client/link/error';
 
 const httpLink = new HttpLink({
