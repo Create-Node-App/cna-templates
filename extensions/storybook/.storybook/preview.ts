@@ -1,4 +1,5 @@
-// @ts-expect-error -- types may not resolve with TS6 bundler mode
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import type { Preview } from '@storybook/react';
 
 const preview: Preview = {

@@ -1,4 +1,6 @@
 import { ConfigService } from '@nestjs/config';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { MongooseModuleOptions } from '@nestjs/mongoose';
 
 export const mongooseConfig = (configService: ConfigService): MongooseModuleOptions => {

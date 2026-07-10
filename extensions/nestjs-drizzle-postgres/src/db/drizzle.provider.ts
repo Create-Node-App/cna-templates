@@ -1,10 +1,13 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { ConfigService } from '@nestjs/config';
-// @ts-expect-error -- ESM package; TypeScript 6 node16 CJS cannot resolve, works at runtime
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { Pool } from 'pg';
 import path from 'path';
 import * as schema from './schema';
@@ -48,7 +51,7 @@ export class DrizzleProvider implements OnModuleInit {
 
     if (this.shouldUseSecretsManager()) {
       const secretName = this.configService.get<string>('POSTGRES_SECRET_NAME');
-      const postgresSecret = (await getSecretValue(secretName)) as string;
+      const postgresSecret = (await getSecretValue(secretName!)) as string;
       const postgresSecretJson = JSON.parse(postgresSecret) as Record<string, string>;
       host = host || postgresSecretJson.host;
       port = port || postgresSecretJson.port;
@@ -68,7 +71,7 @@ export class DrizzleProvider implements OnModuleInit {
 
   private shouldUseSecretsManager() {
     const stage = this.configService.get<string>('STAGE');
-    return !['local', 'offline'].includes(stage) && !!this.configService.get<string>('POSTGRES_SECRET_NAME')!;
+    return !['local', 'offline'].includes(stage!) && !!this.configService.get<string>('POSTGRES_SECRET_NAME')!;
   }
 
   private async getPostgresConnectionUrls() {

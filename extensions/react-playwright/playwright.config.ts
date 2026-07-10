@@ -1,4 +1,5 @@
-// @ts-expect-error -- @playwright/test types; install playwright separately with npx playwright install
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { defineConfig, devices } from '@playwright/test';
 
 const port = process.env.PORT ?? '3000';
