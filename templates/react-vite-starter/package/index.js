@@ -28,11 +28,5 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     },
   };
 
-  // npm overrides ensure CSS-related packages from extensions are always
-  // hoisted to root even when legacy-peer-deps=true is in use
-  const overrides = {
-    tailwindcss: '^3.4.0',
-  };
-
-  return { ...packageJson, dependencies, devDependencies, overrides };
+  return { ...packageJson, dependencies, devDependencies };
 };
