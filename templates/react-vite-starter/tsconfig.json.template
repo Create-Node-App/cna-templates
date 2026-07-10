@@ -12,6 +12,7 @@
     "module": "esnext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "ignoreDeprecations": "6.0",
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
