@@ -9,12 +9,11 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "Preserve",
+    "module": "esnext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["node"],
     "paths": {
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
     }
