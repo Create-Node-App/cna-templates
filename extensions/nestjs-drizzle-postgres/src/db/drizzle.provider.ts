@@ -68,7 +68,7 @@ export class DrizzleProvider implements OnModuleInit {
 
   private shouldUseSecretsManager() {
     const stage = this.configService.get<string>('STAGE');
-    return !['local', 'offline'].includes(stage) && !!this.configService.get<string>('POSTGRES_SECRET_NAME');
+    return !['local', 'offline'].includes(stage) && !!this.configService.get<string>('POSTGRES_SECRET_NAME')!;
   }
 
   private async getPostgresConnectionUrls() {
