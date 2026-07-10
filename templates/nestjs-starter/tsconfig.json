@@ -16,7 +16,11 @@
     "esModuleInterop": true,
     "moduleResolution": "node16",
     "resolveJsonModule": true,
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "6.0",
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "exclude": [
     "node_modules",
