@@ -1,11 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { resolve } = require('path');
-const cwd = process.cwd();
-module.exports = {
-  plugins: [
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require(resolve(require.resolve('tailwindcss', { paths: [cwd] }))),
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require(resolve(require.resolve('autoprefixer', { paths: [cwd] }))),
-  ],
+const path = require('path');
+
+/**
+ * PostCSS config function — uses ctx.cwd to resolve tailwindcss from the
+ * project root even when npm nests it due to legacy-peer-deps interactions.
+ */
+module.exports = (ctx) => {
+  const cwd = ctx.cwd || process.cwd();
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const tw = require(path.join(cwd, 'node_modules', 'tailwindcss'));
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const ap = require(path.join(cwd, 'node_modules', 'autoprefixer'));
+  return {
+    plugins: [tw, ap],
+  };
 };
