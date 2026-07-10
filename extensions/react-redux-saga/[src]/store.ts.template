@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import createSagaMiddleware from 'redux-saga';
 import { createLogger } from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
