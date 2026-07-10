@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache, HttpLink, from, onError } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || '/api/graphql',
