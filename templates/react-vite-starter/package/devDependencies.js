@@ -19,4 +19,5 @@ module.exports = {
   vite: '^8.1.3',
   'vite-plugin-eslint': '^1.8.1',
   'vite-plugin-pwa': '^1.3.0',
+  'less': '^4.2.0',
 };
