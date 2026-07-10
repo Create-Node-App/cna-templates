@@ -1,8 +1,7 @@
 {
   "main": "dist-electron/main/index.js",
   "scripts": {
-    "build":  "tsc && vite build && electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "build": "tsc && vite build"
   },
   "devDependencies": {
     "electron": "^43.0.0",
