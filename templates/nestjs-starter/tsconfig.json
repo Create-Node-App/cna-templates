@@ -14,10 +14,6 @@
     "skipLibCheck": true,
     "allowJs": false,
     "esModuleInterop": true,
-    "types": [
-      "jest",
-      "node"
-    ],
     "moduleResolution": "node16",
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0"
