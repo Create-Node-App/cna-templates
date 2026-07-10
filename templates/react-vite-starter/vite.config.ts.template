@@ -63,18 +63,18 @@ export default defineConfig({
   build: {
     cssMinify: false,
     rolldownOptions: {
-      // Prevent bundling of dev-only, CJS-only, or test-only packages
-      external: [
-        /^@storybook\//,
-        /^recoil-devtools/,
-        /^workbox-/,
-        /^vitest/,
-        /^jsdom/,
-        /^@testing-library\//,
-        /^@vitest\//,
-        /^@playwright\//,
-        /^playwright$/,
-      ],
+      // Externalize all devDependencies to prevent Rolldown from flagging
+      // dev-only/test/Node.js packages as "unintended browser bundling"
+      external: (id: string) => {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const pkg = require('./package.json') as { devDependencies?: Record<string, string> };
+          const devDeps = Object.keys(pkg.devDependencies ?? {});
+          return devDeps.some(dep => id === dep || id.startsWith(dep + '/'));
+        } catch {
+          return false;
+        }
+      },
     },
   },
 });
