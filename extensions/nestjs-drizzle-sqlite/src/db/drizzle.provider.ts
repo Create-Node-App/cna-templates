@@ -1,6 +1,9 @@
+// @ts-ignore -- drizzle-orm ESM package; CTS types loaded at runtime via require condition
 import { drizzle, BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { Injectable, OnModuleInit } from '@nestjs/common';
+// @ts-ignore
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+// @ts-ignore
 import Database from 'better-sqlite3';
 import { ConfigService } from '@nestjs/config';
 import path from 'path';
