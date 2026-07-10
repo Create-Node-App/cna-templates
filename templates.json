@@ -4,8 +4,8 @@
     {
       "slug": "frontend-applications",
       "name": "Frontend Applications",
-      "description": "Templates for building modern web interfaces.",
-      "details": "Discover templates for React, Vue, and other frontend frameworks to build beautiful user interfaces.",
+      "description": "Client-side and content-first starters for SPAs and static sites.",
+      "details": "Pick these when you need a browser UI without a full-stack framework — React + Vite for SPAs, Astro for content sites.",
       "labels": [
         "Frontend",
         "UI",
@@ -17,8 +17,8 @@
     {
       "slug": "backend-applications",
       "name": "Backend Applications",
-      "description": "Templates for building robust server-side applications.",
-      "details": "Explore templates for Node.js, Express, NestJS, and other backend frameworks to build powerful APIs.",
+      "description": "API and service starters for NestJS, Hono, and similar Node backends.",
+      "details": "Use when the deliverable is an HTTP API or worker — NestJS for modular services, Hono for lean edge/serverless handlers.",
       "labels": [
         "Backend",
         "API",
@@ -31,8 +31,8 @@
     {
       "slug": "fullstack-applications",
       "name": "Full Stack Applications",
-      "description": "Templates for building complete web applications.",
-      "details": "Find templates for Next.js, Remix, and other full stack frameworks to build end-to-end applications.",
+      "description": "Frameworks that own routing, rendering, and server logic in one app.",
+      "details": "Choose Next.js or React Router (Remix) when UI and server routes should live in the same codebase.",
       "labels": [
         "FullStack",
         "Frontend",
@@ -44,8 +44,8 @@
     {
       "slug": "monorepo-boilerplate",
       "name": "Monorepo Boilerplate",
-      "description": "Templates for managing multiple packages in a single repository.",
-      "details": "Streamline development with monorepo templates using tools like Nx, Turborepo, and Lerna for efficient code sharing.",
+      "description": "Multi-package workspaces with shared tooling and release flow.",
+      "details": "Start here when you need apps and packages in one repo with Turborepo pipelines and Changesets.",
       "labels": [
         "Monorepo",
         "Workspaces",
@@ -57,8 +57,8 @@
     {
       "slug": "user-acceptance-testing",
       "name": "User Acceptance Testing",
-      "description": "Templates with built-in testing frameworks for end-to-end validation.",
-      "details": "Ensure your applications meet user requirements with templates featuring Cypress, Playwright, or Selenium for comprehensive testing.",
+      "description": "Browser automation projects for end-to-end acceptance suites.",
+      "details": "Use when the repo itself is a WebdriverIO (or similar) test harness, not an application under test.",
       "labels": [
         "Testing",
         "End-to-End",
@@ -70,8 +70,8 @@
     {
       "slug": "web-extension",
       "name": "Web Extension",
-      "description": "Templates for building browser extensions and add-ons.",
-      "details": "Develop cross-browser extensions with templates that support Chrome, Firefox, and Edge with modern web technologies.",
+      "description": "Browser extension starters with React and Vite.",
+      "details": "Scaffold popup, options, and newtab surfaces that target Chrome, Firefox, and Edge via WebExtension APIs.",
       "labels": [
         "WebExtension",
         "Browser",
@@ -85,7 +85,7 @@
     {
       "name": "NestJS Boilerplate",
       "slug": "nestjs-boilerplate",
-      "description": "A boilerplate for building scalable and maintainable backend applications using NestJS with TypeScript, ESLint, and Prettier.",
+      "description": "Modular NestJS API with TypeScript, ESLint, and Prettier. Reach for it when you want controllers, providers, and clear module boundaries from day one.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
       "type": "nestjs-backend",
       "category": "backend-applications",
@@ -102,7 +102,7 @@
     {
       "name": "NextJS Starter",
       "slug": "nextjs-starter",
-      "description": "A production-ready Next.js starter with TypeScript, ESLint, Prettier, and customizable options for rapid full-stack development.",
+      "description": "Next.js App Router starter with TypeScript and a feature-based layout. Use it for full-stack React apps that need server components, routes, and optional auth examples.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
       "type": "nextjs",
       "category": "fullstack-applications",
@@ -113,13 +113,13 @@
         "ESLint",
         "Prettier",
         "Customizable",
-        "Production-ready"
+        "App Router"
       ]
     },
     {
       "name": "Turborepo Boilerplate",
       "slug": "turborepo-boilerplate",
-      "description": "A modern monorepo boilerplate with Turborepo, TypeScript, Changesets, and Workspaces for efficient multi-package management.",
+      "description": "Turborepo workspace with TypeScript, Changesets, and shared packages. Best when multiple apps share UI or config and you want pipeline caching.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
       "type": "monorepo",
       "category": "monorepo-boilerplate",
@@ -136,7 +136,7 @@
     {
       "name": "React Vite Boilerplate",
       "slug": "react-vite-boilerplate",
-      "description": "A fast and lightweight React boilerplate with Vite, TypeScript, React Router, and modern tooling for frontend development.",
+      "description": "React SPA on Vite with React Router and TypeScript. Choose it for client-only apps where instant HMR and a lean build matter more than SSR.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
       "type": "react",
       "category": "frontend-applications",
@@ -148,14 +148,14 @@
         "ESLint",
         "Prettier",
         "React Router",
-        "Fast",
-        "Lightweight"
+        "SPA",
+        "HMR"
       ]
     },
     {
       "name": "Web Extension React Boilerplate",
       "slug": "web-extension-react-boilerplate",
-      "description": "A boilerplate for building WebExtensions with React, Vite, TypeScript, and features like hot module replacement and polyfills.",
+      "description": "React + Vite WebExtension with HMR and polyfills. Use it for Chrome/Firefox/Edge extensions that share a React UI across popup and pages.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
       "type": "webextension-react",
       "category": "web-extension",
@@ -173,7 +173,7 @@
     {
       "name": "WebdriverIO Boilerplate",
       "slug": "webdriverio-boilerplate",
-      "description": "A comprehensive WebdriverIO boilerplate with TypeScript, ESLint, Prettier, and Selenoid for automated user acceptance testing.",
+      "description": "WebdriverIO + TypeScript harness with Selenoid-friendly setup. Scaffold this when the project is an acceptance-test suite, not the app under test.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
       "type": "webdriverio",
       "category": "user-acceptance-testing",
@@ -190,7 +190,7 @@
     {
       "name": "NextJS SaaS AI Starter",
       "slug": "nextjs-saas-ai-starter",
-      "description": "A production-ready multi-tenant Next.js SaaS starter with AI (OpenAI/Anthropic), Auth.js v5, Drizzle ORM + PostgreSQL, Tailwind CSS v4, shadcn/ui, RBAC, audit logs, webhooks, and i18n.",
+      "description": "Multi-tenant Next.js SaaS with AI providers, Auth.js v5, Drizzle + PostgreSQL, Tailwind v4, shadcn/ui, RBAC, audit logs, webhooks, and i18n. The flagship product showcase — not a minimal starter.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-saas-ai-starter",
       "type": "nextjs-saas-ai",
       "category": "fullstack-applications",
@@ -206,14 +206,13 @@
         "PostgreSQL",
         "Auth.js",
         "RBAC",
-        "i18n",
-        "Production-ready"
+        "i18n"
       ]
     },
     {
       "name": "Remix / React Router v7 Starter",
       "slug": "remix-starter",
-      "description": "A React Router v7 application with file-based routing, SSR, TypeScript, and modern React patterns for full-stack web apps.",
+      "description": "React Router v7 with file-based routes, loaders/actions, and TypeScript. Pick it when you want SSR and nested data routes without the Next.js App Router model.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/remix-starter",
       "type": "remix",
       "category": "fullstack-applications",
@@ -229,7 +228,7 @@
     {
       "name": "Astro Starter",
       "slug": "astro-starter",
-      "description": "An Astro site starter with static site generation, TypeScript, and component-based architecture for content-focused websites.",
+      "description": "Astro static site with TypeScript and island-friendly structure. Ideal for docs, marketing, and content sites that ship HTML first and hydrate only where needed.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/astro-starter",
       "type": "astro",
       "category": "frontend-applications",
@@ -244,7 +243,7 @@
     {
       "name": "Hono Starter",
       "slug": "hono-starter",
-      "description": "A lightweight Hono API starter with TypeScript support, ideal for edge computing, serverless, and small-to-medium APIs.",
+      "description": "Minimal Hono API in TypeScript. Use it for edge, serverless, or small HTTP services where NestJS would be heavier than you need.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/hono-starter",
       "type": "hono",
       "category": "backend-applications",

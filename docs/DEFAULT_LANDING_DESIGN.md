@@ -292,7 +292,15 @@ Use a simple link with a label and an arrow. A shared `DocsLink` helper is optio
 
 ---
 
-## 10. Updating this system
+## 10. Catalog preview fields (deferred)
+
+The published catalog (`templates.json` + `templates.schema.json`) does **not** yet support preview or screenshot metadata. The schema uses `additionalProperties: false`, so extra keys would fail validation.
+
+Defer `preview` / `screenshot` fields until the website catalog can consume them. See [`DEFAULT_LANDING_GUIDE.md`](./DEFAULT_LANDING_GUIDE.md) §6 for the rollout steps. Do not break the schema to ship assets early.
+
+---
+
+## 11. Updating this system
 
 1. Propose token changes in a dedicated issue.
 2. Update `shared/assets/*` and this document.

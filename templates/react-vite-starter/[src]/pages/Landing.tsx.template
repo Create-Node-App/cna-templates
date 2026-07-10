@@ -10,33 +10,33 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: '⚡',
-    title: 'Vite 8',
-    description: 'Instant HMR and a fast, opinionated build pipeline.',
+    title: 'Vite-native HMR',
+    description: 'Edit a component and see it update in milliseconds — no full reload tax.',
   },
   {
     icon: '⚛️',
-    title: 'React 19',
-    description: 'Latest React with modern patterns and future-ready APIs.',
+    title: 'React 19 SPA',
+    description: 'Client-rendered React with modern hooks and a lean runtime footprint.',
   },
   {
     icon: '🧭',
     title: 'React Router 7',
-    description: 'Client-side routing already wired for nested routes.',
+    description: 'Nested client routes already wired so you can grow screens without a rewrite.',
   },
   {
     icon: '🛡️',
-    title: 'TypeScript + ESLint + Prettier',
-    description: 'Static typing and consistent, automated code style.',
+    title: 'TypeScript + lint',
+    description: 'ESLint and Prettier ship configured so style debates stay out of PRs.',
   },
   {
     icon: '📦',
-    title: 'Feature-based structure',
-    description: 'Scale by co-locating routes, state, and components.',
+    title: 'Feature folders',
+    description: 'Co-locate routes, state, and UI per feature as the SPA grows.',
   },
   {
     icon: '🧩',
-    title: 'Addon ready',
-    description: 'Layer UI libraries, state tools, testing, and deployment.',
+    title: 'Addon surface',
+    description: 'Layer UI kits, state libraries, tests, or Electron when you need them.',
   },
 ];
 
@@ -50,7 +50,7 @@ const docs = [
 const withIndex = (index: number) => ({ '--index': index }) as React.CSSProperties;
 
 const Landing = () => (
-  <div className="cna-landing">
+  <div className="cna-landing cna-landing--react-vite">
     <header className="cna-landing__header">
       <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
       <span className="cna-landing__brand">Create Awesome Node App</span>
@@ -58,24 +58,32 @@ const Landing = () => (
 
     <main className="cna-landing__main">
       <section className="cna-landing__hero" style={withIndex(0)}>
-        <span className="cna-landing__eyebrow">Your project is ready</span>
+        <span className="cna-landing__eyebrow">React + Vite</span>
         <h1 className="cna-landing__title"><%= projectName %></h1>
         <p className="cna-landing__lead">
-          A cozy React + Vite starter with a feature-based foundation. Everything you need to start building your next
-          screen.
+          A client-side React SPA tuned for instant HMR. Reach for this when you want a fast browser app without
+          server rendering in the critical path.
         </p>
         <div className="cna-landing__actions">
-          <span className="cna-landing__button cna-landing__button--primary">
-            Start editing <code className="cna-landing__code"><%= srcDir %>/pages/Landing.tsx</code>
-          </span>
-          <a href="/docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+          <a href="/docs/README.md" className="cna-landing__button cna-landing__button--primary">
             Read the docs
+          </a>
+          <span className="cna-landing__button cna-landing__button--secondary">
+            Run <code className="cna-landing__code">npm run dev</code>
+          </span>
+          <a
+            href="https://create-awesome-node-app.vercel.app/templates"
+            className="cna-landing__button cna-landing__button--ghost"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Template docs
           </a>
         </div>
       </section>
 
       <section className="cna-landing__features">
-        <h2 className="cna-landing__section-title">What is inside</h2>
+        <h2 className="cna-landing__section-title">Built for SPA velocity</h2>
         <div className="cna-landing__grid">
           {features.map((feature, index) => (
             <article key={feature.title} className="cna-landing__card" style={withIndex(index + 1)}>

@@ -1,33 +1,12 @@
-# NestJS API
+# <%= projectName %>
 
-This project is a NestJS API generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). However, it is recommended to generate your own project using the command and following the options in the interactive menu. Please refer to the documentation for more information.
+Welcome — this is a **NestJS API** scaffolded with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
 
-## Features
+You get a modular TypeScript service (controllers, providers, modules) ready for HTTP APIs. There is no web UI here; start the server and hit your routes.
 
-- 🦾 [TypeScript](https://www.typescriptlang.org/) - Ensures type safety
-- 🚀 NestJS Framework - Utilize the power of NestJS for efficient development
-- 💾 Database Integration - Connect to databases like MongoDB or PostgreSQL
-- 🔒 Validation and Error Handling - Handle user input validation and error responses
-- ⚙️ Configuration Management - Manage different environments and configurations
-- 📜 Logging - Implement logging for debugging and monitoring purposes
-- 📄 API Documentation - Generate API documentation using Swagger or OpenAPI
-- 🧪 Unit Testing - Write and execute unit tests to ensure code quality
+Browse templates and extensions: [create-awesome-node-app.vercel.app](https://create-awesome-node-app.vercel.app)
 
-## Extra documentation
-
-You can find useful information such as project structure, available scripts and much more in the [docs](./docs) folder!
-
-## Pre-packed with
-
-### Development Tools
-
-- [TypeScript](https://www.typescriptlang.org/)
-- [ESLint](https://eslint.org/) - JavaScript and JSX linting utility
-- [Prettier](https://prettier.io/) - Opinionated code formatter
-- [Husky](https://www.npmjs.com/package/husky) - Simplifies Git hooks setup
-- [lint-staged](https://www.npmjs.com/package/lint-staged) - Runs linters against staged git files, preventing 💩 from slipping into your code base!
-
-## Quickstart
+## Next commands
 
 ```sh
 fnm use
@@ -35,7 +14,7 @@ fnm use
 <%= runCommand%> dev
 ```
 
-or using Docker and Docker Compose (_recommended_):
+Or with Docker Compose:
 
 ```sh
 fnm use
@@ -43,26 +22,28 @@ fnm use
 <%= runCommand%> compose:up
 ```
 
-## Development
+## Features
 
-While developing, you will mostly rely on `<%= runCommand%> dev`; however, there are additional scripts available:
+- TypeScript, ESLint, and Prettier configured
+- NestJS module layout for clear boundaries
+- Ready for database, OpenAPI, and serverless addons
+- Logging and config patterns suited to API work
 
-| `<%= runCommand%> <script>` | Description                                                                                                             |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `dev`                       | Serves your app locally for development                                                                                 |
-| `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
-| `lint`                      | Lints the project for potential errors                                                                                   |
-| `lint:fix`                  | Lints the project and fixes all correctable errors                                                                       |
+## Extra documentation
 
-## Production
+Project structure, scripts, and conventions live in the [docs](./docs) folder.
 
-Available scripts:
+## Available scripts
 
-| `<%= runCommand%> <script>` | Description                                                                                                 |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `preview`                   | Serves your app using your production-ready setup                                                           |
-| `build`                     | Builds the application to the `dist/` directory                                                              |
+| `<%= runCommand%> <script>` | Description |
+| --------------------------- | ----------- |
+| `dev` | Serve locally for development |
+| `format` | Format with Prettier |
+| `lint` | Lint for potential errors |
+| `lint:fix` | Lint and fix correctable issues |
+| `build` | Build to `dist/` |
+| `preview` | Serve the production build |
 
 ## Contributing
 
-Read [CONTRIBUTING.md](./CONTRIBUTING.md) for local development, branching and module conventions. For template improvements open issues / PRs in [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) for local development and module conventions. For template improvements, open issues or PRs in [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

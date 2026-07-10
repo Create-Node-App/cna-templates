@@ -9,6 +9,8 @@ This repository contains official templates and extensions for [create-awesome-n
 
 ## Quick start
 
+Browse templates and extensions on the [official site](https://create-awesome-node-app.vercel.app), then scaffold locally:
+
 ```sh
 # Interactive mode
 npx create-awesome-node-app
@@ -85,6 +87,9 @@ If the user only says "continue" or asks "what should I do next", summarize the 
 
 ## Support
 
+- 🌐 [Official site](https://create-awesome-node-app.vercel.app)
+- 📚 [Templates](https://create-awesome-node-app.vercel.app/templates)
+- 🧩 [Extensions](https://create-awesome-node-app.vercel.app/extensions)
 - 📦 [NPM Package](https://www.npmjs.com/package/create-awesome-node-app)
 - 🐛 [Report Issues](https://github.com/Create-Node-App/cna-templates/issues)
 - 💬 [Discussions](https://github.com/Create-Node-App/cna-templates/discussions)

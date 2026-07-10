@@ -1,12 +1,36 @@
 import type { MetaFunction } from "react-router";
 
 const features = [
-  { icon: "🧭", title: "React Router v7", description: "Modern data APIs and fast client-side navigation." },
-  { icon: "⚛️", title: "React 19", description: "Latest React with modern patterns and future-ready APIs." },
-  { icon: "🛡️", title: "TypeScript", description: "Static typing across routes and components." },
-  { icon: "⚡", title: "Vite", description: "Fast builds and instant HMR for rapid development." },
-  { icon: "📦", title: "Feature-based structure", description: "Scale by co-locating routes, state, and components." },
-  { icon: "🧩", title: "Addon ready", description: "Layer UI libraries, state tools, testing, and deployment." },
+  {
+    icon: "🧭",
+    title: "Loaders & actions",
+    description: "Fetch and mutate on the route — data APIs stay next to the UI that needs them.",
+  },
+  {
+    icon: "📄",
+    title: "File-based routes",
+    description: "Nested layouts and URL segments map to files under app/routes.",
+  },
+  {
+    icon: "🌐",
+    title: "SSR by default",
+    description: "Ship HTML from the server, then hydrate for interactive navigation.",
+  },
+  {
+    icon: "⚛️",
+    title: "React 19",
+    description: "Modern React patterns on top of React Router v7 conventions.",
+  },
+  {
+    icon: "⚡",
+    title: "Vite builds",
+    description: "Fast local HMR and production bundles without a custom bundler setup.",
+  },
+  {
+    icon: "🧩",
+    title: "Addon surface",
+    description: "Layer UI, state, and testing extensions when the product grows.",
+  },
 ];
 
 const docs = [
@@ -22,7 +46,7 @@ export const meta: MetaFunction = () => {
 
 export default function Home() {
   return (
-    <div className="cna-landing">
+    <div className="cna-landing cna-landing--remix">
       <header className="cna-landing__header">
         <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
         <span className="cna-landing__brand">Create Awesome Node App</span>
@@ -30,24 +54,32 @@ export default function Home() {
 
       <main className="cna-landing__main">
         <section className="cna-landing__hero" style={{ "--index": 0 } as React.CSSProperties}>
-          <span className="cna-landing__eyebrow">Your project is ready</span>
+          <span className="cna-landing__eyebrow">React Router v7</span>
           <h1 className="cna-landing__title"><%= projectName %></h1>
           <p className="cna-landing__lead">
-            A cozy React Router starter with feature-based folders. Everything you need to start building your next
-            route.
+            Nested routes with loaders and actions — SSR without the Next.js App Router model. Pick this when
+            route-centric data loading is the mental model you want.
           </p>
           <div className="cna-landing__actions">
-            <a href="/app/routes/_index.tsx" className="cna-landing__button cna-landing__button--primary">
-              Start editing
-            </a>
-            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
+            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--primary">
               Read the docs
+            </a>
+            <span className="cna-landing__button cna-landing__button--secondary">
+              Run <code className="cna-landing__code">npm run dev</code>
+            </span>
+            <a
+              href="https://create-awesome-node-app.vercel.app/templates"
+              className="cna-landing__button cna-landing__button--ghost"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Template docs
             </a>
           </div>
         </section>
 
         <section className="cna-landing__features">
-          <h2 className="cna-landing__section-title">What is inside</h2>
+          <h2 className="cna-landing__section-title">Built for route-centric apps</h2>
           <div className="cna-landing__grid">
             {features.map((feature, index) => (
               <article

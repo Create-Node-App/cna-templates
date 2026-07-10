@@ -80,7 +80,13 @@ Respect `prefers-reduced-motion` by collapsing animation and transition duration
 
 ### CTAs
 
-Primary CTA should point to the main editable file of the template (e.g. `src/pages/Landing.tsx`, `src/app/page.tsx`). The secondary CTA should link to `./docs/README.md`.
+Primary and secondary CTAs must be useful in the browser. Prefer:
+
+1. **Read the docs** → `./docs/README.md` (or `/docs/README.md` when that path is served).
+2. **Run the app** → a non-link hint such as `npm run dev` (or the package-manager equivalent), not a dead file URL.
+3. **Template docs on the website** → `https://create-awesome-node-app.vercel.app/templates` when a third link is useful.
+
+Do **not** use primary CTAs that point at source paths like `src/app/page.tsx` or `app/routes/_index.tsx`. Those paths are not served by the dev server and look broken to users.
 
 ### Interpolation in `.template` files
 
@@ -102,7 +108,7 @@ className={`${styles.button} ${styles.buttonPrimary}`}
 |---|---|---|---|
 | `react-vite-starter` | `src/pages/Landing.tsx.template`, `Landing.css` | Plain CSS | Reference implementation |
 | `nextjs-starter` | `src/app/page.tsx.template`, `page.module.css`, `globals.css` | CSS Modules | Use `Image` with `unoptimized` for SVG; add `favicon.svg` to `src/app/` |
-| `nextjs-saas-ai-starter` | Brand component only | Existing design system | Full SaaS landing out of scope; align fallback logo only |
+| `nextjs-saas-ai-starter` | Brand component only | Existing product UI | Flagship showcase — see §9; nest mark as fallback logo only |
 | `remix-starter` | `app/routes/_index.tsx.template`, `app/styles/landing.css` | Plain CSS + import | Add `app/types/css.d.ts` for CSS side-effect imports |
 | `astro-starter` | `src/pages/index.astro` | Scoped global `<style>` | Copy SVG mark/favicon to `public/` |
 | `webextension-react-vite-starter` | `src/newtab/Newtab.tsx.template`, `src/popup/Popup.tsx.template` | Plain CSS | Keep popup compact; newtab can use full landing layout |
@@ -110,7 +116,23 @@ className={`${styles.button} ${styles.buttonPrimary}`}
 
 ---
 
-## 6. Testing checklist
+## 6. Preview / screenshot metadata (deferred)
+
+`templates.schema.json` sets `additionalProperties: false` on the catalog root and only allows the existing template fields (`name`, `slug`, `description`, `url`, `type`, `category`, `labels`).
+
+**Do not** add `preview`, `screenshot`, `ogImage`, or similar fields to `templates.json` until the website catalog can consume them and the schema is intentionally extended. Adding those keys today would fail validation and break consumers.
+
+When the site is ready:
+
+1. Extend `templates.schema.json` with optional preview fields.
+2. Wire the website catalog to render them.
+3. Then add URLs or asset paths to `templates.json`.
+
+Until then, keep catalog copy craft-forward in `description` only.
+
+---
+
+## 7. Testing checklist
 
 For every new or updated landing:
 
@@ -124,7 +146,7 @@ For every new or updated landing:
 
 ---
 
-## 7. Updating the system
+## 8. Updating the system
 
 1. Open an issue describing the change and affected templates.
 2. Update `shared/assets/` and `DEFAULT_LANDING_DESIGN.md` first.
@@ -134,7 +156,19 @@ For every new or updated landing:
 
 ---
 
-## 8. Related documents
+## 9. SaaS brand relationship (`nextjs-saas-ai-starter`)
+
+`nextjs-saas-ai-starter` is the flagship product showcase. It keeps its own marketing UI, design system, and landing narrative.
+
+Rules:
+
+- **Do not** force a full cozy-nest restyle of the SaaS landing.
+- Align only the **fallback nest mark** (and favicon source when needed) with `shared/assets/`.
+- Treat the SaaS template as a separate brand surface that still belongs to the CNA ecosystem, not as another copy of the default starter landing.
+
+---
+
+## 10. Related documents
 
 - [`DEFAULT_LANDING_DESIGN.md`](./DEFAULT_LANDING_DESIGN.md) — tokens, typography, motion, logo rules
 - [`docs/TESTING.md`](./TESTING.md) — local testing commands and CI details
