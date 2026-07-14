@@ -3,12 +3,12 @@
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/addon-interactions": "^8.6.18",
-    "@storybook/addon-links": "^8.6.18",
+    "@storybook/addon-links": "^10.5.0",
     "@storybook/blocks": "^8.6.18",
-    "@storybook/nextjs": "^8.6.18",
-    "@storybook/react": "^8.6.18",
+    "@storybook/nextjs": "^10.5.0",
+    "@storybook/react": "^10.5.0",
     "@storybook/test": "^8.6.18",
-    "storybook": "^8.6.18"
+    "storybook": "^10.5.0"
   },
   "scripts": {
     "storybook": "storybook dev -p 6006",
