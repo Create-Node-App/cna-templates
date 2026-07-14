@@ -13,7 +13,7 @@ const vitePluginPWA = () =>
     registerType: 'autoUpdate',
     injectRegister: 'auto',
     devOptions: {
-      enabled: true,
+      enabled: false,
     },
     manifest: {
       name: '<%= projectName %>',
