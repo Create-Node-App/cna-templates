@@ -1,12 +1,23 @@
-module.exports = {
-  extends: [
-    "eslint-config-ts",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-  ],
-  settings: {
-    react: {
-      version: "detect",
+const tsConfig = require('eslint-config-ts');
+const reactPlugin = require('eslint-plugin-react');
+const reactHooksPlugin = require('eslint-plugin-react-hooks');
+
+module.exports = [
+  ...tsConfig,
+  {
+    plugins: {
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    rules: {
+      ...reactPlugin.configs.recommended.rules,
+      ...reactPlugin.configs['jsx-runtime'].rules,
+      ...reactHooksPlugin.configs.recommended.rules,
     },
   },
-};
+];

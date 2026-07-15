@@ -6,17 +6,17 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/Create-Node-App/nextjs-saas-ai-template?style=social)](https://github.com/Create-Node-App/nextjs-saas-ai-template)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![pnpm](https://img.shields.io/badge/pnpm-9-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![pnpm](https://img.shields.io/badge/pnpm-10-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 
 [![Built with create-awesome-node-app](https://img.shields.io/badge/Built%20with-create--awesome--node--app-blue?style=flat-square)](https://www.npmjs.com/package/create-awesome-node-app)
 
 </div>
 
-A fully-featured, production-ready Next.js 15 template for building multi-tenant SaaS applications with AI capabilities built-in. Part of the [Create-Node-App](https://github.com/Create-Node-App) ecosystem.
+A fully-featured, production-ready Next.js 16 template for building multi-tenant SaaS applications with AI capabilities built-in. Part of the [Create-Node-App](https://github.com/Create-Node-App) ecosystem.
 
 ---
 
@@ -86,8 +86,8 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Category     | Technology                                            |
 | ------------ | ----------------------------------------------------- |
-| Framework    | Next.js 15 (App Router, RSC, Turbopack)               |
-| Language     | TypeScript 5+ (strict)                                |
+| Framework    | Next.js 16 (App Router, RSC, Turbopack)               |
+| Language     | TypeScript 6 (strict)                                 |
 | Styling      | Tailwind CSS v4 + shadcn/ui                           |
 | Database     | PostgreSQL 17 + pgvector + Drizzle ORM                |
 | Auth         | Auth.js v5 + Auth0 (SSO) + database sessions          |

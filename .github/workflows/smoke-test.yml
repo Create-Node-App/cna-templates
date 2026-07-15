@@ -54,4 +54,5 @@ jobs:
           npm run lint --if-present
           npm run type-check --if-present
           SKIP_ENV_VALIDATION=true npm run build --if-present
+          npm test --if-present
           echo "Smoke test passed for ${{ matrix.template }}"

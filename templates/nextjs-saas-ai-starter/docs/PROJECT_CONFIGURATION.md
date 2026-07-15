@@ -6,8 +6,8 @@ Next.js SaaS AI Template is configured with modern tooling for type safety, code
 
 | Category   | Technology                                                  |
 | ---------- | ----------------------------------------------------------- |
-| Framework  | Next.js 15 (App Router)                                     |
-| Language   | TypeScript 5+ (strict)                                      |
+| Framework  | Next.js 16 (App Router)                                     |
+| Language   | TypeScript 6 (strict)                                       |
 | Styling    | Tailwind CSS v4 + shadcn/ui (theme in `globals.css` @theme) |
 | Database   | Drizzle ORM + PostgreSQL + pgvector                         |
 | Auth       | Auth.js v5                                                  |

@@ -1,7 +1,7 @@
 const dependencies = require("./dependencies");
 const devDependencies = require("./devDependencies");
 
-module.exports = function resolvePackage(setup, { appName, runCommand }) {
+module.exports = function resolvePackage(setup, { appName, runCommand, usePnpm }) {
   const packageJson = {
     name: appName,
     version: "0.1.0",

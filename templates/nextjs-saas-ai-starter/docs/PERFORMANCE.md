@@ -1,6 +1,6 @@
 # 🚄 Performance
 
-Next.js SaaS AI Template is optimized for performance using Next.js 15, React Server Components, and Tailwind CSS v4.
+Next.js SaaS AI Template is optimized for performance using Next.js 16, React Server Components, and Tailwind CSS v4.
 
 ## Server Components First
 
