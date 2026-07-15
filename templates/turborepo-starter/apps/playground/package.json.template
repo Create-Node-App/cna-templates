@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint \"**/*.{ts,tsx}\"",
-    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint \"**/*.{ts,tsx}\" --fix",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
     "type-check": "tsc --noEmit",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

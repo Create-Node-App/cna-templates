@@ -1,7 +1,17 @@
-module.exports = {
-  extends: ["next", "eslint-config-ts"],
-  rules: {
-    "@next/next/no-html-link-for-pages": "off",
-    "react/jsx-key": "off",
+const tsConfig = require('eslint-config-ts');
+const nextPlugin = require('@next/eslint-plugin-next');
+
+module.exports = [
+  ...tsConfig,
+  {
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      '@next/next/no-html-link-for-pages': 'off',
+      'react/jsx-key': 'off',
+    },
   },
-};
+];
