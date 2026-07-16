@@ -1,0 +1,29 @@
+# Feature Template
+
+Starter layout for a new feature module under `<%= srcDir %>/features/`.
+
+## Structure
+
+```sh
+features/my-feature/
+├── components/   # Feature-only UI
+├── hooks/        # Feature hooks
+├── services/     # Data helpers (call from loaders/actions)
+├── types/        # Shared types
+└── index.ts      # Public API
+```
+
+## Usage from routes
+
+```typescript
+// <%= srcDir %>/routes/my-route.tsx
+import { exampleLabel } from '~/features/my-feature';
+
+export async function loader() {
+  return { label: exampleLabel };
+}
+```
+
+Keep loaders and actions in route modules; put reusable logic in `services/` and UI in `components/`.
+
+See [Project Structure](../../docs/PROJECT_STRUCTURE.md) for import rules.

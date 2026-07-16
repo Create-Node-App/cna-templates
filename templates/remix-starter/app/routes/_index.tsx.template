@@ -1,47 +1,49 @@
-import type { MetaFunction } from "react-router";
+import type { MetaFunction } from 'react-router';
+import { Link } from 'react-router';
 
 const features = [
   {
-    icon: "🧭",
-    title: "Loaders & actions",
-    description: "Fetch and mutate on the route — data APIs stay next to the UI that needs them.",
+    icon: '🧭',
+    title: 'Loaders & actions',
+    description: 'Fetch and mutate on the route — data APIs stay next to the UI that needs them.',
   },
   {
-    icon: "📄",
-    title: "File-based routes",
-    description: "Nested layouts and URL segments map to files under app/routes.",
+    icon: '📄',
+    title: 'File-based routes',
+    description: 'Nested layouts and URL segments map to files under app/routes.',
   },
   {
-    icon: "🌐",
-    title: "SSR by default",
-    description: "Ship HTML from the server, then hydrate for interactive navigation.",
+    icon: '🌐',
+    title: 'SSR by default',
+    description: 'Ship HTML from the server, then hydrate for interactive navigation.',
   },
   {
-    icon: "⚛️",
-    title: "React 19",
-    description: "Modern React patterns on top of React Router v7 conventions.",
+    icon: '⚛️',
+    title: 'React 19',
+    description: 'Modern React patterns on top of React Router v7 conventions.',
   },
   {
-    icon: "⚡",
-    title: "Vite builds",
-    description: "Fast local HMR and production bundles without a custom bundler setup.",
+    icon: '⚡',
+    title: 'Vite builds',
+    description: 'Fast local HMR and production bundles without a custom bundler setup.',
   },
   {
-    icon: "🧩",
-    title: "Addon surface",
-    description: "Layer UI, state, and testing extensions when the product grows.",
+    icon: '🧩',
+    title: 'Addon surface',
+    description: 'Layer UI, state, and testing extensions when the product grows.',
   },
 ];
 
 const docs = [
-  { label: "Project overview", href: "./docs/README.md" },
-  { label: "Project structure", href: "./docs/PROJECT_STRUCTURE.md" },
-  { label: "Components & styling", href: "./docs/COMPONENTS_AND_STYLING.md" },
-  { label: "State management", href: "./docs/STATE_MANAGEMENT.md" },
+  { label: 'Project overview', href: './docs/README.md' },
+  { label: 'Project structure', href: './docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: './docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: './docs/STATE_MANAGEMENT.md' },
+  { label: 'Project configuration', href: './docs/PROJECT_CONFIGURATION.md' },
 ];
 
 export const meta: MetaFunction = () => {
-  return [{ title: "<%= projectName %> - Create Awesome Node App" }];
+  return [{ title: '<%= projectName %> - Create Awesome Node App' }];
 };
 
 export default function Home() {
@@ -53,7 +55,7 @@ export default function Home() {
       </header>
 
       <main className="cna-landing__main">
-        <section className="cna-landing__hero" style={{ "--index": 0 } as React.CSSProperties}>
+        <section className="cna-landing__hero" style={{ '--index': 0 } as React.CSSProperties}>
           <span className="cna-landing__eyebrow">React Router v7</span>
           <h1 className="cna-landing__title"><%= projectName %></h1>
           <p className="cna-landing__lead">
@@ -61,7 +63,10 @@ export default function Home() {
             route-centric data loading is the mental model you want.
           </p>
           <div className="cna-landing__actions">
-            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--primary">
+            <Link to="/contact" className="cna-landing__button cna-landing__button--primary">
+              Loader + action demo
+            </Link>
+            <a href="./docs/README.md" className="cna-landing__button cna-landing__button--secondary">
               Read the docs
             </a>
             <span className="cna-landing__button cna-landing__button--secondary">
@@ -85,7 +90,7 @@ export default function Home() {
               <article
                 key={feature.title}
                 className="cna-landing__card"
-                style={{ "--index": index + 1 } as React.CSSProperties}
+                style={{ '--index': index + 1 } as React.CSSProperties}
               >
                 <span className="cna-landing__card-icon" aria-hidden="true">
                   {feature.icon}
@@ -97,7 +102,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="cna-landing__docs" style={{ "--index": features.length + 1 } as React.CSSProperties}>
+        <section className="cna-landing__docs" style={{ '--index': features.length + 1 } as React.CSSProperties}>
           <h2 className="cna-landing__section-title">Next steps</h2>
           <nav className="cna-landing__doc-list" aria-label="Documentation">
             {docs.map((doc) => (
@@ -112,9 +117,9 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="cna-landing__footer" style={{ "--index": features.length + 2 } as React.CSSProperties}>
+      <footer className="cna-landing__footer" style={{ '--index': features.length + 2 } as React.CSSProperties}>
         <p>
-          Generated with{" "}
+          Generated with{' '}
           <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
             create-awesome-node-app
           </a>

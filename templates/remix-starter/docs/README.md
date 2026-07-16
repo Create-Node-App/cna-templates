@@ -1,9 +1,10 @@
 # Extra Documentation
 
-Project docs for this CNA starter. Expand these stubs as the template matures (see Create-Node-App/cna-templates#290).
+This folder contains project documentation: structure, configuration, styling, and state patterns for React Router v7 full-stack apps.
 
 ## Resources
 
 - [Project Structure](./PROJECT_STRUCTURE.md)
+- [Project Configuration](./PROJECT_CONFIGURATION.md)
 - [Components and Styling](./COMPONENTS_AND_STYLING.md)
 - [State Management](./STATE_MANAGEMENT.md)
