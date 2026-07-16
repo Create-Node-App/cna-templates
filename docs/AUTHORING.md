@@ -106,7 +106,7 @@ Before merging a new or heavily revised starter, meet the **M1 mature scaffold**
 
 In short:
 
-- Prefer `package/index.js` over a static `package.json` unless you are intentionally shipping a lockfile showcase.
+- Prefer `package/index.js` over a static `package.json` unless you intentionally ship a static package (e.g. Next.js-style showcases with a lockfile).
 - Ship a real `docs/` suite; **never** link landings or READMEs to docs that do not exist.
 - `lint` / `test` scripts must do real work (or be omitted) — no `echo` stubs and no fake README scripts.
 - Use `react-vite-starter` / `nextjs-starter` as the reference; do **not** treat `nextjs-saas-ai-starter` as the default scope.

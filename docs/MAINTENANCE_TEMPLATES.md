@@ -288,7 +288,7 @@ If any step fails, fix the template or extension, then regenerate from scratch. 
 - [ ] `incompatibleWith` is defined for mutually exclusive extensions.
 - [ ] `.npmrc` is added if peer-dependency conflicts exist.
 - [ ] `.template` files use available EJS variables.
-- [ ] **M1 maturity** criteria in [§11](#11-template-maturity-m1--m2--m3) are met (or gaps are tracked in an issue).
+- [ ] **M1 maturity** criteria in [§11](#11-template-maturity-m1--m2--m3) are met for **new** templates. Existing thin starters may merge only with an uplift issue linked until they reach M1.
 - [ ] Local validation passes.
 - [ ] Full matrix worst case (all compatible extensions) is tested for risky changes.
 
@@ -298,8 +298,8 @@ If any step fails, fix the template or extension, then regenerate from scratch. 
 
 New templates must not ship as thin `create-<framework>` shells. Use this bar so every starter adds **differential CNA value**.
 
-**Gold references (M1/M2):** `templates/react-vite-starter`, `templates/nextjs-starter`  
-**Flagship ceiling (M3 — not required for new starters):** `templates/nextjs-saas-ai-starter`
+**Gold references (M1/M2):** [`templates/react-vite-starter`](../templates/react-vite-starter/), [`templates/nextjs-starter`](../templates/nextjs-starter/)  
+**Flagship ceiling (M3 — not required for new starters):** [`templates/nextjs-saas-ai-starter`](../templates/nextjs-saas-ai-starter/)
 
 ### 11.1 Maturity tiers
 

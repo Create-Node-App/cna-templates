@@ -44,7 +44,7 @@ Use [conventional commits](https://www.conventionalcommits.org/): `feat:`, `fix:
 - [ ] `slug` is globally unique across templates and extensions
 - [ ] All required fields present: `name`, `slug`, `description`, `url`, `type`, `category`, `labels`
 - [ ] Extension `type` is an array if it supports multiple template types
-- [ ] New/updated templates meet [M1 maturity](./docs/MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) (or link an uplift issue)
+- [ ] **New** templates meet [M1 maturity](./docs/MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3). Updates to existing thin starters must link an uplift issue until M1 is met
 - [ ] Tested locally — see [docs/TESTING.md](./docs/TESTING.md)
 
 ## Questions?
