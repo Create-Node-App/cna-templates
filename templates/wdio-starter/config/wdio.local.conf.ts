@@ -17,7 +17,7 @@ export const config: Partial<WebdriverIO.Config> = {
     if (process.env.CI === 'true') return;
     const selenium = await import('selenium-standalone');
     await selenium.install(driverOpts);
-    seleniumProcess = selenium.start(driverOpts) as any;
+    seleniumProcess = await selenium.start(driverOpts);
   },
   onComplete: () => {
     console.log('// Test execution has completed //');
