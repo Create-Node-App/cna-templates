@@ -2,7 +2,7 @@ const turboConfig = require('eslint-config-turbo/flat');
 const prettierConfig = require('eslint-config-prettier');
 
 module.exports = [
-  ...turboConfig,
+  ...turboConfig.default,
   {
     languageOptions: {
       globals: {
