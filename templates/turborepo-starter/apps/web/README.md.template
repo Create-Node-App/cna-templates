@@ -1,0 +1,18 @@
+# Web App
+
+Minimal Vite + React application that consumes shared components from `packages/ui`.
+
+## Development
+
+From the repository root:
+
+```bash
+<%= runCommand%> dev
+```
+
+Or run only this app (build `ui` first if needed):
+
+```bash
+<%= runCommand%> build --filter=<%= scope%>ui
+<%= runCommand%> dev --filter=<%= scope%>web
+```

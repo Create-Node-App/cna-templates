@@ -5,6 +5,7 @@ module.exports = function resolvePackage(setup, { appName, usePnpm }) {
     "version": "0.1.0",
     "private": true,
     "scripts": {
+      "dev": "turbo run dev",
       "build": "turbo run build",
       "build-storybook": "turbo run build-storybook",
       "changeset": "changeset",
