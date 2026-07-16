@@ -13,7 +13,8 @@
     "noEmit": true,
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "~/*": ["./<%= srcDir %>/*"]
+      "~/*": ["./<%= srcDir %>/*"],
+      "<%= projectImportPath%>*": ["./<%= srcDir %>/*"]
     }
   },
   "include": [".react-router/types/**/*", "<%= srcDir %>", "<%= srcDir %>/**/*.ts"]
