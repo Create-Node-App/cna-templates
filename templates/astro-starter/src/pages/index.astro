@@ -1,475 +1,127 @@
 ---
-// CNA default landing page — Astro starter
-const projectName = "<%= projectName %>";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/cna-landing.css';
+
+const projectName = '<%= projectName %>';
+const pageTitle = `${projectName} - Create Awesome Node App`;
+const pageDescription =
+  'Content-first Astro starter with layouts, SEO head, and a sample content collection blog.';
 
 const features = [
   {
-    icon: "📄",
-    title: "HTML-first output",
-    description: "Ship pre-rendered pages by default — zero client JS until you opt in.",
+    icon: '📄',
+    title: 'Static HTML output',
+    description: 'Pages ship as pre-rendered HTML. No client JavaScript is included unless you add islands.',
   },
   {
-    icon: "🏝️",
-    title: "Content islands",
-    description: "Hydrate React, Preact, or Solid only on the interactive bits.",
+    icon: '📝',
+    title: 'Content collections',
+    description: 'A sample blog collection under src/content/blog with list and detail routes at /blog.',
   },
   {
-    icon: "🚀",
-    title: "Astro 7",
-    description: "File-based pages, content collections–ready structure, and fast builds.",
+    icon: '🧭',
+    title: 'Layouts & SEO head',
+    description: 'BaseLayout and BaseHead provide shared title and meta description across pages.',
   },
   {
-    icon: "🛡️",
-    title: "TypeScript",
-    description: "Typed components and pages without a heavy SPA toolchain.",
+    icon: '🚀',
+    title: 'Astro 7',
+    description: 'File-based routing, TypeScript, and astro check for template-aware type safety.',
   },
   {
-    icon: "📚",
-    title: "Docs & marketing fit",
-    description: "Ideal when the site is mostly content and a few interactive widgets.",
+    icon: '🛠️',
+    title: 'Lint & format',
+    description: 'ESLint with eslint-plugin-astro and Prettier with prettier-plugin-astro are preconfigured.',
   },
   {
-    icon: "🧩",
-    title: "Addon surface",
-    description: "Layer UI, testing, or deployment extensions as the site grows.",
+    icon: '🏝️',
+    title: 'Islands-ready',
+    description: 'Add @astrojs/react (or another integration) when you need interactive components — not bundled yet.',
   },
 ];
 
 const docs = [
-  { label: "Project overview", href: "./docs/README.md" },
-  { label: "Project structure", href: "./docs/PROJECT_STRUCTURE.md" },
-  { label: "Components & styling", href: "./docs/COMPONENTS_AND_STYLING.md" },
-  { label: "State management", href: "./docs/STATE_MANAGEMENT.md" },
+  { label: 'Project overview', href: './docs/README.md' },
+  { label: 'Project structure', href: './docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: './docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: './docs/STATE_MANAGEMENT.md' },
+  { label: 'Project configuration', href: './docs/PROJECT_CONFIGURATION.md' },
 ];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{projectName} - Create Awesome Node App</title>
-  </head>
-  <body>
-    <div class="cna-landing cna-landing--astro">
-      <header class="cna-landing__header">
-        <img src="/logo.svg" alt="Create Awesome Node App" class="cna-landing__logo" width="40" height="40" />
-        <span class="cna-landing__brand">Create Awesome Node App</span>
-      </header>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="cna-landing cna-landing--astro">
+    <header class="cna-landing__header">
+      <img src="/logo.svg" alt="Create Awesome Node App" class="cna-landing__logo" width="40" height="40" />
+      <span class="cna-landing__brand">Create Awesome Node App</span>
+    </header>
 
-      <main class="cna-landing__main">
-        <section class="cna-landing__hero" style="--index: 0">
-          <span class="cna-landing__eyebrow">Astro · static-first</span>
-          <h1 class="cna-landing__title">{projectName}</h1>
-          <p class="cna-landing__lead">
-            Content-first Astro with islands when you need them. Choose this for docs, marketing, and sites that
-            should ship HTML before JavaScript.
-          </p>
-          <div class="cna-landing__actions">
-            <a href="./docs/README.md" class="cna-landing__button cna-landing__button--primary">Read the docs</a>
-            <span class="cna-landing__button cna-landing__button--secondary">
-              Run <code class="cna-landing__code">npm run dev</code>
-            </span>
-            <a
-              href="https://create-awesome-node-app.vercel.app/templates"
-              class="cna-landing__button cna-landing__button--ghost"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Template docs
-            </a>
-          </div>
-        </section>
-
-        <section class="cna-landing__features">
-          <h2 class="cna-landing__section-title">Built for content sites</h2>
-          <div class="cna-landing__grid">
-            {
-              features.map((feature, index) => (
-                <article class="cna-landing__card" style={`--index: ${index + 1}`}>
-                  <span class="cna-landing__card-icon" aria-hidden="true">{feature.icon}</span>
-                  <h3 class="cna-landing__card-title">{feature.title}</h3>
-                  <p class="cna-landing__card-text">{feature.description}</p>
-                </article>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="cna-landing__docs" style={`--index: ${features.length + 1}`}>
-          <h2 class="cna-landing__section-title">Next steps</h2>
-          <nav class="cna-landing__doc-list" aria-label="Documentation">
-            {
-              docs.map((doc) => (
-                <a href={doc.href} class="cna-landing__doc-link">
-                  <span class="cna-landing__doc-label">{doc.label}</span>
-                  <span class="cna-landing__doc-arrow" aria-hidden="true">→</span>
-                </a>
-              ))
-            }
-          </nav>
-        </section>
-      </main>
-
-      <footer class="cna-landing__footer" style={`--index: ${features.length + 2}`}>
-        <p>
-          Generated with{" "}
-          <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
-            create-awesome-node-app
-          </a>
+    <main class="cna-landing__main">
+      <section class="cna-landing__hero" style="--index: 0">
+        <span class="cna-landing__eyebrow">Astro · static-first</span>
+        <h1 class="cna-landing__title">{projectName}</h1>
+        <p class="cna-landing__lead">
+          Content-first Astro with a sample blog collection, shared layouts, and tooling for docs and marketing sites.
+          Add framework islands only where interactivity is worth the bytes.
         </p>
-      </footer>
-    </div>
-  </body>
-</html>
+        <div class="cna-landing__actions">
+          <a href="./docs/README.md" class="cna-landing__button cna-landing__button--primary">Read the docs</a>
+          <a href="/blog" class="cna-landing__button cna-landing__button--secondary">View sample blog</a>
+          <span class="cna-landing__button cna-landing__button--secondary">
+            Run <code class="cna-landing__code">npm run dev</code>
+          </span>
+          <a
+            href="https://create-awesome-node-app.vercel.app/templates"
+            class="cna-landing__button cna-landing__button--ghost"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Template docs
+          </a>
+        </div>
+      </section>
 
-<style is:global>
-  /* CNA default landing page — Astro starter */
+      <section class="cna-landing__features">
+        <h2 class="cna-landing__section-title">What ships in this starter</h2>
+        <div class="cna-landing__grid">
+          {
+            features.map((feature, index) => (
+              <article class="cna-landing__card" style={`--index: ${index + 1}`}>
+                <span class="cna-landing__card-icon" aria-hidden="true">
+                  {feature.icon}
+                </span>
+                <h3 class="cna-landing__card-title">{feature.title}</h3>
+                <p class="cna-landing__card-text">{feature.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
 
-  :root {
-    --cna-bg: #0f172a;
-    --cna-surface: #1e293b;
-    --cna-surface-elevated: #27364f;
-    --cna-text: #f8fafc;
-    --cna-text-muted: #94a3b8;
-    --cna-border: #334155;
-    --cna-amber: #f59e0b;
-    --cna-amber-soft: #fbbf24;
-    --cna-amber-dark: #d97706;
-    --cna-teal: #14b8a6;
-    --cna-glow: rgba(245, 158, 11, 0.12);
-    --cna-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --cna-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --cna-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --cna-shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.25);
-  }
+      <section class="cna-landing__docs" style={`--index: ${features.length + 1}`}>
+        <h2 class="cna-landing__section-title">Next steps</h2>
+        <nav class="cna-landing__doc-list" aria-label="Documentation">
+          {
+            docs.map((doc) => (
+              <a href={doc.href} class="cna-landing__doc-link">
+                <span class="cna-landing__doc-label">{doc.label}</span>
+                <span class="cna-landing__doc-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))
+          }
+        </nav>
+      </section>
+    </main>
 
-  @media (prefers-color-scheme: light) {
-    :root {
-      --cna-bg: #fffcf5;
-      --cna-surface: #ffffff;
-      --cna-surface-elevated: #fffbeb;
-      --cna-text: #1f2937;
-      --cna-text-muted: #6b7280;
-      --cna-border: #fed7aa;
-      --cna-amber-soft: #d97706;
-      --cna-glow: rgba(245, 158, 11, 0.08);
-      --cna-shadow-glow: 0 0 40px -10px rgba(245, 158, 11, 0.18);
-    }
-  }
-
-  @keyframes cna-fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .cna-landing {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background:
-      radial-gradient(circle at 20% 10%, var(--cna-glow), transparent 40%),
-      radial-gradient(circle at 80% 90%, var(--cna-glow), transparent 40%),
-      var(--cna-bg);
-    color: var(--cna-text);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.65;
-  }
-
-  /* Astro: soft dual glow + bottom accent (content / islands) */
-  .cna-landing--astro {
-    background:
-      radial-gradient(ellipse 80% 35% at 50% -5%, rgba(251, 191, 36, 0.14), transparent 50%),
-      radial-gradient(circle at 70% 100%, rgba(20, 184, 166, 0.14), transparent 40%),
-      var(--cna-bg);
-  }
-
-  .cna-landing--astro .cna-landing__hero {
-    border-bottom: 3px solid var(--cna-amber-soft);
-  }
-
-  .cna-landing--astro .cna-landing__card-icon {
-    background: rgba(251, 191, 36, 0.14);
-  }
-
-  .cna-landing__header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--cna-border);
-    animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .cna-landing__logo {
-    display: block;
-    width: 40px;
-    height: 40px;
-  }
-
-  .cna-landing__brand {
-    font-weight: 800;
-    font-size: 1rem;
-    letter-spacing: -0.02em;
-  }
-
-  .cna-landing__main {
-    flex: 1;
-    width: min(960px, 100%);
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-  }
-
-  .cna-landing__hero,
-  .cna-landing__features,
-  .cna-landing__docs,
-  .cna-landing__footer {
-    animation: cna-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--index, 0) * 80ms);
-  }
-
-  .cna-landing__hero {
-    text-align: center;
-    padding: 2.5rem 1.5rem 3rem;
-    border-radius: 1.75rem;
-    background: var(--cna-surface);
-    border: 1px solid var(--cna-border);
-    box-shadow: var(--cna-shadow-lg), var(--cna-shadow-glow);
-  }
-
-  .cna-landing__eyebrow {
-    display: inline-flex;
-    margin-bottom: 1rem;
-    padding: 0.35rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(245, 158, 11, 0.12);
-    color: var(--cna-amber-soft);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-  }
-
-  .cna-landing__title {
-    overflow-wrap: anywhere;
-    margin: 0 0 0.75rem;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.04em;
-  }
-
-  .cna-landing__lead {
-    max-width: 52ch;
-    margin: 0 auto 1.75rem;
-    color: var(--cna-text-muted);
-    font-size: 1.125rem;
-  }
-
-  .cna-landing__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
-  }
-
-  .cna-landing__button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.75rem;
-    font-weight: 700;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  }
-
-  .cna-landing__code {
-    padding: 0.15rem 0.4rem;
-    border-radius: 0.375rem;
-    background: rgba(0, 0, 0, 0.25);
-    font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    font-size: 0.8125rem;
-    font-weight: 600;
-  }
-
-  .cna-landing__button:hover {
-    transform: translateY(-2px);
-  }
-
-  .cna-landing__button--primary {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 55%, #0d9488 100%);
-    color: #fff;
-    box-shadow: var(--cna-shadow-md);
-  }
-
-  .cna-landing__button--primary:hover {
-    box-shadow: var(--cna-shadow-lg), var(--cna-shadow-glow);
-  }
-
-  .cna-landing__button--secondary {
-    background: var(--cna-surface-elevated);
-    color: var(--cna-text);
-    border: 1px solid var(--cna-border);
-    box-shadow: var(--cna-shadow-sm);
-  }
-
-  .cna-landing__button--secondary:hover {
-    background: var(--cna-border);
-  }
-
-  .cna-landing__button--ghost {
-    background: transparent;
-    color: var(--cna-teal);
-    border: 1px solid var(--cna-border);
-  }
-
-  .cna-landing__button--ghost:hover {
-    border-color: var(--cna-teal);
-    background: rgba(20, 184, 166, 0.08);
-  }
-
-  .cna-landing__section-title {
-    margin: 3rem 0 1.25rem;
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .cna-landing__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-    gap: 1rem;
-  }
-
-  .cna-landing__card {
-    padding: 1.25rem;
-    border-radius: 1.25rem;
-    background: var(--cna-surface);
-    border: 1px solid var(--cna-border);
-    box-shadow: var(--cna-shadow-sm);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  }
-
-  .cna-landing__card:hover {
-    transform: translateY(-3px);
-    background: var(--cna-surface-elevated);
-    box-shadow: var(--cna-shadow-lg), var(--cna-shadow-glow);
-  }
-
-  .cna-landing__card-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    margin-bottom: 0.75rem;
-    border-radius: 0.625rem;
-    background: rgba(245, 158, 11, 0.12);
-    font-size: 1.125rem;
-  }
-
-  .cna-landing__card-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.0625rem;
-    font-weight: 700;
-  }
-
-  .cna-landing__card-text {
-    margin: 0;
-    color: var(--cna-text-muted);
-    font-size: 0.9375rem;
-    line-height: 1.55;
-  }
-
-  .cna-landing__doc-list {
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  .cna-landing__doc-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.25rem;
-    border-radius: 1rem;
-    background: var(--cna-surface);
-    border: 1px solid var(--cna-border);
-    color: var(--cna-text);
-    text-decoration: none;
-    box-shadow: var(--cna-shadow-sm);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  }
-
-  .cna-landing__doc-link:hover {
-    transform: translateX(4px);
-    background: var(--cna-surface-elevated);
-    box-shadow: var(--cna-shadow-md);
-  }
-
-  .cna-landing__doc-label {
-    font-weight: 600;
-    font-size: 0.9375rem;
-  }
-
-  .cna-landing__doc-arrow {
-    color: var(--cna-amber);
-    font-weight: 700;
-  }
-
-  .cna-landing__footer {
-    padding: 2rem 1.5rem;
-    border-top: 1px solid var(--cna-border);
-    text-align: center;
-    color: var(--cna-text-muted);
-    font-size: 0.875rem;
-  }
-
-  .cna-landing__footer a {
-    color: var(--cna-amber-soft);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .cna-landing__footer a:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 640px) {
-    .cna-landing__main {
-      padding: 1.5rem 1rem;
-    }
-
-    .cna-landing__hero {
-      padding: 1.75rem 1rem;
-    }
-
-    .cna-landing__actions {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .cna-landing__button {
-      width: 100%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cna-landing *,
-    .cna-landing *::before,
-    .cna-landing *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-</style>
+    <footer class="cna-landing__footer" style={`--index: ${features.length + 2}`}>
+      <p>
+        Generated with{' '}
+        <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
+          create-awesome-node-app
+        </a>
+      </p>
+    </footer>
+  </div>
+</BaseLayout>

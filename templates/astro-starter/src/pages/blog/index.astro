@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import '../../styles/blog.css';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  title="Blog — <%= projectName %>"
+  description="Sample blog powered by Astro content collections."
+>
+  <div class="blog-page">
+    <div class="blog-page__inner">
+      <nav class="blog-page__nav" aria-label="Site">
+        <a href="/">← Home</a>
+      </nav>
+
+      <h1 class="blog-page__title">Blog</h1>
+      <p class="blog-page__lead">
+        One sample post ships with this starter. Add Markdown files under <code>src/content/blog/</code>.
+      </p>
+
+      <ul class="blog-list">
+        {
+          posts.map((post) => (
+            <li class="blog-list__item">
+              <a href={`/blog/${post.id}`} class="blog-list__link">
+                <h2 class="blog-list__post-title">{post.data.title}</h2>
+                <p class="blog-list__meta">
+                  <time datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                </p>
+                <p class="blog-list__excerpt">{post.data.description}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</BaseLayout>

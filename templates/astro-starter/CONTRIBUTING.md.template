@@ -1,0 +1,89 @@
+# Contributing
+
+Thanks for contributing to a project generated from this Astro starter. Read the README first, then use this guide for day-to-day workflow.
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Project Bootstrap](#project-bootstrap)
+- [Scripts & Tooling](#scripts--tooling)
+- [Architecture Conventions](#architecture-conventions)
+- [Coding Standards](#coding-standards)
+- [Git / Branch Workflow](#git--branch-workflow)
+- [Commit Messages](#commit-messages)
+- [Adding Dependencies](#adding-dependencies)
+- [Testing Strategy](#testing-strategy)
+- [Documentation](#documentation)
+- [Pull Request Checklist](#pull-request-checklist)
+
+## Prerequisites
+
+Install Node **22.14.0** (`fnm use` reads `.node-version`). Run `<%= installCommand%>` after project generation.
+
+## Project Bootstrap
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> dev
+```
+
+Open [http://localhost:4321](http://localhost:4321).
+
+## Scripts & Tooling
+
+| Script | Purpose |
+|--------|---------|
+| `dev` | Astro dev server with hot reload |
+| `build` | Production static build to `dist/` |
+| `preview` | Serve the production build locally |
+| `lint` / `lint:fix` | ESLint (includes Astro files) |
+| `format` | Prettier (includes `.astro` via plugin) |
+| `type-check` | `astro check` |
+
+## Architecture Conventions
+
+Read [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) first.
+
+- Pages in `src/pages/` map to routes
+- Shared shells in `src/layouts/`
+- Markdown content in `src/content/` with schemas in `src/content.config.ts`
+- Prefer static HTML; add framework islands only when needed
+
+## Coding Standards
+
+- TypeScript strict mode — avoid `any` unless justified
+- Validate content frontmatter via Zod in `content.config.ts`
+- Keep components small; use layouts for repeated document structure
+- Accessibility: semantic HTML, alt text, visible focus states
+
+## Git / Branch Workflow
+
+- Branch from `main`: `feat/short-description`
+- Rebase before opening a PR
+
+## Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/): `feat: add changelog collection`, `fix: correct blog slug links`.
+
+## Adding Dependencies
+
+Prefer Astro integrations (`npx astro add …`) for official packages. Document non-obvious dependencies in the PR description.
+
+## Testing Strategy
+
+This starter does **not** include Vitest or Playwright. Add a test runner when you introduce non-trivial logic or interactive islands. Until then, rely on `type-check`, `lint`, and manual QA of `/` and `/blog`.
+
+## Documentation
+
+Update files in `docs/` when you introduce new collections, layouts, or deployment steps.
+
+## Pull Request Checklist
+
+- [ ] Change is scoped and documented
+- [ ] `lint` and `type-check` pass
+- [ ] `build` succeeds
+- [ ] Docs updated if behavior or structure changed
+- [ ] No secrets or `.env` files committed
+
+Happy building!
