@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/cna-landing.css';
 
 const projectName = '<%= projectName %>';
-const pageTitle = `${projectName} - Create Awesome Node App`;
+const pageTitle = projectName + ' - Create Awesome Node App';
 const pageDescription =
   'Content-first Astro starter with layouts, SEO head, and a sample content collection blog.';
 
@@ -86,7 +86,7 @@ const docs = [
         <div class="cna-landing__grid">
           {
             features.map((feature, index) => (
-              <article class="cna-landing__card" style={`--index: ${index + 1}`}>
+              <article class="cna-landing__card" style={"--index: " + String(index + 1)}>
                 <span class="cna-landing__card-icon" aria-hidden="true">
                   {feature.icon}
                 </span>
@@ -98,7 +98,7 @@ const docs = [
         </div>
       </section>
 
-      <section class="cna-landing__docs" style={`--index: ${features.length + 1}`}>
+      <section class="cna-landing__docs" style={"--index: " + String(features.length + 1)}>
         <h2 class="cna-landing__section-title">Next steps</h2>
         <nav class="cna-landing__doc-list" aria-label="Documentation">
           {
@@ -115,7 +115,7 @@ const docs = [
       </section>
     </main>
 
-    <footer class="cna-landing__footer" style={`--index: ${features.length + 2}`}>
+    <footer class="cna-landing__footer" style={"--index: " + String(features.length + 2)}>
       <p>
         Generated with{' '}
         <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">

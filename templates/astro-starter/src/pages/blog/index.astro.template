@@ -1,11 +1,16 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/blog.css';
 
-const posts = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = (
+  await getCollection('blog')
+).filter((post: CollectionEntry<'blog'>) => !post.data.draft)
+  .sort(
+    (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
 ---
 
 <BaseLayout
@@ -25,7 +30,7 @@ const posts = (await getCollection('blog'))
 
       <ul class="blog-list">
         {
-          posts.map((post) => (
+          posts.map((post: CollectionEntry<'blog'>) => (
             <li class="blog-list__item">
               <a href={`/blog/${post.id}`} class="blog-list__link">
                 <h2 class="blog-list__post-title">{post.data.title}</h2>
@@ -38,7 +43,7 @@ const posts = (await getCollection('blog'))
                     })}
                   </time>
                 </p>
-                <p class="blog-list__excerpt">{post.data.description}</p>
+                <p class="blog-list__description">{post.data.description}</p>
               </a>
             </li>
           ))
