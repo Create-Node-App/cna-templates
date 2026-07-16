@@ -1,5 +1,4 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import '../../styles/blog.css';
@@ -7,14 +6,13 @@ import '../../styles/blog.css';
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
 
-  return posts.map((post: CollectionEntry<'blog'>) => ({
+  return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
   }));
 }
 
-type Props = { post: CollectionEntry<'blog'> };
-const { post } = Astro.props as Props;
+const { post } = Astro.props;
 const { Content } = await render(post);
 const pageTitle = post.data.title + ' — <%= projectName %>';
 ---
