@@ -18,7 +18,7 @@ Thanks for contributing to a project generated from this Astro starter. Read the
 
 ## Prerequisites
 
-Install Node **22.14.0** (`fnm use` reads `.node-version`). Run `<%= installCommand%>` after project generation.
+Install Node **22.22.0** (`fnm use` reads `.node-version`). Run `<%= installCommand%>` after project generation.
 
 ## Project Bootstrap
 

@@ -32,7 +32,7 @@ const posts = (
         {
           posts.map((post: CollectionEntry<'blog'>) => (
             <li class="blog-list__item">
-              <a href={`/blog/${post.id}`} class="blog-list__link">
+              <a href={"/blog/" + post.id} class="blog-list__link">
                 <h2 class="blog-list__post-title">{post.data.title}</h2>
                 <p class="blog-list__meta">
                   <time datetime={post.data.pubDate.toISOString()}>
