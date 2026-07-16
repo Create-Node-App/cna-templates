@@ -19,12 +19,18 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
    <%= installCommand%>
    ```
 
-2. **Run Tests**
+2. **Configure environment (optional)**
    ```bash
-   # Run tests locally
-   <%= runCommand%> test:local
+   cp .env.example .env
+   ```
 
-   # Run tests remotely
+3. **Run Tests**
+   ```bash
+   # Default: run tests locally
+   <%= runCommand%> test
+
+   # Explicit local or remote
+   <%= runCommand%> test:local
    <%= runCommand%> test:remote
    ```
 
@@ -41,21 +47,30 @@ Detailed documentation is available in the `docs/` directory:
 
 | Script | Description |
 |--------|-------------|
-| `test:local` | Run tests locally |
-| `test:remote` | Run tests using Selenoid |
+| `test` | Run tests locally (alias for `test:local`) |
+| `test:local` | Run tests against local Selenium |
+| `test:remote` | Run tests using Selenoid / remote grid |
+| `test:ci` | CI entry point (remote mode; use in pipelines) |
+| `test:unit` | Run unit tests for bin helpers |
 | `selenoid` | Manage Selenoid instance |
 
 ## Environment Variables
 
+Copy [`.env.example`](./.env.example) to `.env` and adjust as needed. Key variables:
+
 | Variable | Description |
 |----------|-------------|
+| `MODE` | Execution mode: `local` or `remote` |
+| `BASE_URL` | Application URL under test |
+| `SELENIUM_HUB_HOST` | Selenoid / grid host (remote mode) |
+| `SELENIUM_HUB_PORT` | Selenoid / grid port (remote mode) |
 | `CHROME` | Number of Chrome instances |
 | `FIREFOX` | Number of Firefox instances |
 | `SAFARI` | Number of Safari instances |
 | `BROWSER_VISIBLE` | Run browsers in visible mode |
 | `MAX_INSTANCES` | Maximum number of concurrent instances |
 
-For more details, see [Test Configuration](./docs/TEST_CONFIGURATION.md).
+For the full list, see [`.env.example`](./.env.example) and [Test Configuration](./docs/TEST_CONFIGURATION.md).
 
 ## Contributing
 
