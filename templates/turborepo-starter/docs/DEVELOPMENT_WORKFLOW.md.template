@@ -40,7 +40,7 @@ This document outlines the development workflow and best practices for working w
 | `lint`      | Run linting across all packages                              |
 | `format`    | Format all files with Prettier                               |
 | `storybook` | Start the Storybook playground                               |
-| `clean`     | Clean all build artifacts (per-package, when defined)        |
+| `clean`     | Optional per-package clean scripts (not defined at root)     |
 
 ### Package Level Scripts
 

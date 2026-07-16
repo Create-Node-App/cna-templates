@@ -7,5 +7,15 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./setupTests.ts'],
     include: ['**/*.{test,spec}.{ts,tsx}'],
+    deps: {
+      optimizer: {
+        web: {
+          include: ['react', 'react-dom', 'react-dom/client'],
+        },
+      },
+    },
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom'],
   },
 });
