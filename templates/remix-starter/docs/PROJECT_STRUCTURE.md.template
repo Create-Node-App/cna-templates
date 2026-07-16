@@ -1,0 +1,98 @@
+# 🗄️ Project Structure
+
+This project follows a **route-centric, feature-based** layout. React Router v7 maps URLs to route modules under `<%= srcDir %>/routes/`, while business logic lives in colocated **features** that routes import through a public API.
+
+## Architecture Overview
+
+```sh
+<%= srcDir %>
+|
++-- routes/              # Route modules (loaders, actions, UI)
+|   +-- _index.tsx       # Landing route
+|   +-- contact.tsx      # Loader + action demo
+|
++-- routes.ts            # Route config (file → URL mapping)
+|
++-- root.tsx             # Document shell, global ErrorBoundary
+|
++-- features/            # Feature modules (business capabilities)
+|   +-- _feature-template_/
+|
++-- styles/              # Shared stylesheets
+|
++-- types/               # Ambient type declarations
+```
+
+## Route Modules
+
+Each file in `<%= srcDir %>/routes/` is a **route module**. Export the pieces React Router needs:
+
+| Export | Purpose |
+|--------|---------|
+| `default` | Route component (UI) |
+| `loader` | Read data on the server before render |
+| `action` | Handle form POST / mutations |
+| `meta` | Document `<title>`, Open Graph tags |
+| `ErrorBoundary` | Route-scoped error UI (optional) |
+
+Routes stay thin: fetch and mutate in `loader` / `action`, delegate rendering to feature components when logic grows.
+
+```typescript
+// ✅ Good — route orchestrates, feature owns UI
+import { ContactForm } from '<%= projectImportPath %>features/contact';
+
+export async function loader() { /* ... */ }
+export async function action({ request }) { /* ... */ }
+
+export default function ContactRoute() {
+  return <ContactForm />;
+}
+```
+
+## Feature Modules
+
+Features group code around a business capability. See `<%= srcDir %>/features/_feature-template_/` for the starter layout.
+
+```sh
+<%= srcDir %>/features/awesome-feature
+|
++-- components/    # UI used only in this feature
++-- hooks/         # Feature hooks
++-- services/      # Server/client helpers
++-- types/         # Feature types
++-- index.ts       # Public API — only import from here
+```
+
+### Public API
+
+```typescript
+// ✅ Good
+import { ExampleWidget } from '<%= projectImportPath %>features/awesome-feature';
+
+// ❌ Bad — bypasses the feature boundary
+import { ExampleWidget } from '<%= projectImportPath %>features/awesome-feature/components/ExampleWidget';
+```
+
+Optional ESLint enforcement:
+
+```js
+{
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      { patterns: ['<%= projectImportPath %>features/*/*'] },
+    ],
+  },
+}
+```
+
+## Import Aliases
+
+TypeScript resolves `~/*` and `<%= projectImportPath %>*` to `<%= srcDir %>/*` (see [tsconfig.json](../tsconfig.json)). React Router's `appDirectory` is set to `<%= srcDir %>` in [react-router.config.ts](../react-router.config.ts).
+
+## Benefits
+
+1. **Screaming architecture** — URLs and folders reflect product areas
+2. **SSR-first** — loaders run on the server; HTML ships with data
+3. **Colocation** — data loading sits next to the route that needs it
+4. **Feature isolation** — teams can own modules without entangling routes

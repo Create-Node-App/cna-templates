@@ -156,13 +156,14 @@ Remove extensions one at a time until the project passes. Then fix the last remo
 ### 5.1 Adding a template
 
 1. Create `templates/<directory>/`.
-2. Add `package/index.js` (and optionally `dependencies.js`/`devDependencies.js`).
+2. Add `package/index.js` (and optionally `dependencies.js`/`devDependencies.js`), **or** an intentional static `package.json` (Next.js-style showcases). Prefer `package/index.js` for new starters.
 3. Add source files and `.template` files.
 4. Add `cna.config.json` with `customOptions` if interactive prompts are needed.
-5. Add an entry to `templates.json` under `templates`.
-6. Ensure the entry point matches the directory structure.
-7. Run local validation against the new template.
-8. Run the full matrix after merge.
+5. Meet the **M1 maturity bar** in [§11](#11-template-maturity-m1--m2--m3) before merge (docs, DX, honest scripts, landing integrity).
+6. Add an entry to `templates.json` under `templates`.
+7. Ensure the entry point matches the directory structure.
+8. Run local validation against the new template.
+9. Run the full matrix after merge.
 
 ### 5.2 Directory naming caveat
 
@@ -287,5 +288,84 @@ If any step fails, fix the template or extension, then regenerate from scratch. 
 - [ ] `incompatibleWith` is defined for mutually exclusive extensions.
 - [ ] `.npmrc` is added if peer-dependency conflicts exist.
 - [ ] `.template` files use available EJS variables.
+- [ ] **M1 maturity** criteria in [§11](#11-template-maturity-m1--m2--m3) are met for **new** templates. Existing thin starters may merge only with an uplift issue linked until they reach M1.
 - [ ] Local validation passes.
 - [ ] Full matrix worst case (all compatible extensions) is tested for risky changes.
+
+---
+
+## 11. Template maturity (M1 / M2 / M3)
+
+New templates must not ship as thin `create-<framework>` shells. Use this bar so every starter adds **differential CNA value**.
+
+**Gold references (M1/M2):** [`templates/react-vite-starter`](../templates/react-vite-starter/), [`templates/nextjs-starter`](../templates/nextjs-starter/)  
+**Flagship ceiling (M3 — not required for new starters):** [`templates/nextjs-saas-ai-starter`](../templates/nextjs-saas-ai-starter/)
+
+### 11.1 Maturity tiers
+
+| Tier | Intent | Examples |
+|---|---|---|
+| **M1 — Mature scaffold** | Opinionated layout, full docs, real DX tooling, honest README, CNA first-run UX | `react-vite-starter` |
+| **M2 — Full-stack / domain baseline** | M1 + sample feature, env validation, richer API/testing docs | `nextjs-starter` (+ Nest after polish) |
+| **M3 — Flagship product** | Multi-domain product (auth, DB, tenancy, CI baked in) | `nextjs-saas-ai-starter` only |
+
+### 11.2 M1 checklist (required for smoke-matrix starters)
+
+#### A — CNA plumbing
+
+- [ ] Registry entry complete (`name`, `slug`, `description`, `url`, `type`, `category`, `labels`).
+- [ ] `package/index.js` (+ optional dep helpers) **or** intentional static `package.json`.
+- [ ] `.template` / `.append` / `[bracket]/` used correctly; EJS vars only from the documented set.
+- [ ] Local validation (§9) passes: install → format → lint → type-check → build.
+
+#### B — Docs suite
+
+- [ ] `docs/README.md` indexes the suite.
+- [ ] Core docs present (adapt names for backend/test harnesses): structure, configuration, and domain guides as applicable.
+- [ ] `README.md.template`, `CONTRIBUTING.md.template`, `AGENTS.md` or `AGENTS.md.template`.
+- [ ] **Landing / README CTAs must not link to missing files** (including after stripping `.template`). See [DEFAULT_LANDING_GUIDE.md](./DEFAULT_LANDING_GUIDE.md).
+
+#### C — Architecture
+
+- [ ] Opinionated layout (e.g. `features/`, Nest modules, RR7 routes, Astro `src/pages` + layouts).
+- [ ] Feature / module scaffold (`_feature-template_`, `_module-template_`, or documented equivalent).
+
+#### D — DX tooling
+
+- [ ] TypeScript strict + path alias when relevant.
+- [ ] **Real** ESLint flat config (`lint` must not be an `echo` stub).
+- [ ] Prettier + `.editorconfig` + `.node-version`.
+- [ ] Core scripts: `dev` (or harness equivalent), `build`, `lint`, `lint:fix`, `type-check`, `format`.
+
+#### E — First-run UX
+
+- [ ] UI templates: CNA default landing per [DEFAULT_LANDING_GUIDE.md](./DEFAULT_LANDING_GUIDE.md).
+- [ ] API / non-UI templates: branded README + health (or equivalent) endpoint.
+
+#### F — Env
+
+- [ ] `.env.example` with documented variables (even if empty of secrets).
+- [ ] Server templates should validate env (Zod, Nest Config, t3-env, etc.) at M2; M1 at least documents vars.
+
+#### G — Honesty
+
+- [ ] Every script listed in README exists in `package.json` / `package/index.js`.
+- [ ] Tests either ship in-template **or** are clearly extension-only — never advertise fake `test` scripts.
+
+#### H — Extension seams
+
+- [ ] Documented hooks for the template `type` (providers, middleware handlers, global CSS, etc.).
+
+### 11.3 Hard rules (CI / review blockers)
+
+1. **No dead doc links** from landing pages or README to paths that do not exist in the template tree (treat `FOO.md.template` as satisfying `FOO.md`).
+2. **No stub lint/test scripts** that always succeed or always fail without doing work.
+3. **Do not require M3** for new starters. Prefer M1; add M2 when the stack benefits from a sample domain feature.
+
+### 11.4 Related automation
+
+- Soft dependency warnings: `scripts/check-dependencies.js`
+- Registry validation: `scripts/validate-templates.js`
+- Prefer adding CI integrity checks (dead landing doc links, `shared/assets` drift) rather than relying on manual review alone.
+
+Track uplift work under [#290](https://github.com/Create-Node-App/cna-templates/issues/290).

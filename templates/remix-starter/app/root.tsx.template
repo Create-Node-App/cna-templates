@@ -1,6 +1,6 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from 'react-router';
 
-import "./styles/landing.css";
+import './styles/landing.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,4 +23,32 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function Root() {
   return <Outlet />;
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  let title = 'Unexpected error';
+  let message = 'Something went wrong. Try refreshing the page.';
+
+  if (isRouteErrorResponse(error)) {
+    title = String(error.status) + ' ' + String(error.statusText);
+    message = typeof error.data === 'string' ? error.data : message;
+  } else if (error instanceof Error) {
+    message = error.message;
+  }
+
+  return (
+    <main className="cna-landing cna-landing--remix">
+      <div className="cna-landing__main" style={{ maxWidth: '42rem', margin: '0 auto', padding: '4rem 1.5rem' }}>
+        <span className="cna-landing__eyebrow">ErrorBoundary</span>
+        <h1 className="cna-landing__title">{title}</h1>
+        <p className="cna-landing__lead">{message}</p>
+        <div className="cna-landing__actions">
+          <a href="/" className="cna-landing__button cna-landing__button--primary">
+            Back home
+          </a>
+        </div>
+      </div>
+    </main>
+  );
 }

@@ -1,0 +1,86 @@
+# Contributing
+
+Thanks for contributing to this React Router v7 project. This document is the human entry point after the README.
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Project Bootstrap](#project-bootstrap)
+- [Scripts & Tooling](#scripts--tooling)
+- [Architecture Conventions](#architecture-conventions)
+- [Coding Standards](#coding-standards)
+- [Git / Branch Workflow](#git--branch-workflow)
+- [Commit Messages](#commit-messages)
+- [Adding Dependencies](#adding-dependencies)
+- [Documentation](#documentation)
+- [Pull Request Checklist](#pull-request-checklist)
+
+## Prerequisites
+
+Install Node **v22.14.0** (`fnm use` reads `.node-version`). Run `<%= installCommand%>` after project generation.
+
+## Project Bootstrap
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## Scripts & Tooling
+
+| Script | Purpose |
+|--------|---------|
+| `<%= runCommand%> dev` | Development server |
+| `<%= runCommand%> build` | Production build |
+| `<%= runCommand%> start` | Serve production output |
+| `<%= runCommand%> lint` | ESLint |
+| `<%= runCommand%> lint:fix` | ESLint with autofix |
+| `<%= runCommand%> format` | Prettier |
+| `<%= runCommand%> type-check` | TypeScript |
+
+## Architecture Conventions
+
+Read [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) first.
+
+- **Routes** — `<%= srcDir %>/routes/*.tsx` export `loader`, `action`, and UI
+- **Features** — `<%= srcDir %>/features/<domain>/` with a public `index.ts`
+- **Config** — `react-router.config.ts` sets `appDirectory` to `<%= srcDir %>`
+
+See `<%= srcDir %>/features/_feature-template_/` when adding a new feature module.
+
+## Coding Standards
+
+- TypeScript strict typing — avoid `any` unless justified
+- Server data in loaders/actions, not ad-hoc `useEffect` fetches
+- Use `<Link>` and `<Form>` from `react-router` for in-app navigation and mutations
+- Accessibility: labels, roles, and focus management on interactive UI
+
+## Git / Branch Workflow
+
+- Branch from `main`: `feat/short-description`
+- Rebase before opening a PR
+
+## Commit Messages
+
+Follow Conventional Commits: `feat: add contact route action`, `fix: handle loader error`.
+
+## Adding Dependencies
+
+Prefer React Router built-ins before new libraries. Document rationale in the PR if adding.
+
+## Documentation
+
+Update `docs/` when introducing new architectural patterns or tooling.
+
+## Pull Request Checklist
+
+- [ ] Feature / fix scoped & documented
+- [ ] Lint + type-check + build pass
+- [ ] Loaders/actions typed where applicable
+- [ ] Updated docs if needed
+- [ ] No unused or dead code
+
+Happy hacking!

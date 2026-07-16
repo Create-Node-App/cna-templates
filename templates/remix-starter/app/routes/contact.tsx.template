@@ -1,0 +1,121 @@
+import type { Route } from './+types/contact';
+import { Form, Link, useActionData, useLoaderData } from 'react-router';
+
+import '../styles/contact.css';
+
+type Message = {
+  id: string;
+  name: string;
+  email: string;
+  body: string;
+  createdAt: string;
+};
+
+const messages: Message[] = [];
+
+export async function loader() {
+  return { messages: [...messages].reverse() };
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const name = String(formData.get('name') ?? '').trim();
+  const email = String(formData.get('email') ?? '').trim();
+  const body = String(formData.get('body') ?? '').trim();
+
+  const errors: Record<string, string> = {};
+  if (!name) errors.name = 'Name is required';
+  if (!email) errors.email = 'Email is required';
+  else if (!email.includes('@')) errors.email = 'Enter a valid email';
+  if (!body) errors.body = 'Message is required';
+
+  if (Object.keys(errors).length > 0) {
+    return { ok: false as const, errors, values: { name, email, body } };
+  }
+
+  messages.push({
+    id: crypto.randomUUID(),
+    name,
+    email,
+    body,
+    createdAt: new Date().toISOString(),
+  });
+
+  return { ok: true as const, errors: null, values: { name: '', email: '', body: '' } };
+}
+
+export default function ContactRoute() {
+  const { messages: loadedMessages } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  const values = actionData?.values ?? { name: '', email: '', body: '' };
+  const errors = actionData?.errors ?? {};
+
+  return (
+    <div className="cna-contact">
+      <header className="cna-contact__header">
+        <Link to="/" className="cna-contact__back">
+          ← Home
+        </Link>
+        <h1 className="cna-contact__title">Contact demo</h1>
+        <p className="cna-contact__lead">
+          This route uses a <code>loader</code> to read messages and an <code>action</code> to handle the form POST.
+          Data is stored in memory for demonstration only.
+        </p>
+      </header>
+
+      <div className="cna-contact__grid">
+        <section className="cna-contact__panel" aria-labelledby="contact-form-heading">
+          <h2 id="contact-form-heading">Send a message</h2>
+          {actionData?.ok && <p className="cna-contact__success">Message received — loader revalidated.</p>}
+          <Form method="post" className="cna-contact__form">
+            <label className="cna-contact__field">
+              <span>Name</span>
+              <input name="name" type="text" defaultValue={values.name} aria-invalid={Boolean(errors.name)} />
+              {errors.name && <span className="cna-contact__error">{errors.name}</span>}
+            </label>
+            <label className="cna-contact__field">
+              <span>Email</span>
+              <input name="email" type="email" defaultValue={values.email} aria-invalid={Boolean(errors.email)} />
+              {errors.email && <span className="cna-contact__error">{errors.email}</span>}
+            </label>
+            <label className="cna-contact__field">
+              <span>Message</span>
+              <textarea name="body" rows={4} defaultValue={values.body} aria-invalid={Boolean(errors.body)} />
+              {errors.body && <span className="cna-contact__error">{errors.body}</span>}
+            </label>
+            <button type="submit" className="cna-contact__submit">
+              Submit
+            </button>
+          </Form>
+        </section>
+
+        <section className="cna-contact__panel" aria-labelledby="contact-list-heading">
+          <h2 id="contact-list-heading">Recent messages ({loadedMessages.length})</h2>
+          {loadedMessages.length === 0 ? (
+            <p className="cna-contact__empty">No messages yet — submit the form to populate the loader.</p>
+          ) : (
+            <ul className="cna-contact__list">
+              {loadedMessages.map((message) => (
+                <li key={message.id} className="cna-contact__item">
+                  <strong>{message.name}</strong>
+                  <span className="cna-contact__meta">{message.email}</span>
+                  <p>{message.body}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <div className="cna-contact cna-contact--error">
+      <h1>Contact route error</h1>
+      <p>This route-level ErrorBoundary caught an error in the contact module.</p>
+      <Link to="/">Back home</Link>
+    </div>
+  );
+}
