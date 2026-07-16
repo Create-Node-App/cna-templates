@@ -2,7 +2,7 @@
 
 Welcome — this is a **Hono API** scaffolded with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
 
-A lean TypeScript HTTP service for edge, serverless, or small APIs. No fake web UI — start the server and call the routes.
+Opinionated TypeScript HTTP service for edge, serverless, or small Node APIs: modular routes, Zod env validation, JSON errors, and Vitest smoke tests.
 
 Browse templates and extensions: [create-awesome-node-app.vercel.app](https://create-awesome-node-app.vercel.app)
 
@@ -20,6 +20,7 @@ The server starts on [http://localhost:3000](http://localhost:3000).
 - `<%= runCommand %> dev` — development server with hot reload
 - `<%= runCommand %> build` — compile TypeScript
 - `<%= runCommand %> start` — production server
+- `<%= runCommand %> test` — Vitest suite
 - `<%= runCommand %> format` — format with Prettier
 - `<%= runCommand %> lint` — lint with ESLint
 - `<%= runCommand %> type-check` — TypeScript type checking
@@ -28,3 +29,16 @@ The server starts on [http://localhost:3000](http://localhost:3000).
 
 - `GET /` — welcome message
 - `GET /health` — health check
+- `POST /echo` — Zod-validated echo (`{ "message": "..." }`)
+
+## Docs
+
+- [Project overview](./docs/README.md)
+- [Project structure](./docs/PROJECT_STRUCTURE.md)
+- [API](./docs/API.md)
+- [Configuration](./docs/CONFIGURATION.md)
+- [Testing](./docs/TESTING.md)
+
+## Compatible extensions
+
+`github-setup`, `husky-lint-staged`, and `development-container` work well with this template. Reach for NestJS when you need a larger modular framework.
