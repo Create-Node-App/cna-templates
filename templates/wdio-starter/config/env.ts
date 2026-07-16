@@ -16,14 +16,14 @@ export type WebDriverLogTypes = WebdriverIO.Config['logLevel'];
  * `ExecutionMode` is a sum type that defines the possible execution modes to use.
  * Each execution mode is related with the file `config/wdio.${mode}.conf.ts`.
  */
-export type ExecutionMode = 'docker' | 'remote' | 'local';
+export type ExecutionMode = 'remote' | 'local';
 
 /**
  * `EXECUTION_MODES` list of possible execution modes.
  *
  * @type {ExecutionMode[]}
  */
-export const EXECUTION_MODES: ExecutionMode[] = ['docker', 'remote', 'local'];
+export const EXECUTION_MODES: ExecutionMode[] = ['remote', 'local'];
 
 /**
  * `getExecutionMode` is a function that returns the correct mode to use based on
@@ -37,11 +37,6 @@ export const getExecutionMode = (): ExecutionMode => {
   const executionMode = EXECUTION_MODES.includes(process.env.MODE as never)
     ? (process.env.MODE as ExecutionMode)
     : 'local';
-
-  if (executionMode === 'docker') {
-    console.warn('Execution mode with Docker Service is not supported yet. Will use `local` mode instead');
-    return 'local';
-  }
 
   return executionMode;
 };

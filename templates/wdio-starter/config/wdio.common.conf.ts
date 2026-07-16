@@ -31,10 +31,4 @@ export const config: Partial<WebdriverIO.Config> = {
       await browser.takeScreenshot();
     }
   },
-  onComplete: function () {
-    console.log('// Test execution has completed //');
-  },
-  onPrepare: async function () {
-    console.log('// Test execution has started //');
-  },
 };

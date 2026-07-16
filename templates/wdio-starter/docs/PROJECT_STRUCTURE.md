@@ -15,7 +15,7 @@ wdio-starter/
 │   ├── pageobjects/      # Page Object Models
 │   └── support/          # Support files and utilities
 ├── .babelrc              # Babel configuration
-├── .eslintrc.js          # ESLint configuration
+├── eslint.config.mjs     # ESLint flat configuration
 ├── .prettierrc           # Prettier configuration
 ├── tsconfig.json         # TypeScript configuration
 └── package.json          # Project dependencies and scripts
