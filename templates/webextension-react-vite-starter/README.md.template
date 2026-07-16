@@ -28,6 +28,7 @@ You can find useful information such as project structure, available scripts and
 - [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
 - [prettier](https://prettier.io/) - Opinionated code formatter
 - [web-ext](https://www.npmjs.com/package/web-ext) - A command line tool to help build, run, and test web extensions
+- [Vitest](https://vitest.dev/) - Unit tests with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 
 ## Quickstart
 
@@ -54,7 +55,7 @@ While developing, you will probably rely mostly on `<%= runCommand%> start`; how
 | `<%= runCommand%> <script>` | Description                                                                                                             |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `dev`                       | Serves your app at for local development                                                                                |
-| `test`                      | Runs unit tests with Jest. See [testing](#testing)                                                                      |
+| `test`                      | Runs unit tests with Vitest. See [testing](#testing)                                                                    |
 | `test:watch`                | Runs `test` in watch mode to re-run tests when changed                                                                  |
 | `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
 | `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
@@ -67,6 +68,21 @@ Available scripts:
 | `<%= runCommand%> <script>` | Description                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `build`                     | Builds the application to `dist/`                                                                           |
+
+## Testing
+
+Unit tests use [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). Extension APIs such as `browser.storage` and `browser.runtime` are mocked in `vitest.setup.ts`.
+
+```sh
+<%= runCommand%> test
+<%= runCommand%> test:watch
+```
+
+The starter includes a sample test for the options page. Add browser-level integration tests separately when you need to exercise real extension contexts.
+
+## Messaging
+
+Popup ↔ background communication uses typed messages in `<%= srcDir%>/shared/messages.ts`. The background service worker registers a listener in `<%= srcDir%>/background/messageHandler.ts`. Use the popup's **Ping background** button to try the sample flow.
 
 ## Contributing
 

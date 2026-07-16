@@ -1,8 +1,102 @@
-.OptionsContainer {
-  width: 100%;
-  height: 50vh;
+.options {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0f172a;
+}
+
+.options__header {
+  margin-bottom: 2rem;
+}
+
+.options__eyebrow {
+  margin: 0 0 0.35rem;
+  color: #b45309;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.options__title {
+  margin: 0 0 0.75rem;
   font-size: 2rem;
+}
+
+.options__lead {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.options__lead code {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.options__form {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.options__field {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.options__field input {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  font: inherit;
+}
+
+.options__checkbox {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.65rem;
+  font-weight: 600;
+}
+
+.options__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.options__button {
+  justify-self: start;
+  min-height: 42px;
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f59e0b, #0d9488);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.options__button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.options__status {
+  margin: 0;
+  color: #475569;
+}
+
+.options__status--success {
+  color: #047857;
+}
+
+.options__status--error {
+  color: #b91c1c;
 }

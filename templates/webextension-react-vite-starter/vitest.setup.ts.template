@@ -1,0 +1,24 @@
+import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
+
+vi.mock('webextension-polyfill', () => ({
+  default: {
+    storage: {
+      sync: {
+        get: vi.fn().mockResolvedValue({}),
+        set: vi.fn().mockResolvedValue(undefined),
+      },
+      local: {
+        get: vi.fn().mockResolvedValue({}),
+        set: vi.fn().mockResolvedValue(undefined),
+      },
+    },
+    runtime: {
+      sendMessage: vi.fn(),
+      onMessage: {
+        addListener: vi.fn(),
+      },
+      openOptionsPage: vi.fn(),
+    },
+  },
+}));

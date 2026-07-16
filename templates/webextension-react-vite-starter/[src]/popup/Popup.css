@@ -96,3 +96,26 @@
   cursor: not-allowed;
   filter: none;
 }
+
+.popup__button--secondary {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--popup-text);
+  border: 1px solid var(--popup-border);
+}
+
+.popup__feedback {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.85rem;
+  line-height: 1.5;
+}
+
+.popup__feedback--success {
+  background: rgba(13, 148, 136, 0.16);
+  color: #99f6e4;
+}
+
+.popup__feedback--error {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fecaca;
+}

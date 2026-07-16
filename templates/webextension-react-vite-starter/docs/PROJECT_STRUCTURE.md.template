@@ -23,6 +23,8 @@ Most of the code lives in the `src` and `.webext-config` folders. The `src` fold
 |
 +-- panel # panel scripts
 |
++-- shared # cross-context helpers (settings, typed messages)
+|
 +-- popup # popup scripts
 ```
 
@@ -57,6 +59,10 @@ The `options` folder contains the options scripts. The options scripts are injec
 ## 📦 Panel
 
 The `panel` folder contains the panel scripts. The panel scripts are injected into the panel page. They can be used to listen for events and to send messages to the background script.
+
+## 📦 Shared
+
+The `shared` folder contains helpers used across extension contexts, such as typed runtime messages and `browser.storage` settings helpers.
 
 ## 📦 Popup
 

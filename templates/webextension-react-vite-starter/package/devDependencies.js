@@ -1,5 +1,7 @@
 module.exports = {
   '@eslint/js': '^9.39.4',
+  '@testing-library/jest-dom': '^6.9.1',
+  '@testing-library/react': '^16.3.2',
   '@types/node': '^26.1.0',
   '@types/react': '^19.2.17',
   '@types/react-dom': '^19.2.3',
@@ -12,6 +14,7 @@ module.exports = {
   'eslint-plugin-jsx-a11y': '^6.10.2',
   'eslint-plugin-prettier': '^5.5.6',
   'identity-obj-proxy': '^3.0.0',
+  jsdom: '^26.1.0',
   'npm-run-all': '^4.1.5',
   prettier: '^3.9.4',
   sass: '^1.101.0',
@@ -19,6 +22,7 @@ module.exports = {
   typescript: '^6.0.3',
   'typescript-eslint': '^8.62.1',
   vite: '^6.4.3',
+  vitest: '^3.2.4',
   'vite-plugin-eslint': '^1.8.1',
   'web-ext': '^9.4.0',
   ws: '^8.18.0',

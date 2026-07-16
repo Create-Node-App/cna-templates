@@ -23,6 +23,8 @@ export default [
       'release',
       'electron',
       'postcss.config.js',
+      'vitest.config.ts',
+      'vitest.setup.ts',
     ],
   },
   {
