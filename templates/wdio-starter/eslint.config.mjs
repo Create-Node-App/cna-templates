@@ -3,7 +3,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['node_modules', 'tools', 'reports', 'allure-results', 'allure-report', 'docs', '.vscode', 'wdio.conf.js'],
+    ignores: ['node_modules', 'tools', 'reports', 'allure-results', 'allure-report', 'docs', '.vscode', 'wdio.conf.js', 'types/'],
   },
   ...tseslint.configs.recommended,
   eslintConfigPrettier,
