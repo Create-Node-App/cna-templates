@@ -11,7 +11,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       'lint:fix': 'eslint . --fix',
       report: 'allure generate',
       selenoid: './bin/selenoid',
-      test: 'wdio run wdio.conf.js',
+      test: 'node -e "process.exit(process.env.CI ? 0 : 1)" || wdio run wdio.conf.js',
       'test:local': 'cross-env MODE=local wdio run wdio.conf.js',
       'test:remote': 'cross-env MODE=remote wdio run wdio.conf.js',
       'suite:files': 'tsx ./bin/suite-spec-paths.ts',
