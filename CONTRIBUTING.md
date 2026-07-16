@@ -26,9 +26,12 @@ For a full explanation of how templates, extensions, and the file system work, r
 ## Adding a template
 
 1. Create `templates/<your-slug>/`
-2. Set up `package/index.js`, `package/dependencies.js`, `package/devDependencies.js`
+2. Set up `package/index.js`, `package/dependencies.js`, `package/devDependencies.js` (preferred) — or a deliberate static `package.json`
 3. Add project files with the appropriate suffixes
-4. Register it in `templates.json` under `"templates"` (same fields as extension, plus optional `customOptions`)
+4. Meet the **M1 maturity checklist** in [docs/MAINTENANCE_TEMPLATES.md §11](./docs/MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) (docs suite, real lint, honest scripts, landing integrity)
+5. Register it in `templates.json` under `"templates"` (same fields as extension; put interactive prompts in `cna.config.json`, not the registry)
+
+For a full explanation of how templates, extensions, and the file system work, read [docs/AUTHORING.md](./docs/AUTHORING.md).
 
 ## Commit messages
 
@@ -36,11 +39,12 @@ Use [conventional commits](https://www.conventionalcommits.org/): `feat:`, `fix:
 
 ## PR checklist
 
-- [ ] Directory name matches the `slug` in `templates.json`
+- [ ] Directory name matches the `slug` in `templates.json` (or the `url` path if they intentionally differ — see [MAINTENANCE_TEMPLATES.md](./docs/MAINTENANCE_TEMPLATES.md#52-directory-naming-caveat))
 - [ ] `url` points to the correct path on the `main` branch
 - [ ] `slug` is globally unique across templates and extensions
 - [ ] All required fields present: `name`, `slug`, `description`, `url`, `type`, `category`, `labels`
 - [ ] Extension `type` is an array if it supports multiple template types
+- [ ] New/updated templates meet [M1 maturity](./docs/MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) (or link an uplift issue)
 - [ ] Tested locally — see [docs/TESTING.md](./docs/TESTING.md)
 
 ## Questions?
