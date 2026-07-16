@@ -26,7 +26,7 @@ These fields are defined in `.env.example` and validated in `src/config/env.sche
 | `NODE_ENV` | No | `development` | `development`, `test`, or `production` |
 | `PORT` | No | `3000` | HTTP listen port (positive integer) |
 | `APP_NAME` | No | `NestJS API` | Application name (used in Swagger title) |
-| `LOG_LEVEL` | No | `debug` | `debug`, `info`, `warn`, or `error` |
+| `LOG_LEVEL` (validated; wire Nest Logger levels as needed) | No | `debug` | `debug`, `info`, `warn`, or `error` |
 | `DATABASE_URL` | No | — | PostgreSQL connection URL (when you add a database) |
 | `JWT_SECRET` | No | — | Signing secret (when you add auth) |
 | `JWT_EXPIRATION` | No | — | Token lifetime in seconds |
@@ -88,3 +88,7 @@ Keep validation rules close to the schema so `.env.example` and runtime checks s
 
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) — Where config files live
 - [API.md](./API.md) — Swagger and HTTP surface
+
+## Notes
+
+- `LOG_LEVEL` is validated at boot. Application loggers may still use Nest defaults until you wire `Logger` levels explicitly.
