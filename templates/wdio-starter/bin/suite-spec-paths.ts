@@ -25,7 +25,16 @@ if (!suite) {
   process.exit(0);
 }
 
-const suiteChunk = getSuiteSpecFiles(suite);
+const specs: string[] = [];
+for (const entry of suite) {
+  if (Array.isArray(entry)) {
+    specs.push(...entry);
+  } else {
+    specs.push(entry);
+  }
+}
+
+const suiteChunk = getSuiteSpecFiles(specs);
 
 for (const spec of suiteChunk) {
   console.log(spec);

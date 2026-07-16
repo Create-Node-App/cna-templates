@@ -157,7 +157,7 @@ export const getCapabilityMaxInstances = (capabilityName: DisaredCapabilityName)
  *
  * @returns Partial<WebDriver.DesiredCapabilities> - options override for capabilities
  */
-export const getCapabilityOptionsOverride = (): Partial<WebDriver.DesiredCapabilities> =>
+export const getCapabilityOptionsOverride = (): Partial<WebdriverIO.Capabilities> =>
   getExecutionMode() === 'local'
     ? {}
     : {
