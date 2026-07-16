@@ -8,7 +8,7 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
     description: 'An Astro site created by create-awesome-node-app',
     type: 'module',
     engines: {
-      node: '22.14.0',
+      node: '>=22.22.0',
     },
     scripts: {
       dev: 'astro dev',
