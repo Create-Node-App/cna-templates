@@ -1,4 +1,4 @@
-const tsConfig = require('eslint-config-ts');
+const tsConfig = require('<%= scope%>eslint-config-ts');
 const nextPlugin = require('@next/eslint-plugin-next');
 
 module.exports = [

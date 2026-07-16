@@ -1,7 +1,10 @@
 module.exports = function resolvePackage(_setup, { appName, usePnpm, scope }) {
   // customOptions (e.g. scope) are passed on the second argument by CNA core,
   // not on the first mergedSetup object from template.json.
-  const packageScope = typeof scope === 'string' ? scope : '';
+  // Non-interactive scaffolds do not always apply cna.config.json `initial`,
+  // so default to `@app/` to match workspace package names.
+  const packageScope =
+    typeof scope === 'string' && scope.trim() !== '' ? scope : '@app/';
   const eslintConfigBaseName = `${packageScope}eslint-config-base`;
   const packageJson = {
     name: appName,
