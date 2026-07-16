@@ -1,4 +1,4 @@
-const driverOpts = {
+const driverOpts: Record<string, any> = {
   drivers: {
     chromiumedge: {
       version: 'latest',
