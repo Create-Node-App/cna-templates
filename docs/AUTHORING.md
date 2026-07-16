@@ -99,3 +99,14 @@ Define them in `cna.config.json` at the root of the template directory:
 
 > `cna.config.json` is co-located with the template so it works with both slug resolution and `file://` local URLs.
 > Do **not** put `customOptions` in `templates.json` — it is no longer read from there.
+
+## Template maturity
+
+Before merging a new or heavily revised starter, meet the **M1 mature scaffold** bar documented in [MAINTENANCE_TEMPLATES.md §11](./MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3).
+
+In short:
+
+- Prefer `package/index.js` over a static `package.json` unless you intentionally ship a static package (e.g. Next.js-style showcases with a lockfile).
+- Ship a real `docs/` suite; **never** link landings or READMEs to docs that do not exist.
+- `lint` / `test` scripts must do real work (or be omitted) — no `echo` stubs and no fake README scripts.
+- Use `react-vite-starter` / `nextjs-starter` as the reference; do **not** treat `nextjs-saas-ai-starter` as the default scope.
