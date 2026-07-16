@@ -30,11 +30,25 @@ describe('AppController (e2e)', () => {
           routes: {
             root: '/',
             health: '/health',
+            docs: '/docs',
           },
         });
 
         expect(body.timestamp).toEqual(expect.any(String));
         expect(body.nextSteps).toEqual(expect.arrayContaining([expect.any(String)]));
+      });
+  });
+
+  it('/health (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/health')
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({
+          status: 'ok',
+        });
+        expect(body.uptime).toEqual(expect.any(Number));
+        expect(body.timestamp).toEqual(expect.any(String));
       });
   });
 });

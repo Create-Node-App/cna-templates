@@ -1,25 +1,10 @@
 import { Injectable } from '@nestjs/common';
-
-export type AppStatusResponse = {
-  status: 'ok';
-  message: string;
-  timestamp: string;
-  routes: {
-    root: '/';
-    health: '/health';
-  };
-  nextSteps: string[];
-};
-
-export type AppHealthResponse = {
-  status: 'ok';
-  uptime: number;
-  timestamp: string;
-};
+import { AppHealthResponseDto } from './common/dto/app-health-response.dto';
+import { AppStatusResponseDto } from './common/dto/app-status-response.dto';
 
 @Injectable()
 export class AppService {
-  getStatus(): AppStatusResponse {
+  getStatus(): AppStatusResponseDto {
     return {
       status: 'ok',
       message: 'NestJS starter API is running.',
@@ -27,16 +12,18 @@ export class AppService {
       routes: {
         root: '/',
         health: '/health',
+        docs: '/docs',
       },
       nextSteps: [
         'Add your first feature module.',
         'Wire your environment variables in .env.',
+        'Browse the OpenAPI UI at /docs.',
         'Install compatible CNA addons when you need more capabilities.',
       ],
     };
   }
 
-  getHealth(): AppHealthResponse {
+  getHealth(): AppHealthResponseDto {
     return {
       status: 'ok',
       uptime: Number(process.uptime().toFixed(2)),

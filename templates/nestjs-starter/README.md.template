@@ -26,8 +26,15 @@ fnm use
 
 - TypeScript, ESLint, and Prettier configured
 - NestJS module layout for clear boundaries
-- Ready for database, OpenAPI, and serverless addons
+- OpenAPI (Swagger) at `/docs` for `/` and `/health`
+- Zod-validated environment via `@nestjs/config`
+- Global exception filter and request logging interceptor
+- Ready for database, auth, and serverless addons
 - Logging and config patterns suited to API work
+
+## API documentation
+
+With the dev server running, open [http://localhost:3000/docs](http://localhost:3000/docs) for interactive Swagger UI (port follows `PORT` in `.env`).
 
 ## Extra documentation
 

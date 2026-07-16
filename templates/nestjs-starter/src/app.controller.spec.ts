@@ -22,6 +22,7 @@ describe('AppController', () => {
           routes: {
             root: '/',
             health: '/health',
+            docs: '/docs',
           },
         }),
       );
