@@ -93,3 +93,11 @@ If the user only says "continue" or asks "what should I do next", summarize the 
 - 📦 [NPM Package](https://www.npmjs.com/package/create-awesome-node-app)
 - 🐛 [Report Issues](https://github.com/Create-Node-App/cna-templates/issues)
 - 💬 [Discussions](https://github.com/Create-Node-App/cna-templates/discussions)
+
+## 👥 Contributors
+
+<a href="https://github.com/Create-Node-App/cna-templates/contributors">
+  <img src="https://contrib.rocks/image?repo=Create-Node-App/cna-templates"/>
+</a>
+
+Made with [contributors-img](https://contrib.rocks).
