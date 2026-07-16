@@ -1,7 +1,6 @@
 import {
   DisaredCapabilityName,
   getCapabilitiesMaxInstances,
-  getCapabilityMaxInstances,
   getCapabilityOptionsOverride,
   getDesiredCapabilitiesNames,
   isHeadlessMode,
@@ -13,21 +12,18 @@ const maxInstances = getCapabilitiesMaxInstances();
 
 const capabilitiesMap: Record<DisaredCapabilityName, () => WebdriverIO.Capabilities> = {
   firefox: () => ({
-    maxInstances: getCapabilityMaxInstances('firefox'),
     browserName: 'firefox' as const,
     'moz:firefoxOptions': {
       args: headless ? ['-headless'] : [],
     },
   }),
   chrome: () => ({
-    maxInstances: getCapabilityMaxInstances('chrome'),
     browserName: 'chrome' as const,
     'goog:chromeOptions': {
       args: headless ? ['--headless', '--window-size=1920,1080'] : ['--start-maximized'],
     },
   }),
   mobile_chrome: () => ({
-    maxInstances: getCapabilityMaxInstances('mobile_chrome'),
     browserName: 'chrome' as const,
     'goog:chromeOptions': {
       args: headless ? ['--headless', '--window-size=1920,1080'] : ['--start-maximized'],
@@ -35,7 +31,6 @@ const capabilitiesMap: Record<DisaredCapabilityName, () => WebdriverIO.Capabilit
     },
   }),
   safari: () => ({
-    maxInstances: getCapabilityMaxInstances('safari'),
     browserName: 'safari' as const,
     'safari.options': {
       args: headless ? ['--headless', '--window-size=1920,1080'] : ['--window-size=1920,1080'],
@@ -43,14 +38,24 @@ const capabilitiesMap: Record<DisaredCapabilityName, () => WebdriverIO.Capabilit
   }),
 };
 
-const capabilities: WebdriverIO.Capabilities[] = getDesiredCapabilitiesNames().map((name) => ({
+let capabilities: WebdriverIO.Capabilities[] = getDesiredCapabilitiesNames().map((name) => ({
   ...capabilitiesMap[name](),
   ...getCapabilityOptionsOverride(),
   acceptInsecureCerts: true,
 }));
 
 if (capabilities.length <= 0) {
-  console.warn('No capabilities selected!');
+  console.warn('No capabilities selected via env vars (e.g. CHROME=true). Falling back to default chrome capability.');
+  capabilities = [
+    {
+      browserName: 'chrome' as const,
+      'goog:chromeOptions': {
+        args: isHeadlessMode() ? ['--headless', '--window-size=1920,1080'] : ['--start-maximized'],
+      },
+      ...getCapabilityOptionsOverride(),
+      acceptInsecureCerts: true,
+    },
+  ];
 }
 
 export const config: Partial<WebdriverIO.Config> = {
