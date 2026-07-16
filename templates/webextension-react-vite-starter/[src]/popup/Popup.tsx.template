@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Browser from 'webextension-polyfill';
 import logo from '@/assets/img/logo.svg';
-import { sendExtensionMessage, type PingResponse } from '@/shared/messages';
+import { usePingBackground } from '@/popup/usePingBackground';
 import '@/popup/Popup.css';
 
 const openOptions = () => {
@@ -13,23 +13,7 @@ const openOptions = () => {
 const canOpenOptions = Boolean(Browser.runtime.openOptionsPage);
 
 const Popup = () => {
-  const [pingStatus, setPingStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [pingMessage, setPingMessage] = useState('');
-
-  const pingBackground = async () => {
-    setPingStatus('loading');
-    setPingMessage('');
-
-    try {
-      const response = await sendExtensionMessage<PingResponse>({ type: 'PING' });
-      const greeting = response.settings.displayName.trim() || 'there';
-      setPingStatus('success');
-      setPingMessage(`Background replied at ${new Date(response.timestamp).toLocaleTimeString()} — hello, ${greeting}!`);
-    } catch (error) {
-      setPingStatus('error');
-      setPingMessage(error instanceof Error ? error.message : 'Background did not respond');
-    }
-  };
+  const { pingStatus, pingMessage, pingBackground } = usePingBackground();
 
   return (
     <div className="popup">
@@ -56,12 +40,24 @@ const Popup = () => {
           </p>
         </div>
 
-        <button type="button" className="popup__button popup__button--secondary" onClick={pingBackground} disabled={pingStatus === 'loading'}>
+        <button
+          type="button"
+          className="popup__button popup__button--secondary"
+          onClick={pingBackground}
+          disabled={pingStatus === 'loading'}
+        >
           {pingStatus === 'loading' ? 'Pinging background…' : 'Ping background'}
         </button>
 
         {pingMessage ? (
-          <p className={`popup__feedback popup__feedback--${pingStatus === 'success' ? 'success' : 'error'}`}>{pingMessage}</p>
+          <p
+            className={
+              'popup__feedback popup__feedback--' +
+              (pingStatus === 'success' ? 'success' : 'error')
+            }
+          >
+            {pingMessage}
+          </p>
         ) : null}
 
         <button type="button" className="popup__button" onClick={openOptions} disabled={!canOpenOptions}>
