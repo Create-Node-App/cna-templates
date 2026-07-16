@@ -17,9 +17,11 @@ Run from the project root after installing dependencies:
 
 | Command | Purpose |
 |---------|---------|
-| `npm run test` | Run WDIO suite (default mode) |
+| `npm run test` | Run tests locally (alias for `test:local`) |
 | `npm run test:local` | Run tests against local Selenium |
 | `npm run test:remote` | Run tests against remote grid |
+| `npm run test:ci` | CI entry point (remote mode) |
+| `npm run test:unit` | Run unit tests for bin helpers |
 | `npm run lint` | ESLint |
 | `npm run type-check` | TypeScript (`tsc --noEmit`) |
 
