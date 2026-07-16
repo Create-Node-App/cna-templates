@@ -1,0 +1,115 @@
+/* Minimal blog listing and post styles — extend or replace with your design system */
+
+:root {
+  --blog-bg: #0f172a;
+  --blog-surface: #1e293b;
+  --blog-text: #f8fafc;
+  --blog-muted: #94a3b8;
+  --blog-border: #334155;
+  --blog-accent: #f59e0b;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --blog-bg: #fffcf5;
+    --blog-surface: #ffffff;
+    --blog-text: #1f2937;
+    --blog-muted: #6b7280;
+    --blog-border: #fed7aa;
+    --blog-accent: #d97706;
+  }
+}
+
+.blog-page {
+  min-height: 100vh;
+  background: var(--blog-bg);
+  color: var(--blog-text);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.65;
+}
+
+.blog-page__inner {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.blog-page__nav {
+  margin-bottom: 2rem;
+}
+
+.blog-page__nav a {
+  color: var(--blog-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.blog-page__nav a:hover {
+  text-decoration: underline;
+}
+
+.blog-page__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  letter-spacing: -0.03em;
+}
+
+.blog-page__lead {
+  margin: 0 0 2rem;
+  color: var(--blog-muted);
+}
+
+.blog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-list__item {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: var(--blog-surface);
+  border: 1px solid var(--blog-border);
+}
+
+.blog-list__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-list__link:hover h2 {
+  color: var(--blog-accent);
+}
+
+.blog-list__post-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+}
+
+.blog-list__meta {
+  margin: 0 0 0.5rem;
+  color: var(--blog-muted);
+  font-size: 0.875rem;
+}
+
+.blog-list__excerpt {
+  margin: 0;
+  color: var(--blog-muted);
+  font-size: 0.9375rem;
+}
+
+.blog-post__meta {
+  margin: 0 0 1.5rem;
+  color: var(--blog-muted);
+  font-size: 0.9375rem;
+}
+
+.blog-post__content h2 {
+  margin-top: 2rem;
+}
+
+.blog-post__content a {
+  color: var(--blog-accent);
+}

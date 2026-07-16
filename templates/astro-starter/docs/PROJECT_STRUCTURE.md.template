@@ -1,0 +1,89 @@
+# 🗄️ Project Structure
+
+This Astro starter organizes code around **pages**, **layouts**, **components**, **content collections**, and **static assets**. The goal is a clear, content-first structure that stays easy to navigate as the site grows.
+
+## Top-level layout
+
+```sh
+.
+├── public/                 # Static assets served as-is (favicon, images)
+├── src/
+│   ├── components/         # Reusable Astro (and optional island) components
+│   ├── content/            # Markdown/MDX entries for collections
+│   │   └── blog/           # Sample blog collection
+│   ├── content.config.ts   # Collection loaders and Zod schemas
+│   ├── layouts/            # Page shells (HTML document wrappers)
+│   ├── pages/              # File-based routes
+│   │   ├── index.astro     # CNA landing page
+│   │   └── blog/           # Blog list + [slug] detail routes
+│   └── styles/             # Shared CSS (landing, blog, etc.)
+├── docs/                   # Human-readable project guides
+├── astro.config.mjs
+├── eslint.config.mjs
+├── tsconfig.json
+└── package/                # CNA dynamic package.json resolution (template only)
+```
+
+## Routing
+
+Astro maps files in `<%= srcDir %>/pages/` to URLs:
+
+| File | Route |
+|------|-------|
+| `pages/index.astro` | `/` |
+| `pages/blog/index.astro` | `/blog` |
+| `pages/blog/[slug].astro` | `/blog/:slug` |
+
+## Content collections
+
+Build-time content lives in `<%= srcDir %>/content/` and is registered in `<%= srcDir %>/content.config.ts`.
+
+- **Loader**: `glob()` reads Markdown/MDX from `<%= srcDir %>/content/blog/`
+- **Schema**: Zod validates frontmatter (title, description, pubDate, draft, etc.)
+- **Query**: Pages use `getCollection()` and `render()` from `astro:content`
+
+Add new collections by defining another `defineCollection()` entry and exporting it from `collections`.
+
+## Layouts and components
+
+- **`layouts/BaseLayout.astro`** — document shell with `<html>`, `<body>`, and a default slot
+- **`components/BaseHead.astro`** — shared `<title>`, charset, viewport, and description meta
+
+Keep page-specific markup in `pages/` and promote repeated structure into layouts or components.
+
+## Import alias
+
+TypeScript path mapping is configured in `tsconfig.json`:
+
+```json
+"paths": {
+  "<%= projectImportPath%>*": ["./<%= srcDir%>/*"]
+}
+```
+
+Example:
+
+```astro
+---
+import BaseLayout from '<%= projectImportPath%>layouts/BaseLayout.astro';
+---
+```
+
+## When to add folders
+
+| Need | Suggested location |
+|------|-------------------|
+| New marketing page | `pages/about.astro` |
+| Shared nav/footer | `components/` |
+| Blog or docs content | `content/<collection>/` |
+| Global styles | `styles/` or component `<style>` blocks |
+| Interactive widget | `components/` + optional `@astrojs/react` integration |
+
+## Principles
+
+1. **Content-first** — prefer static HTML and collections over client state
+2. **Colocate** — keep styles and helpers near the page or component that uses them
+3. **Honest routes** — every linked page should exist; remove or update stale links
+4. **Schema at the edge** — validate frontmatter in `content.config.ts` early
+
+For tooling and editor setup, see [Project Configuration](./PROJECT_CONFIGURATION.md).

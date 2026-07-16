@@ -1,21 +1,57 @@
 # <%= projectName %>
 
-An Astro project created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+An Astro 7 starter created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **Generate your own project** via the CLI — do not clone this template folder directly.
 
-## Getting Started
+## Features
 
-```bash
-<%= installCommand %>
-<%= runCommand %> dev
+- **Astro 7** — static-first sites with file-based routing
+- **Content collections** — sample blog under `src/content/blog` with `/blog` routes
+- **Layouts & SEO** — `BaseLayout` + `BaseHead` for shared title and description
+- **TypeScript** — strict mode with `astro check`
+- **Lint & format** — ESLint (`eslint-plugin-astro`) and Prettier (`prettier-plugin-astro`)
+- **Node 22.14.0** — pinned via `.node-version` and `engines`
+
+## Not included (by design)
+
+- No UI framework island integration (add with `npx astro add react` when needed)
+- No Vitest/Playwright — add testing when the project grows
+- No Husky/lint-staged — optional team add-on
+
+## Architecture
+
+Routes live in `src/pages/`. Markdown content uses the Astro 5+/7 content collections API (`src/content.config.ts` + `src/content/`). See [Project Structure](./docs/PROJECT_STRUCTURE.md) for the full layout.
+
+## Documentation
+
+Guides in [`docs/`](./docs):
+
+- [Overview](./docs/README.md)
+- [Project structure](./docs/PROJECT_STRUCTURE.md)
+- [Components & styling](./docs/COMPONENTS_AND_STYLING.md)
+- [State management](./docs/STATE_MANAGEMENT.md)
+- [Project configuration](./docs/PROJECT_CONFIGURATION.md)
+
+## Quickstart
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321) to see your site.
+Open [http://localhost:4321](http://localhost:4321). Visit [/blog](http://localhost:4321/blog) for the sample collection.
 
-## Available Scripts
+## Scripts
 
-- `<%= runCommand %> dev` — start the development server
-- `<%= runCommand %> build` — build for production
-- `<%= runCommand %> preview` — preview the production build
-- `<%= runCommand %> format` — format code with Prettier
-- `<%= runCommand %> lint` — lint code with ESLint
-- `<%= runCommand %> type-check` — run Astro type checking
+| `<%= runCommand%> <script>` | Description |
+| --------------------------- | ----------- |
+| `dev` | Start Astro dev server |
+| `build` | Build static site to `dist/` |
+| `preview` | Preview production build |
+| `format` | Run Prettier |
+| `lint` / `lint:fix` | Run ESLint |
+| `type-check` | Run `astro check` |
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for branch workflow and PR expectations. Template issues belong in [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).
