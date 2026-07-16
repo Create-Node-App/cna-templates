@@ -28,7 +28,7 @@ node scripts/sync-shared-assets.js          # apply
 node scripts/sync-shared-assets.js --check  # CI drift check
 ```
 
-**Landing documentation links must resolve** to files that exist in the template tree. CI enforces this via:
+**Landing documentation links must resolve** to files that exist in the template tree (see [MAINTENANCE_TEMPLATES.md §11](./MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) hard rule #1). CI enforces this via:
 
 ```bash
 node scripts/check-template-integrity.js
