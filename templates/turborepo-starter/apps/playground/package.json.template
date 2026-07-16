@@ -30,6 +30,6 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "react-docgen-typescript-plugin": "^1.0.5",
     "tsconfig": "*",
-    "typescript": "^6.0.3"
+    "typescript": "^5.9.3"
   }
 }

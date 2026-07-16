@@ -22,7 +22,7 @@
     "<%= scope%>eslint-config-react": "*",
     "eslint": "^9.39.4",
     "tsconfig": "*",
-    "typescript": "^6.0.3",
+    "typescript": "^5.9.3",
     "vite": "^6.2.0"
   }
 }

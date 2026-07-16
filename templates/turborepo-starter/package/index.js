@@ -34,6 +34,11 @@ module.exports = function resolvePackage(_setup, { appName, usePnpm, scope }) {
     dependencies: {
       tsup: '^6.2.3',
     },
+    // Storybook 6 (playground) peers older React; keep workspace on React 18.
+    overrides: {
+      react: '^18.3.1',
+      'react-dom': '^18.3.1',
+    },
     engines: {
       node: '>=18.18.0',
     },
