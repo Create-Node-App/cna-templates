@@ -1,0 +1,38 @@
+# Contributing
+
+Welcome! After the README, start here.
+
+## Prerequisites
+
+```sh
+fnm use
+<%= installCommand %>
+```
+
+## Bootstrap
+
+```sh
+<%= runCommand %> dev
+```
+
+## Architecture
+
+Read [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Prefer small Hono route modules over a large framework core.
+
+## Coding standards
+
+- Strong typing (no unvetted `any`)
+- Validate inputs with Zod + `@hono/zod-validator`
+- Keep handlers thin; push logic into services when it grows
+
+## Testing
+
+- Add Vitest coverage for new routes (`app.request` or unit tests)
+- Keep `npm test` green before opening a PR
+
+## PR checklist
+
+- [ ] Lint & type-check pass
+- [ ] Tests added/updated or reason stated
+- [ ] Docs updated if structure or API changed
+- [ ] No secrets in the repo

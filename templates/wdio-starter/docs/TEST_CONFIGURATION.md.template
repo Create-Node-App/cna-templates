@@ -40,6 +40,17 @@ export const env = {
 };
 ```
 
+Copy [`.env.example`](../.env.example) to `.env` for local defaults. `wdio.conf.js` loads it via `dotenv` before merging configs.
+
+## TypeScript toolchain (Babel + tsx)
+
+This template uses two complementary loaders:
+
+- **tsx** — loads TypeScript config files (`config/*.ts`, `bin/*.ts`) and powers `suite:files` / `test:unit` without a separate build step.
+- **Babel** (`.babelrc`) — transpiles spec files at runtime through WebdriverIO's compiler hook so Mocha can execute `.ts` tests in the browser session.
+
+You do not need to compile TypeScript before running tests. Prefer **tsx** for Node-side scripts and **Babel** for WebdriverIO spec execution unless you migrate the template to a single toolchain.
+
 ## Browser Capabilities
 
 Configure browser capabilities in `wdio.capabilities.conf.ts`:
@@ -107,6 +118,8 @@ FIREFOX=1 <%= runCommand%> test:remote --suite smoke
 
 | Variable                      | Description                            | Default   |
 | ----------------------------- | -------------------------------------- | --------- |
+| `MODE`                        | Execution mode (`local` or `remote`)   | local     |
+| `BASE_URL`                    | Application URL under test             | (see `.env.example`) |
 | `MAX_INSTANCES`               | Maximum number of concurrent instances | 1         |
 | `CHROME`                      | Number of Chrome instances             | 0         |
 | `FIREFOX`                     | Number of Firefox instances            | 0         |

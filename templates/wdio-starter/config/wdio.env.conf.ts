@@ -1,3 +1,3 @@
 export const config: Partial<WebdriverIO.Config> = {
-  baseUrl: 'https://www.google.com',
+  baseUrl: process.env.BASE_URL || 'https://www.google.com',
 };

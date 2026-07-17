@@ -1,0 +1,69 @@
+# ⚙️ Project Configuration
+
+This app is bootstrapped with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). Tooling is pre-wired for React Router v7 SSR on Vite.
+
+## React Router
+
+[react-router.config.ts](../react-router.config.ts) sets:
+
+- `appDirectory: "<%= srcDir %>"` — where routes and root live
+- `ssr: true` — server-render HTML, hydrate on the client
+
+Route URLs are declared in [<%= srcDir %>/routes.ts](../<%= srcDir %>/routes.ts) and implemented as modules under `<%= srcDir %>/routes/`.
+
+## ESLint
+
+Flat config in [eslint.config.mjs](../eslint.config.mjs) covers TypeScript, React, accessibility, and Prettier integration.
+
+```bash
+<%= runCommand %> lint
+<%= runCommand %> lint:fix
+```
+
+## Prettier
+
+[.prettierrc.js](../.prettierrc.js) enforces consistent formatting. Enable format-on-save in your editor.
+
+```bash
+<%= runCommand %> format
+```
+
+## TypeScript
+
+Strict mode is enabled. React Router generates route types under `.react-router/types/` — keep `rootDirs` in [tsconfig.json](../tsconfig.json) so imports like `./+types/contact` resolve.
+
+```bash
+<%= runCommand %> type-check
+```
+
+Runs `react-router typegen` first to generate route types under `.react-router/types/`, then `tsc --noEmit`.
+
+## Vite
+
+[vite.config.ts](../vite.config.ts) uses `@react-router/dev/vite` and `vite-tsconfig-paths` for alias resolution during dev and build.
+
+## Environment Variables
+
+Copy [.env.example](../.env.example) to `.env` for local values.
+
+- **Server-only** — any name (e.g. `DATABASE_URL`)
+- **Client-exposed** — must use the `VITE_` prefix (Vite convention)
+
+Never commit secrets; use `.env.local` (gitignored).
+
+## Absolute Imports
+
+[tsconfig.json](../tsconfig.json) maps:
+
+```json
+"paths": {
+  "~/*": ["./<%= srcDir %>/*"],
+  "<%= projectImportPath%>*": ["./<%= srcDir %>/*"]
+}
+```
+
+Use `~/<%= srcDir %>/features/...` or `<%= projectImportPath %>features/...` interchangeably.
+
+## Node Version
+
+[.node-version](../.node-version) pins Node **v22.14.0**. Use `fnm use` or your preferred version manager before installing.

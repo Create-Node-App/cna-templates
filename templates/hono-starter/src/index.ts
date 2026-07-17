@@ -1,22 +1,14 @@
-import { Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { createApp } from "./app";
+import { loadEnv } from "./env";
 
-const app = new Hono();
-
-app.get("/", (c) => {
-  return c.json({ message: "Hello from Hono!" });
-});
-
-app.get("/health", (c) => {
-  return c.json({ status: "ok" });
-});
-
-const port = parseInt(process.env.PORT || "3000", 10);
+const env = loadEnv();
+const app = createApp(env);
 
 serve(
-  { fetch: app.fetch, port },
-  (info: { port: number }) => {
-    console.log(`Server running on http://localhost:${info.port}`);
+  { fetch: app.fetch, port: env.PORT },
+  (info) => {
+    console.log(`${env.APP_NAME} listening on http://localhost:${info.port}`);
   },
 );
 

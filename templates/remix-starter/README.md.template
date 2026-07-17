@@ -18,4 +18,14 @@ Open [http://localhost:5173](http://localhost:5173) to see your app.
 - `<%= runCommand %> start` — start the production server
 - `<%= runCommand %> format` — format code with Prettier
 - `<%= runCommand %> lint` — lint code with ESLint
+- `<%= runCommand %> lint:fix` — lint and autofix with ESLint
 - `<%= runCommand %> type-check` — run TypeScript type checking
+
+## Demo routes
+
+- `/contact` — loader + action form demo (in-memory store)
+- Root `ErrorBoundary` — styled fallback for unexpected errors
+
+## Project docs
+
+See the [docs/](./docs/) folder for architecture, configuration, and React Router patterns.

@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/cna-landing.css';
+
+const projectName = '<%= projectName %>';
+const pageTitle = projectName + ' - Create Awesome Node App';
+const pageDescription =
+  'Content-first Astro starter with layouts, SEO head, and a sample content collection blog.';
+
+const features = [
+  {
+    icon: '📄',
+    title: 'Static HTML output',
+    description: 'Pages ship as pre-rendered HTML. No client JavaScript is included unless you add islands.',
+  },
+  {
+    icon: '📝',
+    title: 'Content collections',
+    description: 'A sample blog collection under src/content/blog with list and detail routes at /blog.',
+  },
+  {
+    icon: '🧭',
+    title: 'Layouts & SEO head',
+    description: 'BaseLayout and BaseHead provide shared title and meta description across pages.',
+  },
+  {
+    icon: '🚀',
+    title: 'Astro 7',
+    description: 'File-based routing, TypeScript, and astro check for template-aware type safety.',
+  },
+  {
+    icon: '🛠️',
+    title: 'Lint & format',
+    description: 'ESLint with eslint-plugin-astro and Prettier with prettier-plugin-astro are preconfigured.',
+  },
+  {
+    icon: '🏝️',
+    title: 'Islands-ready',
+    description: 'Add @astrojs/react (or another integration) when you need interactive components — not bundled yet.',
+  },
+];
+
+const docs = [
+  { label: 'Project overview', href: './docs/README.md' },
+  { label: 'Project structure', href: './docs/PROJECT_STRUCTURE.md' },
+  { label: 'Components & styling', href: './docs/COMPONENTS_AND_STYLING.md' },
+  { label: 'State management', href: './docs/STATE_MANAGEMENT.md' },
+  { label: 'Project configuration', href: './docs/PROJECT_CONFIGURATION.md' },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="cna-landing cna-landing--astro">
+    <header class="cna-landing__header">
+      <img src="/logo.svg" alt="Create Awesome Node App" class="cna-landing__logo" width="40" height="40" />
+      <span class="cna-landing__brand">Create Awesome Node App</span>
+    </header>
+
+    <main class="cna-landing__main">
+      <section class="cna-landing__hero" style="--index: 0">
+        <span class="cna-landing__eyebrow">Astro · static-first</span>
+        <h1 class="cna-landing__title">{projectName}</h1>
+        <p class="cna-landing__lead">
+          Content-first Astro with a sample blog collection, shared layouts, and tooling for docs and marketing sites.
+          Add framework islands only where interactivity is worth the bytes.
+        </p>
+        <div class="cna-landing__actions">
+          <a href="./docs/README.md" class="cna-landing__button cna-landing__button--primary">Read the docs</a>
+          <a href="/blog" class="cna-landing__button cna-landing__button--secondary">View sample blog</a>
+          <span class="cna-landing__button cna-landing__button--secondary">
+            Run <code class="cna-landing__code">npm run dev</code>
+          </span>
+          <a
+            href="https://create-awesome-node-app.vercel.app/templates"
+            class="cna-landing__button cna-landing__button--ghost"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Template docs
+          </a>
+        </div>
+      </section>
+
+      <section class="cna-landing__features">
+        <h2 class="cna-landing__section-title">What ships in this starter</h2>
+        <div class="cna-landing__grid">
+          {
+            features.map((feature, index) => (
+              <article class="cna-landing__card" style={"--index: " + String(index + 1)}>
+                <span class="cna-landing__card-icon" aria-hidden="true">
+                  {feature.icon}
+                </span>
+                <h3 class="cna-landing__card-title">{feature.title}</h3>
+                <p class="cna-landing__card-text">{feature.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="cna-landing__docs" style={"--index: " + String(features.length + 1)}>
+        <h2 class="cna-landing__section-title">Next steps</h2>
+        <nav class="cna-landing__doc-list" aria-label="Documentation">
+          {
+            docs.map((doc) => (
+              <a href={doc.href} class="cna-landing__doc-link">
+                <span class="cna-landing__doc-label">{doc.label}</span>
+                <span class="cna-landing__doc-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))
+          }
+        </nav>
+      </section>
+    </main>
+
+    <footer class="cna-landing__footer" style={"--index: " + String(features.length + 2)}>
+      <p>
+        Generated with{' '}
+        <a href="https://www.npmjs.com/package/create-awesome-node-app" target="_blank" rel="noreferrer">
+          create-awesome-node-app
+        </a>
+      </p>
+    </footer>
+  </div>
+</BaseLayout>

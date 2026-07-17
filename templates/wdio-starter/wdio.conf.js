@@ -1,3 +1,4 @@
+require('dotenv').config();
 require('tsx/cjs');
 
 const path = require('path');

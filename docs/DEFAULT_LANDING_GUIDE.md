@@ -21,7 +21,20 @@ The landing pages follow the CNA design system defined in [`DEFAULT_LANDING_DESI
 | `shared/assets/logo-mark-dark.svg` | Dark-background variant of the mark |
 | `shared/assets/favicon.svg` | Favicon source |
 
-When the identity changes, update the master files first, then copy them into each affected template.
+When the identity changes, update the master files first, then sync copies into templates:
+
+```bash
+node scripts/sync-shared-assets.js          # apply
+node scripts/sync-shared-assets.js --check  # CI drift check
+```
+
+**Landing documentation links must resolve** to files that exist in the template tree (see [MAINTENANCE_TEMPLATES.md §11](./MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) hard rule #1). CI enforces this via:
+
+```bash
+node scripts/check-template-integrity.js
+```
+
+(`FOO.md.template` satisfies a link to `FOO.md`.)
 
 ---
 
