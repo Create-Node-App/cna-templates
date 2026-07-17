@@ -69,6 +69,14 @@ jobs:
           if [ "${{ matrix.cell.templateDir }}" = "turborepo-starter" ]; then
             EXTRA+=(--set "scope=@app/" --set "projectName=turbo-app")
           fi
+          # WDIO browser tests are not reliable without a dedicated runner image.
+          if [ "${{ matrix.cell.templateDir }}" = "wdio-starter" ]; then
+            EXTRA+=(--skip-test)
+          fi
+          # SaaS: service-backed tests/build; canonical run covers install + type-check.
+          if [ "${{ matrix.cell.templateDir }}" = "nextjs-saas-ai-starter" ]; then
+            EXTRA+=(--skip-test --skip-build)
+          fi
           # Browser / Storybook / e2e extensions: install + type-check + build only.
           case "${{ matrix.cell.slug }}" in
             react-playwright|storybook|github-setup-uat)

@@ -67,8 +67,13 @@ jobs:
           PROFILE_SETS: ${{ toJson(matrix.cell.sets) }}
         run: |
           EXTRA=()
-          if [ "${{ matrix.cell.templateDir }}" = "wdio-starter" ] || [ "${{ matrix.cell.templateDir }}" = "nextjs-saas-ai-starter" ]; then
+          # WDIO browser tests are not reliable without a dedicated runner image.
+          if [ "${{ matrix.cell.templateDir }}" = "wdio-starter" ]; then
             EXTRA+=(--skip-test)
+          fi
+          # SaaS: service-backed tests/build; canonical run covers install + type-check.
+          if [ "${{ matrix.cell.templateDir }}" = "nextjs-saas-ai-starter" ]; then
+            EXTRA+=(--skip-test --skip-build)
           fi
           # Expand optional --set flags from profile.sets JSON
           while IFS= read -r line; do
