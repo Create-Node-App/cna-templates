@@ -1,12 +1,13 @@
 {
   "name": "nextjs-prisma-extension",
   "dependencies": {
-    "@prisma/client": "^7.8.0"
+    "@prisma/client": "^6.19.0"
   },
   "devDependencies": {
-    "prisma": "^7.8.0"
+    "prisma": "^6.19.0"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
