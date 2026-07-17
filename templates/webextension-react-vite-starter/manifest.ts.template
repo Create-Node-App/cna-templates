@@ -6,6 +6,7 @@ const manifest: Manifest.WebExtensionManifest = {
   name: packageJson.name,
   version: packageJson.version,
   description: packageJson.description,
+  permissions: ['storage'],
   options_ui: {
     page: '<%= srcDir%>/options/index.html',
   },

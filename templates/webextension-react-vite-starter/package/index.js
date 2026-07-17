@@ -31,6 +31,8 @@ module.exports = function resolvePackage(setup, { appName, runCommand }) {
       "web-ext:firefox":
         "web-ext run --source-dir ./dist --target=firefox-desktop",
       "type-check": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
+      test: "vitest run",
+      "test:watch": "vitest",
     },
   };
 

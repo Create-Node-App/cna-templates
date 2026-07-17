@@ -38,7 +38,7 @@ See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). Contexts: backgrou
 Be explicit about what runs where. Content scripts shouldn’t import background-only APIs directly.
 
 ## Messaging Patterns
-Use structured message types. Avoid anonymous string channels. Centralize message enums or builders.
+Use structured message types in `<%= srcDir%>/shared/messages.ts`. Avoid anonymous string channels. The sample popup sends a typed `PING` message and the background listener in `<%= srcDir%>/background/messageHandler.ts` replies with `PONG` plus the current settings snapshot.
 
 ## Coding Standards
 - Strict TypeScript
@@ -52,7 +52,14 @@ Use structured message types. Avoid anonymous string channels. Centralize messag
 Prefer lightweight libs—bundle size matters for extension review.
 
 ## Testing
-Add integration tests where possible (e.g., mocks or e2e harness). Unit test pure helpers.
+Unit tests run with Vitest and React Testing Library:
+
+```sh
+<%= runCommand%> test
+<%= runCommand%> test:watch
+```
+
+`vitest.setup.ts` mocks `webextension-polyfill` so UI components can be tested in Node. Add integration or browser harness tests when you need to exercise real extension contexts.
 
 ## Publishing
 Update version + changelog. Validate manifest. Smoke test on target browsers.

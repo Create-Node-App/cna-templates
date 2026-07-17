@@ -9,6 +9,8 @@ This folder contains detailed documentation for the Web Extension + React templa
 - [Components and Styling](./COMPONENTS_AND_STYLING.md) - Best practices for components and styling solutions
 - [Performance](./PERFORMANCE.md) - Performance optimization guidelines for web extensions
 - [State Management](./STATE_MANAGEMENT.md) - State management patterns and recommendations
+- [Testing](../README.md#testing) - Vitest setup, mocks, and sample tests
+- [Messaging](../README.md#messaging) - Typed popup ↔ background message passing
 
 ## Web Extension Specific Resources
 
@@ -19,6 +21,8 @@ This folder contains detailed documentation for the Web Extension + React templa
 ## Development Tools
 
 - [Vite Documentation](https://vitejs.dev/guide/)
+- [Vitest Documentation](https://vitest.dev/guide/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [React Documentation](https://reactjs.org/docs/getting-started.html)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 

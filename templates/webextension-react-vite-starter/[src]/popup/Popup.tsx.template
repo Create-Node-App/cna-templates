@@ -1,6 +1,7 @@
 import React from 'react';
 import Browser from 'webextension-polyfill';
 import logo from '@/assets/img/logo.svg';
+import { usePingBackground } from '@/popup/usePingBackground';
 import '@/popup/Popup.css';
 
 const openOptions = () => {
@@ -12,6 +13,8 @@ const openOptions = () => {
 const canOpenOptions = Boolean(Browser.runtime.openOptionsPage);
 
 const Popup = () => {
+  const { pingStatus, pingMessage, pingBackground } = usePingBackground();
+
   return (
     <div className="popup">
       <div className="popup__surface">
@@ -33,9 +36,29 @@ const Popup = () => {
             Edit <code><%= srcDir%>/popup/Popup.tsx</code>
           </p>
           <p>
-            Configure <code><%= srcDir%>/options/Options.tsx</code>
+            Messaging lives in <code><%= srcDir%>/shared/messages.ts</code>
           </p>
         </div>
+
+        <button
+          type="button"
+          className="popup__button popup__button--secondary"
+          onClick={pingBackground}
+          disabled={pingStatus === 'loading'}
+        >
+          {pingStatus === 'loading' ? 'Pinging background…' : 'Ping background'}
+        </button>
+
+        {pingMessage ? (
+          <p
+            className={
+              'popup__feedback popup__feedback--' +
+              (pingStatus === 'success' ? 'success' : 'error')
+            }
+          >
+            {pingMessage}
+          </p>
+        ) : null}
 
         <button type="button" className="popup__button" onClick={openOptions} disabled={!canOpenOptions}>
           {canOpenOptions ? 'Open options' : 'Options unavailable'}
