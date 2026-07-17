@@ -29,6 +29,7 @@ module.exports = function resolvePackage(_setup, { appName, usePnpm, scope }) {
       [eslintConfigBaseName]: '0.0.0',
       prettier: '^3.9.4',
       turbo: '^2.10.2',
+      vitest: '^4.1.9',
     },
     packageManager: 'npm@10.9.0',
     dependencies: {

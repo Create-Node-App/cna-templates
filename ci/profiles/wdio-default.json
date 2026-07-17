@@ -1,0 +1,8 @@
+{
+  "id": "wdio-default",
+  "description": "WebdriverIO UAT: WDIO GitHub setup (Tooling)",
+  "templateDir": "wdio-starter",
+  "addons": [
+    "github-setup-uat"
+  ]
+}

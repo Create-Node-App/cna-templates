@@ -3,7 +3,12 @@
   "compilerOptions": {
     "noEmit": true,
     "moduleResolution": "bundler",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "<%= scope%>ui": ["../../packages/ui/index.tsx"],
+      "<%= scope%>ui/*": ["../../packages/ui/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

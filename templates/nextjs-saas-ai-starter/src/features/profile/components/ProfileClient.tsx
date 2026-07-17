@@ -6,7 +6,7 @@
  * Simple profile view showing basic person information.
  */
 
-import { Building2, Clock, ExternalLink, Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Building2, Clock, ExternalLink, GitBranch, Link2, Mail, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
@@ -147,7 +147,7 @@ export function ProfileClient({ tenantSlug: _tenantSlug, person, personExtra }: 
 
           {personExtra?.githubUsername && (
             <div className="flex items-center gap-2 text-sm">
-              <Github className="h-4 w-4 text-muted-foreground shrink-0" />
+              <GitBranch className="h-4 w-4 text-muted-foreground shrink-0" />
               <Link
                 href={`https://github.com/${personExtra.githubUsername}`}
                 target="_blank"
@@ -167,7 +167,7 @@ export function ProfileClient({ tenantSlug: _tenantSlug, person, personExtra }: 
 
           {personExtra?.linkedinUrl && (
             <div className="flex items-center gap-2 text-sm">
-              <Linkedin className="h-4 w-4 text-muted-foreground shrink-0" />
+              <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
               <Link
                 href={personExtra.linkedinUrl}
                 target="_blank"

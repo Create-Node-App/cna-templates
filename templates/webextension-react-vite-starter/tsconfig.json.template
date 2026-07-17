@@ -14,12 +14,13 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": ["vite/client", "@testing-library/jest-dom"],
     "paths": {
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"],
       "virtual:reload-on-update-in-background-script": ["./<%= srcDir%>/global.d.ts"],
       "virtual:reload-on-update-in-view": ["./<%= srcDir%>/global.d.ts"]
     }
   },
-  "include": ["<%= srcDir%>"],
+  "include": ["<%= srcDir%>", "vitest.setup.ts"],
   "exclude": ["./tools/**/*"]
 }

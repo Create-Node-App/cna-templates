@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot, Github, Globe, LayoutDashboard, User } from 'lucide-react';
+import { Bot, GitBranch, Globe, LayoutDashboard, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { SidebarNavItem } from '../SidebarNavItem';
@@ -40,7 +40,7 @@ export function MyViewNav({ basePath, onItemClick }: MyViewNavProps) {
       </SidebarSection>
 
       <SidebarSection title={t('integrations')} icon={<Globe className="h-4 w-4" />} variant="default">
-        <SidebarNavItem href={`${basePath}/profile?tab=github`} label="GitHub" icon={Github} onClick={onItemClick} />
+        <SidebarNavItem href={`${basePath}/profile?tab=github`} label="GitHub" icon={GitBranch} onClick={onItemClick} />
       </SidebarSection>
     </>
   );
