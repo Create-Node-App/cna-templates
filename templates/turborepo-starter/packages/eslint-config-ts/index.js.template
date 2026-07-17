@@ -1,4 +1,4 @@
-const baseConfig = require('eslint-config-base');
+const baseConfig = require('<%= scope%>eslint-config-base');
 const tseslint = require('typescript-eslint');
 
 module.exports = [

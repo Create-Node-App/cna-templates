@@ -17,6 +17,7 @@ This project was generated using [create-awesome-node-app](https://www.npmjs.com
 ```sh
 fnm use
 <%= installCommand %>
+<%= runCommand %> build
 ```
 
 ## Features
@@ -27,9 +28,10 @@ fnm use
 - **TypeScript** - All packages are written in [TypeScript](https://www.typescriptlang.org/).
 - **ESLint** - All packages are linted by [ESLint](https://eslint.org/).
 - **Prettier** - All packages are formatted by [Prettier](https://prettier.io/).
-- **React** - There is a [React](https://reactjs.org/) app inside the apps folder.
-- **Storybook** - There is a [Storybook](https://storybook.js.org/) playground inside the playgrounds folder.
-- **Local Development Environment** - This project includes all the tools and configuration files you need to develop a new awesome set of packages and applications.
+- **Shared UI** - Reusable React components in `packages/ui`, tested with [Vitest](https://vitest.dev/).
+- **Web app** - A minimal [Vite](https://vitejs.dev/) + React app in `apps/web` that imports workspace packages.
+- **Storybook** - A [Storybook](https://storybook.js.org/) playground in `apps/playground` for component docs.
+- **Local Development Environment** - Tooling and configuration to develop shared packages and applications together.
 
 ## Pre-packed
 
@@ -40,24 +42,30 @@ fnm use
 - [Changesets](https://github.com/changesets/changesets) - A way to manage your versioning and changelogs with a focus on multi-package repositories
 - [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
 - [prettier](https://prettier.io/) - Opinionated code formatter
+- [Vitest](https://vitest.dev/) - Unit tests for shared packages
 
-## Applications and Services
+## Applications and Packages
 
-- **Playground** - A [Storybook](https://storybook.js.org/) playground.
-- **React App** - React app created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) powered by [Vite](https://vitejs.dev/).
-- **WebExtension** - WebExtension created with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) powered by [Vite](https://vitejs.dev/) and [WebExtension-Polyfill](https://github.com/mozilla/webextension-polyfill).
+- **Web** (`apps/web`) - Vite + React app that consumes `<%= scope%>ui`.
+- **Playground** (`apps/playground`) - Storybook for documenting shared components.
+- **UI** (`packages/ui`) - Shared React component library.
+
+Need another app (API, extension, Next.js site)? Scaffold it with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) and add it under `apps/`.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-| `npm run <script>` | Description                                                                                                             |
+| `<%= runCommand %> <script>` | Description                                                                                                             |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `test`             | Runs unit tests with Jest.                                                                                              |
+| `dev`              | Start development servers (`apps/web` and package watchers).                                                            |
+| `test`             | Runs unit tests with Vitest (via Turborepo).                                                                            |
 | `lint`             | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
 | `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
 | `format`           | Formats the project using [Prettier](https://prettier.io/)                                                              |
-| `type-check`        | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |
+| `type-check`       | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |
+| `storybook`        | Starts the Storybook playground                                                                                         |
+| `build`            | Builds all packages and applications                                                                                    |
 
 ## Contributing
 

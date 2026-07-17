@@ -1,0 +1,13 @@
+import { Button } from '<%= scope%>ui';
+
+const App = () => (
+  <main style={{ fontFamily: 'system-ui, sans-serif', padding: '2rem' }}>
+    <h1>Monorepo Web App</h1>
+    <p>
+      This app imports shared UI from <code>{'<%= scope%>ui'}</code>.
+    </p>
+    <Button />
+  </main>
+);
+
+export default App;

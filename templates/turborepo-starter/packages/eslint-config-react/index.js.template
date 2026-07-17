@@ -1,4 +1,4 @@
-const tsConfig = require('eslint-config-ts');
+const tsConfig = require('<%= scope%>eslint-config-ts');
 const reactPlugin = require('eslint-plugin-react');
 const reactHooksPlugin = require('eslint-plugin-react-hooks');
 

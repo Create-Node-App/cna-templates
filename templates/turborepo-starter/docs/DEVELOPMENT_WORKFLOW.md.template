@@ -10,26 +10,37 @@ This document outlines the development workflow and best practices for working w
    <%= installCommand%>
    ```
 
-2. **Start Development**
+2. **Build shared packages**
+
+   ```bash
+   <%= runCommand%> build
+   ```
+
+3. **Start Development**
 
    ```bash
    <%= runCommand%> dev
    ```
 
-   This will start all applications in development mode with hot reloading.
+   This starts `apps/web` (Vite) and package watchers such as `packages/ui`. For Storybook only:
+
+   ```bash
+   <%= runCommand%> storybook
+   ```
 
 ## Available Scripts
 
 ### Root Level Scripts
 
-| Script   | Description                                |
-| -------- | ------------------------------------------ |
-| `dev`    | Start all applications in development mode |
-| `build`  | Build all packages and applications        |
-| `test`   | Run tests across all packages              |
-| `lint`   | Run linting across all packages            |
-| `format` | Format all files with Prettier             |
-| `clean`  | Clean all build artifacts                  |
+| Script      | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| `dev`       | Start development servers for apps and package watchers      |
+| `build`     | Build all packages and applications                          |
+| `test`      | Run Vitest tests across packages that define a `test` script |
+| `lint`      | Run linting across all packages                              |
+| `format`    | Format all files with Prettier                               |
+| `storybook` | Start the Storybook playground                               |
+| `clean`     | Optional per-package clean scripts (not defined at root)     |
 
 ### Package Level Scripts
 
@@ -39,7 +50,7 @@ Each package in `apps/` and `packages/` can have its own scripts. Common ones in
 | ------- | ------------------------ |
 | `dev`   | Start development server |
 | `build` | Build the package        |
-| `test`  | Run tests                |
+| `test`  | Run Vitest tests         |
 | `lint`  | Run linting              |
 
 ## Development Process
@@ -100,13 +111,14 @@ Each package in `apps/` and `packages/` can have its own scripts. Common ones in
 - Run tests for a specific package
 
   ```bash
-  <%= runCommand%> test --filter=package-name
+  <%= runCommand%> test --filter=<%= scope%>ui
   ```
 
-- Run tests in watch mode
+- Run tests in watch mode (from a package directory)
 
   ```bash
-  <%= runCommand%> test --watch
+  cd packages/ui
+  npx vitest
   ```
 
 ### 4. Building Packages
@@ -120,7 +132,7 @@ Each package in `apps/` and `packages/` can have its own scripts. Common ones in
 - Build a specific package
 
   ```bash
-  <%= runCommand%> build --filter=package-name
+  <%= runCommand%> build --filter=<%= scope%>ui
   ```
 
 ## Best Practices
@@ -171,8 +183,7 @@ Each package in `apps/` and `packages/` can have its own scripts. Common ones in
    - Check for timing issues
 
 3. **Dependency Issues**
-   - Clear node_modules: `<%= runCommand%> clean`
-   - Reinstall dependencies: `<%= installCommand%>`
+   - Clear node_modules and reinstall: `<%= installCommand%>`
    - Check for version conflicts
 
 ### Getting Help

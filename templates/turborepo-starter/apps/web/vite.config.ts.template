@@ -1,0 +1,21 @@
+import path from 'path';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      // Point at source so Vite/Rollup can tree-shake ESM named exports.
+      // Built dist CJS breaks `import { Button } from '<%= scope%>ui'`.
+      '<%= scope%>ui': path.resolve(__dirname, '../../packages/ui/index.tsx'),
+    },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'styled-components'],
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
+});
