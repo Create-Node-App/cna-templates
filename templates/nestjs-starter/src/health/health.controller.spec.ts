@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppHealthResponse, AppService } from '../app.service';
+import { AppHealthResponseDto } from '../common/dto/app-health-response.dto';
+import { AppService } from '../app.service';
 import { HealthController } from './health.controller';
 
 describe('HealthController', () => {
   let controller: HealthController;
-  const healthResponse: AppHealthResponse = {
+  const healthResponse: AppHealthResponseDto = {
     status: 'ok',
     uptime: 12.34,
     timestamp: '2026-03-13T00:00:00.000Z',
