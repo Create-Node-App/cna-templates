@@ -1,0 +1,8 @@
+{
+  "id": "saas-default",
+  "description": "SaaS AI starter with husky tooling only (product stack is in-template)",
+  "templateDir": "nextjs-saas-ai-starter",
+  "addons": [
+    "husky-lint-staged"
+  ]
+}

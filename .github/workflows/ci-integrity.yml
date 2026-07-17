@@ -1,16 +1,13 @@
-name: Template Integrity
+name: CI Integrity (L0)
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
+    branches: [main]
+    types: [opened, synchronize, reopened]
   push:
-    branches:
-      - main
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 permissions:
@@ -18,7 +15,7 @@ permissions:
 
 jobs:
   integrity:
-    name: Template integrity checks
+    name: Registry + docs + assets + profiles
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,8 +28,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Validate templates.json (incl. on-disk paths)
+        run: node scripts/validate-templates.js
+
       - name: Check landing/README doc links
         run: node scripts/check-template-integrity.js
 
       - name: Check shared assets sync
         run: node scripts/sync-shared-assets.js --check
+
+      - name: Validate curated CI profiles
+        run: node scripts/ci/generate-matrix.js --layer validate-profiles

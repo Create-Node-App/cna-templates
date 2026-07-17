@@ -204,6 +204,57 @@ function validateCategories(data) {
   }
 }
 
+function validatePackageModuleConflict(data) {
+  info('Checking package.json vs package/ conflicts...');
+
+  data.templates.forEach((template) => {
+    const match = template.url.match(/\/templates\/([^\/]+)/);
+    if (!match) return;
+    const dir = path.join(TEMPLATES_DIR, match[1]);
+    const hasPkgJson = fs.existsSync(path.join(dir, 'package.json'));
+    const hasPkgDir = fs.existsSync(path.join(dir, 'package', 'index.js')) ||
+      fs.existsSync(path.join(dir, 'package.js'));
+    if (hasPkgJson && hasPkgDir) {
+      error(
+        `Template "${template.slug}" has both package.json and package/ — ` +
+          `Node resolves "package" to package.json and package/index.js never runs (breaks file:// CI)`,
+      );
+    }
+  });
+
+  if (!hasErrors) {
+    success('No package.json / package/ conflicts');
+  }
+}
+
+function validateIncompatibleSymmetry(data) {
+  info('Checking incompatibleWith symmetry...');
+
+  const bySlug = new Map(data.extensions.map((e) => [e.slug, e]));
+  data.extensions.forEach((extension) => {
+    const listed = extension.incompatibleWith || [];
+    listed.forEach((otherSlug) => {
+      const other = bySlug.get(otherSlug);
+      if (!other) {
+        error(
+          `Extension "${extension.slug}" lists incompatibleWith "${otherSlug}" but that slug does not exist`,
+        );
+        return;
+      }
+      const reverse = other.incompatibleWith || [];
+      if (!reverse.includes(extension.slug)) {
+        warning(
+          `Extension "${extension.slug}" → "${otherSlug}" is not symmetric (add "${extension.slug}" to "${otherSlug}".incompatibleWith)`,
+        );
+      }
+    });
+  });
+
+  if (!hasErrors) {
+    success('incompatibleWith references validated');
+  }
+}
+
 function main() {
   console.log('🔍 Validating templates.json...\n');
   
@@ -219,6 +270,8 @@ function main() {
   validateDirectoryReferences(data);
   validateTypes(data);
   validateCategories(data);
+  validatePackageModuleConflict(data);
+  validateIncompatibleSymmetry(data);
   
   console.log('\n' + '='.repeat(50));
   

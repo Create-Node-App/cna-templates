@@ -1,7 +1,9 @@
 # CNA Templates
 
-[![Validation](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml)
-[![Smoke Test](https://github.com/Create-Node-App/cna-templates/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/smoke-test.yml)
+[![L0 Integrity](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-integrity.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-integrity.yml)
+[![L1 Templates](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-templates.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-templates.yml)
+[![L2 Extensions](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-extensions.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-extensions.yml)
+[![L3 Profiles](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-profiles.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-profiles.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Node Version](https://img.shields.io/badge/node-22+-green.svg)
 
@@ -43,20 +45,23 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 | [docs/MAINTENANCE_RUNBOOK.md](./docs/MAINTENANCE_RUNBOOK.md) | Operational procedures for maintaining templates, extensions, CI, dependencies, security, and releases |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to add templates and extensions |
 
-## CI compatibility matrix
+## CI trust layers
 
-The badges above reflect the CI workflows:
+Green Actions mean templates and realistic selections work — **not** that every
+extension can be merged into one mega-app. See [#309](https://github.com/Create-Node-App/cna-templates/issues/309) and [docs/TESTING.md](./docs/TESTING.md).
 
 | Workflow | Trigger | Scope |
 |----------|---------|-------|
-| [Test Combinations](./.github/workflows/test-combinations.yml) | Push to `main`, PR, weekly | Randomized & full matrix of template × extension combinations |
-| [Smoke Test](./.github/workflows/smoke-test.yml) | PRs to `main` | Quick end-to-end validation of scaffolded projects |
+| [L0 Integrity](./.github/workflows/ci-integrity.yml) | PR, main, weekly | Registry paths, doc links, assets, profiles |
+| [L1 Templates](./.github/workflows/ci-templates.yml) | PR, main, weekly | Every template alone |
+| [L2 Extensions](./.github/workflows/ci-extensions.yml) | PR (changed), weekly (all) | One extension × canonical template |
+| [L3 Profiles](./.github/workflows/ci-profiles.yml) | PR (affected), weekly (all) | Curated one-per-category stacks |
 
-- **On push to `main`:** a randomized subset of template × extension combinations
-- **On every PR:** a randomized subset + smoke test of scaffolded projects
-- **Weekly (Sunday UTC):** full matrix — every template with all compatible extensions
+- **PR required bar:** L0 + L1 (always). L2/L3 run for touched paths.
+- **Weekly:** full L1 + L2 + L3.
+- **Never:** stack all compatible extensions in one job.
 
-See the [Actions tab](https://github.com/Create-Node-App/cna-templates/actions/workflows/test-combinations.yml) for the latest run results.
+See the [Actions tab](https://github.com/Create-Node-App/cna-templates/actions) for latest runs.
 
 ## For AI assistants: copy-paste to start a maintenance session
 
@@ -79,7 +84,8 @@ Always:
 
 Current known constraints:
 - Storybook extension is pinned to `^8.6.18` with `legacy-peer-deps=true` in `extensions/storybook/.npmrc`; do not upgrade to Storybook v10 without resolving issue #161 first.
-- The `test-combinations.yml` generator uses JS variables `repoDir` and `tplDir` unescaped; never prefix them with a backslash inside the heredoc.
+- CI uses layered L0–L3 workflows (`ci-*.yml`); do not reintroduce all-extensions stacking.
+- Always resolve `file://` paths from `templates.json` `url` directories, never from public slugs.
 - `create-node-app` releases use npm Trusted Publishing via OIDC; do not use a manual `NPM_TOKEN`.
 
 If the user only says "continue" or asks "what should I do next", summarize the current CI/issues state and propose the next action.

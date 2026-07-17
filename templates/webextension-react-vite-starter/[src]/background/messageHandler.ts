@@ -21,13 +21,13 @@ async function handleMessage(message: ExtensionMessage): Promise<ExtensionRespon
 }
 
 export function registerMessageListener(): void {
-  Browser.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
+  Browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (!isExtensionMessage(message)) {
       sendResponse({
         type: 'ERROR',
         message: 'Invalid message payload',
       } satisfies ExtensionResponse);
-      return false;
+      return true;
     }
 
     void handleMessage(message).then(sendResponse);

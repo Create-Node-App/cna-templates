@@ -15,7 +15,7 @@ import { getSecretValue } from '../helpers/asm';
 
 @Injectable()
 export class DrizzleProvider implements OnModuleInit {
-  db: NodePgDatabase<typeof schema>;
+  db!: NodePgDatabase<typeof schema>;
 
   constructor(private readonly configService: ConfigService) {}
 

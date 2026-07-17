@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, CheckCircle, Github, Image, Mail, User } from 'lucide-react';
+import { ArrowRight, CheckCircle, GitBranch, Image, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
@@ -58,7 +58,7 @@ export function ProfileCompletionWidget({
       label: t('connectGitHub'),
       completed: profileCompletion.hasGitHub,
       href: `/t/${tenantSlug}/profile`,
-      icon: Github,
+      icon: GitBranch,
     },
     {
       id: 'invite',

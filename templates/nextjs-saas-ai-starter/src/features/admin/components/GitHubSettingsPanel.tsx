@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle, Github, Link2Off, Loader2, RefreshCw, Settings, Unlink } from 'lucide-react';
+import { CheckCircle, GitBranch, Link2Off, Loader2, RefreshCw, Settings, Unlink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
@@ -152,7 +152,7 @@ export function GitHubSettingsPanel({
                 {connectedGithubUsername && (
                   <Button variant="ghost" size="sm" asChild>
                     <a href={`https://github.com/${connectedGithubUsername}`} target="_blank" rel="noopener noreferrer">
-                      <Github className="h-4 w-4 mr-2" />@{connectedGithubUsername}
+                      <GitBranch className="h-4 w-4 mr-2" />@{connectedGithubUsername}
                     </a>
                   </Button>
                 )}

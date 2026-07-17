@@ -14,5 +14,5 @@
     "outDir": "./dist"
   },
   "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["dist", "build", "node_modules", "**/*.test.tsx", "setupTests.ts", "vitest.config.ts"]
 }

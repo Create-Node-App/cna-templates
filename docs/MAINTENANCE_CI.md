@@ -3,6 +3,7 @@
 > How to diagnose, fix, and extend the CI workflows that validate the `create-node-app` ecosystem.
 >
 > Read after the top-level [MAINTENANCE_RUNBOOK.md](./MAINTENANCE_RUNBOOK.md).
+> Trust model: [#309](https://github.com/Create-Node-App/cna-templates/issues/309).
 
 ---
 
@@ -20,168 +21,118 @@
 | `publish.yml` | Changesets + npm Trusted Publishing |
 | `pr-review.yml` | PR automation |
 
-### `cna-templates`
+### `cna-templates` (layered CI)
 
-| Workflow | Purpose |
-|---|---|
-| `test-combinations.yml` | Random + full matrix of template × extension combinations |
-| `smoke-test.yml` | Quick end-to-end smoke tests on PRs |
+| Workflow | Layer | Purpose |
+|---|---|---|
+| `ci-integrity.yml` | L0 | Registry paths, doc links, shared assets, profile validation |
+| `ci-templates.yml` | L1 | Every template alone (required trust bar) |
+| `ci-extensions.yml` | L2 | One extension per job on a canonical template |
+| `ci-profiles.yml` | L3 | Curated one-per-category stacks (`ci/profiles/*.json`) |
+
+**Removed:** `smoke-test.yml` (false greens from wrong slug→dir paths) and
+`test-combinations.yml` (random stacks + “all extensions at once”).
 
 ---
 
 ## 2. Reading CI failures
 
-Always start with the failed logs:
-
 ```bash
-gh run view <run-id> --repo Create-Node-App/<repo> --log-failed
+gh run view <run-id> --repo Create-Node-App/cna-templates --log-failed
+gh run list --repo Create-Node-App/cna-templates --limit 20
 ```
 
-For long logs, filter:
+Job names encode the layer:
 
-```bash
-gh run view <run-id> --repo Create-Node-App/<repo> --log-failed | grep -iE "error|fail|cannot|unable"
-```
+- `L1 · hono-starter` — bare template failed
+- `L2 · zustand @ react-vite-starter` — that extension broke isolation
+- `L3 · react-default` — curated profile composition failed
 
-List recent runs:
-
-```bash
-gh run list --repo Create-Node-App/<repo> --limit 20
-```
+Phases inside `scripts/ci/run-scaffold-check.js`: `scaffold` → `empty-guard` →
+`install` → `type-check` → `build` → `test`.
 
 ---
 
 ## 3. Running workflows manually
 
 ```bash
-# cna-templates random + full matrix
-gh workflow run "Test Template and Extension Combinations" \
-  --repo Create-Node-App/cna-templates --ref main
-
-# Watch until it finishes
+gh workflow run "CI Templates (L1)" --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Extensions (L2)" --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Profiles (L3)" --repo Create-Node-App/cna-templates --ref main
 gh run watch <run-id> --repo Create-Node-App/cna-templates --exit-status
-
-# create-node-app tests
-gh workflow run "Test" --repo Create-Node-App/create-node-app --ref main
 ```
 
-Use `--ref <branch>` to test a PR branch before merging.
-
 ---
 
-## 4. The `test-combinations.yml` generator
-
-This workflow is the most common source of maintenance work. It has four jobs:
-
-1. `generate-combinations` — builds a JSON matrix of random, non-conflicting combinations.
-2. `test-combinations` — runs the random matrix.
-3. `generate-full-matrix` — builds a JSON matrix of every template with **all** compatible extensions.
-4. `test-full-matrix` — runs the full matrix.
-
-### 4.1 Random matrix logic
-
-For each template:
-
-- Filter compatible extensions by `type`.
-- Group by `category`.
-- Pick one random extension per category.
-- Skip any extension that conflicts with already-selected ones (`incompatibleWith`).
-
-### 4.2 Full matrix logic
-
-For each template:
-
-- Filter compatible extensions by `type`.
-- Add every mutually-compatible extension to a single job per template.
-
-This is the worst-case scenario and catches peer-dependency blowups.
-
----
-
-## 5. Common workflow failures
-
-### 5.1 `SyntaxError: Identifier has already been declared`
-
-**Cause:** The Node script embedded in the YAML has a duplicate function or variable declaration.
-
-**Fix:** Remove the duplicate in `.github/workflows/test-combinations.yml`.
-
-**Historical fix:** #159 and #160.
-
-### 5.2 Empty `templateUrl` like `file://?subdir=templates/`
-
-**Cause:** Escaped JS template variables (`\${repoDir}`, `\${tplDir}`) are passed as literal strings instead of being interpolated by Node.
-
-**Fix:** Use `${repoDir}` and `${tplDir}` without backslashes. GitHub Actions does not interpolate `${...}`, only `${{ ... }}`, so the JS here-doc receives the raw `${repoDir}` text that Node evaluates correctly.
-
-**Historical fix:** commit `9d95c3f`.
-
-### 5.3 `npm error ETARGET`
-
-See [MAINTENANCE_DEPENDENCIES.md](./MAINTENANCE_DEPENDENCIES.md).
-
-### 5.4 `npm error ERESOLVE`
-
-See [MAINTENANCE_DEPENDENCIES.md](./MAINTENANCE_DEPENDENCIES.md).
-
-### 5.5 Full matrix passes but random fails (or vice versa)
-
-This usually means:
-
-- The random matrix hit an unlucky combination not covered by the all-at-once full matrix.
-- The full matrix selects all extensions, shadowing a per-extension failure.
-
-Re-run the exact combination locally using the failed job's `templateUrl` and `extensions`.
-
----
-
-## 6. Testing the embedded Node script locally
-
-The `test-combinations.yml` embeds Node code inside `<<EOF` heredocs. Validate the script before pushing:
+## 4. Matrix generators (testable Node, not YAML heredocs)
 
 ```bash
-node - <<'PY'
-const fs = require('fs');
-const txt = fs.readFileSync('.github/workflows/test-combinations.yml', 'utf8');
-let idx = 0;
-for (const match of txt.matchAll(/node <<EOF\n([\s\S]*?)\n          EOF/g)) {
-  let code = match[1].replace(/^          /gm, '');
-  // For syntax validation only, turn escaped template literals back into real ones
-  code = code.replace(/\\\`/g, '`').replace(/\\\$/g, '$');
-  try {
-    new Function(code);
-    console.log(`Block ${idx}: OK`);
-  } catch (e) {
-    console.error(`Block ${idx}: SYNTAX ERROR — ${e.message}`);
-    process.exit(1);
-  }
-  idx++;
-}
-PY
+node scripts/ci/generate-matrix.js --layer templates
+node scripts/ci/generate-matrix.js --layer extensions
+node scripts/ci/generate-matrix.js --layer profiles
+node scripts/ci/generate-matrix.js --layer validate-profiles
 ```
 
-Run this from the `cna-templates` root.
+PR runs use `--changed-only` for L2/L3. Changes under `scripts/ci/`,
+`ci/profiles/`, `templates.json`, or `ci-*.yml` force the full L2/L3 matrix.
+
+### Canonical templates for L2
+
+See `CANONICAL_TEMPLATE_BY_TYPE` in `scripts/ci/registry.js` (e.g. `react` →
+`react-vite-starter`).
+
+### Profiles (L3)
+
+- One addon **per category**
+- Must honor `incompatibleWith`
+- Optional `sets` for `cna.config.json` custom options (e.g. turborepo `scope`)
 
 ---
 
-## 7. Modifying a workflow safely
+## 5. Common failures
 
-1. Make the change in a branch.
-2. Run the syntax validator above.
-3. Push and open a PR.
-4. Run the workflow manually on the branch if possible:
-   ```bash
-   gh workflow run "Test Template and Extension Combinations" \
-     --repo Create-Node-App/cna-templates --ref <branch>
-   ```
-5. Merge only after the manual run succeeds.
+### 5.1 `empty-guard` / template path does not exist
+
+**Cause:** `file://` pointed at a slug (`templates/nestjs-boilerplate`) instead
+of the directory (`templates/nestjs-starter`).
+
+**Fix:** Always resolve paths via `templates.json` `url` (see `scripts/ci/registry.js`).
+
+### 5.2 `npm error ETARGET` / `ERESOLVE`
+
+See [MAINTENANCE_DEPENDENCIES.md](./MAINTENANCE_DEPENDENCIES.md).
+
+### 5.3 L3 profile validation fails
+
+```bash
+node scripts/ci/generate-matrix.js --layer validate-profiles
+```
+
+Fix duplicate categories or unknown slugs in `ci/profiles/*.json`.
+
+### 5.4 Why we do not stack all extensions
+
+Stacking 18–32 addons (multiple UIs + stores + test runners) produces
+collisions nobody selects in the CLI. Isolation (L2) + curated profiles (L3)
+match real UX and attribute failures.
 
 ---
 
-## 8. Checklist
+## 6. Modifying CI safely
 
-- [ ] Embedded Node scripts pass local syntax validation.
-- [ ] Workflow YAML is valid (use `cat` + visual check or a YAML linter).
-- [ ] Manual workflow run on the branch passes.
-- [ ] The full matrix is green for risky changes.
-- [ ] Changes do not introduce new secret exposure or permissions escalation.
+1. Change scripts under `scripts/ci/` or workflows under `.github/workflows/ci-*.yml`.
+2. Run generators locally.
+3. Spot-check with `run-scaffold-check.js` for one L1 and one L2 cell.
+4. Open a PR; L0+L1 always run. L2/L3 run for touched paths (or full if CI scripts change).
+5. For risky registry changes, manually dispatch L2/L3 on the branch.
+
+---
+
+## 7. Checklist
+
+- [ ] `node scripts/validate-templates.js` passes (paths exist).
+- [ ] Profiles validate.
+- [ ] L1 covers every template after template changes.
+- [ ] Changed extensions have a green L2 cell (or an issue explaining known break).
+- [ ] No workflow stacks same-category extensions outside a named profile.
+- [ ] Permissions stay `contents: read` unless a job truly needs more.

@@ -17,6 +17,15 @@ Use `file://` URLs to test unpublished templates or extensions without pushing t
 `customOptions` defaults are read from `cna.config.json` inside the template directory,
 so all EJS variables resolve automatically in non-interactive mode.
 
+**Always use the on-disk directory name** from the registry `url` (for example
+`templates/nestjs-starter`), never the public slug (`nestjs-boilerplate`). Wrong
+paths produce empty scaffolds that look green if scripts are `--if-present`.
+
+**`file://` templates ignore static `package.json`.** CNA only applies
+`package/index.js` (or `package.js`). Do not keep both `package.json` and a
+`package/` directory — Node resolves `…/package` to `package.json` and the
+resolver never runs.
+
 ```sh
 REPO=/absolute/path/to/cna-templates
 
@@ -33,29 +42,44 @@ CI=true npx create-awesome-node-app my-app \
   --no-install
 cd my-app && npm install && npm run lint:fix && npm run build
 
-# Remote template slug + local extension (for extension-only development)
-CI=true npx create-awesome-node-app my-app \
-  --template react-vite-boilerplate \
-  --addons "file://$REPO?subdir=extensions/my-new-extension"
+# Shared CI runner (same checks as GitHub Actions)
+node scripts/ci/run-scaffold-check.js \
+  --template-url "file://$REPO/templates/react-vite-starter" \
+  --addon-url "file://$REPO/extensions/react-zustand"
 ```
 
 ### Debug output
 
 Add `--verbose` to any command to see detailed scaffolding logs.
 
-## CI Workflow
+## CI Workflow (layered trust — #309)
 
-`.github/workflows/test-combinations.yml` runs on every push/PR to `main` and weekly on Sundays.
+Green required checks mean **templates and realistic profiles work**, not that
+every extension can be stacked into one mega-app.
 
-For each template it:
-1. Picks one random compatible extension per category
-2. Runs `npx create-awesome-node-app --template <slug> --addons <...>` (CI mode)
-3. Verifies `npm run format --if-present`, `npm run lint:fix --if-present`, and `npm run build --if-present` all pass
+| Layer | Workflow | When | What |
+|-------|----------|------|------|
+| **L0** | `ci-integrity.yml` | PR + main + weekly | `validate-templates.js` (paths exist), doc links, shared assets, profile schema |
+| **L1** | `ci-templates.yml` | PR + main + weekly | **Every** template alone (correct `file://` dir from registry) |
+| **L2** | `ci-extensions.yml` | PR (changed only) + weekly (all) | **One extension per job** on its canonical template |
+| **L3** | `ci-profiles.yml` | PR (affected) + weekly (all) | Curated one-per-category stacks in `ci/profiles/*.json` |
 
-To reproduce a CI run locally:
+### What we deliberately do **not** run
+
+- Random “one extension per category” stacks on every push
+- “Full matrix” = all compatible extensions at once (false negatives from UI/store collisions; false confidence)
+
+### Local matrix generation
 
 ```sh
-CI=true npx create-awesome-node-app my-app \
-  --template <slug> --addons <ext1> <ext2>
-cd my-app && npm run format --if-present && npm run lint:fix --if-present && npm run build --if-present
+node scripts/ci/generate-matrix.js --layer templates
+node scripts/ci/generate-matrix.js --layer extensions
+node scripts/ci/generate-matrix.js --layer profiles
+node scripts/ci/generate-matrix.js --layer validate-profiles
 ```
+
+### Adding a curated profile
+
+1. Create `ci/profiles/<id>.json` with `templateDir`, `addons` (registry **slugs**), optional `sets`.
+2. Enforce **one addon per category** and honor `incompatibleWith`.
+3. Run `node scripts/ci/generate-matrix.js --layer validate-profiles`.

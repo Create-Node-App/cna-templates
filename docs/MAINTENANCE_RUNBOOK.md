@@ -66,7 +66,7 @@ Use this to decide which procedure to follow:
 
 ```text
 CI is red
-├── Failure is in .github/workflows/test-combinations.yml
+├── Failure is in `.github/workflows/ci-*.yml`
 │   └── Read MAINTENANCE_CI.md
 ├── Failure is dependency resolution (ERESOLVE, ETARGET, peer conflict)
 │   └── Read MAINTENANCE_DEPENDENCIES.md
@@ -141,7 +141,7 @@ Every task should follow these phases:
 | Repo | What it is | Critical files | Critical CI |
 |---|---|---|---|
 | `create-node-app` | CLI + monorepo | `packages/*/package.json`, `.changeset/config.json`, `.github/workflows/publish.yml` | `test.yml`, `type-check.yml`, `publish.yml`, `mega-linter.yml` |
-| `cna-templates` | Template/extension bank | `templates.json`, `templates.schema.json`, `templates/`, `extensions/`, `.github/workflows/test-combinations.yml` | `test-combinations.yml`, `smoke-test.yml` |
+| `cna-templates` | Template/extension bank | `templates.json`, `templates.schema.json`, `templates/`, `extensions/`, `.github/workflows/ci-*.yml`, `ci/profiles/` | `ci-integrity.yml`, `ci-templates.yml`, `ci-extensions.yml`, `ci-profiles.yml` |
 
 ---
 

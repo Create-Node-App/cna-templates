@@ -163,7 +163,7 @@ Remove extensions one at a time until the project passes. Then fix the last remo
 6. Add an entry to `templates.json` under `templates`.
 7. Ensure the entry point matches the directory structure.
 8. Run local validation against the new template.
-9. Run the full matrix after merge.
+9. Confirm L1 (`ci-templates.yml`) covers the template after merge.
 
 ### 5.2 Directory naming caveat
 
@@ -175,10 +175,10 @@ The directory name in `templates/` and the slug in `templates.json` may differ. 
 
 ### 5.3 Modifying a template
 
-1. Re-scaffold the template with a representative set of extensions.
+1. Re-scaffold the template alone (`scripts/ci/run-scaffold-check.js`).
 2. Apply the change.
-3. Validate lint/type-check/build.
-4. Re-scaffold with **all** compatible extensions (full matrix worst case) to detect conflicts.
+3. Validate lint/type-check/build/test.
+4. Re-scaffold with a **curated profile** from `ci/profiles/` (or a one-per-category stack) — do **not** install all compatible extensions at once.
 
 ---
 
@@ -191,16 +191,16 @@ The directory name in `templates/` and the slug in `templates.json` may differ. 
 3. Add files, templates, appends, or `.npmrc` as needed.
 4. Add the extension to `templates.json` under `extensions`.
 5. Set `type` to match compatible template types.
-6. Set `category` to avoid selecting multiple extensions from the same category in random CI.
-7. Define `incompatibleWith` if it cannot coexist with other extensions.
-8. Validate locally with **each** compatible template.
-9. Validate the full matrix after merge.
+6. Set `category` so curated profiles and the CLI keep mutually exclusive choices clear.
+7. Define `incompatibleWith` if it cannot coexist with other extensions (keep symmetric).
+8. Validate locally with **each** compatible canonical template (L2 isolation).
+9. Confirm weekly L2 picks up the extension after merge.
 
 ### 6.2 Modifying an extension
 
 1. Identify all templates compatible with the extension (`type` match).
-2. Test the extension against **at least one** template locally.
-3. If the change affects dependencies, also test the full matrix of that template (all extensions at once) to detect peer conflicts.
+2. Test the extension **alone** against its canonical template (`scripts/ci/run-scaffold-check.js --addon-url ...`).
+3. If composition matters, exercise a matching `ci/profiles/*.json` profile — never stack every compatible extension.
 
 ---
 
@@ -219,7 +219,9 @@ In `templates.json`, add `incompatibleWith` to both extensions:
 }
 ```
 
-The CI generator reads this and never selects both in the same combination. The full matrix generator also respects it.
+The CI profile generator (`scripts/ci/generate-matrix.js --layer profiles`) never
+selects two extensions that declare `incompatibleWith` each other. L2 isolation
+jobs test one extension at a time.
 
 ### 7.2 Via `.npmrc`
 
@@ -290,7 +292,9 @@ If any step fails, fix the template or extension, then regenerate from scratch. 
 - [ ] `.template` files use available EJS variables.
 - [ ] **M1 maturity** criteria in [§11](#11-template-maturity-m1--m2--m3) are met for **new** templates. Existing thin starters may merge only with an uplift issue linked until they reach M1.
 - [ ] Local validation passes.
-- [ ] Full matrix worst case (all compatible extensions) is tested for risky changes.
+- [ ] Full L1 template baseline is green for template changes.
+- [ ] Changed extensions have a green L2 isolation job (or a tracked known break).
+- [ ] Risky composition is covered by a curated L3 profile, not an all-extensions stack.
 
 ---
 

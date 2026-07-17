@@ -1,0 +1,9 @@
+{
+  "id": "nestjs-default",
+  "description": "Typical Nest API: Drizzle Postgres + husky (one Tooling addon — openapi is also Tooling)",
+  "templateDir": "nestjs-starter",
+  "addons": [
+    "drizzle-orm-postgresql",
+    "husky-lint-staged"
+  ]
+}

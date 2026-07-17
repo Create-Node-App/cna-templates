@@ -5,6 +5,8 @@ import Browser from 'webextension-polyfill';
 import Options from '@/options/Options';
 import { DEFAULT_SETTINGS, SETTINGS_STORAGE_KEY } from '@/shared/settings';
 
+import '@testing-library/jest-dom/vitest';
+
 describe('Options', () => {
   it('loads saved settings from storage.sync', async () => {
     vi.mocked(Browser.storage.sync.get).mockResolvedValue({
