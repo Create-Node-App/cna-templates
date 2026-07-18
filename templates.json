@@ -920,7 +920,7 @@
     {
       "name": "Auth.js v5 for Next.js",
       "slug": "nextjs-auth",
-      "description": "Add Auth.js v5 (next-auth@beta, latest: 5.0.0-beta.31) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session. Note: v5 remains in beta as of 2026 \u2014 see https://authjs.dev for updates.",
+      "description": "Add Auth.js v5 (next-auth@beta, latest: 5.0.0-beta.31) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session. Note: v5 remains in beta as of 2026 — see https://authjs.dev for updates.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-auth",
       "type": "nextjs",
       "category": "Auth",
@@ -1068,6 +1068,21 @@
         "Database",
         "Edge",
         "Drizzle"
+      ]
+    },
+    {
+      "name": "React Router v7",
+      "slug": "react-react-router",
+      "description": "Adds React Router v7 with BrowserRouter setup and sample pages.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-react-router",
+      "type": "react",
+      "category": "Tooling",
+      "labels": [
+        "React",
+        "React Router",
+        "Routing",
+        "Vite",
+        "SPA"
       ]
     }
   ]

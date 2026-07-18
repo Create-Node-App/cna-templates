@@ -1,0 +1,31 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+import './Landing.css';
+
+const About = () => (
+  <div className="cna-landing cna-landing--react-vite">
+    <header className="cna-landing__header">
+      <img src="/logo.svg" alt="Create Awesome Node App" className="cna-landing__logo" width="40" height="40" />
+      <span className="cna-landing__brand">Create Awesome Node App</span>
+    </header>
+
+    <main className="cna-landing__main">
+      <section className="cna-landing__hero">
+        <span className="cna-landing__eyebrow">React Router v7</span>
+        <h1 className="cna-landing__title">About</h1>
+        <p className="cna-landing__lead">
+          Sample page from the React Router extension — add more routes in{' '}
+          <code className="cna-landing__code">src/routes/AppRoutes.tsx</code>.
+        </p>
+        <div className="cna-landing__actions">
+          <Link to="/" className="cna-landing__button cna-landing__button--primary">
+            Back to Home
+          </Link>
+        </div>
+      </section>
+    </main>
+  </div>
+);
+
+export default About;
