@@ -52,6 +52,7 @@ function run(phase, cmd, cmdArgs, options = {}) {
   console.log(`\n▶ [${phase}] ${cmd} ${cmdArgs.join(' ')}`);
   const result = spawnSync(cmd, cmdArgs, {
     stdio: 'inherit',
+    shell: process.platform === 'win32',
     env: {
       ...process.env,
       CI: 'true',
@@ -73,7 +74,10 @@ function resolveFileTarget(fileUrl) {
     fail('scaffold', `URL must be file://, got: ${fileUrl}`);
   }
   const parsed = new URL(fileUrl);
-  const pathname = decodeURIComponent(parsed.pathname);
+  let pathname = decodeURIComponent(parsed.pathname);
+  if (process.platform === 'win32' && pathname.startsWith('/')) {
+    pathname = pathname.replace(/^\/([A-Za-z]:)/, '$1');
+  }
   const subdir = parsed.searchParams.get('subdir');
   return subdir ? path.join(pathname, subdir) : pathname;
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Landing.css';
 
 interface Feature {
@@ -19,9 +20,9 @@ const features: Feature[] = [
     description: 'Client-rendered React with modern hooks and a lean runtime footprint.',
   },
   {
-    icon: '🎨',
-    title: 'Styling Ready',
-    description: 'Tailwind CSS, Sass, and Less support built-in and ready for your components.',
+    icon: '🧭',
+    title: 'React Router 7',
+    description: 'Nested client routes already wired so you can grow screens without a rewrite.',
   },
   {
     icon: '🛡️',
@@ -40,11 +41,19 @@ const features: Feature[] = [
   },
 ];
 
-const docs = [
+interface Doc {
+  label: string;
+  href?: string;
+  to?: string;
+  isRouterLink?: boolean;
+}
+
+const docs: Doc[] = [
   { label: 'Project overview', href: '/docs/README.md' },
   { label: 'Project structure', href: '/docs/PROJECT_STRUCTURE.md' },
   { label: 'Components & styling', href: '/docs/COMPONENTS_AND_STYLING.md' },
   { label: 'State management', href: '/docs/STATE_MANAGEMENT.md' },
+  { label: 'About Page (React Router Demo)', to: '/about', isRouterLink: true },
 ];
 
 const withIndex = (index: number) => ({ '--index': index }) as React.CSSProperties;
@@ -100,7 +109,14 @@ const Landing = () => (
       <section className="cna-landing__docs" style={withIndex(features.length + 1)}>
         <h2 className="cna-landing__section-title">Next steps</h2>
         <nav className="cna-landing__doc-list" aria-label="Documentation">
-          {docs.map((doc) => (
+          {docs.map((doc) => doc.isRouterLink && doc.to ? (
+            <Link key={doc.label} to={doc.to} className="cna-landing__doc-link">
+              <span className="cna-landing__doc-label">{doc.label}</span>
+              <span className="cna-landing__doc-arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          ) : (
             <a key={doc.label} href={doc.href} className="cna-landing__doc-link">
               <span className="cna-landing__doc-label">{doc.label}</span>
               <span className="cna-landing__doc-arrow" aria-hidden="true">

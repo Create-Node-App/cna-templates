@@ -1,0 +1,12 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const About = () => (
+  <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '600px', margin: '0 auto' }}>
+    <h1>About Page</h1>
+    <p>This is a sample page added by the React Router v7 extension.</p>
+    <Link to="/" style={{ color: '#0070f3', textDecoration: 'underline' }}>Back to Home</Link>
+  </div>
+);
+
+export default About;
