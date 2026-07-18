@@ -61,8 +61,8 @@ const Landing = () => (
         <span className="cna-landing__eyebrow">React + Vite</span>
         <h1 className="cna-landing__title"><%= projectName %></h1>
         <p className="cna-landing__lead">
-          A client-side React SPA tuned for instant HMR. Reach for this when you want a fast browser app without
-          server rendering in the critical path.
+          A client-side React SPA tuned for instant HMR. Reach for this when you want a fast browser app without server
+          rendering in the critical path.
         </p>
         <div className="cna-landing__actions">
           <a href="/docs/README.md" className="cna-landing__button cna-landing__button--primary">

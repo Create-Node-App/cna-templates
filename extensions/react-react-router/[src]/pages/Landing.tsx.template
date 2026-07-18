@@ -41,19 +41,14 @@ const features: Feature[] = [
   },
 ];
 
-interface Doc {
-  label: string;
-  href?: string;
-  to?: string;
-  isRouterLink?: boolean;
-}
+type Doc = { label: string; href: string } | { label: string; to: string };
 
 const docs: Doc[] = [
   { label: 'Project overview', href: '/docs/README.md' },
   { label: 'Project structure', href: '/docs/PROJECT_STRUCTURE.md' },
   { label: 'Components & styling', href: '/docs/COMPONENTS_AND_STYLING.md' },
   { label: 'State management', href: '/docs/STATE_MANAGEMENT.md' },
-  { label: 'About Page (React Router Demo)', to: '/about', isRouterLink: true },
+  { label: 'About Page (React Router Demo)', to: '/about' },
 ];
 
 const withIndex = (index: number) => ({ '--index': index }) as React.CSSProperties;
@@ -70,8 +65,8 @@ const Landing = () => (
         <span className="cna-landing__eyebrow">React + Vite</span>
         <h1 className="cna-landing__title"><%= projectName %></h1>
         <p className="cna-landing__lead">
-          A client-side React SPA tuned for instant HMR. Reach for this when you want a fast browser app without
-          server rendering in the critical path.
+          A client-side React SPA tuned for instant HMR. Reach for this when you want a fast browser app without server
+          rendering in the critical path.
         </p>
         <div className="cna-landing__actions">
           <a href="/docs/README.md" className="cna-landing__button cna-landing__button--primary">
@@ -109,21 +104,23 @@ const Landing = () => (
       <section className="cna-landing__docs" style={withIndex(features.length + 1)}>
         <h2 className="cna-landing__section-title">Next steps</h2>
         <nav className="cna-landing__doc-list" aria-label="Documentation">
-          {docs.map((doc) => doc.isRouterLink && doc.to ? (
-            <Link key={doc.label} to={doc.to} className="cna-landing__doc-link">
-              <span className="cna-landing__doc-label">{doc.label}</span>
-              <span className="cna-landing__doc-arrow" aria-hidden="true">
-                →
-              </span>
-            </Link>
-          ) : (
-            <a key={doc.label} href={doc.href} className="cna-landing__doc-link">
-              <span className="cna-landing__doc-label">{doc.label}</span>
-              <span className="cna-landing__doc-arrow" aria-hidden="true">
-                →
-              </span>
-            </a>
-          ))}
+          {docs.map((doc) =>
+            'to' in doc ? (
+              <Link key={doc.label} to={doc.to} className="cna-landing__doc-link">
+                <span className="cna-landing__doc-label">{doc.label}</span>
+                <span className="cna-landing__doc-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            ) : (
+              <a key={doc.label} href={doc.href} className="cna-landing__doc-link">
+                <span className="cna-landing__doc-label">{doc.label}</span>
+                <span className="cna-landing__doc-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ),
+          )}
         </nav>
       </section>
     </main>
