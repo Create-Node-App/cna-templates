@@ -1,13 +1,29 @@
-/* shadcn/ui global styles (templated) */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-bg: rgb(var(--color-bg));
+  --color-fg: rgb(var(--color-fg));
+  --animate-fade-in: fade-in .2s ease-out;
+  --animate-scale-in: scale-in .25s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 
 :root {
   --radius: 8px;
   --color-bg: 255 252 245;
   --color-fg: 31 41 55;
 }
+
 .dark {
   --color-bg: 15 23 42;
   --color-fg: 248 250 252;

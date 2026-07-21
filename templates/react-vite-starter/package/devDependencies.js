@@ -20,7 +20,8 @@ module.exports = {
   'vite-plugin-eslint': '^1.8.1',
   'vite-plugin-pwa': '^1.3.0',
   'less': '^4.2.0',
-  'tailwindcss': '^3.4.0',
+  '@tailwindcss/postcss': '^4.3.3',
+  'tailwindcss': '^4.3.3',
   'postcss': '^8.4.47',
   'autoprefixer': '^10.4.20',
 };
