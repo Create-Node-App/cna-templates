@@ -1,17 +1,27 @@
-/* Tailwind base stylesheet (templated) */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f5f8ff;
+  --color-brand-100: #ebf1ff;
+  --color-brand-200: #d6e3ff;
+  --color-brand-300: #adc7ff;
+  --color-brand-400: #7aa5ff;
+  --color-brand-500: #3d7dff;
+  --color-brand-600: #1559e6;
+  --color-brand-700: #0f44b4;
+  --color-brand-800: #0d378f;
+  --color-brand-900: #0c2f75;
+  --radius-xl: 1rem;
+}
 
 :root {
   --radius: 8px;
 }
 
-html.dark { color-scheme: dark; }
+body {
+  @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 antialiased;
+}
 
-body { @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 antialiased; }
-
-/* Example utility composition */
 .btn-primary {
   @apply inline-flex items-center rounded-md bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow hover:bg-amber-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors;
 }
