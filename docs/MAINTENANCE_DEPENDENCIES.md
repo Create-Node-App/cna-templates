@@ -52,7 +52,7 @@ If a version is missing, `npm view` returns a 404. That immediately tells you th
    - Pin to the latest common version across all related packages.
    - Wait/research the new addon/package name in the new major line.
 
-**Case study:** Storybook `^10.4.6` exists for `storybook`, `@storybook/nextjs`, `@storybook/react`, and `@storybook/addon-links`, but **not** for `@storybook/addon-essentials`, `@storybook/addon-interactions`, `@storybook/blocks`, or `@storybook/test`. The immediate fix was to revert to `^8.6.18`. The follow-up is tracked in issue #161.
+**Case study (resolved):** Storybook `^10.5.3` exists for `storybook`, `@storybook/nextjs`, `@storybook/react`, and `@storybook/addon-links`, but **not** for `@storybook/addon-essentials`, `@storybook/addon-interactions`, `@storybook/blocks`, or `@storybook/test` (these are built into `storybook` core in v10 and referenced as string-based addons in `main.ts`). The fix was to drop those packages and keep only the 4 that ship as npm packages. Resolved in `feat/storybook-v10-migration`. See issue #161 for research details.
 
 ### 2.2 `npm error ERESOLVE`
 
@@ -67,7 +67,7 @@ If a version is missing, `npm view` returns a 404. That immediately tells you th
 3. **Add `.npmrc` with `legacy-peer-deps=true`** if the packages are known to work together despite the declared peer range. Several extensions already do this (see `MAINTENANCE_TEMPLATES.md`).
 4. **Mark extensions as incompatible** if they truly cannot coexist.
 
-**Case study:** `@storybook/nextjs@8.6.18` declares `peer next@"^13.5.0 || ^14.0.0 || ^15.0.0"`, but `nextjs-starter` uses Next 16. Keeping Storybook 8 and adding `.npmrc` with `legacy-peer-deps=true` is the current workaround.
+**Case study (resolved):** `@storybook/nextjs@8.6.18` declared `peer next@"^13.5.0 || ^14.0.0 || ^15.0.0"`, but `nextjs-starter` uses Next 16. The workaround was `.npmrc` with `legacy-peer-deps=true`. With `@storybook/nextjs@^10.5.3` the peer range expanded to include Next 16, so the `.npmrc` was removed. Resolved in `feat/storybook-v10-migration`.
 
 ### 2.3 Peer dependency warnings that turn into errors
 
