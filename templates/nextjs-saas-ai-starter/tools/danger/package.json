@@ -20,6 +20,6 @@
     "danger": "^12.3.4"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "typescript": "^7.0.2"
   }
 }
