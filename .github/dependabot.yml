@@ -1,9 +1,11 @@
 version: 2
 updates:
+  # Template roots ship deps via package/index.js (no package.json on disk).
+  # Only scan extension manifests and the SaaS danger tooling package.
   - package-ecosystem: npm
     directories:
       - /extensions/*
-      - /templates/*
+      - /templates/nextjs-saas-ai-starter/tools/danger
     schedule:
       interval: weekly
     groups:
@@ -11,3 +13,12 @@ updates:
         dependency-type: development
       productionDependencies:
         dependency-type: production
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
