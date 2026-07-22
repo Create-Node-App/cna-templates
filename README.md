@@ -6,6 +6,7 @@
 [![L3 Profiles](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-profiles.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-profiles.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Node Version](https://img.shields.io/badge/node-22+-green.svg)
+[![Discord](https://img.shields.io/discord/1527933660764831825?label=Discord&logo=discord&logoColor=white)](https://discord.gg/dwFTsR7fK2)
 
 This repository contains official templates and extensions for [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
 
