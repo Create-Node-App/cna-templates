@@ -84,7 +84,6 @@ Always:
 8. Update `knowledge/processes/create-node-app-maintenance.md` in the workspace if you discover a new pattern or decision.
 
 Current known constraints:
-- Storybook extension is pinned to `^8.6.18` with `legacy-peer-deps=true` in `extensions/storybook/.npmrc`; do not upgrade to Storybook v10 without resolving issue #161 first.
 - CI uses layered L0–L3 workflows (`ci-*.yml`); do not reintroduce all-extensions stacking.
 - Always resolve `file://` paths from `templates.json` `url` directories, never from public slugs.
 - `create-node-app` releases use npm Trusted Publishing via OIDC; do not use a manual `NPM_TOKEN`.
