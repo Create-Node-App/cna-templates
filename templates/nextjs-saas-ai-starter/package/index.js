@@ -158,6 +158,8 @@ module.exports = function resolvePackage(_setup, { appName }) {
           "typescript-eslint": "^8.63.0",
           "wcag-contrast": "^3.0.0"
     },
-    packageManager: "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
+    overrides: {
+      "valibot": "^1.0.0"
+    },
   };
 };
