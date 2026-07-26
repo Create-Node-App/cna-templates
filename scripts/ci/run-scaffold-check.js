@@ -144,6 +144,23 @@ function hasScript(projectRoot, script) {
   return Boolean(pkg.scripts && pkg.scripts[script]);
 }
 
+function resolvePackageManager(projectRoot) {
+  const pkg = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
+  if (!pkg.packageManager) return 'npm';
+  const [name] = pkg.packageManager.split('@');
+  return ['pnpm', 'yarn', 'bun'].includes(name) ? name : 'npm';
+}
+
+function ensurePackageManager(pm) {
+  if (pm === 'npm') return;
+  console.log(`\n▶ [setup-pm] enabling ${pm} via corepack`);
+  const result = spawnSync('corepack', ['enable', pm], { stdio: 'inherit' });
+  if (result.status !== 0) {
+    console.warn(`⚠ [setup-pm] corepack failed, falling back to npm install -g ${pm}`);
+    spawnSync('npm', ['install', '-g', pm], { stdio: 'inherit', shell: true });
+  }
+}
+
 function main() {
   const args = parseArgs(process.argv);
   if (!args.templateUrl) {
@@ -188,11 +205,14 @@ function main() {
 
   assertNonEmptyProject(projectRoot);
 
-  run('install', 'npm', ['install'], { cwd: projectRoot });
+  const pm = resolvePackageManager(projectRoot);
+  ensurePackageManager(pm);
+
+  run('install', pm, ['install'], { cwd: projectRoot });
 
   if (hasScript(projectRoot, 'format')) {
-    console.log(`\n▶ [format] npm run format --if-present (soft)`);
-    const formatResult = spawnSync('npm', ['run', 'format', '--if-present'], {
+    console.log(`\n▶ [format] ${pm} run format (soft)`);
+    const formatResult = spawnSync(pm, ['run', 'format'], {
       cwd: projectRoot,
       stdio: 'inherit',
       env: { ...process.env, CI: 'true', FORCE_COLOR: '0' },
@@ -205,14 +225,14 @@ function main() {
   }
 
   if (hasScript(projectRoot, 'type-check')) {
-    run('type-check', 'npm', ['run', 'type-check'], { cwd: projectRoot });
+    run('type-check', pm, ['run', 'type-check'], { cwd: projectRoot });
   } else {
     console.log('ℹ [type-check] skipped (script not present)');
   }
 
   if (!args.skipBuild) {
     if (hasScript(projectRoot, 'build')) {
-      run('build', 'npm', ['run', 'build'], { cwd: projectRoot });
+      run('build', pm, ['run', 'build'], { cwd: projectRoot });
     } else {
       console.log('ℹ [build] skipped (script not present)');
     }
@@ -220,7 +240,7 @@ function main() {
 
   if (!args.skipTest) {
     if (hasScript(projectRoot, 'test')) {
-      run('test', 'npm', ['test'], { cwd: projectRoot });
+      run('test', pm, ['run', 'test'], { cwd: projectRoot });
     } else {
       console.log('ℹ [test] skipped (script not present)');
     }

@@ -55,6 +55,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Enable corepack (for pnpm/yarn/bun templates)
+        run: corepack enable
+
       - name: Scaffold check (template alone)
         env:
           NODE_OPTIONS: --max-old-space-size=8192
