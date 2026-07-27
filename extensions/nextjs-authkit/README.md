@@ -33,10 +33,10 @@ These two extensions are **incompatible** — install only one.
 
 Copy the appended variables from `.env.example` into `.env.local` and fill them in:
 
-```
+```dotenv
 WORKOS_API_KEY=sk_your_api_key
 WORKOS_CLIENT_ID=client_your_client_id
-WORKOS_COOKIE_PASSWORD=<generate 32+ char secret>
+WORKOS_COOKIE_PASSWORD="<replace-with-a-randomly-generated-secret-of-32+-characters>"
 NEXT_PUBLIC_WORKOS_REDIRECT_URI=http://localhost:3000/callback
 ```
 

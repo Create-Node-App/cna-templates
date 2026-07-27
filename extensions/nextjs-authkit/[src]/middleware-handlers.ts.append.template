@@ -7,7 +7,9 @@ middlewareHandlers.push(async (request) => {
 
   // Customize which paths require a signed-in session.
   // Everything except "/" requires auth by default — adjust to your app's needs.
-  if (pathname !== '/' && !session.user && authorizationUrl) {
+  const isPublicPath =
+    pathname === '/' || pathname === '/callback' || pathname === '/sign-in';
+  if (!isPublicPath && !session.user && authorizationUrl) {
     return {
       response: handleAuthkitHeaders(request, headers, { redirect: authorizationUrl }),
       priority: 10,
