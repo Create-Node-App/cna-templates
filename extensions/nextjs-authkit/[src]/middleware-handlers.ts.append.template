@@ -1,0 +1,23 @@
+
+import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
+
+middlewareHandlers.push(async (request) => {
+  const { session, headers, authorizationUrl } = await authkit(request);
+  const { pathname } = request.nextUrl;
+
+  // Customize which paths require a signed-in session.
+  // Everything except "/" requires auth by default — adjust to your app's needs.
+  if (pathname !== '/' && !session.user && authorizationUrl) {
+    return {
+      response: handleAuthkitHeaders(request, headers, { redirect: authorizationUrl }),
+      priority: 10,
+    };
+  }
+
+  // Always forward AuthKit's headers, even on public routes —
+  // withAuth() in your pages depends on this running first.
+  return {
+    response: handleAuthkitHeaders(request, headers),
+    priority: 0,
+  };
+});

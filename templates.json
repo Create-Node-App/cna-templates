@@ -930,7 +930,23 @@
         "Authentication",
         "OAuth",
         "Session"
-      ]
+      ],
+      "incompatibleWith": ["nextjs-authkit"]
+    },{
+      "name": "WorkOS AuthKit",
+      "slug": "nextjs-authkit",
+      "description": "Hosted authentication platform with pre-built UI, SSO, MFA, and password reset via WorkOS AuthKit.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-authkit",
+      "type": "nextjs",
+      "category": "Auth",
+      "labels": [
+        "sso",
+        "workos",
+        "authkit",
+        "enterprise",
+        "auth"
+      ],
+      "incompatibleWith": ["nextjs-auth"]
     },
     {
       "name": "t3-env for Next.js",
