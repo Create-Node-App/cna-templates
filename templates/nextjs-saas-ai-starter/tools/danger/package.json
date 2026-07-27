@@ -21,5 +21,9 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2"
+  },
+  "overrides": {
+    "undici": ">=6.27.0",
+    "picomatch": ">=2.3.2"
   }
 }
