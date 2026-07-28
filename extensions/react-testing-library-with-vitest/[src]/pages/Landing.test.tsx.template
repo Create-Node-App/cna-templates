@@ -7,8 +7,10 @@ import Landing from '<%= projectImportPath %>pages/Landing';
 
 describe('Landing', () => {
   it('renders the project title', () => {
-    const { getByRole } = render(<Landing />);
+    const { getByText } = render(<Landing />);
+    const heading = getByText('<%= projectName %>');
 
-    expect(getByRole('heading', { level: 1, name: '<%= projectName %>' })).toBeInTheDocument();
+    expect(heading).toBeInTheDocument();
+    expect(heading.tagName).toBe('H1');
   });
 });
