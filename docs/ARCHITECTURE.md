@@ -1,5 +1,23 @@
 # Architecture
 
+## System Overview
+
+```mermaid
+flowchart LR
+  User[User] -->|npx create-awesome-node-app| CLI[CLI]
+  CLI -->|--template / --addons| Resolve[Resolve template and extension entries]
+  Resolve --> TemplatesJson[templates.json]
+  TemplatesJson -->|template URL| Template[Template directory]
+  TemplatesJson -->|extension URLs in order| Extensions[Extension directories]
+  Template --> Copy[Copy base files]
+  Extensions --> Merge[Merge extension files on top]
+  Copy --> Process[Process special files]
+  Process --> Rename[Rename [bracket] directories]
+  Rename --> Package[Generate package.json]
+  Package --> Merge
+  Merge --> Output[Write final project to disk]
+```
+
 ## How the System Works
 
 A user runs:
@@ -8,7 +26,7 @@ A user runs:
 npx create-awesome-node-app --template <slug> --addons <ext1> <ext2>
 ```
 
-CNA resolves each slug to a `url` in `templates.json`, downloads the directories, merges them, and writes the final project to disk. The merge order is: base template files → each extension in order.
+CNA resolves each slug to a `url` in `templates.json`, downloads the directories, merges them, and writes the final project to disk. The merge order is: base template files, then each selected extension in the order the user provided it.
 
 ## `templates.json` Structure
 
@@ -16,6 +34,8 @@ Three top-level keys: `categories`, `templates`, `extensions`.
 
 Every template and extension requires: `name`, `slug`, `description`, `url`, `type`, `category`, `labels`.
 Templates may also have `customOptions` (interactive CLI prompts — see [AUTHORING.md](./AUTHORING.md)).
+
+`categories` groups templates for the CLI picker. A template belongs to exactly one category via its `category` value. Extensions use a free-form category label and can apply to multiple template types.
 
 ## The Type System
 
@@ -39,9 +59,10 @@ compatible = [ext.type].flat().includes(template.type)
 ## Generation Flow
 
 1. Resolve `url` for template and each selected extension from `templates.json`
-2. Copy static files from template directory
-3. Process special files (`.template`, `.append`, `.if-pnpm`) — see [AUTHORING.md](./AUTHORING.md)
-4. Rename `[bracket]/` directories based on `customOptions` answers
-5. Generate `package.json` by calling `package/index.js` (or using the static `package.json`)
-6. Merge extension files and dependencies on top
-7. Write final project to disk
+2. Read `customOptions` when present and collect interactive answers
+3. Copy static files from the template directory
+4. Process special files (`.template`, `.append`, `.if-pnpm`) — see [AUTHORING.md](./AUTHORING.md)
+5. Rename `[bracket]/` directories based on `customOptions` answers
+6. Generate `package.json` by calling `package/index.js` (or using the static `package.json`)
+7. Merge each extension's files and dependencies on top, in user-provided order
+8. Write the final project to disk
