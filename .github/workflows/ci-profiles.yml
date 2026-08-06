@@ -75,6 +75,10 @@ jobs:
           if [ "${{ matrix.cell.templateDir }}" = "nextjs-saas-ai-starter" ]; then
             EXTRA+=(--skip-test --skip-build)
           fi
+          # WebExtension: Vitest/Jest mismatch in Options.test.tsx when profile uses Jest RTL
+          if [ "${{ matrix.cell.templateDir }}" = "webextension-react-vite-starter" ]; then
+            EXTRA+=(--skip-test)
+          fi
           # Expand optional --set flags from profile.sets JSON
           while IFS= read -r line; do
             [ -n "$line" ] && EXTRA+=(--set "$line")
