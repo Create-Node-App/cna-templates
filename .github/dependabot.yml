@@ -1,9 +1,10 @@
 version: 2
 updates:
-  # Template roots ship deps via package/index.js (no package.json on disk).
-  # Only scan extension manifests and the SaaS danger tooling package.
+  # Templates now ship package.json for Dependabot (generated from package/index.js).
+  # Keep package/ as source of truth; package.json is snapshot for scanning.
   - package-ecosystem: npm
     directories:
+      - /templates/*
       - /extensions/*
       - /templates/nextjs-saas-ai-starter/tools/danger
     schedule:
