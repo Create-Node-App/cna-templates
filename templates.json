@@ -264,11 +264,9 @@
       "description": "Automate GitHub workflows with Actions, Dependabot, and templates for issues and pull requests.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
       "type": [
-        "sls",
         "react",
         "webextension-react",
         "monorepo",
-        "backend",
         "nestjs-backend",
         "nextjs",
         "nextjs-saas-ai"
@@ -308,11 +306,9 @@
       "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
       "type": [
-        "sls",
         "react",
         "webextension-react",
         "webdriverio",
-        "backend",
         "nestjs-backend",
         "nextjs",
         "nextjs-saas-ai"
@@ -350,12 +346,10 @@
       "description": "Set up a development container with Docker and VSCode for consistent environments.",
       "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
       "type": [
-        "sls",
         "react",
         "webextension-react",
         "monorepo",
         "webdriverio",
-        "backend",
         "nestjs-backend",
         "nextjs",
         "nextjs-saas-ai"

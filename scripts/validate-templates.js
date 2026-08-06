@@ -178,7 +178,7 @@ function validateTypes(data) {
     const extTypes = Array.isArray(extension.type) ? extension.type : [extension.type];
     extTypes.forEach(extType => {
       if (!templateTypes.has(extType)) {
-        warning(`Extension "${extension.slug}" has type "${extType}" that doesn't match any template type`);
+        error(`Extension "${extension.slug}" has type "${extType}" that doesn't match any template type`);
       }
     });
   });
