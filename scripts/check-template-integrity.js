@@ -74,7 +74,12 @@ function docExists(templateRoot, docHref) {
 }
 
 function checkTemplate(templateName) {
-  const templateRoot = path.join(TEMPLATES_DIR, templateName);
+  const baseRoot = path.join(TEMPLATES_DIR, templateName);
+  // Support new layout templates/<name>/{README.md, template/}:
+  // scaffold lives in template/ if it exists, otherwise base
+  const templateRoot = fs.existsSync(path.join(baseRoot, "template"))
+    ? path.join(baseRoot, "template")
+    : baseRoot;
   const files = walk(templateRoot);
   const targets = files.filter((f) => {
     const base = path.basename(f);
