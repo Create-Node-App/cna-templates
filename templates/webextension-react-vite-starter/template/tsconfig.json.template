@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "@testing-library/jest-dom"],
+    "types": ["vite/client", "@testing-library/jest-dom", "vitest/globals"],
     "paths": {
       "<%= projectImportPath%>*": ["./<%= srcDir%>/*"],
       "virtual:reload-on-update-in-background-script": ["./<%= srcDir%>/global.d.ts"],

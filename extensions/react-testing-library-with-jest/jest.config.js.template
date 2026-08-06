@@ -32,6 +32,10 @@ module.exports = {
   // Important: order matters, specific rules should be defined first
   // https://jestjs.io/fr/docs/configuration#modulenamemapper-objectstring-string--arraystring
   moduleNameMapper: {
+    // Mock webextension-polyfill for webextension templates (prevents
+    // "This script should only be loaded in a browser extension" error)
+    '^webextension-polyfill$': '<rootDir>/__mocks__/webextension-polyfill.js',
+
     // Handle CSS imports (with CSS modules)
     // https://jestjs.io/docs/webpack#mocking-css-modules
     '^.+\\.module\\.(css|sass|scss|less)$': 'identity-obj-proxy',
