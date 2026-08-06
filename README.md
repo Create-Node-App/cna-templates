@@ -42,6 +42,7 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 |---|---|
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System overview, type system, generation flow |
 | [docs/AUTHORING.md](./docs/AUTHORING.md) | File conventions, EJS variables, `package/` system |
+| [docs/AUTHORING.es.md](./docs/AUTHORING.es.md) | Spanish version of the authoring conventions |
 | [docs/TESTING.md](./docs/TESTING.md) | Local testing and CI workflow |
 | [docs/MAINTENANCE_RUNBOOK.md](./docs/MAINTENANCE_RUNBOOK.md) | Operational procedures for maintaining templates, extensions, CI, dependencies, security, and releases |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to add templates and extensions |
