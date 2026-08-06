@@ -1,10 +1,10 @@
 version: 2
 updates:
-  # Templates now ship package.json for Dependabot — at templates/<name>/package.json (for loader)
-  # and copied to templates/<name>/template/package.json (as requested, for co-location with scaffold).
+  # Templates keep package.json only inside template/ as requested:
+  # templates/<name>/template/package.json (co-located with scaffold).
+  # Core's getPackagePath resolves it via template/ fallback.
   - package-ecosystem: npm
     directories:
-      - /templates/*
       - /templates/*/template
       - /extensions/*
       - /templates/nextjs-saas-ai-starter/tools/danger
