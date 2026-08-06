@@ -22,22 +22,22 @@ const COPIES = [
   {
     from: "logo-mark.svg",
     to: [
-      "templates/astro-starter/public/logo.svg",
-      "templates/remix-starter/public/logo.svg",
-      "templates/react-vite-starter/public/logo.svg",
-      "templates/nextjs-starter/public/logo.svg",
-      "templates/webextension-react-vite-starter/public/logo.svg",
-      "templates/webextension-react-vite-starter/[src]/assets/img/logo.svg",
+      "templates/astro-starter/template/public/logo.svg",
+      "templates/remix-starter/template/public/logo.svg",
+      "templates/react-vite-starter/template/public/logo.svg",
+      "templates/nextjs-starter/template/public/logo.svg",
+      "templates/webextension-react-vite-starter/template/public/logo.svg",
+      "templates/webextension-react-vite-starter/template/[src]/assets/img/logo.svg",
     ],
   },
   {
     from: "favicon.svg",
     to: [
-      "templates/astro-starter/public/favicon.svg",
-      "templates/remix-starter/public/favicon.svg",
-      "templates/react-vite-starter/public/favicon.svg",
-      "templates/nextjs-starter/[src]/app/favicon.svg",
-      "templates/webextension-react-vite-starter/public/favicon.svg",
+      "templates/astro-starter/template/public/favicon.svg",
+      "templates/remix-starter/template/public/favicon.svg",
+      "templates/react-vite-starter/template/public/favicon.svg",
+      "templates/nextjs-starter/template/[src]/app/favicon.svg",
+      "templates/webextension-react-vite-starter/template/public/favicon.svg",
     ],
   },
 ];
