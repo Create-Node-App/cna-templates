@@ -17,7 +17,7 @@
     "type-check": "turbo run type-check"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
+    "@changesets/cli": "^3.0.0",
     "@app/eslint-config-base": "0.0.0",
     "prettier": "^3.9.4",
     "turbo": "^2.10.2",
