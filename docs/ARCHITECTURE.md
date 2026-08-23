@@ -51,6 +51,10 @@ compatible = [ext.type].flat().includes(template.type)
 |---|---|
 | `nestjs-boilerplate` | `nestjs-backend` |
 | `nextjs-starter` | `nextjs` |
+| `nextjs-saas-ai-starter` | `nextjs-saas-ai` |
+| `remix-starter` | `remix` |
+| `astro-starter` | `astro` |
+| `hono-starter` | `hono` |
 | `turborepo-boilerplate` | `monorepo` |
 | `react-vite-boilerplate` | `react` |
 | `web-extension-react-boilerplate` | `webextension-react` |
@@ -59,10 +63,10 @@ compatible = [ext.type].flat().includes(template.type)
 ## Generation Flow
 
 1. Resolve `url` for template and each selected extension from `templates.json`
-2. Read `customOptions` when present and collect interactive answers
-3. Copy static files from the template directory
+2. Read `customOptions` from `cna.config.json` when present and collect interactive answers
+3. Copy static files from the `template/` directory (including static `template/package.json`)
 4. Process special files (`.template`, `.append`, `.if-pnpm`) — see [AUTHORING.md](./AUTHORING.md)
 5. Rename `[bracket]/` directories based on `customOptions` answers
-6. Generate `package.json` by calling `package/index.js` (or using the static `package.json`)
+6. Use the static `template/package.json` as the base manifest (legacy `package/index.js` is no longer used — no template currently ships it)
 7. Merge each extension's files and dependencies on top, in user-provided order
 8. Write the final project to disk

@@ -86,7 +86,7 @@ In newer npm versions, peer conflicts can fail installs even when the rest of th
 
 ### 3.2 In a template
 
-Templates usually generate `package.json` via `package/index.js`. Update the versions there or in `dependencies.js`/`devDependencies.js`.
+Templates ship a static `template/package.json`. Update the versions there directly (the legacy `package/index.js` / `dependencies.js` generator is no longer used).
 
 ### 3.3 Major updates
 

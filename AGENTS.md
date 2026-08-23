@@ -6,12 +6,12 @@ This repo is the template and extension bank for [create-awesome-node-app](https
 
 - **`templates.json`** — single registry of all templates, extensions, and categories. Every entry needs `name`, `slug`, `description`, `url`, `type`, `category`, `labels`. Slugs must be globally unique.
 - **`type`** — links templates to extensions. A template has one type string; extensions list one or more compatible types. Only matching extensions appear when a template is selected.
-- **`package/index.js`** — most templates use this instead of a static `package.json`. It exports a function `(setup, { appName, runCommand, usePnpm }) => packageJson`.
+- **`template/package.json`** — static manifest inside `template/` (all 10 templates use this layout). The legacy `package/index.js` dynamic generator (`(setup, { appName, runCommand, usePnpm }) => packageJson`) is no longer used.
+- **`cna.config.json`** — lives at `templates/<slug>/cna.config.json` (sibling to `template/`), defines `customOptions` (interactive CLI prompts; answers become EJS variables). Replaces the old `customOptions` field in `templates.json`.
 - **`.template` files** — processed with EJS (`<%= variable %>`). Variables come from user input and `customOptions`.
 - **`.append` files** — content is appended to the matching existing file instead of replacing it.
 - **`.if-pnpm` files** — only included when the user picks pnpm.
 - **`[bracket]/` dirs** — renamed based on the matching `customOption` value.
-- **`cna.config.json`** — lives in the template directory, defines `customOptions` (interactive CLI prompts; answers become EJS variables). Replaces the old `customOptions` field in `templates.json`.
 
 ## How to test
 

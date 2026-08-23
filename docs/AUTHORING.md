@@ -4,36 +4,30 @@
 
 ```
 my-template/
-├── package/
-│   ├── index.js           # Required: exports a function that returns package.json
-│   ├── dependencies.js    # module.exports = { "lib": "^1.0.0" }
-│   └── devDependencies.js
-├── [src]/                 # Renamed based on the `srcDir` customOption
-│   └── App.tsx.template   # Processed with EJS
-├── vite.config.ts.template
-└── .gitignore             # Static — copied as-is
+├── cna.config.json         # customOptions (interactive prompts)
+├── template/
+│   ├── package.json        # static manifest — all 10 templates use this
+│   ├── [src]/              # Renamed based on the `srcDir` customOption
+│   │   └── App.tsx.template # Processed with EJS
+│   ├── vite.config.ts.template
+│   └── .gitignore          # Static — copied as-is
 ```
 
-## `package/index.js`
+## `template/package.json` (static manifest)
 
-Exports a function that receives user context and returns the full `package.json`:
+All templates ship a static `template/package.json`. The CLI copies it verbatim (after EJS processing) as the base manifest; extensions then merge their `package.json` dependencies on top.
 
-```js
-const dependencies = require("./dependencies");
-const devDependencies = require("./devDependencies");
+Legacy `package/index.js` (`(setup, { appName, runCommand, usePnpm }) => packageJson` with `package/dependencies.js` / `devDependencies.js`) is no longer used — zero templates currently ship it. Do not add a `package/` directory alongside `template/package.json`; Node resolves `…/package` to `package.json` and the dynamic resolver would never run (see `docs/TESTING.md`).
 
-module.exports = function resolvePackage(setup, { appName, runCommand, usePnpm }) {
-  return {
-    name: appName,
-    version: "0.1.0",
-    scripts: { dev: "vite", build: "tsc && vite build" },
-    dependencies,
-    devDependencies,
-  };
-};
+```json
+{
+  "name": "my-template",
+  "version": "0.1.0",
+  "scripts": { "dev": "vite", "build": "tsc && vite build" },
+  "dependencies": { "react": "^19.0.0" },
+  "devDependencies": { "vite": "^6.0.0" }
+}
 ```
-
-Available parameters: `appName`, `runCommand`, `installCommand`, `usePnpm`.
 
 ## File Naming Conventions
 
@@ -74,7 +68,7 @@ respecting all file suffix conventions above.
 
 Only templates can define these. They become EJS variables and control bracket directory renaming.
 
-Define them in `cna.config.json` at the root of the template directory:
+Define them in `cna.config.json` at `templates/<slug>/cna.config.json` (sibling to `template/`):
 
 ```json
 {
@@ -97,7 +91,7 @@ Define them in `cna.config.json` at the root of the template directory:
 | `initial` | Default value (used automatically in non-interactive/CI mode) |
 | `required` | Optional. Defaults to true |
 
-> `cna.config.json` is co-located with the template so it works with both slug resolution and `file://` local URLs.
+> `cna.config.json` lives at `templates/<slug>/cna.config.json` (sibling to `template/`) so it works with both slug resolution and `file://` local URLs.
 > Do **not** put `customOptions` in `templates.json` — it is no longer read from there.
 
 ## Template maturity
@@ -106,7 +100,7 @@ Before merging a new or heavily revised starter, meet the **M1 mature scaffold**
 
 In short:
 
-- Prefer `package/index.js` over a static `package.json` unless you intentionally ship a static package (e.g. Next.js-style showcases with a lockfile).
+- Use static `template/package.json` with `cna.config.json` for prompts (all 10 templates do this). The legacy `package/index.js` is no longer used — do not introduce a `package/` directory.
 - Ship a real `docs/` suite; **never** link landings or READMEs to docs that do not exist.
 - `lint` / `test` scripts must do real work (or be omitted) — no `echo` stubs and no fake README scripts.
 - Use `react-vite-starter` / `nextjs-starter` as the reference; do **not** treat `nextjs-saas-ai-starter` as the default scope.
