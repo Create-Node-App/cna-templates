@@ -1,6 +1,6 @@
-# Bootstrap React
+# Valtio
 
-Add Bootstrap React components with TypeScript support and responsive design patterns.
+Extension to add Valtio, a tiny state management library for React
 
 ## Compatible types
 
@@ -8,13 +8,13 @@ Add Bootstrap React components with TypeScript support and responsive design pat
 
 ## Files
 
-- `[src]/theme/index.ts.append` — Bootstrap CSS import snippet
-- `package.json` — `react-bootstrap@^2.10.9`, `bootstrap@^5.3.3`
+- `package.json` — `dependencies`: `valtio@^2.1.3`
+- No additional source files — Valtio is a proxy-based state library; create proxies with `proxy()` and use `useSnapshot()`.
 
 ## Apply
 
 ```sh
-npx create-awesome-node-app my-app --template react-vite-boilerplate --addons bootstrap-react
+npx create-awesome-node-app my-app --template react-vite-boilerplate --addons valtio
 ```
 
 Or interactively:
@@ -22,7 +22,7 @@ Or interactively:
 ```sh
 npx create-awesome-node-app
 # → pick a compatible template (see above)
-# → select the addon: bootstrap-react
+# → select the addon: valtio
 ```
 
 ## Verify
@@ -33,4 +33,4 @@ npx create-awesome-node-app
    npx create-awesome-node-app /tmp/scaffold --template <template> --addons <slug>
    npm --prefix /tmp/scaffold run build  # or `npm run lint` / `tsc --noEmit`
    ```
-   Replace `<template>` with a compatible template from **Compatible types** and `<slug>` with `bootstrap-react`.
+   Replace `<template>` with a compatible template from **Compatible types** and `<slug>` with `valtio`.
