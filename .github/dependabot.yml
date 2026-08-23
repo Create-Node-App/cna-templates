@@ -10,6 +10,11 @@ updates:
       - /templates/nextjs-saas-ai-starter/tools/danger
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    reviewers:
+      - ulises-jeremias
     ignore:
       # Prisma 7 needs schema/config migration in nextjs-prisma.
       - dependency-name: prisma
@@ -29,6 +34,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    reviewers:
+      - ulises-jeremias
     groups:
       github-actions:
         patterns:

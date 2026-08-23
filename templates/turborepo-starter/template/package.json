@@ -2,7 +2,7 @@
   "name": "turborepo-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "Template turborepo-starter — generated package.json for Dependabot scanning (source is package/index.js)",
+  "description": "Template turborepo-starter — package.json for Dependabot scanning",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
