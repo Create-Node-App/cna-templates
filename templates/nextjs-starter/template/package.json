@@ -2,7 +2,7 @@
   "name": "nextjs-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "Template nextjs-starter — generated package.json for Dependabot scanning (source is package/index.js)",
+  "description": "Template nextjs-starter — package.json for Dependabot scanning",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
