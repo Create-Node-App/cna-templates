@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Validate templates.json (incl. on-disk paths)
         run: node scripts/validate-templates.js

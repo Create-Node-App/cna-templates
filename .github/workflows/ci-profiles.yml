@@ -37,6 +37,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Generate L3 matrix
         id: set
@@ -70,6 +71,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Scaffold check (curated profile)
         env:

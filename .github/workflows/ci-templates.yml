@@ -36,6 +36,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Generate L1 matrix
         id: set
@@ -62,6 +63,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Scaffold check (template alone)
         env:
