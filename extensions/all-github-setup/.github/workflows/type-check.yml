@@ -45,4 +45,4 @@ jobs:
           fi
 
       - name: Run type-check validation
-        run: npm run type-check --if-present
+        run: npm run type-check

@@ -50,15 +50,20 @@ function fail(phase, message, code = 1) {
 
 function run(phase, cmd, cmdArgs, options = {}) {
   console.log(`\n▶ [${phase}] ${cmd} ${cmdArgs.join(' ')}`);
+  // Note: Do NOT blanket SKIP_ENV_VALIDATION=true — that masks real validation bugs (issue #193).
+  // Only propagate it when the caller explicitly sets it (e.g. a profile that needs it).
+  const env = {
+    ...process.env,
+    CI: 'true',
+    FORCE_COLOR: '0',
+  };
+  if (process.env.SKIP_ENV_VALIDATION) {
+    env.SKIP_ENV_VALIDATION = process.env.SKIP_ENV_VALIDATION;
+  }
   const result = spawnSync(cmd, cmdArgs, {
     stdio: 'inherit',
     shell: process.platform === 'win32',
-    env: {
-      ...process.env,
-      CI: 'true',
-      FORCE_COLOR: '0',
-      SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION || 'true',
-    },
+    env,
     ...options,
   });
   if (result.error) {
