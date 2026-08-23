@@ -14,6 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const TEMPLATES_PATH = path.join(__dirname, '..', 'templates.json');
+const SCHEMA_PATH = path.join(__dirname, '..', 'templates.schema.json');
 const EXTENSIONS_DIR = path.join(__dirname, '..', 'extensions');
 const TEMPLATES_DIR = path.join(__dirname, '..', 'templates');
 
@@ -255,6 +256,121 @@ function validateIncompatibleSymmetry(data) {
   }
 }
 
+function validateJsonSchema(data) {
+  info('Validating against templates.schema.json (draft-04)...');
+
+  if (!fs.existsSync(SCHEMA_PATH)) {
+    warning(`Schema file not found at ${SCHEMA_PATH} — skipping JSON Schema validation`);
+    return;
+  }
+
+  let schema;
+  try {
+    schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  } catch (err) {
+    error(`Failed to read/parse schema: ${err.message}`);
+    return;
+  }
+
+  // Try AJV if available (optional dependency — not required for CI)
+  try {
+    const Ajv = require('ajv');
+    // ajv v8 defaults to draft-07; use strict:false to allow draft-04 $schema
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    // Add draft-04 meta-schema if ajv version needs it (ajv opts already lenient)
+    const validate = ajv.compile(schema);
+    const valid = validate(data);
+    if (!valid) {
+      const details = (validate.errors || [])
+        .map((e) => `${e.instancePath || '/'} ${e.message} (${JSON.stringify(e.params)})`)
+        .join('; ');
+      error(`templates.json does not conform to templates.schema.json: ${details}`);
+    } else {
+      success('JSON Schema validation passed (ajv)');
+    }
+    return;
+  } catch (err) {
+    if (err.code !== 'MODULE_NOT_FOUND' || !String(err.message).includes('ajv')) {
+      warning(`AJV validation attempt failed (${err.message}) — falling back to manual validation`);
+    }
+    // Fall through to manual validation when ajv not installed
+  }
+
+  // Lightweight manual validation mirroring templates.schema.json (draft-04)
+  // Ensures L0 fails if templates.json violates required shape even without ajv.
+  // Allow $schema for editor support even though schema has additionalProperties:false.
+  const allowedTopKeys = new Set(['$schema', 'categories', 'templates', 'extensions']);
+  const requiredTop = ['categories', 'templates', 'extensions'];
+
+  for (const key of requiredTop) {
+    if (!(key in data)) {
+      error(`Missing required top-level key: ${key}`);
+    }
+  }
+  for (const key of Object.keys(data)) {
+    if (!allowedTopKeys.has(key)) {
+      error(`Unknown top-level property "${key}" (schema additionalProperties: false)`);
+    }
+  }
+  if (hasErrors) return;
+
+  function isString(v) {
+    return typeof v === 'string' && v.length > 0;
+  }
+  function isStringArray(v) {
+    return Array.isArray(v) && v.every((x) => typeof x === 'string');
+  }
+
+  // categories: array of { slug, name, description, labels } (+ optional details/details)
+  if (!Array.isArray(data.categories)) {
+    error('categories must be an array');
+  } else {
+    data.categories.forEach((cat, i) => {
+      for (const f of ['slug', 'name', 'description', 'labels']) {
+        if (!(f in cat)) error(`categories[${i}] missing required field: ${f}`);
+      }
+      if ('slug' in cat && !isString(cat.slug)) error(`categories[${i}].slug must be a non-empty string`);
+      if ('name' in cat && !isString(cat.name)) error(`categories[${i}].name must be a non-empty string`);
+      if ('description' in cat && !isString(cat.description)) error(`categories[${i}].description must be a non-empty string`);
+      if ('labels' in cat && !isStringArray(cat.labels)) error(`categories[${i}].labels must be array of strings`);
+      if ('details' in cat && typeof cat.details !== 'string') error(`categories[${i}].details must be string`);
+      const allowedCatKeys = new Set(['slug', 'name', 'description', 'details', 'labels']);
+      for (const k of Object.keys(cat)) if (!allowedCatKeys.has(k)) error(`categories[${i}] has unknown property "${k}"`);
+    });
+  }
+
+  // helper for template/extension entry
+  function validateEntry(entry, idx, kind) {
+    for (const f of ['name', 'slug', 'description', 'url', 'type', 'category', 'labels']) {
+      if (!(f in entry)) error(`${kind}[${idx}] (${entry.slug || 'unknown'}) missing required field: ${f}`);
+    }
+    if ('name' in entry && !isString(entry.name)) error(`${kind}[${idx}].name must be non-empty string`);
+    if ('slug' in entry && !isString(entry.slug)) error(`${kind}[${idx}].slug must be non-empty string`);
+    if ('description' in entry && !isString(entry.description)) error(`${kind}[${idx}].description must be non-empty string`);
+    if ('url' in entry && !isString(entry.url)) error(`${kind}[${idx}].url must be non-empty string`);
+    if ('type' in entry) {
+      const t = entry.type;
+      const ok = isString(t) || (Array.isArray(t) && t.length > 0 && t.every(isString));
+      if (!ok) error(`${kind}[${idx}].type must be string or array of non-empty strings`);
+    }
+    if ('category' in entry && !isString(entry.category)) error(`${kind}[${idx}].category must be non-empty string`);
+    if ('labels' in entry && !isStringArray(entry.labels)) error(`${kind}[${idx}].labels must be array of strings`);
+    if ('incompatibleWith' in entry && !isStringArray(entry.incompatibleWith)) error(`${kind}[${idx}].incompatibleWith must be array of strings`);
+    const allowedKeys = new Set(['name', 'slug', 'description', 'url', 'type', 'category', 'labels', 'incompatibleWith']);
+    for (const k of Object.keys(entry)) if (!allowedKeys.has(k)) error(`${kind}[${idx}] has unknown property "${k}"`);
+  }
+
+  if (!Array.isArray(data.templates)) error('templates must be an array');
+  else data.templates.forEach((t, i) => validateEntry(t, i, 'templates'));
+
+  if (!Array.isArray(data.extensions)) error('extensions must be an array');
+  else data.extensions.forEach((e, i) => validateEntry(e, i, 'extensions'));
+
+  if (!hasErrors) {
+    success('JSON Schema validation passed (manual — templates.schema.json draft-04)');
+  }
+}
+
 function main() {
   console.log('🔍 Validating templates.json...\n');
   
@@ -272,6 +388,7 @@ function main() {
   validateCategories(data);
   validatePackageModuleConflict(data);
   validateIncompatibleSymmetry(data);
+  validateJsonSchema(data);
   
   console.log('\n' + '='.repeat(50));
   
