@@ -26,8 +26,8 @@ For a full explanation of how templates, extensions, and the file system work, r
 ## Adding a template
 
 1. Create `templates/<your-slug>/`
-2. Set up `package/index.js`, `package/dependencies.js`, `package/devDependencies.js` (preferred) — or a deliberate static `package.json`
-3. Add project files with the appropriate suffixes
+2. Set up `template/package.json` (static manifest, preferred) with `cna.config.json` for prompts — the legacy `package/index.js` is no longer used
+3. Add project files under `template/` with the appropriate suffixes
 4. Meet the **M1 maturity checklist** in [docs/MAINTENANCE_TEMPLATES.md §11](./docs/MAINTENANCE_TEMPLATES.md#11-template-maturity-m1--m2--m3) (docs suite, real lint, honest scripts, landing integrity)
 5. Register it in `templates.json` under `"templates"` (same fields as extension; put interactive prompts in `cna.config.json`, not the registry)
 

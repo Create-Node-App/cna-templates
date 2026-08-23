@@ -167,8 +167,10 @@ SKIP_ENV_VALIDATION=true npm run build --if-present
 gh run view <run-id> --repo Create-Node-App/<repo> --log-failed
 
 # --- Run cna-templates CI manually ---
-gh workflow run "Test Template and Extension Combinations" \
-  --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Templates (L1)" --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Extensions (L2)" --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Profiles (L3)" --repo Create-Node-App/cna-templates --ref main
+gh workflow run "CI Integrity (L0)" --repo Create-Node-App/cna-templates --ref main
 gh run watch <run-id> --repo Create-Node-App/cna-templates --exit-status
 
 # --- Inspect package versions ---
@@ -188,7 +190,7 @@ npm run lint
 | File | Use |
 |---|---|
 | [docs/ARCHITECTURE.md](./ARCHITECTURE.md) | How templates and extensions are composed |
-| [docs/AUTHORING.md](./AUTHORING.md) | File conventions, EJS, `package/index.js`, `customOptions` |
+| [docs/AUTHORING.md](./AUTHORING.md) | File conventions, EJS, `template/package.json`, `cna.config.json` |
 | [docs/TESTING.md](./TESTING.md) | Local test commands |
 | [docs/MAINTENANCE_TEMPLATES.md](./MAINTENANCE_TEMPLATES.md) | Working with templates and extensions |
 | [docs/MAINTENANCE_DEPENDENCIES.md](./MAINTENANCE_DEPENDENCIES.md) | Updating and resolving dependencies |

@@ -27,8 +27,8 @@ These are defined in `AGENTS.md` and `docs/ARCHITECTURE.md`; the critical points
 
 | Convention | Behavior |
 |---|---|
-| `package/index.js` | Exports a function that returns the generated `package.json`. Most templates use this. |
-| `package/dependencies.js` / `devDependencies.js` | Optional helpers imported by `index.js`. |
+| `template/package.json` | Static manifest inside `template/` — all 10 templates use this. Legacy `package/index.js` is no longer used. |
+| `cna.config.json` | At `templates/<slug>/cna.config.json` (sibling to `template/`); defines `customOptions` prompts. |
 | `*.template` | Processed with EJS; output filename strips `.template`. |
 | `*.append` | Content is appended to the matching file in the project. |
 | `*.if-pnpm` | Only included when the user selects pnpm. |
@@ -50,10 +50,10 @@ Common variables available in `.template` files:
 ### 1.5 Generation order
 
 1. Resolve template + extension URLs from `templates.json`.
-2. Copy template files.
+2. Copy static files from `template/` (including `template/package.json`).
 3. Process `.template`, `.append`, `.if-pnpm` files.
-4. Rename `[bracket]/` directories based on `customOptions`.
-5. Generate `package.json` from `package/index.js` (or static `package.json`).
+4. Rename `[bracket]/` directories based on `customOptions` from `cna.config.json`.
+5. Use the static `template/package.json` as the base manifest (legacy `package/index.js` is no longer used).
 6. Merge extension files and dependencies on top.
 7. Run install and post-generation scripts.
 
@@ -70,8 +70,8 @@ ls templates/
 # Read the registry entry
 grep -A 15 '"slug": "nestjs-boilerplate"' templates.json
 
-# Read the package generator
-cat templates/nestjs-starter/package/index.js
+# Read the static manifest
+cat templates/nestjs-starter/template/package.json
 
 # Read custom options
 cat templates/nestjs-starter/cna.config.json
@@ -81,7 +81,7 @@ Key questions:
 
 - What `type` does it have?
 - What `customOptions` does it define?
-- What scripts does `package/index.js` generate?
+- What scripts does `template/package.json` declare?
 - Are there `[bracket]/` directories that depend on custom options?
 
 ---
@@ -147,7 +147,7 @@ Remove extensions one at a time until the project passes. Then fix the last remo
 ### 4.4 Case studies in this repo
 
 - **#153** — `nestjs-drizzle-sqlite` provider had an uninitialized `db` property and implicit string types. Fixed by initializing in `onModuleInit` and adding string fallbacks.
-- **#154** — Storybook 8 peer-required Next `^13\|\|14\|\|15`, but `nextjs-starter` uses Next 16. Fixed by keeping Storybook 8 and adding `legacy-peer-deps=true` in `extensions/storybook/.npmrc`.
+- **#154** — Storybook 8 peer-required Next `^13\|\|14\|\|15`, but `nextjs-starter` uses Next 16. Historic fix was `legacy-peer-deps=true` in an extension `.npmrc` (current examples: `extensions/react-hookstate/.npmrc`, `extensions/react-semantic-ui/.npmrc`, `extensions/nestjs-openapi/.npmrc`).
 
 ---
 
@@ -156,9 +156,8 @@ Remove extensions one at a time until the project passes. Then fix the last remo
 ### 5.1 Adding a template
 
 1. Create `templates/<directory>/`.
-2. Add `package/index.js` (and optionally `dependencies.js`/`devDependencies.js`), **or** an intentional static `package.json` (Next.js-style showcases). Prefer `package/index.js` for new starters.
-3. Add source files and `.template` files.
-4. Add `cna.config.json` with `customOptions` if interactive prompts are needed.
+2. Add `template/package.json` (static manifest) and `cna.config.json` if interactive prompts are needed — the legacy `package/index.js` is no longer used.
+3. Add source files under `template/` (use `.template` / `.append` / `[bracket]/` as needed).
 5. Meet the **M1 maturity bar** in [§11](#11-template-maturity-m1--m2--m3) before merge (docs, DX, honest scripts, landing integrity).
 6. Add an entry to `templates.json` under `templates`.
 7. Ensure the entry point matches the directory structure.
@@ -230,7 +229,9 @@ If the incompatibility is only a peer-dependency resolution issue at install tim
 ```text
 extensions/react-hookstate/.npmrc
 extensions/react-semantic-ui/.npmrc
-extensions/storybook/.npmrc
+extensions/react-semantic-ui-less/.npmrc
+extensions/react-ionic-capacitor/.npmrc
+extensions/nestjs-openapi/.npmrc
 ```
 
 This is cheaper than `incompatibleWith` because it keeps both extensions available. Use it when the conflict is a semver-peer restriction, not a logical conflict.
@@ -248,7 +249,7 @@ This is cheaper than `incompatibleWith` because it keeps both extensions availab
 
 ## 8. Updating dependencies inside a template or extension
 
-1. Open the relevant `package.json` (or `package/index.js` for templates).
+1. Open the relevant `package.json` (`template/package.json` for templates).
 2. Use `npm view` to find the latest compatible version.
 3. Update the range conservatively (prefer caret minors, not arbitrary majors).
 4. Re-scaffold locally and run validation.
@@ -318,7 +319,7 @@ New templates must not ship as thin `create-<framework>` shells. Use this bar so
 #### A — CNA plumbing
 
 - [ ] Registry entry complete (`name`, `slug`, `description`, `url`, `type`, `category`, `labels`).
-- [ ] `package/index.js` (+ optional dep helpers) **or** intentional static `package.json`.
+- [ ] `template/package.json` (static manifest) + `cna.config.json` if prompts are needed — legacy `package/index.js` is no longer used.
 - [ ] `.template` / `.append` / `[bracket]/` used correctly; EJS vars only from the documented set.
 - [ ] Local validation (§9) passes: install → format → lint → type-check → build.
 
@@ -353,7 +354,7 @@ New templates must not ship as thin `create-<framework>` shells. Use this bar so
 
 #### G — Honesty
 
-- [ ] Every script listed in README exists in `package.json` / `package/index.js`.
+- [ ] Every script listed in README exists in `template/package.json`.
 - [ ] Tests either ship in-template **or** are clearly extension-only — never advertise fake `test` scripts.
 
 #### H — Extension seams

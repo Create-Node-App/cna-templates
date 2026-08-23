@@ -28,6 +28,7 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 |----------|------|----------|
 | [React Vite](./templates/react-vite-starter) | `react` | Frontend apps |
 | [Next.js](./templates/nextjs-starter) | `nextjs` | Full-stack apps |
+| [Next.js SaaS AI](./templates/nextjs-saas-ai-starter) | `nextjs-saas-ai` | SaaS + AI apps |
 | [NestJS](./templates/nestjs-starter) | `nestjs-backend` | Backend APIs |
 | [Remix / React Router v7](./templates/remix-starter) | `remix` | Full-stack apps |
 | [Astro](./templates/astro-starter) | `astro` | Content sites |
