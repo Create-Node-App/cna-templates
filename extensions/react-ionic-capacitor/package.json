@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "@ionic/react": "^8.4.3",
-    "@ionic/react-router": "^8.4.3"
+    "@ionic/react": "^9.0.0",
+    "@ionic/react-router": "^9.0.0"
   },
   "devDependencies": {
     "@capacitor/android": "^8.4.1",
