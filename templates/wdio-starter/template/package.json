@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "Automation framework created by create-awesome-node-app",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "keywords": [
     "automation",
     "wdio",

@@ -4,6 +4,9 @@
   "private": true,
   "description": "Hono TypeScript API created by create-awesome-node-app",
   "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

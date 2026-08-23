@@ -11,7 +11,8 @@
     "declaration": true,
     "declarationMap": true,
     "moduleResolution": "bundler",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "ignoreDeprecations": "6.0"
   },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules", "**/*.test.tsx", "setupTests.ts", "vitest.config.ts"]

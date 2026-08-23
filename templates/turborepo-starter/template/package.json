@@ -2,7 +2,7 @@
   "name": "turborepo-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "Template turborepo-starter — package.json for Dependabot scanning",
+  "description": "Turborepo starter — monorepo with shared packages and pipeline caching",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -21,6 +21,7 @@
     "@app/eslint-config-base": "0.0.0",
     "prettier": "^3.9.4",
     "turbo": "^2.10.2",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
   "packageManager": "npm@10.9.0",
@@ -32,7 +33,7 @@
     "react-dom": "^18.3.1"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=22.22.0"
   },
   "workspaces": [
     "packages/*",
