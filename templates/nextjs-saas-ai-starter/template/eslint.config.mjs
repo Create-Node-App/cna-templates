@@ -1,5 +1,5 @@
 import eslintPluginNext from '@next/eslint-plugin-next';
-import eslintPluginImport from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
 // eslint-plugin-tailwindcss is disabled: not compatible with Tailwind v4 (resolveConfig removed).
@@ -30,7 +30,7 @@ const config = typescriptEslint.config(
     ignores: eslintIgnore,
   },
   typescriptEslint.configs.recommended,
-  eslintPluginImport.flatConfigs.recommended,
+  importX.flatConfigs.recommended,
   {
     plugins: {
       '@next/next': eslintPluginNext,
@@ -62,7 +62,7 @@ const config = typescriptEslint.config(
   },
   {
     settings: {
-      'import/resolver': {
+      'import-x/resolver': {
         typescript: true,
         node: true,
       },
@@ -82,7 +82,7 @@ const config = typescriptEslint.config(
           ignoreDeclarationSort: true,
         },
       ],
-      'import/order': [
+      'import-x/order': [
         'warn',
         {
           groups: ['external', 'builtin', 'internal', 'sibling', 'parent', 'index'],

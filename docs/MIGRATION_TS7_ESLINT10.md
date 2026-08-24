@@ -19,8 +19,8 @@ Upstream peer ranges / tooling not yet compatible with the new majors:
 | Blocker | Current constraint | Impact |
 |---|---|---|
 | `typescript-eslint` | `^8.x` declares peer `typescript <6.1.0` (pre-TS7 line; TS7 support lands in `typescript-eslint@9` / `eslint@10` line — pending) | Blocks `hono-starter`, `nestjs-starter`, `nextjs-*`, `react-vite-starter`, `remix-starter` flat-config stacks |
-| `eslint-plugin-import` | `^2.32.0` — peer `eslint <9` / unmaintained; ESLint 10 support moved to [`eslint-plugin-import-x@4`](https://github.com/un-ts/eslint-plugin-import-x) (import-x) | Blocks `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter` |
-| `eslint-plugin-jsx-a11y` | `^6.10.2` — peer `eslint ^3..^9` | Same four templates above |
+| `eslint-plugin-import` | `^2.32.0` — peer `eslint <9` / unmaintained; ESLint 10 support moved to [`eslint-plugin-import-x@4`](https://github.com/un-ts/eslint-plugin-import-x) (import-x) — **prepared in this branch as `eslint-plugin-import-x@^4.17.1` (peer `^8.57 \|\| ^9 \|\| ^10`, ESLint 9 compat + ESLint 10 ready)** | Blocks `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter` |
+| `eslint-plugin-jsx-a11y` | `^6.10.2` — peer `eslint ^3..^9` (latest `6.10.2` as of 2026-08-24; no `7.x` with ESLint 10 peer yet — see `jsx-eslint/eslint-plugin-jsx-a11y#1048`) | Same four templates above |
 | `@astrojs/check` | `^0.9.9` with peer `typescript ^5 \|\| ^6` (`@astrojs/language-server` / `@astrojs/check` `^5\|\|^6` has no TS7 release yet) | Blocks `astro-starter` |
 | `tsup` + `rollup-plugin-dts` (monorepo DTS build) | `tsup@8.5.1` bundles `rollup-plugin-dts` / `rollup ^3/4`; TS7 changes `baseUrl` / `ignoreDeprecations` handling and DTS emit — requires `tsup@9` or `rollup-plugin-dts@6` / `rollup@4.30+` validation | Blocks `turborepo-starter` package builds |
 | `eslint-config-prettier` / `eslint-plugin-prettier` | compat with ESLint 10 flat config needs verification | All templates with `eslint-config-prettier@10.1.8` |
@@ -58,8 +58,9 @@ Scope: `eslint ^10.8.1`, `@eslint/js ^10.0.1`, flat-config compat.
 
 - `eslint` `^10.8.1` + `@eslint/js` `^10.0.1` — breaking: removes legacy `.eslintrc` support, `SourceCode` deprecations, `eslint-env` comment errors, Node `^20.19 || ^22.13 || >=24` (see `eslint/eslint#20160`).
 - Plugins / configs:
-  - `eslint-plugin-import@^2.32.0` → `eslint-plugin-import-x@^4.3+` (rename, flat-config native) — update `eslint.config.mjs` imports in `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter`.
-  - `eslint-plugin-jsx-a11y@^6.10.2` → wait for `^7.x` with ESLint 10 peer (track `jsx-eslint/eslint-plugin-jsx-a11y#1048`).
+  - `eslint-plugin-import@^2.32.0` → `eslint-plugin-import-x@^4.17.1` (rename, flat-config native) — update `eslint.config.mjs` imports in `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter`.
+    - ✅ **Prepared in `chore/major-ts7-eslint10` (PR #390):** `eslint-plugin-import` → `eslint-plugin-import-x@^4.17.1` in 4 templates — `eslint@^9.39.4` kept (import-x peer `^8.57 || ^9 || ^10`), configs use `importX.flatConfigs.recommended` / `import-x/order` / `import-x/resolver` (flat-config native, ESLint 10 ready, validates on ESLint 9 today).
+  - `eslint-plugin-jsx-a11y@^6.10.2` → wait for `^7.x` with ESLint 10 peer (track `jsx-eslint/eslint-plugin-jsx-a11y#1048`) — stays `^6.10.2` (latest as of 2026-08-24, no 7.x published).
   - `eslint-plugin-astro@^2.1.1 → ^3.1.0` (handled — already ESLint 10 ready; keep `eslint@10` gate).
   - `globals@^17.11.0`, `@types/node@^26` — sweep after plugin upgrades.
   - `typescript-eslint` → `^9.x` line aligned with TS7.
@@ -127,6 +128,7 @@ Subscribe to each tracker; unblock phases as ranges relax. Keep this branch reba
 - [ ] Phase 1 confirm: all templates on `typescript ^6.0.3` (fix `hono-starter` skew) — ref #383
 - [ ] Phase 2 PR: bump TS7 + `ignoreDeprecations` + `tsup`/`rollup-plugin-dts` + `@astrojs/check` gate
 - [ ] Phase 3 PR: ESLint 10 + `import-x` + `jsx-a11y` + `typescript-eslint@9` + `globals`/`@types/node`
+  - [x] Phase 3 prep (this branch, PR #390): `eslint-plugin-import` → `eslint-plugin-import-x@^4.17.1` in `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter` (eslint 9 compat, ESLint 10 ready) — `eslint-plugin-jsx-a11y` stays `^6.10.2` (latest, no 7.x yet)
 - [ ] Phase 4 PR: Vitest 4 + Vite 8 / jsdom 29 / plugin-react 6 spillover
 - [ ] Matrix: `typescript: [6.0.3, 7.0.2]` in `ci-templates.yml` / `ci-profiles.yml` on this branch
 - [ ] L0 `validate-templates.js` + `validate-profiles` green before each phase merge
