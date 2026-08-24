@@ -1,5 +1,7 @@
 # CNA Templates
 
+> Each template directory includes its own `README.md`, including [Next.js SaaS AI](./templates/nextjs-saas-ai-starter/README.md).
+
 [![L0 Integrity](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-integrity.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-integrity.yml)
 [![L1 Templates](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-templates.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-templates.yml)
 [![L2 Extensions](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-extensions.yml/badge.svg)](https://github.com/Create-Node-App/cna-templates/actions/workflows/ci-extensions.yml)
