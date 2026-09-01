@@ -120,7 +120,7 @@
     "@storybook/nextjs-vite": "^10.4.6",
     "@storybook/react": "^10.4.6",
     "@tailwindcss/typography": "^0.5.20",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/dompurify": "^3.2.0",
@@ -137,7 +137,7 @@
     "buffer": "^6.0.3",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
-    "eslint": "^9.39.4",
+    "eslint": "^10.9.0",
     "eslint-config-next": "^16.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
@@ -157,7 +157,7 @@
     "tailwindcss": "^4.3.2",
     "ts-jest": "^29.4.11",
     "tsx": "^4.23.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.63.0",
     "wcag-contrast": "^3.0.0"
   }
