@@ -1,9 +1,0 @@
-[auth]
-token = 
-
-[defaults]
-org = 
-project = 
-
-[log]
-level = info

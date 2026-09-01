@@ -1,3 +1,0 @@
-import reactConfig from '<%= scope%>eslint-config-react';
-
-export default [...reactConfig];

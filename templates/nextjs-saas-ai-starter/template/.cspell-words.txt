@@ -1,2 +1,0 @@
-# Project-specific words for cspell spell checking
-# Add custom words here, one per line

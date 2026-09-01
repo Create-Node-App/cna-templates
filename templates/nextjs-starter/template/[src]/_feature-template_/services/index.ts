@@ -1,1 +1,0 @@
-export { doSomething } from './exampleService';

@@ -1,8 +1,0 @@
-{
-  "*.{js,jsx,ts,tsx}": [
-    "<%= runCommand%> lint:fix"
-  ],
-  "*": [
-    "prettier -u --write"
-  ]
-}

@@ -1,8 +1,0 @@
-/** Tailwind Config for shadcn/ui (templated) */
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: 'class',
-  content: ['./index.html', './<%= srcDir %>/**/*.{js,ts,jsx,tsx}'],
-  theme: { extend: {} },
-  plugins: [],
-};

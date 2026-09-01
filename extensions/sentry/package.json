@@ -1,6 +1,0 @@
-{
-  "name": "sentry-extension",
-  "dependencies": {
-    "@sentry/nextjs": "^10.62.0"
-  }
-}

@@ -1,5 +1,0 @@
-# Sqlite
-*.sqlite
-*.db
-*.db-journal
-

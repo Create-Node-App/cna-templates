@@ -1,9 +1,0 @@
-{
-  "id": "react-material-ui-hook-form",
-  "description": "React Vite app with Material UI components and React Hook Form",
-  "templateDir": "react-vite-starter",
-  "addons": [
-    "material-ui",
-    "react-hook-form"
-  ]
-}
