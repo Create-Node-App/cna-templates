@@ -1,0 +1,80 @@
+# AGENTS.md – AI Interaction & Execution Guide (Human contributors: see CONTRIBUTING.md & docs/)
+
+This file is intentionally scoped only for AI assistants (Cursor, Copilot Chat, PR automation bots).
+Humans: read CONTRIBUTING.md and the documents under docs/.
+
+## 1. Authoritative References (Never Reproduce Content Here)
+
+| Topic | Source of Truth |
+|-------|-----------------|
+| Project architecture | docs/PROJECT_STRUCTURE.md |
+| Component & styling patterns | docs/COMPONENTS_AND_STYLING.md |
+| State management approach | docs/STATE_MANAGEMENT.md |
+| Project / build configuration | docs/PROJECT_CONFIGURATION.md |
+
+(If a file ends with .template it will be materialized during project generation—still treat it as authoritative.)
+
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | React Router dev server (Vite) |
+| `npm run build` | Production SSR build |
+| `npm run start` | Serve production build |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript (`tsc --noEmit`) |
+
+## 2. Operating Principles (AI Perspective)
+
+- Documentation-first
+- Loaders/actions before client fetch hacks
+- Type safety always (no unvetted any)
+- Deterministic, incremental changes
+- Explicit assumption logging
+
+## 3. AI Execution Protocol (React Router Feature / Route Work)
+
+When asked to add/modify UI or data flow:
+
+1. Decide route vs feature placement — new URL → `<%= srcDir %>/routes/` + entry in `routes.ts`
+2. Read related docs referenced above before proposing code
+3. Prefer `loader` / `action` + `<Form>` for server-backed data
+4. Present proposed file tree + diff plan BEFORE writing code
+5. After code changes: list validation steps (format, lint, type-check, build)
+
+## 4. Guardrails (Must Enforce)
+
+- Do NOT fabricate file paths, route APIs, or library versions
+- Do NOT remove existing accessibility props (aria-*, alt, role) without rationale + replacement
+- Do NOT fetch server data in `useEffect` when a `loader` suffices
+- ALWAYS flag large dependency additions (>1 lib) for human confirmation
+- Surface SSR/hydration mismatches and unnecessary client bundles
+
+## 5. Route / Component Creation Checklist
+
+- Typed loader/action return values
+- Route registered in `<%= srcDir %>/routes.ts`
+- Feature public API updated if adding cross-route exports
+- Accessibility reviewed on forms processed by actions
+- Test file added or explicitly deferred with reason
+
+## 6. When the AI Should Ask or Refuse
+
+Ask if: route URL unclear, conflicting patterns, missing target directory.
+Refuse if: asked to bypass validation, remove type safety, or duplicate an existing documented component.
+
+## 7. Post-Change Assistant Report
+
+Return a bullet summary:
+
+- Files touched (concise)
+- New dependencies (if any)
+- Type/lint status
+- Suggested manual QA steps
+- Deferred items (tests, docs)
+
+---
+Maintained automatically by create-awesome-node-app React Router template provisioning.
+Humans: stop reading—go to CONTRIBUTING.md + docs/.

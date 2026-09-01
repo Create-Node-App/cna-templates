@@ -1,0 +1,12 @@
+{
+  "id": "turborepo-default",
+  "description": "Monorepo baseline: monorepo husky (sole Tooling addon in this profile)",
+  "templateDir": "turborepo-starter",
+  "addons": [
+    "monorepo-husky-lint-staged"
+  ],
+  "sets": {
+    "scope": "@app/",
+    "projectName": "turbo-app"
+  }
+}

@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+# ============================================================================
+# Next.js SaaS AI Template - Dev Environment Configuration
+# ============================================================================
+# USAGE:
+#   direnv allow
+#
+# If a .env.local file exists, it will be loaded and can override these
+# defaults. Use .env.local for secrets (API keys, etc.).
+# ============================================================================
+
+# ============================================================================
+# Application Configuration
+# ============================================================================
+
+export NODE_ENV="${NODE_ENV:-development}"
+export NEXT_PUBLIC_APP_URL="${NEXT_PUBLIC_APP_URL:-http://localhost:3000}"
+export NEXT_PUBLIC_APP_NAME="${NEXT_PUBLIC_APP_NAME:-Next.js SaaS AI Template}"
+
+# ============================================================================
+# Database Configuration (PostgreSQL + pgvector)
+# ============================================================================
+
+# DevContainer: postgresql://saas_template:saas_template@db:5432/saas_template_dev
+# Local Docker:  postgresql://saas_template:saas_template@localhost:5432/saas_template_dev
+export DATABASE_URL="${DATABASE_URL:-postgresql://saas_template:saas_template@localhost:5432/saas_template_dev}"
+
+# ============================================================================
+# Authentication (Auth.js v5)
+# ============================================================================
+
+# Generate with: openssl rand -base64 32  (dev default only - change in production)
+export AUTH_SECRET="${AUTH_SECRET:-development-secret-change-in-production-min32chars}"
+
+# Auth0 Provider (optional - for SSO)
+export AUTH0_CLIENT_ID="${AUTH0_CLIENT_ID:-}"
+export AUTH0_CLIENT_SECRET="${AUTH0_CLIENT_SECRET:-}"
+export AUTH0_ISSUER="${AUTH0_ISSUER:-}"
+
+# ============================================================================
+# AI / LLM Configuration
+# ============================================================================
+
+export OPENAI_API_KEY="${OPENAI_API_KEY:-}"
+export ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"
+export ENABLE_AI_FEATURES="${ENABLE_AI_FEATURES:-false}"
+
+# ============================================================================
+# AWS / Storage Configuration (optional)
+# ============================================================================
+
+export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID:-}"
+export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-}"
+export AWS_REGION="${AWS_REGION:-us-east-1}"
+export AWS_S3_BUCKET="${AWS_S3_BUCKET:-}"
+
+# S3-compatible storage (MinIO for local dev)
+export S3_ENDPOINT="${S3_ENDPOINT:-}"
+export S3_PUBLIC_ENDPOINT="${S3_PUBLIC_ENDPOINT:-}"
+
+# ============================================================================
+# Observability (optional)
+# ============================================================================
+
+export SENTRY_DSN="${SENTRY_DSN:-}"
+export NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN:-}"
+
+# ============================================================================
+# Load .env.local overrides
+# ============================================================================
+
+if [[ -f .env.local ]]; then
+  echo "📄 Loading environment overrides from .env.local..."
+  set -a
+  source .env.local
+  set +a
+elif [[ -f .env ]]; then
+  echo "📄 Loading environment overrides from .env..."
+  set -a
+  source .env
+  set +a
+else
+  echo "💡 Tip: Create .env.local from .env.example to customize configuration (optional)"
+fi
+
+# ============================================================================
+# Node.js / DevContainer setup
+# ============================================================================
+
+export npm_config_engine_strict=true
+
+if [[ -n "${REMOTE_CONTAINERS}" ]] || [[ -n "${CODESPACES}" ]]; then
+  echo "🐳 Running in DevContainer/Codespaces..."
+  export DATABASE_URL="${DATABASE_URL:-postgresql://saas_template:saas_template@db:5432/saas_template_dev}"
+fi
+
+if ! command -v pnpm > /dev/null 2>&1; then
+  echo "⚠️  pnpm not found. Install with: npm install -g pnpm"
+fi
+
+# ============================================================================
+# Helpful Commands
+# ============================================================================
+echo ""
+echo "🤖 Next.js SaaS AI Template - Available Commands:"
+echo "  pnpm dev          - Start development server (port 3000)"
+echo "  pnpm build        - Build for production"
+echo "  pnpm lint         - Run ESLint"
+echo "  pnpm type-check   - Run TypeScript check"
+echo "  pnpm test         - Run tests"
+echo "  pnpm db:push      - Push schema to database"
+echo "  pnpm db:studio    - Open Drizzle Studio (port 5555)"
+echo "  pnpm db:generate  - Generate migrations"
+echo "  pnpm db:migrate   - Run migrations"
+echo ""
+echo "📚 Documentation: See docs/ folder for guides"
+echo ""

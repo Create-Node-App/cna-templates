@@ -1,0 +1,4 @@
+
+## Testing (Vitest)
+
+This project uses Vitest with React Testing Library. See [docs/TESTING_GUIDE.md](./docs/TESTING_GUIDE.md).

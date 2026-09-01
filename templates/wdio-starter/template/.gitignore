@@ -1,0 +1,8 @@
+node_modules
+reports
+allure-results
+allure-report
+.DS_Store
+.vscode
+*.log
+cm

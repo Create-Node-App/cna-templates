@@ -1,0 +1,958 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+
+/* =====================================================================
+   SaaS AI Template Design System
+   Philosophy: "Intentional Craft"
+   See docs/DESIGN_SYSTEM.md for full documentation of every decision.
+   ===================================================================== */
+
+@theme {
+  /* --- Border Radius (tenant-configurable via --radius) --- */
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+
+  /* --- shadcn/ui Semantic Colors (resolve from :root / .dark at runtime) --- */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* --- Status Colors --- */
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+
+  /* --- Domain Colors --- */
+  --color-domain-okr: hsl(var(--domain-okr));
+  --color-domain-learning: hsl(var(--domain-learning));
+  --color-domain-performance: hsl(var(--domain-performance));
+  --color-domain-project: hsl(var(--domain-project));
+  --color-domain-recognition: hsl(var(--domain-recognition));
+  --color-domain-oneonone: hsl(var(--domain-oneonone));
+
+  /* --- Surface Tints --- */
+  --color-surface-skill: hsl(var(--surface-skill));
+  --color-surface-interest: hsl(var(--surface-interest));
+  --color-surface-okr: hsl(var(--surface-okr));
+  --color-surface-learning: hsl(var(--surface-learning));
+  --color-surface-performance: hsl(var(--surface-performance));
+  --color-surface-project: hsl(var(--surface-project));
+  --color-surface-recognition: hsl(var(--surface-recognition));
+  --color-surface-oneonone: hsl(var(--surface-oneonone));
+  --color-surface-success: hsl(var(--surface-success));
+  --color-surface-warning: hsl(var(--surface-warning));
+  --color-surface-info: hsl(var(--surface-info));
+  --color-surface-destructive: hsl(var(--surface-destructive));
+
+  /* --- Chart Colors --- */
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  /* --- Domain Colors (OKLCH, fixed across tenants) ---
+     These encode meaning, not decoration. See Principle 1.2: "Color Encodes Meaning" */
+  --color-skill: oklch(55% 0.18 290);
+  --color-skill-foreground: oklch(98% 0.005 290);
+  --color-interest: oklch(70% 0.16 75);
+  --color-interest-foreground: oklch(20% 0.02 75);
+
+  /* Assessment type colors */
+  --color-assessment-self: oklch(60% 0.12 250);
+  --color-assessment-supervised: oklch(65% 0.16 145);
+  --color-assessment-inferred: oklch(60% 0.14 290);
+
+  /* --- Breakpoint 2xl (container max) --- */
+  --breakpoint-2xl: 87.5rem;
+
+  /* --- Typography (font-sans from layout.tsx via --font-sans) --- */
+  --font-sans: var(--font-sans, ui-sans-serif, system-ui, 'DM Sans', sans-serif);
+  --font-mono: var(--font-mono, ui-monospace, monospace);
+
+  /* --- Custom typography scale (enhanced readability) --- */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.6;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.6;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 1.5;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 1.4;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 1.2;
+
+  --leading-relaxed: 1.75;
+
+  /* --- Premium elevation shadows (Section 6 DESIGN_SYSTEM.md) --- */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.08), 0 8px 10px rgba(0, 0, 0, 0.03);
+
+  /* --- Motion Tokens ---
+     See Principle 1.5 and Section 7 of DESIGN_SYSTEM.md */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-typing: typing 1s steps(3, end) infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      opacity: 1;
+    }
+    30% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Container utility — centered, padded, max-width 2xl (1400px) */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  max-width: 87.5rem;
+}
+
+/* =====================================================================
+   Light Mode Palette
+   Warm neutrals (hue ~260) — not pure white, not pure gray.
+   See Section 3 of DESIGN_SYSTEM.md
+   ===================================================================== */
+:root {
+  /* --- Neutral Surfaces --- */
+  --background: 240 8% 96%;
+  --foreground: 240 10% 16%;
+  --card: 240 6% 98%;
+  --card-foreground: 240 10% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 16%;
+
+  /* --- Primary (tenant-overridable via ThemeCSSInjector) --- */
+  --primary: 245 58% 52%;
+  --primary-foreground: 0 0% 100%;
+
+  /* --- Secondary --- */
+  --secondary: 270 30% 58%;
+  --secondary-foreground: 0 0% 100%;
+
+  /* --- Muted --- */
+  --muted: 240 8% 92%;
+  --muted-foreground: 240 5% 42%;
+
+  /* --- Accent --- */
+  --accent: 240 6% 94%;
+  --accent-foreground: 240 10% 16%;
+
+  /* --- Destructive --- */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* --- Status Colors --- */
+  --success: 152 60% 38%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 92% 10%;
+  --info: 210 80% 52%;
+  --info-foreground: 0 0% 100%;
+
+  /* --- Growth --- */
+  --growth: 155 60% 42%;
+  --growth-foreground: 0 0% 100%;
+  --surface-growth: 155 40% 95%;
+
+  /* --- Warm Surface --- */
+  --surface-warm: 30 15% 96%;
+
+  /* --- Feature Domain Colors ---
+     Fixed per domain. Not tenant-configurable.
+     Encode meaning: skill=violet, interest=amber, okr=emerald, etc. */
+  --domain-okr: 155 65% 38%;
+  --domain-okr-foreground: 0 0% 100%;
+  --domain-learning: 210 70% 48%;
+  --domain-learning-foreground: 0 0% 100%;
+  --domain-performance: 30 85% 52%;
+  --domain-performance-foreground: 0 0% 100%;
+  --domain-project: 245 55% 52%;
+  --domain-project-foreground: 0 0% 100%;
+  --domain-recognition: 350 68% 55%;
+  --domain-recognition-foreground: 0 0% 100%;
+  --domain-oneonone: 175 55% 40%;
+  --domain-oneonone-foreground: 0 0% 100%;
+
+  /* --- Surface Tints (subtle domain backgrounds) --- */
+  --surface-skill: 270 50% 96%;
+  --surface-interest: 38 65% 95%;
+  --surface-okr: 155 40% 95%;
+  --surface-learning: 210 50% 95%;
+  --surface-performance: 30 60% 95%;
+  --surface-project: 245 50% 96%;
+  --surface-recognition: 350 50% 96%;
+  --surface-oneonone: 175 40% 95%;
+  --surface-success: 152 40% 95%;
+  --surface-warning: 38 60% 95%;
+  --surface-info: 210 50% 95%;
+  --surface-destructive: 0 50% 96%;
+
+  /* --- Borders & Input --- */
+  --border: 240 6% 88%;
+  --input: 240 6% 88%;
+  --ring: 245 58% 52%;
+
+  /* --- Border Radius (default: 10px, "lg" preset) --- */
+  --radius: 0.625rem;
+
+  /* --- Brand Gradient (the ONE gradient — logo + hero only) --- */
+  --brand-gradient-from: 245 58% 52%;
+  --brand-gradient-to: 270 30% 58%;
+
+  /* --- Chart Colors --- */
+  --chart-1: 245 58% 52%;
+  --chart-2: 270 30% 58%;
+  --chart-3: 175 55% 40%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 0 72% 51%;
+}
+
+/* =====================================================================
+   Dark Mode Palette
+   Modern dark UI: cards sit ON the surface with minimal visual weight.
+   Depth comes from borders and shadows, not filled backgrounds.
+   ===================================================================== */
+.dark {
+  /* --- Neutral Surfaces --- */
+  --background: 240 14% 10%;
+  --foreground: 240 8% 93%;
+  --card: 240 14% 10%;
+  --card-foreground: 240 8% 93%;
+  --popover: 240 14% 12%;
+  --popover-foreground: 240 8% 93%;
+
+  /* --- Primary --- */
+  --primary: 245 68% 65%;
+  --primary-foreground: 0 0% 100%;
+
+  /* --- Secondary --- */
+  --secondary: 270 40% 62%;
+  --secondary-foreground: 0 0% 100%;
+
+  /* --- Muted --- */
+  --muted: 240 10% 18%;
+  --muted-foreground: 240 5% 62%;
+
+  /* --- Accent --- */
+  --accent: 240 10% 16%;
+  --accent-foreground: 240 8% 93%;
+
+  /* --- Destructive --- */
+  --destructive: 0 62% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* --- Status Colors (Dark) --- */
+  --success: 152 55% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 85% 55%;
+  --warning-foreground: 38 92% 10%;
+  --info: 210 75% 58%;
+  --info-foreground: 0 0% 100%;
+
+  /* --- Growth (Dark) --- */
+  --growth: 155 55% 48%;
+  --growth-foreground: 0 0% 100%;
+  --surface-growth: 155 25% 14%;
+
+  /* --- Warm Surface (Dark) --- */
+  --surface-warm: 30 10% 13%;
+
+  /* --- Domain Colors (Dark - brighter for contrast) --- */
+  --domain-okr: 155 55% 45%;
+  --domain-okr-foreground: 0 0% 100%;
+  --domain-learning: 210 65% 58%;
+  --domain-learning-foreground: 0 0% 100%;
+  --domain-performance: 30 80% 58%;
+  --domain-performance-foreground: 0 0% 10%;
+  --domain-project: 245 60% 65%;
+  --domain-project-foreground: 0 0% 100%;
+  --domain-recognition: 350 62% 62%;
+  --domain-recognition-foreground: 0 0% 100%;
+  --domain-oneonone: 175 50% 48%;
+  --domain-oneonone-foreground: 0 0% 100%;
+
+  /* --- Surface Tints (Dark) --- */
+  --surface-skill: 270 30% 14%;
+  --surface-interest: 38 30% 14%;
+  --surface-okr: 155 25% 13%;
+  --surface-learning: 210 25% 14%;
+  --surface-performance: 30 25% 14%;
+  --surface-project: 245 25% 15%;
+  --surface-recognition: 350 22% 14%;
+  --surface-oneonone: 175 22% 13%;
+  --surface-success: 152 22% 13%;
+  --surface-warning: 38 25% 14%;
+  --surface-info: 210 22% 14%;
+  --surface-destructive: 0 22% 14%;
+
+  /* --- Borders & Input (Dark) --- */
+  --border: 240 10% 22%;
+  --input: 240 10% 22%;
+  --ring: 245 68% 65%;
+
+  /* --- Brand Gradient (Dark) --- */
+  --brand-gradient-from: 245 68% 65%;
+  --brand-gradient-to: 270 40% 62%;
+
+  /* --- Chart Colors (Dark) --- */
+  --chart-1: 245 68% 65%;
+  --chart-2: 270 40% 62%;
+  --chart-3: 175 50% 48%;
+  --chart-4: 38 85% 55%;
+  --chart-5: 0 62% 55%;
+}
+
+/* =====================================================================
+   Base Styles
+   ===================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
+}
+
+/* Heading typography — tighter tracking for editorial premium feel */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+h4,
+h5,
+h6 {
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =====================================================================
+   Brand Gradient — THE ONE GRADIENT
+   Reserved for: logo mark, hero banner, landing hero.
+   See Section 8.4 of DESIGN_SYSTEM.md: "The Brand Moment"
+   ===================================================================== */
+.brand-gradient {
+  background: linear-gradient(135deg, hsl(var(--brand-gradient-from)), hsl(var(--brand-gradient-to)));
+}
+
+.brand-gradient-text {
+  background: linear-gradient(
+    to right,
+    hsl(var(--brand-gradient-from)),
+    hsl(var(--brand-gradient-to)),
+    hsl(var(--brand-gradient-from))
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-text 8s ease-in-out infinite;
+}
+
+@keyframes shimmer-text {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Legacy aliases removed — migration complete. Use brand-gradient or brand-gradient-text. */
+
+/* =====================================================================
+   Recommendation Banner Dark Mode Fix
+   ===================================================================== */
+.recommendation-banner {
+  background-color: hsl(var(--surface-skill));
+}
+.dark .recommendation-banner {
+  background-color: hsl(var(--surface-skill));
+  border: 1px solid hsl(var(--border));
+}
+
+/* =====================================================================
+   Typography (prose) Dark Mode Fix
+   ===================================================================== */
+.dark .prose {
+  --tw-prose-body: hsl(210 30% 85%);
+  --tw-prose-headings: hsl(210 40% 98%);
+  --tw-prose-lead: hsl(210 25% 75%);
+  --tw-prose-links: hsl(245 70% 72%);
+  --tw-prose-bold: hsl(210 40% 98%);
+  --tw-prose-counters: hsl(210 25% 65%);
+  --tw-prose-bullets: hsl(210 20% 55%);
+  --tw-prose-hr: hsl(220 20% 30%);
+  --tw-prose-quotes: hsl(210 30% 85%);
+  --tw-prose-quote-borders: hsl(220 20% 30%);
+  --tw-prose-captions: hsl(210 25% 65%);
+  --tw-prose-kbd: hsl(210 40% 98%);
+  --tw-prose-code: hsl(210 40% 98%);
+  --tw-prose-pre-code: hsl(210 30% 85%);
+  --tw-prose-pre-bg: hsl(220 40% 8%);
+  --tw-prose-th-borders: hsl(220 20% 30%);
+  --tw-prose-td-borders: hsl(220 20% 25%);
+}
+
+/* =====================================================================
+   ReactFlow Dark Mode Styles
+   ===================================================================== */
+.dark .react-flow__controls {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+.dark .react-flow__controls button {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+.dark .react-flow__controls button:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+.dark .react-flow__minimap {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+.dark .react-flow__minimap-mask {
+  fill: hsl(var(--background) / 0.3) !important;
+}
+.dark .react-flow__minimap-node {
+  fill: hsl(var(--primary)) !important;
+}
+.dark .react-flow__background-pattern {
+  stroke: hsl(var(--muted-foreground)) !important;
+  opacity: 0.2 !important;
+}
+.react-flow__arrowhead,
+.react-flow__arrowhead-closed {
+  fill: hsl(var(--primary)) !important;
+}
+.dark .react-flow__arrowhead,
+.dark .react-flow__arrowhead-closed {
+  fill: hsl(var(--primary)) !important;
+}
+.react-flow__edge-path {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 3 !important;
+  stroke-opacity: 1 !important;
+}
+.dark .react-flow__edge-path {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 3 !important;
+  stroke-opacity: 1 !important;
+}
+.react-flow__edge .react-flow__arrowhead,
+.react-flow__edge .react-flow__arrowhead-closed,
+.dark .react-flow__edge .react-flow__arrowhead,
+.dark .react-flow__edge .react-flow__arrowhead-closed {
+  fill: hsl(var(--primary)) !important;
+}
+.react-flow__arrowhead path,
+.react-flow__arrowhead-closed path,
+.dark .react-flow__arrowhead path,
+.dark .react-flow__arrowhead-closed path {
+  fill: hsl(var(--primary)) !important;
+}
+.react-flow__viewport {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.react-flow__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* =====================================================================
+   Utility Classes
+   ===================================================================== */
+
+/* Text gradient utility — uses brand gradient */
+.text-gradient {
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass effect — for special surfaces only */
+.glass {
+  background: hsl(var(--background) / 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* AI cursor animation */
+.ai-cursor::after {
+  content: '▋';
+  animation: var(--animate-typing);
+}
+
+/* Force dark background for achieved capabilities cards in dark mode */
+.dark .achieved-capability-card {
+  background-image: none !important;
+  background-color: rgb(20, 83, 45) !important;
+}
+
+/* Semantic text color classes */
+.text-skill {
+  color: var(--color-skill);
+}
+.text-interest {
+  color: var(--color-interest);
+}
+
+/* Text balance */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Tab active badge styles */
+button[data-state='active'] [data-badge],
+div[data-state='active'] [data-badge] {
+  background-color: hsl(var(--primary) / 0.1) !important;
+  color: hsl(var(--primary)) !important;
+  border-color: hsl(var(--primary) / 0.2) !important;
+}
+
+/* =====================================================================
+   Elevation System — Depth through shadows, not gradients
+   Modern dark mode: enhanced borders and subtle inner glow for definition
+   See Section 6 of DESIGN_SYSTEM.md
+   ===================================================================== */
+
+/* Enhanced card shadows in dark mode for better definition */
+.dark .shadow-sm {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.dark .shadow-md {
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.dark .shadow-lg {
+  box-shadow:
+    0 10px 15px rgba(0, 0, 0, 0.4),
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Card interactive — shadow elevation + lift transition */
+.card-interactive {
+  transition:
+    box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 4px 6px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.03);
+  border-color: hsl(var(--primary) / 0.2);
+}
+.dark .card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+/* Legacy aliases — kept for components not yet migrated */
+.hover-lift {
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.08),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+.dark .hover-lift:hover {
+  box-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+    0 2px 6px -1px rgba(0, 0, 0, 0.12);
+}
+
+.hover-glow {
+  transition: box-shadow 0.2s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15);
+}
+.dark .hover-glow:hover {
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.25);
+}
+
+/* =====================================================================
+   Animation Utilities
+   ===================================================================== */
+
+/* Entrance fade — used for page content mount.
+   Combines fade + slight upward drift + scale materialization. */
+.entrance-fade {
+  animation: entrance-fade-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes entrance-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Staggered entrance */
+.entrance-stagger {
+  animation-delay: calc(var(--stagger-index, 0) * 50ms);
+}
+
+/* Skeleton shimmer — using neutral colors, not gradients */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.06) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Progress bar stripe animation */
+@keyframes progress-stripe {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+.progress-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-stripe 0.5s linear infinite;
+}
+
+/* Status dot pulse */
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+.status-dot-pulse {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* Bounce subtle for notification badges */
+@keyframes bounce-subtle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+.bounce-subtle {
+  animation: bounce-subtle 1s ease-in-out infinite;
+}
+
+/* Celebration spring — for milestone completions */
+@keyframes celebration-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.celebration-pop {
+  animation: celebration-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Celebration with confetti burst — the artist's signature */
+.celebration-confetti {
+  position: relative;
+  animation: celebration-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.celebration-confetti::before,
+.celebration-confetti::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.celebration-confetti::before {
+  top: -4px;
+  right: -4px;
+  background: hsl(var(--primary));
+  animation: confetti-burst-1 0.6s 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.celebration-confetti::after {
+  bottom: -4px;
+  left: -4px;
+  background: oklch(62% 0.19 45);
+  animation: confetti-burst-2 0.6s 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes confetti-burst-1 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(12px, -14px) scale(0.5);
+  }
+}
+@keyframes confetti-burst-2 {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-10px, 12px) scale(0.5);
+  }
+}
+
+/* =====================================================================
+   Artistry Layer — Motion that gives life
+   See plan: "Artistry Pass: Give the App Life"
+   ===================================================================== */
+
+/* Hero card staggered entrance */
+@keyframes hero-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(var(--card-rotate, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--card-rotate, 0deg));
+  }
+}
+
+/* Gentle continuous float — cards feel suspended in space */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--card-rotate, 0deg));
+  }
+  50% {
+    transform: translateY(-5px) rotate(var(--card-rotate, 0deg));
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Ambient glow pulse behind hero cards */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  50% {
+    opacity: 0.14;
+  }
+}
+
+/* Progress bar fill — starts from 0 */
+@keyframes progress-fill {
+  from {
+    width: 0;
+  }
+}
+
+/* Progress bar completion glow */
+@keyframes progress-glow {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.4);
+  }
+}
+
+/* Medal spring entrance */
+@keyframes medal-spring {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Timeline grow — height reveals from top */
+@keyframes timeline-grow {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+/* Icon scale-in */
+@keyframes icon-scale-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Scroll reveal — used by RevealOnScroll component */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

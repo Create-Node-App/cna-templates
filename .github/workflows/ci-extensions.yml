@@ -1,0 +1,106 @@
+name: CI Extensions (L2)
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    name: Generate extension matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+      count: ${{ steps.set.outputs.count }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Generate L2 matrix
+        id: set
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.base_ref }}"
+            git fetch origin "${{ github.base_ref }}" --depth=1 || true
+            node scripts/ci/generate-matrix.js --layer extensions --changed-only --base-ref "$BASE"
+          else
+            node scripts/ci/generate-matrix.js --layer extensions
+          fi
+
+  extensions:
+    name: ${{ matrix.cell.id }}
+    needs: generate
+    if: needs.generate.outputs.count != '0'
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJson(needs.generate.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Scaffold check (one extension)
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+        run: |
+          EXTRA=()
+          if [ "${{ matrix.cell.templateDir }}" = "turborepo-starter" ]; then
+            EXTRA+=(--set "scope=@app/" --set "projectName=turbo-app")
+          fi
+          # WDIO browser tests are not reliable without a dedicated runner image.
+          if [ "${{ matrix.cell.templateDir }}" = "wdio-starter" ]; then
+            EXTRA+=(--skip-test)
+          fi
+          # SaaS: service-backed tests/build; canonical run covers install + type-check.
+          if [ "${{ matrix.cell.templateDir }}" = "nextjs-saas-ai-starter" ]; then
+            EXTRA+=(--skip-test --skip-build)
+          fi
+          # Browser / Storybook / e2e extensions: install + type-check + build only.
+          case "${{ matrix.cell.slug }}" in
+            react-playwright|storybook|github-setup-uat)
+              EXTRA+=(--skip-test)
+              ;;
+          esac
+          ADDON_ARGS=()
+          for url in ${{ join(matrix.cell.addons, ' ') }}; do
+            ADDON_ARGS+=(--addon-url "$url")
+          done
+          node scripts/ci/run-scaffold-check.js \
+            --template-url "${{ matrix.cell.templateUrl }}" \
+            --workdir "${{ runner.temp }}/cna-l2" \
+            "${ADDON_ARGS[@]}" \
+            "${EXTRA[@]}"

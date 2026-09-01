@@ -1,0 +1,16 @@
+import React, { Suspense } from 'react';
+
+import '<%= projectImportPath %>theme';
+
+import { composeAppProviders } from '<%= projectImportPath %>app-providers';
+import Loading from '<%= projectImportPath %>components/Loading';
+import Landing from '<%= projectImportPath %>pages/Landing';
+
+const App = () =>
+  composeAppProviders(
+    <Suspense fallback={<Loading />}>
+      <Landing />
+    </Suspense>,
+  );
+
+export default App;

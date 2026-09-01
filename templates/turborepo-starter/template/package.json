@@ -1,0 +1,42 @@
+{
+  "name": "turborepo-starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turborepo starter — monorepo with shared packages and pipeline caching",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "build-storybook": "turbo run build-storybook",
+    "changeset": "changeset",
+    "format": "prettier --ignore-path .gitignore -u --write .",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "publish-packages": "turbo run lint && changeset version && turbo run build && changeset publish",
+    "storybook": "turbo run storybook",
+    "test": "turbo run test",
+    "type-check": "turbo run type-check"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@app/eslint-config-base": "0.0.0",
+    "prettier": "^3.9.4",
+    "turbo": "^2.10.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "packageManager": "npm@10.9.0",
+  "dependencies": {
+    "tsup": "^8.5.1"
+  },
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
+}

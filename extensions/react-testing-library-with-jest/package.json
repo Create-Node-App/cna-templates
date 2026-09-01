@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/jest": "^30.0.0",
+    "eslint-plugin-jest": "^29.12.1",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "jest-transform-stub": "^2.0.0",
+    "ts-jest": "^29.2.0"
+  },
+  "scripts": {
+    "test": "jest --runInBand --detectOpenHandles --passWithNoTests",
+    "test:watch": "jest -u --runInBand --verbose --watch --detectOpenHandles --passWithNoTests",
+    "test:coverage": "jest -u --coverage --verbose --runInBand --detectOpenHandles --passWithNoTests"
+  }
+}

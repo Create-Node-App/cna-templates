@@ -1,0 +1,14 @@
+services:
+  turso:
+    image: ghcr.io/tursodatabase/libsql-server:latest
+    container_name: turso-local
+    ports:
+      - "8080:8080"
+    volumes:
+      - turso_data:/var/lib/sqld
+    environment:
+      - SQLD_NODE=primary
+      - SQLD_AUTH_TOKEN=local-dev-token
+
+volumes:
+  turso_data:

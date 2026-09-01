@@ -1,0 +1,141 @@
+import Image from "next/image";
+import styles from "./page.module.css";
+
+const features = [
+  {
+    icon: "▲",
+    title: "App Router first",
+    description: "Layouts, nested routes, and React Server Components without a pages/ rewrite.",
+  },
+  {
+    icon: "🖥️",
+    title: "Server + client",
+    description: "Keep data close to the server; hydrate interactive islands only where needed.",
+  },
+  {
+    icon: "🛡️",
+    title: "TypeScript + lint",
+    description: "ESLint and Prettier configured so full-stack changes stay consistent.",
+  },
+  {
+    icon: "🔐",
+    title: "Auth route sample",
+    description: "A login example under (auth) so protected flows have a starting point.",
+  },
+  {
+    icon: "📦",
+    title: "Feature folders",
+    description: "Grow by co-locating routes, UI, and domain logic per feature.",
+  },
+  {
+    icon: "🧩",
+    title: "Addon surface",
+    description: "Add Tailwind, Auth.js, Drizzle, tRPC, or i18n when the product needs them.",
+  },
+];
+
+const docs = [
+  { label: "Project overview", href: "/docs/README.md" },
+  { label: "Project structure", href: "/docs/PROJECT_STRUCTURE.md" },
+  { label: "Components & styling", href: "/docs/COMPONENTS_AND_STYLING.md" },
+  { label: "State management", href: "/docs/STATE_MANAGEMENT.md" },
+];
+
+const withIndex = (index: number) => ({ "--index": index }) as React.CSSProperties;
+
+export default function Home() {
+  return (
+    <div className={styles.landing + " " + styles.landingNext}>
+      <header className={styles.header}>
+        <Image
+          src="/logo.svg"
+          alt="Create Awesome Node App"
+          className={styles.logo}
+          width={40}
+          height={40}
+          unoptimized
+        />
+        <span className={styles.brand}>Create Awesome Node App</span>
+      </header>
+
+      <main className={styles.main}>
+        <section className={styles.hero} style={withIndex(0)}>
+          <span className={styles.eyebrow}>Next.js App Router</span>
+          <h1 className={styles.title}><%= projectName %></h1>
+          <p className={styles.lead}>
+            A full-stack Next.js foundation with server components and feature folders. Choose it when UI and
+            server routes should live in one App Router codebase.
+          </p>
+          <div className={styles.actions}>
+            <a href="/docs/README.md" className={styles.button + " " + styles.buttonPrimary}>
+              Read the docs
+            </a>
+            <span className={styles.button + " " + styles.buttonSecondary}>
+              Run <code className={styles.code}>npm run dev</code>
+            </span>
+            <a
+              href="https://create-awesome-node-app.vercel.app/templates"
+              className={styles.button + " " + styles.buttonGhost}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Template docs
+            </a>
+          </div>
+        </section>
+
+        <section className={styles.features}>
+          <h2 className={styles.sectionTitle}>Built for App Router apps</h2>
+          <div className={styles.grid}>
+            {features.map((feature, index) => (
+              <article
+                key={feature.title}
+                className={styles.card}
+                style={withIndex(index + 1)}
+              >
+                <span className={styles.cardIcon} aria-hidden="true">
+                  {feature.icon}
+                </span>
+                <h3 className={styles.cardTitle}>{feature.title}</h3>
+                <p className={styles.cardText}>{feature.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className={styles.docs}
+          style={withIndex(features.length + 1)}
+        >
+          <h2 className={styles.sectionTitle}>Next steps</h2>
+          <nav className={styles.docList} aria-label="Documentation">
+            {docs.map((doc) => (
+              <a key={doc.label} href={doc.href} className={styles.docLink}>
+                <span className={styles.docLabel}>{doc.label}</span>
+                <span className={styles.docArrow} aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))}
+          </nav>
+        </section>
+      </main>
+
+      <footer
+        className={styles.footer}
+        style={withIndex(features.length + 2)}
+      >
+        <p>
+          Generated with{" "}
+          <a
+            href="https://www.npmjs.com/package/create-awesome-node-app"
+            target="_blank"
+            rel="noreferrer"
+          >
+            create-awesome-node-app
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+}

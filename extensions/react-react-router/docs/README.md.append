@@ -1,0 +1,26 @@
+
+## React Router v7
+
+This project includes [React Router v7](https://reactrouter.com) for client-side routing.
+
+### Quick Start
+
+Add new routes in `src/routes/AppRoutes.tsx`:
+
+```tsx
+import About from '@/pages/About';
+// ...
+<Route path="/about" element={<About />} />
+```
+
+Navigate using `<Link>`:
+
+```tsx
+import { Link } from 'react-router-dom';
+// ...
+<Link to="/about">About</Link>
+```
+
+### Learn More
+
+- [React Router v7 Documentation](https://reactrouter.com)

@@ -1,0 +1,11 @@
+{
+  "id": "react-default",
+  "description": "Typical React Vite app: Tailwind + Zustand + Vitest + husky",
+  "templateDir": "react-vite-starter",
+  "addons": [
+    "tailwind-css",
+    "zustand",
+    "vitest-react-testing-library",
+    "husky-lint-staged"
+  ]
+}

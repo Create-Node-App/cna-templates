@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "semantic-ui-react": "^2.1.5",
+    "semantic-ui-css": "^2.5.0"
+  },
+  "devDependencies": {
+    "less": "^4.2.0",
+    "less-loader": "^13.0.0"
+  }
+}

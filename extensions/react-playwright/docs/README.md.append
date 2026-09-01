@@ -1,0 +1,4 @@
+
+## E2E testing (Playwright)
+
+Run browser tests with `npm run test:e2e`. See the [Playwright extension README](https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-playwright).
