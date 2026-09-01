@@ -1,0 +1,34 @@
+# Codecov configuration
+# https://docs.codecov.com/docs/codecov-yaml
+
+coverage:
+  status:
+    project:
+      default:
+        # Target 100% coverage
+        target: 100%
+        # Allow 1% drop from target before failing
+        threshold: 1%
+    patch:
+      default:
+        # New code must have 100% coverage
+        target: 100%
+
+# Ignore specific paths from coverage
+ignore:
+  - '**/*.d.ts'
+  - '**/__mocks__/**'
+  - '**/node_modules/**'
+  - 'src/shared/db/migrations/**'
+  - '**/*.stories.tsx'
+  - '**/*.stories.ts'
+
+# Comment configuration for PRs
+comment:
+  layout: 'reach,diff,flags,files'
+  behavior: default
+  require_changes: true
+
+# GitHub checks integration
+github_checks:
+  annotations: true

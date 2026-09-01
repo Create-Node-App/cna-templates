@@ -1,0 +1,27 @@
+<div align="center">
+<h1>Packages</h1>
+
+</div>
+
+## Requirements
+
+**You’ll need to have Node 16.16.0 or later on your local development machine** (but it’s not required on the server). You can use [fnm](https://github.com/Schniz/fnm) to easily switch Node versions between different projects.
+
+```sh
+fnm use
+<%= installCommand%>
+```
+
+## Publishing Packages
+
+We use [Changesets](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md) to publish packages. This is a tool that allows us to publish packages to NPM with a single command. It also allows us to create a changelog for each package.
+
+To publish a package, you need to run the following command:
+
+```sh
+# Add a new changeset
+<%= runCommand%> changeset
+
+# Build the packages, update the versions and publish them
+<%= runCommand%> publish-packages
+```

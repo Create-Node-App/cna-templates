@@ -1,0 +1,56 @@
+# <%= projectName %>
+
+Welcome — this is a **NestJS API** scaffolded with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app).
+
+You get a modular TypeScript service (controllers, providers, modules) ready for HTTP APIs. There is no web UI here; start the server and hit your routes.
+
+Browse templates and extensions: [create-awesome-node-app.vercel.app](https://create-awesome-node-app.vercel.app)
+
+## Next commands
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> dev
+```
+
+Or with Docker Compose:
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> compose:up
+```
+
+## Features
+
+- TypeScript, ESLint, and Prettier configured
+- NestJS module layout for clear boundaries
+- OpenAPI (Swagger) at `/docs` for `/` and `/health`
+- Zod-validated environment via `@nestjs/config`
+- Global exception filter and request logging interceptor
+- Ready for database, auth, and serverless addons
+- Logging and config patterns suited to API work
+
+## API documentation
+
+With the dev server running, open [http://localhost:3000/docs](http://localhost:3000/docs) for interactive Swagger UI (port follows `PORT` in `.env`).
+
+## Extra documentation
+
+Project structure, scripts, and conventions live in the [docs](./docs) folder.
+
+## Available scripts
+
+| `<%= runCommand%> <script>` | Description |
+| --------------------------- | ----------- |
+| `dev` | Serve locally for development |
+| `format` | Format with Prettier |
+| `lint` | Lint for potential errors |
+| `lint:fix` | Lint and fix correctable issues |
+| `build` | Build to `dist/` |
+| `preview` | Serve the production build |
+
+## Contributing
+
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) for local development and module conventions. For template improvements, open issues or PRs in [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

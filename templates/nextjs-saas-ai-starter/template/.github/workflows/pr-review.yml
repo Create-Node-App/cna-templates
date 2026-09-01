@@ -1,0 +1,47 @@
+name: Pull Request Validation
+
+concurrency:
+  group: pull_request_${{ github.event.number }}
+  cancel-in-progress: true
+
+on:
+  # Run this workflow on pull request to main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  issues: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  pr-review:
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v4
+
+      - name: Setup Danger Files
+        run: |
+          echo "Setting up Danger files..."
+          mv tools/danger/* .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'v22.14.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Danger JS Action
+        uses: danger/danger-js@11.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}

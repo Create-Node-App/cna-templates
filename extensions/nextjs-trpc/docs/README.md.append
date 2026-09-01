@@ -1,0 +1,4 @@
+
+## tRPC
+
+This project includes a type-safe tRPC API at `/api/trpc/*` with TanStack Query on the client. See [TRPC_GUIDE.md](./TRPC_GUIDE.md).

@@ -1,0 +1,73 @@
+# Project Structure
+
+This document outlines the structure of the Turborepo monorepo template.
+
+## Directory Structure
+
+```txt
+turborepo-starter/
+├── apps/                    # Application packages
+│   ├── web/                # Vite + React app (consumes packages/ui)
+│   └── playground/         # Storybook component playground
+├── packages/               # Shared packages
+│   ├── ui/                 # Shared UI components (Vitest)
+│   ├── eslint-config-*/    # Shared ESLint configurations
+│   └── tsconfig/           # TypeScript configurations
+├── .changeset/             # Changeset configuration
+├── package.json            # Root package.json
+├── turbo.json              # Turborepo configuration
+└── pnpm-workspace.yaml     # PNPM workspace configuration (when using pnpm)
+```
+
+## Key Directories
+
+### `apps/`
+
+Contains deployable applications in the monorepo.
+
+- `web/`: Minimal Vite + React app that imports `<%= scope%>ui`
+- `playground/`: Storybook for developing and documenting shared components
+
+### `packages/`
+
+Contains shared packages used across applications.
+
+- `ui/`: Shared React components and styles
+- `eslint-config-*`: Shared ESLint presets
+- `tsconfig/`: Shared TypeScript configurations
+
+### Configuration Files
+
+- `turbo.json`: Defines the pipeline and dependencies between packages
+- `pnpm-workspace.yaml`: Configures the PNPM workspace (pnpm installs only)
+- `.changeset/`: Configuration for versioning and changelog generation
+
+## Package Management
+
+### Adding a New Package
+
+1. Create a new directory in `packages/` or `apps/`
+2. Initialize the package with `package.json`
+3. Add the package to the workspace (npm workspaces or `pnpm-workspace.yaml`)
+4. Update `turbo.json` if necessary
+
+### Package Dependencies
+
+- Use workspace dependencies (`*` or `workspace:*`) for internal packages
+- Use regular dependencies for external packages
+- Keep shared tooling dependencies in the root `package.json` when practical
+
+## Development Workflow
+
+1. Install dependencies: `<%= installCommand%>`
+2. Build shared packages: `<%= runCommand%> build`
+3. Start development: `<%= runCommand%> dev`
+4. Run tests: `<%= runCommand%> test`
+
+## Best Practices
+
+1. Keep shared code in the `packages/` directory
+2. Use TypeScript for all packages
+3. Follow the established directory structure
+4. Keep package dependencies up to date
+5. Use changesets for versioning

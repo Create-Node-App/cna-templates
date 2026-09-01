@@ -1,0 +1,5 @@
+tools/
+node_modules/
+dist/
+build/
+tools/**

@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # Templates keep package.json only inside template/ as requested:
+  # templates/<name>/template/package.json (co-located with scaffold).
+  # Core's getPackagePath resolves it via template/ fallback.
+  - package-ecosystem: npm
+    directories:
+      - /templates/*/template
+      - /extensions/*
+      - /templates/nextjs-saas-ai-starter/tools/danger
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    reviewers:
+      - ulises-jeremias
+    ignore:
+      # Prisma 7 needs schema/config migration in nextjs-prisma.
+      - dependency-name: prisma
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@prisma/client"
+        update-types: ["version-update:semver-major"]
+      # jsdom 30 breaks @testing-library/dom getComputedStyle (font-sizes.js:116) — see #341
+      - dependency-name: jsdom
+        versions: [">=30"]
+    groups:
+      devDependencies:
+        dependency-type: development
+      productionDependencies:
+        dependency-type: production
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    reviewers:
+      - ulises-jeremias
+    groups:
+      github-actions:
+        patterns:
+          - "*"

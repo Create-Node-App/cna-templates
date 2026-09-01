@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CNA Templates Index Schema",
+  "type": "object",
+  "properties": {
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "details": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["slug", "name", "description", "labels"]
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "type": { "oneOf": [ { "type": "string" }, { "type": "array", "items": { "type": "string" } } ] },
+          "category": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["name", "slug", "description", "url", "type", "category", "labels"]
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "type": { "oneOf": [ { "type": "string" }, { "type": "array", "items": { "type": "string" } } ] },
+          "category": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } },
+          "incompatibleWith": { "type": "array", "items": { "type": "string" }, "description": "Slugs of extensions that cannot be combined with this extension." }
+        },
+        "required": ["name", "slug", "description", "url", "type", "category", "labels"]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["categories", "templates", "extensions"]
+}

@@ -1,0 +1,1099 @@
+{
+  "$schema": "./templates.schema.json",
+  "categories": [
+    {
+      "slug": "frontend-applications",
+      "name": "Frontend Applications",
+      "description": "Client-side and content-first starters for SPAs and static sites.",
+      "details": "Pick these when you need a browser UI without a full-stack framework — React + Vite for SPAs, Astro for content sites.",
+      "labels": [
+        "Frontend",
+        "UI",
+        "React",
+        "Vue",
+        "Web"
+      ]
+    },
+    {
+      "slug": "backend-applications",
+      "name": "Backend Applications",
+      "description": "API and service starters for NestJS, Hono, and similar Node backends.",
+      "details": "Use when the deliverable is an HTTP API or worker — NestJS for modular services, Hono for lean edge/serverless handlers.",
+      "labels": [
+        "Backend",
+        "API",
+        "Server",
+        "Node.js",
+        "Express",
+        "NestJS"
+      ]
+    },
+    {
+      "slug": "fullstack-applications",
+      "name": "Full Stack Applications",
+      "description": "Frameworks that own routing, rendering, and server logic in one app.",
+      "details": "Choose Next.js or React Router (Remix) when UI and server routes should live in the same codebase.",
+      "labels": [
+        "FullStack",
+        "Frontend",
+        "Backend",
+        "Next.js",
+        "Remix"
+      ]
+    },
+    {
+      "slug": "monorepo-boilerplate",
+      "name": "Monorepo Boilerplate",
+      "description": "Multi-package workspaces with shared tooling and release flow.",
+      "details": "Start here when you need apps and packages in one repo with Turborepo pipelines and Changesets.",
+      "labels": [
+        "Monorepo",
+        "Workspaces",
+        "Turborepo",
+        "Nx",
+        "Lerna"
+      ]
+    },
+    {
+      "slug": "user-acceptance-testing",
+      "name": "User Acceptance Testing",
+      "description": "Browser automation projects for end-to-end acceptance suites.",
+      "details": "Use when the repo itself is a WebdriverIO (or similar) test harness, not an application under test.",
+      "labels": [
+        "Testing",
+        "End-to-End",
+        "Cypress",
+        "Playwright",
+        "Selenium"
+      ]
+    },
+    {
+      "slug": "web-extension",
+      "name": "Web Extension",
+      "description": "Browser extension starters with React and Vite.",
+      "details": "Scaffold popup, options, and newtab surfaces that target Chrome, Firefox, and Edge via WebExtension APIs.",
+      "labels": [
+        "WebExtension",
+        "Browser",
+        "Chrome",
+        "Firefox",
+        "Edge"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "name": "NestJS Boilerplate",
+      "slug": "nestjs-boilerplate",
+      "description": "Modular NestJS API with TypeScript, ESLint, and Prettier. Reach for it when you want controllers, providers, and clear module boundaries from day one.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nestjs-starter",
+      "type": "nestjs-backend",
+      "category": "backend-applications",
+      "labels": [
+        "NestJS",
+        "Backend",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Scalable",
+        "Maintainable"
+      ]
+    },
+    {
+      "name": "NextJS Starter",
+      "slug": "nextjs-starter",
+      "description": "Next.js App Router starter with TypeScript and a feature-based layout. Use it for full-stack React apps that need server components, routes, and optional auth examples.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-starter",
+      "type": "nextjs",
+      "category": "fullstack-applications",
+      "labels": [
+        "Next.js",
+        "FullStack",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "Customizable",
+        "App Router"
+      ]
+    },
+    {
+      "name": "Turborepo Boilerplate",
+      "slug": "turborepo-boilerplate",
+      "description": "Turborepo workspace with TypeScript, Changesets, and shared packages. Best when multiple apps share UI or config and you want pipeline caching.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/turborepo-starter",
+      "type": "monorepo",
+      "category": "monorepo-boilerplate",
+      "labels": [
+        "Monorepo",
+        "Turborepo",
+        "TypeScript",
+        "Changesets",
+        "Workspaces",
+        "Efficient",
+        "Multi-package"
+      ]
+    },
+    {
+      "name": "React Vite Boilerplate",
+      "slug": "react-vite-boilerplate",
+      "description": "React SPA on Vite with React Router and TypeScript. Choose it for client-only apps where instant HMR and a lean build matter more than SSR.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/react-vite-starter",
+      "type": "react",
+      "category": "frontend-applications",
+      "labels": [
+        "React",
+        "Vite",
+        "Frontend",
+        "TypeScript",
+        "ESLint",
+        "Prettier",
+        "React Router",
+        "SPA",
+        "HMR"
+      ]
+    },
+    {
+      "name": "Web Extension React Boilerplate",
+      "slug": "web-extension-react-boilerplate",
+      "description": "React + Vite WebExtension with HMR and polyfills. Use it for Chrome/Firefox/Edge extensions that share a React UI across popup and pages.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/webextension-react-vite-starter",
+      "type": "webextension-react",
+      "category": "web-extension",
+      "labels": [
+        "WebExtension",
+        "React",
+        "Vite",
+        "TypeScript",
+        "Hot Reload",
+        "Polyfill",
+        "ESLint",
+        "Prettier"
+      ]
+    },
+    {
+      "name": "WebdriverIO Boilerplate",
+      "slug": "webdriverio-boilerplate",
+      "description": "WebdriverIO + TypeScript harness with Selenoid-friendly setup. Scaffold this when the project is an acceptance-test suite, not the app under test.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/wdio-starter",
+      "type": "webdriverio",
+      "category": "user-acceptance-testing",
+      "labels": [
+        "WebdriverIO",
+        "Testing",
+        "TypeScript",
+        "Selenoid",
+        "ESLint",
+        "Prettier",
+        "Automated Testing"
+      ]
+    },
+    {
+      "name": "NextJS SaaS AI Starter",
+      "slug": "nextjs-saas-ai-starter",
+      "description": "Multi-tenant Next.js SaaS with AI providers, Auth.js v5, Drizzle + PostgreSQL, Tailwind v4, shadcn/ui, RBAC, audit logs, webhooks, and i18n. The flagship product showcase — not a minimal starter.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/nextjs-saas-ai-starter",
+      "type": "nextjs-saas-ai",
+      "category": "fullstack-applications",
+      "labels": [
+        "Next.js",
+        "SaaS",
+        "AI",
+        "Multi-tenant",
+        "TypeScript",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "Drizzle",
+        "PostgreSQL",
+        "Auth.js",
+        "RBAC",
+        "i18n"
+      ]
+    },
+    {
+      "name": "Remix / React Router v7 Starter",
+      "slug": "remix-starter",
+      "description": "React Router v7 with file-based routes, loaders/actions, and TypeScript. Pick it when you want SSR and nested data routes without the Next.js App Router model.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/remix-starter",
+      "type": "remix",
+      "category": "fullstack-applications",
+      "labels": [
+        "Remix",
+        "React Router",
+        "FullStack",
+        "TypeScript",
+        "SSR",
+        "File-based Routing"
+      ]
+    },
+    {
+      "name": "Astro Starter",
+      "slug": "astro-starter",
+      "description": "Astro static site with TypeScript and island-friendly structure. Ideal for docs, marketing, and content sites that ship HTML first and hydrate only where needed.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/astro-starter",
+      "type": "astro",
+      "category": "frontend-applications",
+      "labels": [
+        "Astro",
+        "Static Site",
+        "TypeScript",
+        "Frontend",
+        "Content"
+      ]
+    },
+    {
+      "name": "Hono Starter",
+      "slug": "hono-starter",
+      "description": "Minimal Hono API in TypeScript. Use it for edge, serverless, or small HTTP services where NestJS would be heavier than you need.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/templates/hono-starter",
+      "type": "hono",
+      "category": "backend-applications",
+      "labels": [
+        "Hono",
+        "API",
+        "Backend",
+        "TypeScript",
+        "Serverless",
+        "Edge"
+      ]
+    }
+  ],
+  "extensions": [
+    {
+      "name": "GitHub Setup",
+      "slug": "github-setup",
+      "description": "Automate GitHub workflows with Actions, Dependabot, and templates for issues and pull requests.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-github-setup",
+      "type": [
+        "react",
+        "webextension-react",
+        "monorepo",
+        "nestjs-backend",
+        "nextjs",
+        "nextjs-saas-ai"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "GitHub",
+        "Automation",
+        "Actions",
+        "Dependabot",
+        "Templates",
+        "CI/CD"
+      ]
+    },
+    {
+      "name": "GitHub Setup for User Acceptance Testing",
+      "slug": "github-setup-uat",
+      "description": "This extension adds GitHub setup to your project including GitHub Actions, Dependabot, Issue Templates, Pull Request Templates, and more. It also adds a GitHub Action to run User Acceptance Tests using Selenium.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/wdio-github-setup",
+      "type": [
+        "webdriverio"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "GitHub",
+        "GitHub Actions",
+        "Dependabot",
+        "Issue Templates",
+        "Pull Request Templates",
+        "Selenium",
+        "User Acceptance Testing"
+      ]
+    },
+    {
+      "name": "Husky + Lint Staged",
+      "slug": "husky-lint-staged",
+      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-husky-lint-staged",
+      "type": [
+        "react",
+        "webextension-react",
+        "webdriverio",
+        "nestjs-backend",
+        "nextjs",
+        "nextjs-saas-ai"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Husky",
+        "Lint Staged",
+        "Code Quality",
+        "Pre-commit",
+        "Automation"
+      ]
+    },
+    {
+      "name": "Husky + Lint Staged (Monorepo)",
+      "slug": "monorepo-husky-lint-staged",
+      "description": "Improve code quality with pre-commit hooks using Husky and Lint Staged for monorepo projects.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/monorepo-husky-lint-staged",
+      "type": [
+        "monorepo"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Husky",
+        "Lint Staged",
+        "Code Quality",
+        "Pre-commit",
+        "Automation",
+        "Monorepo"
+      ]
+    },
+    {
+      "name": "Development Container",
+      "slug": "development-container",
+      "description": "Set up a development container with Docker and VSCode for consistent environments.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/all-devcontainer",
+      "type": [
+        "react",
+        "webextension-react",
+        "monorepo",
+        "webdriverio",
+        "nestjs-backend",
+        "nextjs",
+        "nextjs-saas-ai"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Docker",
+        "VSCode",
+        "DevContainer",
+        "Environment",
+        "Consistency"
+      ]
+    },
+    {
+      "name": "Jest + React Testing Library",
+      "slug": "jest-react-testing-library",
+      "description": "Add Jest and React Testing Library for unit and integration testing in React projects.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-jest",
+      "type": [
+        "react",
+        "webextension-react",
+        "nextjs"
+      ],
+      "category": "Testing",
+      "labels": [
+        "Jest",
+        "React Testing Library",
+        "Unit Testing",
+        "Integration Testing",
+        "React"
+      ]
+    },
+    {
+      "name": "Vitest + React Testing Library",
+      "slug": "vitest-react-testing-library",
+      "description": "Add Vitest and React Testing Library for fast Vite-native unit and integration testing in React projects.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-testing-library-with-vitest",
+      "type": "react",
+      "category": "Testing",
+      "labels": [
+        "Vitest",
+        "React Testing Library",
+        "Unit Testing",
+        "Integration Testing",
+        "Vite"
+      ]
+    },
+    {
+      "name": "Playwright E2E",
+      "slug": "react-playwright",
+      "description": "Add Playwright end-to-end browser testing with multi-browser config, dev-server bootstrap, and CI workflow.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-playwright",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Testing",
+      "labels": [
+        "Playwright",
+        "E2E",
+        "Browser Testing",
+        "CI"
+      ]
+    },
+    {
+      "name": "React i18n",
+      "slug": "react-i18n",
+      "description": "Add internationalization support to your React app with react-i18n and async backend.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-i18n",
+      "type": "react",
+      "category": "Localization",
+      "labels": [
+        "i18n",
+        "Localization",
+        "React",
+        "Async Backend",
+        "Multi-language"
+      ]
+    },
+    {
+      "name": "TanStack React Query",
+      "slug": "tanstack-react-query",
+      "description": "High-quality open-source software for web developers.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-query",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "TanStack",
+        "React Query",
+        "State Management",
+        "Asynchronous State Management",
+        "stale-while-revalidate"
+      ]
+    },
+    {
+      "name": "React Hook Form",
+      "slug": "react-hook-form",
+      "description": "Extension to add React Hook Form, a performant, flexible and extensible forms with easy-to-use validation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hook-form",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "React Hook Form",
+        "State Management",
+        "Form Validation"
+      ]
+    },
+    {
+      "name": "Jotai",
+      "slug": "jotai",
+      "description": "Extension to add Jotai, a small and fast state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-jotai",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Jotai",
+        "State Management",
+        "Atomic State Management"
+      ]
+    },
+    {
+      "name": "Recoil.js (Deprecated)",
+      "slug": "recoil-js",
+      "description": "Extension to add Recoil.js, a state management library for React. Note: Recoil is no longer maintained by Meta (formerly Facebook Experimental) and may not receive future updates.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-recoil",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Recoil.js",
+        "State Management",
+        "Atomic State Management"
+      ]
+    },
+    {
+      "name": "Hookstate",
+      "slug": "hookstate",
+      "description": "Add Hookstate, a modern state management solution with hooks-based API and TypeScript support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-hookstate",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Hookstate",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "MobX",
+      "slug": "mobx",
+      "description": "Extension to add MobX, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-mobx",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "MobX",
+        "State Management",
+        "Bidirectional State Management"
+      ]
+    },
+    {
+      "name": "Teaful (Deprecated)",
+      "slug": "teaful",
+      "description": "Add Teaful, a tiny and fast state management solution with a simple API and TypeScript support. Note: Teaful has very low adoption (~126 weekly downloads) and may not receive future updates.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-teaful",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Teaful",
+        "State Management",
+        "React Hooks",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Valtio",
+      "slug": "valtio",
+      "description": "Extension to add Valtio, a tiny state management library for React",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-valtio",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Valtio",
+        "State Management",
+        "Bidirectional State Management"
+      ]
+    },
+    {
+      "name": "XState",
+      "slug": "xstate",
+      "description": "Add XState, a state management and orchestration solution for complex state machines and workflows.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-xstate",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "XState",
+        "State Management",
+        "Finite State Machines",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Zustand",
+      "slug": "zustand",
+      "description": "Add Zustand, a small, fast and scalable state management solution with a simple API and TypeScript support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-zustand",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "Zustand",
+        "State Management",
+        "Unidirectional State Management",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "React Redux with Redux Saga",
+      "slug": "react-redux-saga",
+      "description": "Extension to add Redux Toolkit (RTK) with React Redux bindings and Redux Saga for side-effect management",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-saga",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "React",
+        "State Management",
+        "Unidirectional State Management",
+        "Redux",
+        "React Redux",
+        "Redux Saga"
+      ],
+      "incompatibleWith": [
+        "react-redux-thunk"
+      ]
+    },
+    {
+      "name": "React Redux with Redux Toolkit",
+      "slug": "react-redux-thunk",
+      "description": "Extension to add Redux Toolkit (RTK) with React Redux bindings, redux-persist, and redux-logger for a fully configured store",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-redux-thunk",
+      "type": "react",
+      "category": "State Management",
+      "labels": [
+        "React",
+        "State Management",
+        "Unidirectional State Management",
+        "Redux",
+        "React Redux",
+        "Redux Thunk"
+      ],
+      "incompatibleWith": [
+        "react-redux-saga"
+      ]
+    },
+    {
+      "name": "Cross Platform Apps with Ionic React + Capacitor",
+      "slug": "ionic-react-capacitor",
+      "description": "Add Ionic React and Capacitor to your cross platform react app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ionic-capacitor",
+      "type": "react",
+      "category": "Cross Platform",
+      "labels": [
+        "Ionic",
+        "Capacitor",
+        "React",
+        "Cross Platform"
+      ]
+    },
+    {
+      "name": "Docker Compose Setup",
+      "slug": "docker-compose-setup",
+      "description": "Add docker environments for development and production to your project setup with docker-compose",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-compose",
+      "type": "react",
+      "category": "Tooling",
+      "labels": [
+        "Docker",
+        "Docker Compose",
+        "React",
+        "Next",
+        "Production",
+        "Development"
+      ]
+    },
+    {
+      "name": "Android Tools",
+      "slug": "android-tools",
+      "description": "Avoid using heavy IDEs by installing this extension that creates an elegant tool setup for your android app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-android-tools",
+      "type": "react",
+      "category": "Cross Platform",
+      "labels": [
+        "Android",
+        "React",
+        "Android Studio",
+        "Gradle",
+        "Kotlin"
+      ]
+    },
+    {
+      "name": "Semantic UI React",
+      "slug": "semantic-ui-react",
+      "description": "Extension to add Semantic UI React to your setup",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Semantic UI",
+        "Semantic UI React",
+        "CSS"
+      ]
+    },
+    {
+      "name": "Semantic UI React with Theme",
+      "slug": "semantic-ui-react-theme",
+      "description": "Extension to add Semantic UI React to your setup with theme customization",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-semantic-ui-less",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Semantic UI",
+        "Semantic UI React",
+        "Less",
+        "Theme Customization"
+      ]
+    },
+    {
+      "name": "Material UI",
+      "slug": "material-ui",
+      "description": "Add Material UI components and theming capabilities to your React application with TypeScript support and best practices.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-material-ui",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Material UI",
+        "Components",
+        "Theming",
+        "UI Library",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Ant Design for React",
+      "slug": "ant-design-react",
+      "description": "Add Ant Design React components with TypeScript support, theming capabilities and enterprise-grade UI patterns.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-ant-design",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Ant Design",
+        "Ant Design React",
+        "TypeScript",
+        "Enterprise UI",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Bootstrap React",
+      "slug": "bootstrap-react",
+      "description": "Add Bootstrap React components with TypeScript support and responsive design patterns.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-bootstrap",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Bootstrap",
+        "Bootstrap React",
+        "TypeScript",
+        "Responsive Design",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Drizzle ORM SQLite",
+      "slug": "drizzle-orm-sqlite",
+      "description": "Add Drizzle ORM with SQLite to your NestJS API with TypeScript support and best practices for database operations.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-sqlite",
+      "type": "nestjs-backend",
+      "category": "Database",
+      "labels": [
+        "NestJS",
+        "Drizzle ORM",
+        "SQLite",
+        "TypeScript",
+        "Database",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Drizzle ORM PostgreSQL",
+      "slug": "drizzle-orm-postgresql",
+      "description": "Add Drizzle ORM with PostgreSQL to your NestJS API with TypeScript support and best practices for database operations.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-drizzle-postgres",
+      "type": "nestjs-backend",
+      "category": "Database",
+      "labels": [
+        "NestJS",
+        "Drizzle ORM",
+        "PostgreSQL",
+        "TypeScript",
+        "Database",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Mongoose ORM MongoDB",
+      "slug": "mongoose-orm-mongodb",
+      "description": "Add Mongoose ORM with MongoDB to your NestJS API with TypeScript support and best practices for NoSQL database operations.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-mongoose",
+      "type": "nestjs-backend",
+      "category": "Database",
+      "labels": [
+        "NestJS",
+        "Mongoose ORM",
+        "MongoDB",
+        "TypeScript",
+        "NoSQL",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Serverless Framework",
+      "slug": "serverless-framework",
+      "description": "Add Serverless Framework packaging to deploy your NestJS API to AWS Lambda with TypeScript support and best practices for serverless architecture.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-serverless",
+      "type": "nestjs-backend",
+      "category": "Deployment",
+      "labels": [
+        "NestJS",
+        "Serverless Framework",
+        "AWS lambda",
+        "AWS",
+        "TypeScript",
+        "Serverless",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "React Million DOM Optimization",
+      "slug": "react-million-dom-optimization",
+      "description": "Extension to add Million DOM Optimization to your React app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-million",
+      "type": "react",
+      "category": "Tooling",
+      "labels": [
+        "React",
+        "Million",
+        "Optimization"
+      ]
+    },
+    {
+      "name": "OpenAPI",
+      "slug": "openapi",
+      "description": "Extension to add OpenAPI documentation to your NestJS API",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nestjs-openapi",
+      "type": "nestjs-backend",
+      "category": "Tooling",
+      "labels": [
+        "NestJS",
+        "OpenAPI",
+        "Swagger"
+      ]
+    },
+    {
+      "name": "React Electron Vite",
+      "slug": "react-electron-vite",
+      "description": "Add Electron to your cross platform React Vite app",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-electron-vite",
+      "type": "react",
+      "category": "Cross Platform",
+      "labels": [
+        "React",
+        "Electron",
+        "Vite",
+        "Cross Platform"
+      ]
+    },
+    {
+      "name": "Tailwind CSS",
+      "slug": "tailwind-css",
+      "description": "Add Tailwind CSS utility-first styling with PostCSS and dark mode class strategy.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-tailwindcss",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "TailwindCSS",
+        "Utility-First",
+        "Styling",
+        "Dark Mode",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "shadcn/ui",
+      "slug": "shadcn-ui",
+      "description": "Add shadcn/ui component primitives (Radix UI + Tailwind CSS) with variant-based theming utilities.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-shadcn",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "shadcn/ui",
+        "TailwindCSS",
+        "Radix UI",
+        "Components",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
+      "name": "Tailwind CSS for Next.js",
+      "slug": "nextjs-tailwindcss",
+      "description": "Add Tailwind CSS v4 to your Next.js project with PostCSS configuration and utility-first CSS setup.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-tailwindcss",
+      "type": "nextjs",
+      "category": "UI",
+      "labels": [
+        "Tailwind CSS",
+        "CSS",
+        "Styling",
+        "PostCSS"
+      ]
+    },
+    {
+      "name": "shadcn/ui for Next.js",
+      "slug": "nextjs-shadcn",
+      "description": "Add shadcn/ui component library to your Next.js project with Radix UI primitives, class-variance-authority, and a cn() utility.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-shadcn",
+      "type": "nextjs",
+      "category": "UI",
+      "labels": [
+        "shadcn/ui",
+        "Radix UI",
+        "Components",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "name": "Drizzle ORM + PostgreSQL for Next.js",
+      "slug": "nextjs-drizzle-postgres",
+      "description": "Add Drizzle ORM with PostgreSQL to your Next.js project. Includes schema setup, migrations, Docker Compose for local development, and db:* scripts.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-drizzle-postgres",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Drizzle",
+        "PostgreSQL",
+        "ORM",
+        "Database",
+        "Docker"
+      ]
+    },
+    {
+      "name": "Auth.js v5 for Next.js",
+      "slug": "nextjs-auth",
+      "description": "Add Auth.js v5 (next-auth@beta, latest: 5.0.0-beta.31) to your Next.js project with OAuth providers support, database sessions, and TypeScript-typed session. Note: v5 remains in beta as of 2026 — see https://authjs.dev for updates.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-auth",
+      "type": "nextjs",
+      "category": "Auth",
+      "labels": [
+        "Auth.js",
+        "NextAuth",
+        "Authentication",
+        "OAuth",
+        "Session"
+      ],
+      "incompatibleWith": ["nextjs-authkit"]
+    },{
+      "name": "WorkOS AuthKit",
+      "slug": "nextjs-authkit",
+      "description": "Hosted authentication platform with pre-built UI, SSO, MFA, and password reset via WorkOS AuthKit.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-authkit",
+      "type": "nextjs",
+      "category": "Auth",
+      "labels": [
+        "sso",
+        "workos",
+        "authkit",
+        "enterprise",
+        "auth"
+      ],
+      "incompatibleWith": ["nextjs-auth"]
+    },
+    {
+      "name": "t3-env for Next.js",
+      "slug": "nextjs-t3-env",
+      "description": "Add type-safe environment variable validation with @t3-oss/env-nextjs and Zod, including server/client split and SKIP_ENV_VALIDATION for CI.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-t3-env",
+      "type": "nextjs",
+      "category": "Tooling",
+      "labels": [
+        "t3-env",
+        "Environment",
+        "Zod",
+        "Validation",
+        "TypeScript"
+      ]
+    },
+    {
+      "name": "tRPC for Next.js",
+      "slug": "nextjs-trpc",
+      "description": "Add tRPC v11 with TanStack Query and App Router fetch adapter for end-to-end type-safe APIs without code generation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-trpc",
+      "type": "nextjs",
+      "category": "API",
+      "labels": [
+        "tRPC",
+        "TanStack Query",
+        "TypeScript",
+        "App Router",
+        "API"
+      ]
+    },
+    {
+      "name": "next-intl (i18n) for Next.js",
+      "slug": "nextjs-i18n",
+      "description": "Add internationalization to your Next.js project using next-intl with English and Spanish translations, middleware routing, and type-safe message access.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-i18n",
+      "type": "nextjs",
+      "category": "Tooling",
+      "labels": [
+        "i18n",
+        "Internationalization",
+        "next-intl",
+        "Localization"
+      ]
+    },
+    {
+      "name": "Sentry for Next.js",
+      "slug": "sentry",
+      "description": "Add Sentry error tracking and performance monitoring to your Next.js project with client/server configuration and source map upload support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/sentry",
+      "type": "nextjs",
+      "category": "Monitoring",
+      "labels": [
+        "Sentry",
+        "Error Tracking",
+        "Performance",
+        "Monitoring"
+      ]
+    },
+    {
+      "name": "Apollo Client for React",
+      "slug": "apollo-client",
+      "description": "Add Apollo Client for GraphQL data fetching, caching, and state management in React applications.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-apollo",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Data Fetching",
+      "labels": [
+        "Apollo",
+        "GraphQL",
+        "Data Fetching",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Storybook",
+      "slug": "storybook",
+      "description": "Add Storybook for isolated component development, visual testing, and interactive documentation.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/storybook",
+      "type": [
+        "react",
+        "nextjs"
+      ],
+      "category": "Tooling",
+      "labels": [
+        "Storybook",
+        "Components",
+        "Documentation",
+        "Visual Testing"
+      ]
+    },
+    {
+      "name": "React Query for Next.js",
+      "slug": "nextjs-react-query",
+      "description": "Add TanStack React Query with SSR-compatible setup for Next.js App Router, including hydration support and query client factory.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-react-query",
+      "type": "nextjs",
+      "category": "Data Fetching",
+      "labels": [
+        "TanStack Query",
+        "React Query",
+        "Data Fetching",
+        "SSR",
+        "Cache"
+      ]
+    },
+    {
+      "name": "Prisma for Next.js",
+      "slug": "nextjs-prisma",
+      "description": "Add Prisma ORM with PostgreSQL for type-safe database access, schema management, and migrations in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-prisma",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Prisma",
+        "PostgreSQL",
+        "ORM",
+        "Database",
+        "Migrations"
+      ]
+    },
+    {
+      "name": "Turso/libSQL for Next.js",
+      "slug": "nextjs-turso",
+      "description": "Add Turso (libSQL) database client with Drizzle ORM for edge-ready SQLite database access in Next.js.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-turso",
+      "type": "nextjs",
+      "category": "Database",
+      "labels": [
+        "Turso",
+        "libSQL",
+        "SQLite",
+        "Database",
+        "Edge",
+        "Drizzle"
+      ]
+    },
+    {
+      "name": "React Router v7",
+      "slug": "react-react-router",
+      "description": "Adds React Router v7 with BrowserRouter setup and sample pages.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-react-router",
+      "type": "react",
+      "category": "Tooling",
+      "labels": [
+        "React",
+        "React Router",
+        "Routing",
+        "Vite",
+        "SPA"
+      ]
+    }
+  ]
+}

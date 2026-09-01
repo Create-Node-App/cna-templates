@@ -1,0 +1,72 @@
+<!--lint disable double-link awesome-heading awesome-git-repo-age awesome-toc-->
+
+<div align="center">
+<h1>TypeScript Monorepo</h1>
+
+</div>
+<div align="center">
+
+</div>
+
+This project was generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
+
+## Quickstart
+
+**You’ll need to have Node 16 or later on your local development machine** (but it’s not required on the server). You can use [fnm](https://github.com/Schniz/fnm) to easily switch Node versions between different projects.
+
+```sh
+fnm use
+<%= installCommand %>
+<%= runCommand %> build
+```
+
+## Features
+
+- **Monorepo** - All packages are managed by [Turborepo](https://turborepo.com/).
+- **Workspaces** - All packages are managed by [Workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces).
+- **Changesets** - All packages are managed by [Changesets](https://github.com/changesets/changesets).
+- **TypeScript** - All packages are written in [TypeScript](https://www.typescriptlang.org/).
+- **ESLint** - All packages are linted by [ESLint](https://eslint.org/).
+- **Prettier** - All packages are formatted by [Prettier](https://prettier.io/).
+- **Shared UI** - Reusable React components in `packages/ui`, tested with [Vitest](https://vitest.dev/).
+- **Web app** - A minimal [Vite](https://vitejs.dev/) + React app in `apps/web` that imports workspace packages.
+- **Storybook** - A [Storybook](https://storybook.js.org/) playground in `apps/playground` for component docs.
+- **Local Development Environment** - Tooling and configuration to develop shared packages and applications together.
+
+## Pre-packed
+
+### Dev tools
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Turbo](https://turborepo.com/) - A monorepo manager for JavaScript and TypeScript
+- [Changesets](https://github.com/changesets/changesets) - A way to manage your versioning and changelogs with a focus on multi-package repositories
+- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
+- [prettier](https://prettier.io/) - Opinionated code formatter
+- [Vitest](https://vitest.dev/) - Unit tests for shared packages
+
+## Applications and Packages
+
+- **Web** (`apps/web`) - Vite + React app that consumes `<%= scope%>ui`.
+- **Playground** (`apps/playground`) - Storybook for documenting shared components.
+- **UI** (`packages/ui`) - Shared React component library.
+
+Need another app (API, extension, Next.js site)? Scaffold it with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app) and add it under `apps/`.
+
+## Available Scripts
+
+In the project directory, you can run:
+
+| `<%= runCommand %> <script>` | Description                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `dev`              | Start development servers (`apps/web` and package watchers).                                                            |
+| `test`             | Runs unit tests with Vitest (via Turborepo).                                                                            |
+| `lint`             | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`         | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+| `format`           | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `type-check`       | Runs [TypeScript](https://www.typescriptlang.org/) type checking                                                        |
+| `storybook`        | Starts the Storybook playground                                                                                         |
+| `build`            | Builds all packages and applications                                                                                    |
+
+## Contributing
+
+Follow the local workflow described in [CONTRIBUTING.md](./CONTRIBUTING.md). To propose changes to the underlying template itself, contribute via the main repo: [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

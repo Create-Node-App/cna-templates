@@ -1,0 +1,20 @@
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+
+import { useTRPC } from '<%= projectImportPath %>utils/trpc';
+
+export function TrpcHello() {
+  const trpc = useTRPC();
+  const hello = useQuery(trpc.hello.queryOptions({ text: 'tRPC' }));
+
+  if (hello.isLoading) {
+    return <p>Loading tRPC hello…</p>;
+  }
+
+  if (hello.isError) {
+    return <p>Unable to reach the tRPC API.</p>;
+  }
+
+  return <p>{hello.data?.greeting}</p>;
+}

@@ -1,0 +1,48 @@
+---
+name: "🐛 Bug Report"
+description: Report a bug in a template or extension
+title: "(short issue description)"
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: What is the problem? A clear and concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Behavior
+      description: What actually happened? Include errors, stack traces, logs.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: Provide a minimal reproduction (commands, template, extensions).
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version used
+      description: Tool/repo version or commit SHA.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      description: OS, Node version, package manager, etc.
+    validations:
+      required: true

@@ -1,0 +1,81 @@
+# AGENTS.md – AI Interaction & Execution Guide (Human contributors: see CONTRIBUTING.md & docs/)
+
+This file is scoped for AI assistants (Cursor, Copilot Chat, PR automation bots).
+Humans: read CONTRIBUTING.md and the documents under docs/.
+
+## 1. Authoritative References (Never Reproduce Content Here)
+
+| Topic | Source of Truth |
+|-------|-----------------|
+| Project architecture | docs/PROJECT_STRUCTURE.md |
+| Component & styling patterns | docs/COMPONENTS_AND_STYLING.md |
+| State & content data flow | docs/STATE_MANAGEMENT.md |
+| Project / build configuration | docs/PROJECT_CONFIGURATION.md |
+
+(If a file ends with `.template` it is materialized during project generation — still treat it as authoritative.)
+
+## Key Commands
+
+Run from the project root after installing dependencies:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Astro dev server (port 4321) |
+| `npm run build` | Static production build → `dist/` |
+| `npm run preview` | Preview production build |
+| `npm run lint` | ESLint (flat config + eslint-plugin-astro) |
+| `npm run type-check` | Astro check (`.astro` + content types) |
+| `npm run format` | Prettier with prettier-plugin-astro |
+
+## 2. Operating Principles (AI Perspective)
+
+- Documentation-first
+- Content-first — prefer collections and static HTML over client state
+- Type safety via TypeScript and Zod content schemas
+- Deterministic, incremental changes
+- Honest feature claims — do not imply islands, tests, or integrations that are not installed
+
+## 3. AI Execution Protocol (Astro Feature Work)
+
+When asked to add pages, content, or components:
+
+1. Read docs/PROJECT_STRUCTURE.md and relevant guides before proposing code
+2. Place routes in `<%= srcDir %>/pages/`, shared UI in `components/` or `layouts/`
+3. Add or extend content collections in `content.config.ts` + `content/<name>/`
+4. Present file tree + diff plan before large changes
+5. After changes: run format, lint, type-check, and build when possible
+
+## 4. Guardrails (Must Enforce)
+
+- Do NOT fabricate file paths, collection names, or Astro APIs
+- Do NOT add global client stores for static marketing content
+- Do NOT remove accessibility semantics without replacement
+- Do NOT commit `node_modules/`, `dist/`, or secrets
+- Flag new UI framework integrations for human confirmation
+
+## 5. Content & Page Checklist
+
+- Frontmatter matches Zod schema in `content.config.ts`
+- Pages using collections filter `draft` entries when appropriate
+- Layout receives `title` and `description` for SEO
+- Links point to existing routes (`/`, `/blog`, docs paths)
+- Scoped vs global CSS choice is intentional
+
+## 6. When the AI Should Ask or Refuse
+
+Ask if: collection schema unclear, SSR vs static tradeoff unresolved, missing target route.
+Refuse if: asked to bypass validation, commit build artifacts, or duplicate existing layout patterns poorly.
+
+## 7. Post-Change Assistant Report
+
+Return a bullet summary:
+
+- Files touched (concise)
+- New dependencies (if any)
+- Lint / type-check / build status
+- Suggested manual QA (`/`, `/blog`, content edits)
+- Deferred items (tests, adapters, island integrations)
+
+---
+Maintained by create-awesome-node-app Astro starter provisioning.
+Humans: stop reading — go to CONTRIBUTING.md + docs/.

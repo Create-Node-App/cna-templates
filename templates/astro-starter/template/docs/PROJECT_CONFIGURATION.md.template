@@ -1,0 +1,90 @@
+# ⚙️ Project Configuration
+
+This project is bootstrapped with [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). Dependencies and scripts are resolved from the template's `package/` folder at generation time.
+
+## Node.js
+
+- **Pinned version**: `22.14.0` (see `.node-version` and `engines.node` in `package.json`)
+- Use `fnm use`, `nvm use`, or your preferred version manager before installing
+
+## Astro
+
+Configuration lives in [`astro.config.mjs`](../astro.config.mjs). The starter uses static output:
+
+```js
+export default defineConfig({
+  output: 'static',
+});
+```
+
+Change `output` or add integrations (React, Tailwind, sitemap) as your deployment target requires.
+
+## TypeScript
+
+[`tsconfig.json`](../tsconfig.json) enables strict mode and path aliases (`<%= projectImportPath%>` → `<%= srcDir %>/`).
+
+Run type checking with:
+
+```sh
+<%= runCommand%> type-check
+```
+
+This invokes `astro check`, which understands `.astro` files and content collection types.
+
+## ESLint
+
+[`eslint.config.mjs`](../eslint.config.mjs) uses the flat config format with `eslint-plugin-astro`:
+
+- Recommended Astro rules via `astro.configs['flat/recommended']`
+- Ignores: `dist/`, `.astro/`, `node_modules/`
+
+```sh
+<%= runCommand%> lint
+<%= runCommand%> lint:fix
+```
+
+## Prettier
+
+[`/.prettierrc.js`](../.prettierrc.js) includes `prettier-plugin-astro` for `.astro` file formatting.
+
+```sh
+<%= runCommand%> format
+```
+
+Enable format-on-save in your editor for consistent style.
+
+## Content collections
+
+[`src/content.config.ts`](../src/content.config.ts) registers collections with loaders and Zod schemas. After changing schemas:
+
+1. Restart the dev server
+2. Run `<%= runCommand%> type-check` to surface frontmatter errors
+
+See [Project Structure](./PROJECT_STRUCTURE.md) for folder conventions.
+
+## Environment variables
+
+Copy [`.env.example`](../.env.example) to `.env` for local values.
+
+- **`PUBLIC_*`** — exposed to client code (e.g. site name, analytics flags)
+- **Unprefixed** — server/build only; never leak secrets to the browser
+
+`.env`, `.env.local`, and similar files are gitignored.
+
+## EditorConfig
+
+[`.editorconfig`](../.editorconfig) sets two-space indentation, LF line endings, and UTF-8 encoding across editors.
+
+## Absolute imports
+
+Configure `baseUrl` and `paths` in `tsconfig.json` (already set for `<%= projectImportPath%>`). Import from `<%= projectImportPath%>layouts/BaseLayout.astro` instead of deep relative paths like `../../layouts/...`.
+
+## Optional tooling (not included)
+
+The starter does **not** ship Husky, lint-staged, or Vitest. Add them when your team needs pre-commit hooks or automated tests — see [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+## Deployment
+
+`<%= runCommand%> build` writes static assets to `dist/`. Deploy that folder to any static host (Netlify, Vercel, Cloudflare Pages, S3 + CDN).
+
+If you need SSR, server islands, or on-demand rendering, add an [Astro adapter](https://docs.astro.build/en/guides/deploy/) and update `astro.config.mjs`.

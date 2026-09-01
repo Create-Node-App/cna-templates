@@ -1,0 +1,97 @@
+// DevContainer configuration for Next.js SaaS AI Template
+// Docs: https://containers.dev/implementors/json_reference/
+{
+  "name": "Next.js SaaS AI Template Dev",
+  "dockerComposeFile": "compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  // Features to add to the dev container
+  // "features": {
+  // },
+  // Forward ports from the container to the host
+  "forwardPorts": [
+    3000, // Next.js dev server
+    5432, // PostgreSQL
+    4982 // Drizzle Studio
+  ],
+  // Port labels for VS Code
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "4982": {
+      "label": "Drizzle Studio",
+      "onAutoForward": "notify"
+    }
+  },
+  // Run commands after the container is created
+  "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
+  // VS Code customizations
+  "customizations": {
+    "vscode": {
+      // Extensions to install
+      "extensions": [
+        // Core
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+        // TypeScript & JavaScript
+        "ms-vscode.vscode-typescript-next",
+        // Tailwind CSS
+        "bradlc.vscode-tailwindcss",
+        // Database
+        "cweijan.vscode-database-client2",
+        // Git
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        // GitHub
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "GitHub.vscode-pull-request-github",
+        // Utilities
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "christian-kohler.path-intellisense",
+        "mikestead.dotenv",
+        // Markdown
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint"
+      ],
+      // VS Code settings
+      "settings": {
+        // Editor
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        // TypeScript
+        "typescript.preferences.importModuleSpecifier": "non-relative",
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        // Tailwind CSS
+        "tailwindCSS.experimental.classRegex": [
+          ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+          ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+        ],
+        // Files
+        "files.associations": {
+          "*.css": "tailwindcss"
+        },
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  // Container user
+  "remoteUser": "node",
+  // Environment variables for the container
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  }
+}

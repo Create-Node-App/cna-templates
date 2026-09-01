@@ -1,0 +1,19 @@
+{
+  "name": "<%= scope%>eslint-config-react",
+  "version": "0.0.0",
+  "main": "index.js",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "<%= scope%>eslint-config-ts": "*",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

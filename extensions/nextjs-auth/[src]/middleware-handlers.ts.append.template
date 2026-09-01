@@ -1,0 +1,18 @@
+
+import { auth } from '<%= projectImportPath%>lib/auth';
+
+middlewareHandlers.push(async (request) => {
+  const authMiddleware = auth((req) => {
+    if (!req.auth && req.nextUrl.pathname !== '/') {
+      const newUrl = new URL('/api/auth/signin', req.nextUrl.origin);
+      return Response.redirect(newUrl);
+    }
+  }) as (request: NextRequest) => Promise<Response | void>;
+
+  const response = await authMiddleware(request);
+
+  return {
+    response,
+    priority: response ? 10 : 0,
+  };
+});

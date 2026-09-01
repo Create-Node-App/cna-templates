@@ -1,0 +1,94 @@
+# Next.js TypeScript Starter
+
+This project was generated using [create-awesome-node-app](https://www.npmjs.com/package/create-awesome-node-app). **DON'T USE THIS TEMPLATE AS IT!** Generate yours using the command and following the options in the interactive menu. Check the docs for more information!
+
+## Features
+
+- ⚡️ **Next.js 13+** - The latest version of Next.js with App Router
+- ⚛ React - [React](https://reactjs.org/) is used for UI
+- 🦾 [TypeScript](https://www.typescriptlang.org/) - type safe
+- 🏗️ **Feature-Based Architecture** - Scalable and maintainable code organization
+- 🔒 **Encapsulated Features** - Self-contained modules with clear boundaries
+- 🎯 **Domain-Driven Design** - Code organized around business capabilities
+- 🚀 **Server Components** - Leverage React Server Components for better performance
+
+## Architecture
+
+This template uses a Feature-Based Architecture adapted for Next.js App Router, combining:
+
+- 📦 **Modular Features**: Self-contained business capabilities
+- 🔄 **Next.js Integration**: Leverages App Router and Server Components
+- 🎨 **Clear Structure**: Routes, features, and shared code are clearly separated
+- 🚀 **Performance**: Built-in optimizations from Next.js
+
+### Example Implementation
+
+The template includes a complete authentication feature example:
+
+```typescript
+// features/auth/index.ts
+export * from './components/LoginForm';
+export * from './hooks/useAuth';
+export * from './services/authService';
+
+// features/auth/components/LoginForm.tsx
+import { useAuth } from '../hooks';
+export const LoginForm = () => {
+  const { login, isLoading, error } = useAuth();
+  // Component implementation
+};
+
+// app/(auth)/login/page.tsx
+import { LoginForm } from '<%= projectImportPath%>features/auth';
+export default function LoginPage() {
+  return <LoginForm />;
+}
+```
+
+For detailed information about the architecture, see [Project Structure](./docs/PROJECT_STRUCTURE.md).
+
+## Extra documentation
+
+You can find useful information such as project structure, available scripts and much more in the [docs](./docs) folder!
+
+## Pre-packed
+
+### Dev tools
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [eslint](https://eslint.org/) - Linting utility for JavaScript and JSX
+- [prettier](https://prettier.io/) - Opinionated code formatter
+- [husky](https://www.npmjs.com/package/husky) - Git hooks made easy
+- [lint-staged](https://www.npmjs.com/package/lint-staged) - Run linters against staged git files and don't let 💩 slip into your code base!
+
+## Quickstart
+
+```sh
+fnm use
+<%= installCommand%>
+<%= runCommand%> dev
+```
+
+## Development
+
+While developing, you will probably rely mostly on `<%= runCommand%> dev`; however, there are additional scripts at your disposal:
+
+| `<%= runCommand%> <script>` | Description                                                                                                             |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `dev`                       | Serves your app at for local development                                                                                |
+| `format`                    | Formats the project using [Prettier](https://prettier.io/)                                                              |
+| `lint`                      | [Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors                    |
+| `lint:fix`                  | Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix) |
+
+## Production
+
+Scripts for preparing and viewing the production version:
+
+| `<%= runCommand%> <script>` | Description                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `preview`                   | Serves your app using your production ready setup (`.env.production`) |
+| `build`                     | Builds the application to `dist/`                                                                           |
+
+## Contributing
+
+Start with the local guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md). For template-wide issues or enhancements, use the main repository: [Create-Node-App/cna-templates](https://github.com/Create-Node-App/cna-templates).

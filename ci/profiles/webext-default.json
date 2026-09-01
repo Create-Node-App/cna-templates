@@ -1,0 +1,9 @@
+{
+  "id": "webext-default",
+  "description": "Web extension: Jest RTL + husky",
+  "templateDir": "webextension-react-vite-starter",
+  "addons": [
+    "jest-react-testing-library",
+    "husky-lint-staged"
+  ]
+}

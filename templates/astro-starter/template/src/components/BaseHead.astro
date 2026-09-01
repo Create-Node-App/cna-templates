@@ -1,0 +1,14 @@
+---
+/**
+ * @typedef {Object} Props
+ * @property {string} title
+ * @property {string} [description]
+ */
+const { title, description } = /** @type {Props} */ (Astro.props);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>{title}</title>
+{description && <meta name="description" content={description} />}

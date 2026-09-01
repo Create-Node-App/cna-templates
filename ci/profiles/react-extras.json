@@ -1,0 +1,14 @@
+{
+  "id": "react-extras",
+  "description": "React Vite with diverse ecosystem: Ant Design UI, TanStack Query, i18n, Ionic Capacitor, Apollo, Playwright and Storybook",
+  "templateDir": "react-vite-starter",
+  "addons": [
+    "ant-design-react",
+    "tanstack-react-query",
+    "react-i18n",
+    "ionic-react-capacitor",
+    "apollo-client",
+    "react-playwright",
+    "storybook"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "nextjs-default",
+  "description": "Typical Next.js app: Tailwind + React Query + Drizzle + husky",
+  "templateDir": "nextjs-starter",
+  "addons": [
+    "nextjs-tailwindcss",
+    "nextjs-react-query",
+    "nextjs-drizzle-postgres",
+    "husky-lint-staged"
+  ]
+}
