@@ -4,6 +4,10 @@
 
 This extension adds Recoil state management to your React application with atomic state management and fine-grained reactivity.
 
+## React 19 compatibility
+
+Recoil accepts React 19, but its optional DevTools packages still declare an outdated `react@>=17 <19` peer range. The extension includes a project-local `.npmrc` with `legacy-peer-deps=true` so npm can install this known combination. The generated project still runs its normal type check, build, and test gates; the setting only changes peer-dependency resolution.
+
 ## Features
 
 - Integration with Recoil
@@ -58,4 +62,4 @@ function Counter() {
 
 - [Recoil Documentation](https://recoiljs.org/)
 - [Recoil GitHub Repository](https://github.com/facebookexperimental/Recoil)
-- [React State Management Guide](https://react.dev/learn/managing-state) 
+- [React State Management Guide](https://react.dev/learn/managing-state)
