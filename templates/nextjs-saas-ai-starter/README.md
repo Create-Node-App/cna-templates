@@ -2,7 +2,7 @@
 
 > Production-ready multi-tenant SaaS with integrated AI — Next.js App Router, Auth.js v5, PostgreSQL + pgvector, and Drizzle. The flagship product showcase, not a minimal starter.
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org) [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?logo=typescript)](https://www.typescriptlang.org) [![Tailwind](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwindcss)](https://tailwindcss.com)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org) [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-blue?logo=typescript)](https://www.typescriptlang.org) [![Tailwind](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwindcss)](https://tailwindcss.com)
 
 ## Tech stack
 
@@ -18,7 +18,7 @@
 | i18n | next-intl (EN + ES) |
 | Test | Jest + React Testing Library + Storybook |
 | Runtime | Node 22 |
-| API | tRCP for nextjs |
+| API | tRPC for Nextjs |
 | Tooling | husky + lint staged
 
 ## Scaffold
