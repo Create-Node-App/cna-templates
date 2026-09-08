@@ -38,6 +38,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
+      - name: Use npm 11 (npm 10 arborist crashes on vitest 4 — edgesOut)
+        run: npm install -g npm@11 --no-audit --no-fund
+
       - name: Generate L1 matrix
         id: set
         run: node scripts/ci/generate-matrix.js --layer templates
@@ -64,6 +67,9 @@ jobs:
           node-version: 22
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
+
+      - name: Use npm 11 (npm 10 arborist crashes on vitest 4 — edgesOut)
+        run: npm install -g npm@11 --no-audit --no-fund
 
       - name: Scaffold check (template alone)
         env:
