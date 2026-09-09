@@ -1,4 +1,4 @@
-import { envSchema } from './env.schema';
+import { envSchema } from './env.schema.js';
 
 export function validateEnv(config: Record<string, unknown>) {
   const parsed = envSchema.safeParse(config);

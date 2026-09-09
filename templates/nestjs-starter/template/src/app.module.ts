@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
-import { validateEnv } from './config/env.validation';
-import { HealthController } from './health/health.controller';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor.js';
+import { validateEnv } from './config/env.validation.js';
+import { HealthController } from './health/health.controller.js';
 
 @Module({
   imports: [

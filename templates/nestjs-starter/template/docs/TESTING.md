@@ -21,7 +21,7 @@ Unit tests live next to the code they cover:
 - `src/app.controller.spec.ts` — Root controller
 - `src/health/health.controller.spec.ts` — Health controller
 
-Configuration: `jest.config.js` (rootDir `src`, matches `*.spec.ts`).
+Configuration: `jest.config.cjs` (rootDir `src`, matches `*.spec.ts`, ESM via ts-jest `useESM`).
 
 Unit tests typically:
 
