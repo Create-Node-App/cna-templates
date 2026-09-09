@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DrizzleProvider } from './db/drizzle.provider';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { DrizzleProvider } from './db/drizzle.provider.js';
 
 @Module({
   imports: [
