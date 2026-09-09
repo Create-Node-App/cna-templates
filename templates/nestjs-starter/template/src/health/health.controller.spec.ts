@@ -1,7 +1,8 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppHealthResponseDto } from '../common/dto/app-health-response.dto';
-import { AppService } from '../app.service';
-import { HealthController } from './health.controller';
+import { AppHealthResponseDto } from '../common/dto/app-health-response.dto.js';
+import { AppService } from '../app.service.js';
+import { HealthController } from './health.controller.js';
 
 describe('HealthController', () => {
   let controller: HealthController;

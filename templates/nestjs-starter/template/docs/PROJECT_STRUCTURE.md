@@ -29,7 +29,7 @@ nestjs-starter/
 ├── compose.yml                 # Local Docker Compose stack
 ├── .env.example                # Documented environment template
 ├── nest-cli.json               # Nest CLI configuration
-├── jest.config.js              # Unit test config
+├── jest.config.cjs             # Unit test config (CJS so Node loads it under "type": "module")
 └── tsconfig.json               # TypeScript compiler options
 ```
 
