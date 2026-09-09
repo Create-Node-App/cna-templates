@@ -18,7 +18,7 @@
 | i18n | next-intl (EN + ES) |
 | Test | Jest + React Testing Library + Storybook |
 | Runtime | Node 22 |
-| API | tRPC for Nextjs |
+| API | REST Route Handlers (`src/app/api/`) |
 | Tooling | husky + lint staged
 
 ## Scaffold
