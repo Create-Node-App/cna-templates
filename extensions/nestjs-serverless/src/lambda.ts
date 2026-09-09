@@ -12,6 +12,11 @@ import { AppModule } from './app.module.js';
 
 let cachedServer: Handler;
 
+// @vendia/serverless-express is untyped CJS whose default export is the
+// factory function. Under nodenext the namespace import is not callable,
+// so type the factory explicitly (runtime interop is unaffected).
+const createServer = serverlessExpress as unknown as (options: { app: unknown }) => Handler;
+
 async function bootstrap() {
   if (!cachedServer) {
     const expressApp = express();
@@ -21,7 +26,7 @@ async function bootstrap() {
 
     await nestApp.init();
 
-    cachedServer = serverlessExpress({ app: expressApp });
+    cachedServer = createServer({ app: expressApp });
   }
 
   return cachedServer;
