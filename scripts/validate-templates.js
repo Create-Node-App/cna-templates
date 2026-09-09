@@ -228,6 +228,34 @@ function validatePackageModuleConflict(data) {
   }
 }
 
+function validateCnaConfig(data) {
+  info('Checking cna.config.json presence and shape (refs #273)...');
+
+  data.templates.forEach((template) => {
+    const match = template.url.match(/\/templates\/([^\/]+)/);
+    if (!match) return;
+    const configPath = path.join(TEMPLATES_DIR, match[1], 'cna.config.json');
+    if (!fs.existsSync(configPath)) {
+      error(`Template "${template.slug}" is missing cna.config.json (no interactive prompts)`);
+      return;
+    }
+    let config;
+    try {
+      config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    } catch (err) {
+      error(`Template "${template.slug}" has unparsable cna.config.json: ${err.message}`);
+      return;
+    }
+    if (!Array.isArray(config.customOptions)) {
+      error(`Template "${template.slug}" cna.config.json must define customOptions array`);
+    }
+  });
+
+  if (!hasErrors) {
+    success('All templates define cna.config.json with customOptions array');
+  }
+}
+
 function validateIncompatibleSymmetry(data) {
   info('Checking incompatibleWith symmetry...');
 
@@ -387,6 +415,7 @@ function main() {
   validateTypes(data);
   validateCategories(data);
   validatePackageModuleConflict(data);
+  validateCnaConfig(data);
   validateIncompatibleSymmetry(data);
   validateJsonSchema(data);
   

@@ -468,6 +468,17 @@
         "Jotai",
         "State Management",
         "Atomic State Management"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -481,6 +492,17 @@
         "Recoil.js",
         "State Management",
         "Atomic State Management"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -496,6 +518,17 @@
         "React Hooks",
         "TypeScript",
         "Cursor Rules"
+      ],
+      "incompatibleWith": [
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -509,6 +542,17 @@
         "MobX",
         "State Management",
         "Bidirectional State Management"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -524,6 +568,17 @@
         "React Hooks",
         "TypeScript",
         "Cursor Rules"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -537,6 +592,17 @@
         "Valtio",
         "State Management",
         "Bidirectional State Management"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -552,6 +618,17 @@
         "Finite State Machines",
         "TypeScript",
         "Cursor Rules"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "zustand"
       ]
     },
     {
@@ -567,6 +644,17 @@
         "Unidirectional State Management",
         "TypeScript",
         "Cursor Rules"
+      ],
+      "incompatibleWith": [
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate"
       ]
     },
     {
@@ -585,7 +673,15 @@
         "Redux Saga"
       ],
       "incompatibleWith": [
-        "react-redux-thunk"
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-thunk",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
@@ -604,7 +700,15 @@
         "Redux Thunk"
       ],
       "incompatibleWith": [
-        "react-redux-saga"
+        "hookstate",
+        "jotai",
+        "mobx",
+        "react-redux-saga",
+        "recoil-js",
+        "teaful",
+        "valtio",
+        "xstate",
+        "zustand"
       ]
     },
     {
