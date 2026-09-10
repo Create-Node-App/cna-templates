@@ -768,6 +768,9 @@
         "Semantic UI",
         "Semantic UI React",
         "CSS"
+      ],
+      "incompatibleWith": [
+        "semantic-ui-react-theme"
       ]
     },
     {
@@ -783,6 +786,9 @@
         "Semantic UI React",
         "Less",
         "Theme Customization"
+      ],
+      "incompatibleWith": [
+        "semantic-ui-react"
       ]
     },
     {
