@@ -58,6 +58,12 @@ function run(phase, cmd, cmdArgs, options = {}) {
     FORCE_COLOR: '0',
   };
   if (process.env.SKIP_ENV_VALIDATION) {
+    // Caller opt-in only (never set blanket in workflows — L0
+    // scripts/validate-env.js fails CI on blanket sets, issues #382/#398).
+    // Logged loudly so a skipped schema validation can never go unnoticed.
+    console.warn(
+      `⚠ [env] propagating caller-set SKIP_ENV_VALIDATION=${process.env.SKIP_ENV_VALIDATION} — env schema validation will be skipped for the child commands below`,
+    );
     env.SKIP_ENV_VALIDATION = process.env.SKIP_ENV_VALIDATION;
   }
   const result = spawnSync(cmd, cmdArgs, {

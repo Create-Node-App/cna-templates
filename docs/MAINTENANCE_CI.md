@@ -128,9 +128,50 @@ match real UX and attribute failures.
 
 ---
 
-## 7. Checklist
+## 7. Env validation model (`SKIP_ENV_VALIDATION`, #382/#398)
+
+`SKIP_ENV_VALIDATION=true` lets builds pass without exercising env schemas,
+which masks mis-configured schemas (missing required vars, weakened zod
+constraints) that would fail in production. L0 enforces a model where real
+schema bugs fail CI while legitimate skips still work:
+
+```bash
+node scripts/validate-env.js              # no-masking audit + model + fixtures
+node scripts/validate-env.js --self-test  # plus the negative test (breakages must fail)
+```
+
+### 7.1 Classification
+
+| Class | Meaning | CI treatment |
+|---|---|---|
+| `required` | No `.optional()` / `.default()` (e.g. SaaS `DATABASE_URL`, `AUTH_SECRET`) | Empty env **must fail**; CI supplies a placeholder-only fixture that satisfies the constraint (`z.url()`, `.min(32)`) |
+| `build-defaulted` | Has a default (e.g. `NEXT_PUBLIC_APP_URL`) | Safe in CI without secrets; empty env passes |
+| `runtime-optional` | `.optional()` (e.g. `OPENAI_API_KEY`) | May be absent everywhere |
+| `ci-fixture` | Synthetic placeholder (`postgresql://ci:ci@localhost:5432/ci`) | CI-only, never a real secret; must look like a placeholder |
+
+The required set is **derived from the schema source**, not trusted from the
+model: silently weakening a field (adding `.optional()`, dropping
+`.min(32)`), unwiring it from t3 `runtimeEnv`, or adding a new required var
+without a fixture fails L0. The negative test (`--self-test`) runs the real
+checker against such mutations and fails CI if any breakage goes undetected.
+
+### 7.2 When the skip is appropriate
+
+- **Never** set `SKIP_ENV_VALIDATION=true` blanket in workflows or
+  `scripts/ci/` — L0 fails the PR. `run-scaffold-check.js` only propagates a
+  caller-set value and logs a `⚠ [env]` warning when it does.
+- **Appropriate:** a per-command opt-in where secrets are unavailable, e.g.
+  the SaaS template `build:ci` script
+  (`SKIP_ENV_VALIDATION=true NODE_ENV=production next build`); local
+  scaffold debugging (`docs/MAINTENANCE_TEMPLATES.md` §4.1/§9).
+- L1/L3 run `npm run build` **without** the flag, so template builds
+  validate for real. The SaaS template skips build in L1/L3 (service-backed)
+  and is covered by the L0 fixture proof instead.
+
+## 8. Checklist
 
 - [ ] `node scripts/validate-templates.js` passes (paths exist).
+- [ ] `node scripts/validate-env.js` and `--self-test` pass (no env masking).
 - [ ] Profiles validate.
 - [ ] L1 covers every template after template changes.
 - [ ] Changed extensions have a green L2 cell (or an issue explaining known break).

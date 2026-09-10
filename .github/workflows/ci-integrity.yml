@@ -47,5 +47,11 @@ jobs:
       - name: Validate curated CI profiles
         run: node scripts/ci/generate-matrix.js --layer validate-profiles
 
+      - name: Validate env model (no SKIP_ENV_VALIDATION masking)
+        run: node scripts/validate-env.js
+
+      - name: Negative test (a broken env schema must fail)
+        run: node scripts/validate-env.js --self-test
+
       - name: Validate incompatibleWith matrix (negative + positive controls)
         run: node scripts/ci/generate-matrix.js --layer validate-incompat
