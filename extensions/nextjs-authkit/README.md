@@ -138,6 +138,30 @@ to use when scoping data per tenant — treat it the same way you'd treat a
 `refreshAuth` also accept an `organizationId` to switch a session between
 organizations.
 
+## Comparison with other auth options
+
+| Feature | WorkOS AuthKit (this extension) | WorkOS SSO (`nextjs-workos`) | Auth0 (via `nextjs-auth`) |
+|---|---|---|---|
+| Auth.js integration | Custom SDK (`authkit-nextjs`) | Built-in `workos` provider | Built-in `auth0` provider |
+| Hosted UI | Yes | No | Yes (Universal Login) |
+| Enterprise SSO | Yes | Yes | Yes |
+| MFA | Built-in | IdP-dependent | Built-in |
+
+See [docs/AUTHENTICATION.md](../../docs/AUTHENTICATION.md) for the full
+comparison, setup pointers, and migration notes.
+
+## Migrating from Auth.js (`nextjs-auth`)
+
+1. Remove the `nextjs-auth` files (`[src]/lib/auth.ts`, the
+   `/api/auth/[...nextauth]` route, `middleware-handlers.ts` snippet) and its
+   provider env vars.
+2. Apply this extension and configure dashboard Redirects plus `.env.local`
+   as described in [Setup](#setup).
+3. Replace `auth()` / `useSession()` call sites with `withAuth()` (server)
+   and `useAuth()` (client).
+4. Key per-tenant data by the session's `organizationId` + `user.id`
+   (see [Organization-to-tenant mapping](#organization-to-tenant-mapping)).
+
 ## References
 
 - [AuthKit Next.js docs](https://workos.com/docs/authkit/nextjs)
