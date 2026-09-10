@@ -7,6 +7,8 @@
  * permissions are mocked; no real OAuth credentials are used.
  */
 
+export {};
+
 const mockDbQuery = {
   users: { findFirst: jest.fn() },
   tenants: { findFirst: jest.fn() },
