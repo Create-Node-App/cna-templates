@@ -1,5 +1,6 @@
 'use client';
 
+import { isValidElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -123,9 +124,8 @@ function extractTextFromNode(node: React.ReactNode): string {
   if (typeof node === 'string') return node;
   if (typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(extractTextFromNode).join('');
-  if (node && typeof node === 'object' && 'props' in node) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return extractTextFromNode((node as any).props.children);
+  if (isValidElement<{ children?: React.ReactNode }>(node)) {
+    return extractTextFromNode(node.props.children);
   }
   return '';
 }

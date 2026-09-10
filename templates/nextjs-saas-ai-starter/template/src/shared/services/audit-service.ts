@@ -17,19 +17,35 @@ import { auditEvents } from '@/shared/db/schema';
 import { logger } from '@/shared/lib/logger';
 
 export interface AuditLogInput {
+  /** Tenant the event belongs to (omit for system-level events) */
   tenantId?: string;
+  /** ID of the user or service that performed the action */
   actorId?: string;
+  /** Action key, e.g. one of {@link AuditActions} */
   action: string;
+  /** Type of entity acted upon, e.g. `'person'` */
   entityType: string;
+  /** ID of the entity acted upon */
   entityId?: string;
+  /** Before/after field changes */
   changes?: Record<string, unknown>;
+  /** Additional structured context */
   metadata?: Record<string, unknown>;
+  /** AI model version when the event came from an AI flow */
   aiModelVersion?: string;
+  /** Prompt version when the event came from an AI flow */
   aiPromptVersion?: string;
 }
 
 /**
- * Get request correlation IDs from headers or generate new ones
+ * Get request correlation IDs from headers or generate new ones.
+ *
+ * Reads `x-request-id` / `x-trace-id` from the incoming request headers so
+ * audit rows can be joined with logs; falls back to fresh UUIDs when the
+ * headers are absent (e.g. background jobs).
+ *
+ * @returns The request and trace IDs for the current execution context.
+ * @throws Never throws — header access failures surface as generated UUIDs.
  */
 export async function getCorrelationIds(): Promise<{ requestId: string; traceId: string }> {
   const headersList = await headers();
@@ -40,7 +56,15 @@ export async function getCorrelationIds(): Promise<{ requestId: string; traceId:
 }
 
 /**
- * Log an audit event
+ * Log an audit event to the database and the structured logger.
+ *
+ * Persists the event with request correlation IDs, client IP, and user agent
+ * resolved from request headers, then mirrors it to the application logger
+ * with `audit: true` for log-pipeline filtering.
+ *
+ * @param input - The audit event fields (actor, action, entity, context).
+ * @returns The ID of the inserted audit event row.
+ * @throws When the database insert fails.
  */
 export async function logAuditEvent(input: AuditLogInput): Promise<string> {
   const { requestId, traceId } = await getCorrelationIds();
@@ -77,7 +101,10 @@ export async function logAuditEvent(input: AuditLogInput): Promise<string> {
 }
 
 /**
- * Common audit actions
+ * Common audit action keys grouped by domain.
+ *
+ * Use these constants as the `action` field of {@link AuditLogInput} to keep
+ * audit rows queryable instead of scattering string literals.
  */
 export const AuditActions = {
   // Person actions
@@ -108,4 +135,5 @@ export const AuditActions = {
   AUTH_LOGOUT: 'auth.logout',
 } as const;
 
+/** Union of all known audit action keys from {@link AuditActions}. */
 export type AuditAction = (typeof AuditActions)[keyof typeof AuditActions];

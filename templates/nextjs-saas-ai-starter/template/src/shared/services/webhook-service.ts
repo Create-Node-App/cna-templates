@@ -45,8 +45,14 @@ interface DeliveryResult {
 // ============================================================================
 
 /**
- * Generate HMAC-SHA256 signature for webhook payload.
- * Recipients can verify using: HMAC-SHA256(secret, JSON.stringify(payload))
+ * Generate HMAC-SHA256 signature for a webhook payload.
+ *
+ * Recipients verify with `HMAC-SHA256(secret, JSON.stringify(payload))`
+ * using the endpoint's signing secret.
+ *
+ * @param secret - The endpoint signing secret.
+ * @param payload - The event payload that was (or will be) delivered.
+ * @returns The hex-encoded HMAC-SHA256 signature.
  */
 export function signPayload(secret: string, payload: WebhookEventPayload): string {
   const hmac = createHmac('sha256', secret);
@@ -70,6 +76,8 @@ export function signPayload(secret: string, payload: WebhookEventPayload): strin
  * @param tenantSlug - Tenant identifier
  * @param eventType - Event type (e.g., 'person.created')
  * @param data - Event payload data
+ * @returns `{ success, deliveryIds }` — created delivery record IDs (empty when webhooks are disabled or no endpoint subscribes).
+ * @throws Never throws — unexpected failures are logged and returned as `{ success: false, deliveryIds: [] }`.
  */
 export async function emitWebhookEvent(
   tenantSlug: string,
@@ -323,8 +331,13 @@ async function deliverWebhook(endpoint: schema.WebhookEndpoint, payload: Webhook
 // ============================================================================
 
 /**
- * Process pending retries.
- * Call this from a cron job or scheduled task.
+ * Process pending webhook-delivery retries due for another attempt.
+ *
+ * Picks up to 100 `pending`/`retrying` deliveries whose `nextRetryAt` has
+ * passed and re-attempts them. Call this from a cron job or scheduled task.
+ *
+ * @returns Counts of processed, succeeded, and failed deliveries.
+ * @throws When the database query for pending deliveries fails.
  */
 export async function processRetryQueue(): Promise<{ processed: number; succeeded: number; failed: number }> {
   const now = new Date();
@@ -424,6 +437,14 @@ export async function processRetryQueue(): Promise<{ processed: number; succeede
 
 /**
  * Send a test event to a specific webhook endpoint.
+ *
+ * Delivers a synthetic event to verify the endpoint URL, signing, and
+ * reachability without emitting a real domain event.
+ *
+ * @param tenantSlug - The tenant slug owning the endpoint.
+ * @param endpointId - The webhook endpoint ID to test.
+ * @returns `{ success: true, status, durationMs }` on delivery, or `{ success: false, error }` (including `'Tenant not found'` / `'Endpoint not found'`).
+ * @throws Never throws for delivery failures — they are returned as `{ success: false, error }`.
  */
 export async function sendTestWebhook(
   tenantSlug: string,

@@ -15,23 +15,17 @@ jest.mock('next-auth/react', () => ({
   SessionProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// Mock window.location
-const mockLocation = {
-  href: '',
-  origin: 'http://localhost',
-  assign: jest.fn(),
-  replace: jest.fn(),
-};
+// Mock same-origin navigation (jsdom freezes window.location, so the
+// component delegates navigation to this mockable module).
+const navigateToSameOriginMock = jest.fn();
 
-Object.defineProperty(window, 'location', {
-  value: mockLocation,
-  writable: true,
-});
+jest.mock('@/shared/lib/navigation', () => ({
+  navigateToSameOrigin: (...args: unknown[]) => navigateToSameOriginMock(...args),
+}));
 
 describe('LoginForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockLocation.href = '';
   });
 
   it('renders sign in title and description', () => {
@@ -147,7 +141,7 @@ describe('LoginForm', () => {
       await user.click(devButton);
 
       await waitFor(() => {
-        expect(mockLocation.href).toBe('/select-tenant');
+        expect(navigateToSameOriginMock).toHaveBeenCalledWith('/select-tenant');
       });
     });
 
