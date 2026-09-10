@@ -50,9 +50,17 @@ function changedPaths(baseRef) {
       cwd: REPO_ROOT,
       encoding: 'utf8',
     });
-    return out.split('\n').map((s) => s.trim()).filter(Boolean);
+    const paths = out.split('\n').map((s) => s.trim()).filter(Boolean);
+    console.error(`Changed paths vs ${baseRef}: ${paths.length} file(s)`);
+    return paths;
   } catch {
-    return [];
+    // Fail toward FULL coverage, never toward an empty matrix: a generator
+    // that cannot determine changed files must test everything (refs #381).
+    // An empty matrix would skip all jobs and report green (false positive).
+    console.error(
+      `⚠ cannot diff ${baseRef}...HEAD (e.g. shallow fetch with no merge base) — falling back to FULL matrix`,
+    );
+    return null;
   }
 }
 
@@ -81,9 +89,9 @@ function matrixTemplates(registry) {
 
 function matrixExtensions(registry, { changedOnly, baseRef }) {
   const changed = changedOnly ? changedPaths(baseRef) : [];
-  const full = !changedOnly || forceFullMatrix(changed);
+  const full = !changedOnly || changed === null || forceFullMatrix(changed || []);
   const changedExtDirs = new Set(
-    changed
+    (changed || [])
       .filter((p) => p.startsWith('extensions/'))
       .map((p) => p.split('/')[1])
       .filter(Boolean),
@@ -122,20 +130,21 @@ function matrixExtensions(registry, { changedOnly, baseRef }) {
 function matrixProfiles(registry, { changedOnly, baseRef }) {
   const profiles = loadProfiles();
   const changed = changedOnly ? changedPaths(baseRef) : [];
-  const full = !changedOnly || forceFullMatrix(changed);
+  const full = !changedOnly || changed === null || forceFullMatrix(changed || []);
+  const changedList = changed || [];
 
   const cells = [];
   for (const profile of profiles) {
     const { template, addons } = assertProfileValid(registry, profile);
 
     if (!full) {
-      const touchedTemplate = changed.some((p) =>
+      const touchedTemplate = changedList.some((p) =>
         p.startsWith(`templates/${profile.templateDir}/`),
       );
       const touchedAddon = addons.some((ext) =>
-        changed.some((p) => p.startsWith(`extensions/${extensionDir(ext)}/`)),
+        changedList.some((p) => p.startsWith(`extensions/${extensionDir(ext)}/`)),
       );
-      const touchedProfile = changed.some((p) => p === `ci/profiles/${profile._file}`);
+      const touchedProfile = changedList.some((p) => p === `ci/profiles/${profile._file}`);
       if (!touchedTemplate && !touchedAddon && !touchedProfile) continue;
     }
 

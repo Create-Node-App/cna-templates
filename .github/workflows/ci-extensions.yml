@@ -47,7 +47,10 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="origin/${{ github.base_ref }}"
-            git fetch origin "${{ github.base_ref }}" --depth=1 || true
+            # Full fetch (no --depth=1): a shallow fetch drops merge-base
+            # ancestry and makes `git diff $BASE...HEAD` fail, which used to
+            # silently produce an empty matrix (false green, refs #381).
+            git fetch origin "${{ github.base_ref }}" || true
             node scripts/ci/generate-matrix.js --layer extensions --changed-only --base-ref "$BASE"
           else
             node scripts/ci/generate-matrix.js --layer extensions
