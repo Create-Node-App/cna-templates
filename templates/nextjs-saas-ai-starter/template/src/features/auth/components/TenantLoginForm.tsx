@@ -19,6 +19,7 @@ import {
   FormLabel,
   Input,
 } from '@/shared/components/ui';
+import { getAuthProviderDisplayName, getPublicAuthProviderId } from '@/shared/lib/auth-providers';
 import { navigateToSameOrigin } from '@/shared/lib/navigation';
 
 // ============================================================================
@@ -87,11 +88,15 @@ export function TenantLoginForm({ tenantSlug, tenantName, initialEmail = '' }: T
     }
   };
 
-  // Handle Auth0 login
-  const handleAuth0Login = async () => {
+  // Active production SSO provider (Auth0 default, WorkOS when configured)
+  const ssoProviderId = getPublicAuthProviderId();
+  const ssoProviderName = getAuthProviderDisplayName(ssoProviderId);
+
+  // Handle SSO login with the active provider
+  const handleSsoLogin = async () => {
     setIsLoading(true);
     try {
-      await signIn('auth0', { callbackUrl });
+      await signIn(ssoProviderId, { callbackUrl });
     } catch {
       setServerError(t('failedToStartLogin'));
       setIsLoading(false);
@@ -112,15 +117,15 @@ export function TenantLoginForm({ tenantSlug, tenantName, initialEmail = '' }: T
           {serverError}
         </FormGlobalError>
 
-        {/* Auth0 Login Button */}
+        {/* SSO Login Button (active provider) */}
         <Button
           type="button"
           className="w-full h-12 bg-primary hover:opacity-90 shadow-md text-base font-medium"
-          onClick={handleAuth0Login}
+          onClick={handleSsoLogin}
           disabled={isLoading}
           aria-busy={isLoading}
         >
-          {isLoading ? t('signingIn') : t('continueWith', { provider: 'Auth0' })}
+          {isLoading ? t('signingIn') : t('continueWith', { provider: ssoProviderName })}
         </Button>
 
         <div className="relative">

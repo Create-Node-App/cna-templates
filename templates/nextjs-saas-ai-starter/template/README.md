@@ -23,7 +23,7 @@ A fully-featured, production-ready Next.js 16 template for building multi-tenant
 ## ✨ Features
 
 - 🏢 **Multi-tenant architecture** — tenant-scoped routes (`/t/[tenant]`), full tenant isolation in DB
-- 🔐 **Auth.js v5 + Auth0** — SSO, database sessions, development credentials provider
+- 🔐 **Auth.js v5 + Auth0 / WorkOS** — configurable SSO, database sessions, development credentials provider
 - 🗄️ **PostgreSQL 17 + pgvector + Drizzle ORM** — type-safe queries, vector similarity search
 - 🤖 **AI assistant** — OpenAI/Anthropic via Vercel AI SDK, RAG with embeddings
 - 🔑 **Permission-Based Access Control (PBAC)** — roles are bundles of permissions, multi-role support
@@ -122,7 +122,7 @@ not configure a working database for runtime use.
 | Language     | TypeScript 6 (strict)                                 |
 | Styling      | Tailwind CSS v4 + shadcn/ui                           |
 | Database     | PostgreSQL 17 + pgvector + Drizzle ORM                |
-| Auth         | Auth.js v5 + Auth0 (SSO) + database sessions          |
+| Auth         | Auth.js v5 + Auth0 / WorkOS (SSO) + database sessions |
 | AI           | OpenAI / Anthropic via Vercel AI SDK + RAG/embeddings |
 | File Storage | AWS S3 (production) / MinIO (local dev)               |
 | i18n         | next-intl (EN + ES)                                   |

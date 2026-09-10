@@ -33,10 +33,19 @@ export DATABASE_URL="${DATABASE_URL:-postgresql://saas_template:saas_template@lo
 # Generate with: openssl rand -base64 32  (dev default only - change in production)
 export AUTH_SECRET="${AUTH_SECRET:-development-secret-change-in-production-min32chars}"
 
+# Active SSO provider: auth0 (default) or workos (opt-in)
+export AUTH_PROVIDER="${AUTH_PROVIDER:-auth0}"
+export NEXT_PUBLIC_AUTH_PROVIDER="${NEXT_PUBLIC_AUTH_PROVIDER:-${AUTH_PROVIDER:-auth0}}"
+
 # Auth0 Provider (optional - for SSO)
 export AUTH0_CLIENT_ID="${AUTH0_CLIENT_ID:-}"
 export AUTH0_CLIENT_SECRET="${AUTH0_CLIENT_SECRET:-}"
 export AUTH0_ISSUER="${AUTH0_ISSUER:-}"
+
+# WorkOS Provider (optional - enterprise SSO via AUTH_PROVIDER=workos)
+export WORKOS_CLIENT_ID="${WORKOS_CLIENT_ID:-}"
+export WORKOS_CLIENT_SECRET="${WORKOS_CLIENT_SECRET:-}"
+export WORKOS_CONNECTION_ID="${WORKOS_CONNECTION_ID:-}"
 
 # ============================================================================
 # AI / LLM Configuration

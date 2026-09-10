@@ -103,6 +103,28 @@ describe('LoginForm', () => {
       expect(signIn).toHaveBeenCalledWith('auth0', { callbackUrl: '/select-tenant' });
     });
 
+    it('calls signIn with workos provider when NEXT_PUBLIC_AUTH_PROVIDER=workos', async () => {
+      const previous = process.env.NEXT_PUBLIC_AUTH_PROVIDER;
+      process.env.NEXT_PUBLIC_AUTH_PROVIDER = 'workos';
+      try {
+        const user = userEvent.setup();
+        (signIn as jest.Mock).mockResolvedValue({ ok: true });
+
+        renderLogin(enMessages);
+
+        const workosButton = screen.getByRole('button', { name: /continue with workos/i });
+        await user.click(workosButton);
+
+        expect(signIn).toHaveBeenCalledWith('workos', { callbackUrl: '/select-tenant' });
+      } finally {
+        if (previous === undefined) {
+          delete process.env.NEXT_PUBLIC_AUTH_PROVIDER;
+        } else {
+          process.env.NEXT_PUBLIC_AUTH_PROVIDER = previous;
+        }
+      }
+    });
+
     it('shows loading state while signing in', async () => {
       const user = userEvent.setup();
       // Create a promise that never resolves to keep loading state

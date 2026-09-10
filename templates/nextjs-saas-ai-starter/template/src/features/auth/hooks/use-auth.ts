@@ -5,10 +5,16 @@
  *
  * Provides convenient access to authentication state and actions.
  * For most use cases, prefer using next-auth/react directly.
+ *
+ * The default login provider follows `NEXT_PUBLIC_AUTH_PROVIDER`
+ * (`auth0` unless configured otherwise); pass an explicit provider to
+ * override it per call.
  */
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useCallback } from 'react';
+
+import { getPublicAuthProviderId } from '@/shared/lib/auth-providers';
 
 export interface UseAuthReturn {
   /** Current user if authenticated */
@@ -31,7 +37,7 @@ export interface UseAuthReturn {
 export const useAuth = (): UseAuthReturn => {
   const { data: session, status } = useSession();
 
-  const login = useCallback(async (provider = 'auth0', callbackUrl = '/') => {
+  const login = useCallback(async (provider: string = getPublicAuthProviderId(), callbackUrl = '/') => {
     await signIn(provider, { callbackUrl });
   }, []);
 

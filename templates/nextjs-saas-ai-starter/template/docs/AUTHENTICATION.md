@@ -169,6 +169,49 @@ Auth.js tables are defined in `src/shared/db/schema/auth.ts`:
    - Allowed Logout URLs: `http://localhost:3000`
 3. Copy Client ID, Client Secret, and Issuer to `.env.local`
 
+## Choosing a Production SSO Provider
+
+The template supports two production SSO providers behind the `AUTH_PROVIDER`
+environment variable (Auth0 is the default for backward compatibility):
+
+```env
+# Auth0 (default) — no AUTH_PROVIDER needed
+AUTH0_CLIENT_ID="your-client-id"
+AUTH0_CLIENT_SECRET="your-client-secret"
+AUTH0_ISSUER="https://your-tenant.auth0.com"
+
+# WorkOS (opt-in)
+AUTH_PROVIDER="workos"
+NEXT_PUBLIC_AUTH_PROVIDER="workos"
+WORKOS_CLIENT_ID="client_..."
+WORKOS_CLIENT_SECRET="sk_..."   # your WorkOS API key
+WORKOS_CONNECTION_ID="conn_..." # optional: pin a specific SSO connection
+```
+
+`src/shared/lib/auth.ts` resolves the active provider at startup via
+`resolveAuthProviderId()` (see `src/shared/lib/auth-providers.ts`): the
+selected provider is registered only when its credentials are present,
+otherwise the app falls back to development-only logins. Login buttons and
+the `useAuth()` default provider follow `NEXT_PUBLIC_AUTH_PROVIDER`, so set
+both variables together when deploying.
+
+## WorkOS Setup
+
+1. Create a WorkOS account at [dashboard.workos.com](https://dashboard.workos.com/)
+   and copy the API key (`WORKOS_CLIENT_SECRET`) and Client ID (`WORKOS_CLIENT_ID`)
+2. Configure the redirect URI in the WorkOS dashboard:
+   - `http://localhost:3000/api/auth/callback/workos` (add production URLs per environment)
+3. (Optional) Create an SSO connection (SAML/OIDC) and set `WORKOS_CONNECTION_ID`
+   to route logins through it; without it, users pick their organization's
+   connection via domain
+4. Set `AUTH_PROVIDER=workos` and `NEXT_PUBLIC_AUTH_PROVIDER=workos` in `.env.local`
+5. Sign in — users land in the same `users`/`accounts` tables with
+   `accounts.provider = 'workos'`; RBAC, multi-tenant scoping, and sessions
+   behave identically to Auth0
+
+See [docs/MIGRATION_AUTH0_TO_WORKOS.md](./MIGRATION_AUTH0_TO_WORKOS.md) for
+migrating an existing Auth0 deployment.
+
 ## Best Practices
 
 1. **Always check auth server-side** before rendering sensitive data
@@ -181,4 +224,7 @@ Auth.js tables are defined in `src/shared/db/schema/auth.ts`:
 
 - [Auth.js v5 Docs](https://authjs.dev)
 - [Auth0 Quickstart](https://auth0.com/docs/quickstart/webapp/nextjs)
+- [WorkOS NextAuth integration](https://workos.com/docs/integrations/next-auth)
+- [Auth.js WorkOS provider](https://authjs.dev/getting-started/providers/workos)
+- [Auth0 to WorkOS migration guide](./MIGRATION_AUTH0_TO_WORKOS.md)
 - [Project Structure](./PROJECT_STRUCTURE.md)
