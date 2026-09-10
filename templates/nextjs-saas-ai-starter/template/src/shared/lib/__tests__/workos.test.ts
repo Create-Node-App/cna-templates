@@ -5,8 +5,6 @@
  * mapping helpers. The AuthKit SDK itself is not imported here.
  */
 
-export {};
-
 const mockEnvValues: { current: Record<string, string | undefined> } = { current: {} };
 
 jest.mock('@/shared/lib/env', () => ({
@@ -15,10 +13,11 @@ jest.mock('@/shared/lib/env', () => ({
   },
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { isWorkosAuthKitConfigured, selectWorkosOrganization, workosOrganizationToTenantSlug } = require(
-  '../workos',
-) as typeof import('../workos');
+import {
+  isWorkosAuthKitConfigured,
+  selectWorkosOrganization,
+  workosOrganizationToTenantSlug,
+} from '../workos';
 
 describe('isWorkosAuthKitConfigured', () => {
   const FULL = {
