@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["dist/**", "coverage/**", "**/*.config.*", ".prettierrc.js", "tests/**"],
+    ignores: ["dist/**", "coverage/**", "**/*.config.*", ".prettierrc.*", "tests/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -10,8 +10,8 @@ import { ConfigService } from '@nestjs/config';
 // @ts-ignore
 import { Pool } from 'pg';
 import path from 'path';
-import * as schema from './schema';
-import { getSecretValue } from '../helpers/asm';
+import * as schema from './schema.js';
+import { getSecretValue } from '../helpers/asm.js';
 
 @Injectable()
 export class DrizzleProvider implements OnModuleInit {
