@@ -8,6 +8,7 @@ import '@testing-library/jest-dom';
 
 describe('Options', () => {
   it('loads saved settings from storage.sync', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- webextension-polyfill ships no mock-friendly types, and this suite runs under Jest (npm test), where vitest helpers cannot be imported.
     (Browser.storage.sync.get as any).mockResolvedValue({
       [SETTINGS_STORAGE_KEY]: {
         ...DEFAULT_SETTINGS,

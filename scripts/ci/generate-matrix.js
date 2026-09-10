@@ -9,6 +9,7 @@
  *   node scripts/ci/generate-matrix.js --layer extensions [--changed-only]
  *   node scripts/ci/generate-matrix.js --layer profiles [--changed-only]
  *   node scripts/ci/generate-matrix.js --layer validate-profiles
+ *   node scripts/ci/generate-matrix.js --layer validate-incompat
  *
  * Prints a JSON array to stdout. When GITHUB_OUTPUT is set, also writes matrix=<json>.
  */
@@ -26,6 +27,7 @@ const {
   extensionFileUrl,
   canonicalTemplateDirForType,
   findTemplateByDir,
+  hasIncompatibility,
   loadProfiles,
   assertProfileValid,
 } = require('./registry');
@@ -48,9 +50,17 @@ function changedPaths(baseRef) {
       cwd: REPO_ROOT,
       encoding: 'utf8',
     });
-    return out.split('\n').map((s) => s.trim()).filter(Boolean);
+    const paths = out.split('\n').map((s) => s.trim()).filter(Boolean);
+    console.error(`Changed paths vs ${baseRef}: ${paths.length} file(s)`);
+    return paths;
   } catch {
-    return [];
+    // Fail toward FULL coverage, never toward an empty matrix: a generator
+    // that cannot determine changed files must test everything (refs #381).
+    // An empty matrix would skip all jobs and report green (false positive).
+    console.error(
+      `⚠ cannot diff ${baseRef}...HEAD (e.g. shallow fetch with no merge base) — falling back to FULL matrix`,
+    );
+    return null;
   }
 }
 
@@ -79,9 +89,9 @@ function matrixTemplates(registry) {
 
 function matrixExtensions(registry, { changedOnly, baseRef }) {
   const changed = changedOnly ? changedPaths(baseRef) : [];
-  const full = !changedOnly || forceFullMatrix(changed);
+  const full = !changedOnly || changed === null || forceFullMatrix(changed || []);
   const changedExtDirs = new Set(
-    changed
+    (changed || [])
       .filter((p) => p.startsWith('extensions/'))
       .map((p) => p.split('/')[1])
       .filter(Boolean),
@@ -120,20 +130,21 @@ function matrixExtensions(registry, { changedOnly, baseRef }) {
 function matrixProfiles(registry, { changedOnly, baseRef }) {
   const profiles = loadProfiles();
   const changed = changedOnly ? changedPaths(baseRef) : [];
-  const full = !changedOnly || forceFullMatrix(changed);
+  const full = !changedOnly || changed === null || forceFullMatrix(changed || []);
+  const changedList = changed || [];
 
   const cells = [];
   for (const profile of profiles) {
     const { template, addons } = assertProfileValid(registry, profile);
 
     if (!full) {
-      const touchedTemplate = changed.some((p) =>
+      const touchedTemplate = changedList.some((p) =>
         p.startsWith(`templates/${profile.templateDir}/`),
       );
       const touchedAddon = addons.some((ext) =>
-        changed.some((p) => p.startsWith(`extensions/${extensionDir(ext)}/`)),
+        changedList.some((p) => p.startsWith(`extensions/${extensionDir(ext)}/`)),
       );
-      const touchedProfile = changed.some((p) => p === `ci/profiles/${profile._file}`);
+      const touchedProfile = changedList.some((p) => p === `ci/profiles/${profile._file}`);
       if (!touchedTemplate && !touchedAddon && !touchedProfile) continue;
     }
 
@@ -159,6 +170,86 @@ function validateAllProfiles(registry) {
   return [];
 }
 
+/**
+ * Validate the incompatibleWith matrix (refs #402).
+ *
+ * For every declared incompatibleWith pair:
+ *   - negative control: hasIncompatibility() must flag the pair as blocked;
+ *   - the pair must share at least one template type (otherwise blocking it
+ *     is meaningless because the two extensions can never meet).
+ * For every extension declaring incompatibilities:
+ *   - positive control: at least one same-type extension must remain allowed,
+ *     proving the block list is not overbroad.
+ * TEMPLATE+0 cells are covered by the templates layer (L1); this layer only
+ * validates pair semantics, so it stays fast on every PR.
+ */
+function validateIncompat(registry) {
+  const bySlug = new Map(registry.extensions.map((e) => [e.slug, e]));
+  const failures = [];
+  let negatives = 0;
+  let positives = 0;
+
+  for (const ext of registry.extensions) {
+    const listed = ext.incompatibleWith || [];
+    for (const otherSlug of listed) {
+      const other = bySlug.get(otherSlug);
+      if (!other) {
+        failures.push(`${ext.slug} lists unknown slug "${otherSlug}"`);
+        continue;
+      }
+      if (!hasIncompatibility([ext], other)) {
+        failures.push(
+          `negative control failed: ${ext.slug} + ${otherSlug} not detected as incompatible`,
+        );
+        continue;
+      }
+      negatives += 1;
+      const otherTypes = new Set(asTypes(other.type));
+      const shared = asTypes(ext.type).filter((t) => otherTypes.has(t));
+      if (shared.length === 0) {
+        failures.push(
+          `${ext.slug} + ${otherSlug} share no template type (negative test is meaningless)`,
+        );
+      }
+    }
+
+    if (listed.length > 0) {
+      const myTypes = new Set(asTypes(ext.type));
+      const partner = registry.extensions.find(
+        (cand) =>
+          cand.slug !== ext.slug &&
+          !listed.includes(cand.slug) &&
+          !(cand.incompatibleWith || []).includes(ext.slug) &&
+          asTypes(cand.type).some((t) => myTypes.has(t)),
+      );
+      if (!partner) {
+        failures.push(
+          `${ext.slug}: no allowed same-type partner found (incompatibleWith blocks everything)`,
+        );
+      } else if (hasIncompatibility([ext], partner)) {
+        failures.push(
+          `positive control failed: ${ext.slug} + ${partner.slug} flagged incompatible`,
+        );
+      } else {
+        positives += 1;
+        console.error(`✅ positive control: ${ext.slug} + ${partner.slug} allowed`);
+      }
+    }
+  }
+
+  if (failures.length > 0) {
+    for (const f of failures) console.error(`❌ ${f}`);
+    console.error(
+      `incompatibleWith matrix INVALID (${negatives} negative / ${positives} positive controls held)`,
+    );
+    process.exit(1);
+  }
+  console.error(
+    `incompatibleWith matrix valid (${negatives} negative / ${positives} positive controls)`,
+  );
+  return [];
+}
+
 function writeOutput(matrix) {
   const json = JSON.stringify(matrix);
   process.stdout.write(json + '\n');
@@ -177,7 +268,7 @@ function writeOutput(matrix) {
 function main() {
   const args = parseArgs(process.argv);
   if (args.help || !args.layer) {
-    console.error(`Usage: node scripts/ci/generate-matrix.js --layer <templates|extensions|profiles|validate-profiles> [--changed-only]`);
+    console.error(`Usage: node scripts/ci/generate-matrix.js --layer <templates|extensions|profiles|validate-profiles|validate-incompat> [--changed-only]`);
     process.exit(args.help ? 0 : 1);
   }
 
@@ -195,6 +286,9 @@ function main() {
       break;
     case 'validate-profiles':
       matrix = validateAllProfiles(registry);
+      break;
+    case 'validate-incompat':
+      matrix = validateIncompat(registry);
       break;
     default:
       console.error(`Unknown layer: ${args.layer}`);

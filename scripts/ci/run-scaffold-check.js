@@ -215,6 +215,12 @@ function main() {
     }
   }
 
+  if (hasScript(projectRoot, 'lint')) {
+    run('lint', 'npm', ['run', 'lint'], { cwd: projectRoot });
+  } else {
+    console.log('ℹ [lint] skipped (script not present)');
+  }
+
   if (hasScript(projectRoot, 'type-check')) {
     run('type-check', 'npm', ['run', 'type-check'], { cwd: projectRoot });
   } else {

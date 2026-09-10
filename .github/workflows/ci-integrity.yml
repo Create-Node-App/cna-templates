@@ -52,3 +52,6 @@ jobs:
 
       - name: Negative test (a broken env schema must fail)
         run: node scripts/validate-env.js --self-test
+
+      - name: Validate incompatibleWith matrix (negative + positive controls)
+        run: node scripts/ci/generate-matrix.js --layer validate-incompat
