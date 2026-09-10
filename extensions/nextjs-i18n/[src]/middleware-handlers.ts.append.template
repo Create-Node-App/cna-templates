@@ -1,6 +1,6 @@
 
 import createIntlMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from '<%= projectImportPath%>i18n/config';
+import { defaultLocale, locales } from '<%= projectImportPath%>i18n/config';
 
 const intlMiddleware = createIntlMiddleware({
   locales,
