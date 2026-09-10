@@ -11,8 +11,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Scheduled full-matrix runs get their own group and are never cancelled:
+  # with daily merges, sharing the push/PR group starved the Sunday run
+  # (refs #452). Push/PR behavior is unchanged.
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
 
 permissions:
   contents: read
