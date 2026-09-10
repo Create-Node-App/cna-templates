@@ -37,3 +37,13 @@ npx create-awesome-node-app
    npm --prefix /tmp/scaffold run build  # or `npm run lint` / `tsc --noEmit`
    ```
    Replace `<template>` with a compatible template from **Compatible types** and `<slug>` with `nextjs-auth`.
+
+## Choosing an auth approach
+
+- Pair with `nextjs-workos` to add enterprise SSO via the Auth.js built-in
+  WorkOS provider while keeping your own sign-in UI.
+- Prefer `nextjs-authkit` for a fully hosted WorkOS experience (sign-in UI,
+  MFA, password reset) with no auth screens to maintain.
+
+See [docs/AUTHENTICATION.md](../../docs/AUTHENTICATION.md) for the full
+WorkOS SSO vs AuthKit vs Auth0 comparison.
