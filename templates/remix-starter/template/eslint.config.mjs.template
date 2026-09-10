@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-import importPlugin from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 
 export default [
   {
@@ -71,7 +71,7 @@ export default [
       react,
       prettier,
       'jsx-a11y': jsxA11y,
-      import: importPlugin,
+      'import-x': importX,
     },
     settings: {
       react: {
