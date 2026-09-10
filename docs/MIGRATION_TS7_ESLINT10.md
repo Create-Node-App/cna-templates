@@ -125,16 +125,29 @@ Subscribe to each tracker; unblock phases as ranges relax. Keep this branch reba
 
 - [ ] Subscribe/watch upstream issues above (assign owner)
 - [ ] Weekly rebase `chore/major-ts7-eslint10` on `origin/main`
-- [ ] Phase 1 confirm: all templates on `typescript ^6.0.3` (fix `hono-starter` skew) — ref #383
+- [x] Phase 1 confirm (this branch, PR #390): all templates on `typescript ^6.0.3` (`hono-starter ^5.8.3 → ^6.0.3`; resolves cleanly, `typescript-eslint@8` peer allows `<6.1.0`) — ref #383
 - [ ] Phase 2 PR: bump TS7 + `ignoreDeprecations` + `tsup`/`rollup-plugin-dts` + `@astrojs/check` gate
 - [ ] Phase 3 PR: ESLint 10 + `import-x` + `jsx-a11y` + `typescript-eslint@9` + `globals`/`@types/node`
   - [x] Phase 3 prep (this branch, PR #390): `eslint-plugin-import` → `eslint-plugin-import-x@^4.17.1` in `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter` (eslint 9 compat, ESLint 10 ready) — `eslint-plugin-jsx-a11y` stays `^6.10.2` (latest, no 7.x yet)
-- [ ] Phase 4 PR: Vitest 4 + Vite 8 / jsdom 29 / plugin-react 6 spillover
+- [x] Phase 4 prep, partial (this branch, PR #390 + #423 on `main`): `vitest 5` (`V4` tag `4.1.11` superseded by latest `5.0.0`) + Vite 8 / jsdom 29 / plugin-react 6 landed everywhere viable — `react-vite-starter`, `remix-starter`, `hono-starter`, `turborepo-starter`, `webextension-react-vite-starter` (this branch migrates webext `custom-dynamic-import` off removed `renderDynamicImport` onto a post-`generateBundle` alias wrap). Still held: nothing — Vite 8 rollout complete; remaining holds are TS7/ESLint10 only (see re-verification below)
 - [ ] Matrix: `typescript: [6.0.3, 7.0.2]` in `ci-templates.yml` / `ci-profiles.yml` on this branch
 - [ ] L0 `validate-templates.js` + `validate-profiles` green before each phase merge
 - [ ] Full L1/L2/L3 green on `chore/major-ts7-eslint10` before merging to `main`
 - [ ] Dependabot: keep #388 open as tracker; close superseded `#363` via phase PRs per #371 guidance
 - [ ] Docs: update `MAINTENANCE_DEPENDENCIES.md §3.3` + `MAINTENANCE_RUNBOOK.md` after each phase
+
+## Re-verification 2026-09-10 (`npm view`, npm 11)
+
+Main (`f2d2746`, #423) already landed the safe resolvable subset: `electron 44`, `eslint-plugin-astro 3`, hono/nestjs eslint-10 family, `@types/node 26`, `globals 17`, `vitest 5`, `vite 8` + `plugin-react 6` (except webext, migrated on this branch), `jsdom 29`, `web-ext 10`. Still blocked today, with exact evidence:
+
+| Blocker | Evidence 2026-09-10 | Verdict |
+|---|---|---|
+| TS7 (`typescript ^7.0.2`) | `typescript-eslint@8.70.0` (latest, no `9.x` line published) peer `typescript >=4.8.4 <6.1.0`; `@astrojs/check@0.9.10` (latest) peer `typescript ^5.0.0 \|\| ^6.0.0`; `tsup@8.5.1` (latest, no `9.x`) | STOP — hold TS6 per template |
+| ESLint 10 for `nextjs-starter`, `nextjs-saas-ai-starter`, `react-vite-starter`, `remix-starter`, `webextension-react-vite-starter` | `eslint-plugin-jsx-a11y@6.10.2` still latest (no `7.x`), peer `eslint ^3..^9`; `eslint@10.10.0` latest | STOP — hold eslint 9 per template (`import-x@4.17.1` prep already in place, peer `^8.57 \|\| ^9 \|\| ^10`) |
+| `esbuild-node-externals ^2.0.0` (exists) for `nestjs-serverless` ext | `serverless-esbuild@1.57.2` peer `esbuild-node-externals ^1.0.0` | STOP — hold v1 there |
+| webext Vite 8 (`renderDynamicImport` removed) | No `resolveDynamicImport` rename possible (resolves ids only — returning `{ left, right }` fails build `Missing field id` + tsc); migrated via post-`generateBundle` AST alias wrap, verified: install resolves, `tsc` app+node clean, `vite build` green with alias in content chunk, no `__vitePreload` leaks, dist JS `node --check` clean, `vitest run` green | DONE on this branch |
+
+`npm view vite dist-tags`: `latest 8.2.2`; `vitest dist-tags`: `latest 5.0.0`, `V4 4.1.11`; `@vitejs/plugin-react@6.0.3` peer `vite ^8.0.0`; `vite-plugin-eslint@1.8.1` peer `vite >=2` (vite 8 OK); `vitest@5.0.0` peer `vite ^6.4.0 \|\| ^7.0.0 \|\| ^8.0.0`.
 
 ## References
 
