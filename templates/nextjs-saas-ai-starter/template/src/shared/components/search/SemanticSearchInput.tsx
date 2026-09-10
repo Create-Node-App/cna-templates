@@ -7,6 +7,7 @@
  */
 
 import { Search, Sparkles, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Badge } from '@/shared/components/ui/badge';
@@ -28,13 +29,15 @@ export function SemanticSearchInput({
   value,
   onChange,
   onSearch,
-  placeholder = 'Search...',
+  placeholder,
   debounceMs = 300,
   showSemanticIndicator = true,
   searchMethod = null,
   className,
 }: SemanticSearchInputProps) {
+  const t = useTranslations('search');
   const [_isFocused, setIsFocused] = useState(false);
+  const effectivePlaceholder = placeholder ?? t('defaultPlaceholder');
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleChange = useCallback(
@@ -78,7 +81,7 @@ export function SemanticSearchInput({
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
-        placeholder={placeholder}
+        placeholder={effectivePlaceholder}
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
@@ -92,7 +95,7 @@ export function SemanticSearchInput({
             className="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-0 hidden sm:flex"
           >
             <Sparkles className="h-3 w-3 mr-1" />
-            Semantic
+            {t('semantic')}
           </Badge>
         )}
         {showClearButton && (
@@ -102,7 +105,7 @@ export function SemanticSearchInput({
             className="h-6 w-6 p-0 hover:bg-muted"
             onClick={handleClear}
             type="button"
-            aria-label="Clear search"
+            aria-label={t('clearSearch')}
           >
             <X className="h-3 w-3" aria-hidden />
           </Button>

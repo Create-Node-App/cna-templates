@@ -10,6 +10,7 @@
 import { Command } from 'cmdk';
 import { BookOpen, Clock, FileText, Loader2, Search, Sparkles, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useTenant } from '@/shared/providers';
@@ -42,6 +43,7 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
 
   const router = useRouter();
   const tenant = useTenant();
+  const t = useTranslations('search');
 
   // Use global search state if available, otherwise use internal state
   const open = controlledOpen ?? globalSearch?.isCommandPaletteOpen ?? internalOpen;
@@ -165,8 +167,8 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <Command.Input
-              placeholder="Search knowledge base..."
-              aria-label="Search knowledge base"
+              placeholder={t('placeholder')}
+              aria-label={t('placeholder')}
               value={query}
               onValueChange={handleQueryChange}
               className="flex h-12 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -175,7 +177,7 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
             {searchMethod === 'semantic' && !isSearching && (
               <div className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400">
                 <Sparkles className="h-3 w-3" />
-                <span>Semantic</span>
+                <span>{t('semantic')}</span>
               </div>
             )}
           </div>
@@ -185,9 +187,11 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
               <>
                 {/* Recent Searches */}
                 {globalSearch && globalSearch.recentSearches.length > 0 && (
-                  <Command.Group heading="Recent Searches">
+                  <Command.Group heading={t('recentSearches')}>
                     <div className="flex items-center justify-between px-2 py-1">
-                      <span className="text-xs text-muted-foreground">{globalSearch.recentSearches.length} recent</span>
+                      <span className="text-xs text-muted-foreground">
+                        {t('recentCount', { count: globalSearch.recentSearches.length })}
+                      </span>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -198,7 +202,7 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
                         }}
                       >
                         <X className="h-3 w-3 mr-1" />
-                        Clear
+                        {t('clear')}
                       </Button>
                     </div>
                     {globalSearch.recentSearches.slice(0, 5).map((recent) => (
@@ -219,10 +223,8 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
                 {(!globalSearch || globalSearch.recentSearches.length === 0) && (
                   <Command.Empty className="py-6 text-center text-sm text-muted-foreground">
                     <BookOpen className="mx-auto mb-2 h-8 w-8 opacity-50" />
-                    <p>Start typing to search...</p>
-                    <p className="text-xs mt-1 opacity-75">
-                      Use natural language like &quot;how to deploy to AWS&quot;
-                    </p>
+                    <p>{t('startTyping')}</p>
+                    <p className="text-xs mt-1 opacity-75">{t('naturalExample')}</p>
                   </Command.Empty>
                 )}
               </>
@@ -230,12 +232,12 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
 
             {query.trim() !== '' && results.length === 0 && !isSearching && (
               <Command.Empty className="py-6 text-center text-sm text-muted-foreground">
-                <p>No results found for &quot;{query}&quot;</p>
+                <p>{t('noResults', { query })}</p>
               </Command.Empty>
             )}
 
             {results.length > 0 && (
-              <Command.Group heading="Results">
+              <Command.Group heading={t('resultsHeading')}>
                 {results.map((result) => (
                   <Command.Item
                     key={result.id}
@@ -262,13 +264,13 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
           <div className="border-t px-3 py-2 text-xs text-muted-foreground flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span>
-                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">↑↓</kbd> navigate
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">↑↓</kbd> {t('navigateHint')}
               </span>
               <span>
-                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">↵</kbd> select
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">↵</kbd> {t('selectHint')}
               </span>
               <span>
-                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">esc</kbd> close
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">esc</kbd> {t('closeHint')}
               </span>
             </div>
             <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono">⌘K</kbd>

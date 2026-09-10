@@ -6,8 +6,36 @@ import { screen, waitFor } from '@testing-library/react';
 import { signIn } from 'next-auth/react';
 
 import { renderWithProviders, userEvent } from '@/__tests__/test-utils';
+import enMessages from '@/i18n/messages/en.json';
+import esMessages from '@/i18n/messages/es.json';
 
 import { LoginForm } from '../LoginForm';
+
+// Resolve translations from the real message catalogs in this suite: the
+// global jest mock returns translation keys, which would hide the actual
+// rendered copy. (next-intl ships ESM only, so the real provider cannot be
+// required from these CommonJS tests.)
+const mockLocaleMessages: { current: typeof enMessages } = { current: enMessages };
+
+jest.mock('next-intl', () => ({
+  useTranslations:
+    (namespace?: string) =>
+    (key: string, vars?: Record<string, string | number>): string => {
+      const catalog = mockLocaleMessages.current as unknown as Record<string, Record<string, string>>;
+      let text: string = catalog[namespace ?? '']?.[key] ?? key;
+      for (const [name, value] of Object.entries(vars ?? {})) {
+        text = text.replace(`{${name}}`, String(value));
+      }
+      return text;
+    },
+  useLocale: () => 'en',
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+function renderLogin(messages: typeof enMessages) {
+  mockLocaleMessages.current = messages;
+  return renderWithProviders(<LoginForm />);
+}
 
 // Mock next-auth
 jest.mock('next-auth/react', () => ({
@@ -29,27 +57,35 @@ describe('LoginForm', () => {
   });
 
   it('renders sign in title and description', () => {
-    renderWithProviders(<LoginForm />);
+    renderLogin(enMessages);
 
     expect(screen.getByText('Sign in')).toBeInTheDocument();
     expect(screen.getByText('Choose your preferred sign in method')).toBeInTheDocument();
   });
 
+  it('renders Spanish copy when locale is es', () => {
+    renderLogin(esMessages);
+
+    expect(screen.getByText('Iniciar sesión')).toBeInTheDocument();
+    expect(screen.getByText('Elige tu método de inicio de sesión')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continuar con auth0/i })).toBeInTheDocument();
+  });
+
   it('renders Auth0 login button', () => {
-    renderWithProviders(<LoginForm />);
+    renderLogin(enMessages);
 
     expect(screen.getByRole('button', { name: /continue with auth0/i })).toBeInTheDocument();
   });
 
   it('renders development login form with email input', () => {
-    renderWithProviders(<LoginForm />);
+    renderLogin(enMessages);
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /development login/i })).toBeInTheDocument();
   });
 
   it('shows development login disclaimer', () => {
-    renderWithProviders(<LoginForm />);
+    renderLogin(enMessages);
 
     expect(screen.getByText(/development login is only available in development mode/i)).toBeInTheDocument();
   });
@@ -59,7 +95,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockResolvedValue({ ok: true });
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const auth0Button = screen.getByRole('button', { name: /continue with auth0/i });
       await user.click(auth0Button);
@@ -72,7 +108,7 @@ describe('LoginForm', () => {
       // Create a promise that never resolves to keep loading state
       (signIn as jest.Mock).mockImplementation(() => new Promise(() => {}));
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const auth0Button = screen.getByRole('button', { name: /continue with auth0/i });
       await user.click(auth0Button);
@@ -87,7 +123,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockRejectedValue(new Error('Auth0 error'));
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const auth0Button = screen.getByRole('button', { name: /continue with auth0/i });
       await user.click(auth0Button);
@@ -101,7 +137,7 @@ describe('LoginForm', () => {
   describe('Development Login', () => {
     it('allows email input', async () => {
       const user = userEvent.setup();
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'test@example.com');
@@ -113,7 +149,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockResolvedValue({ ok: true, url: '/select-tenant' });
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'dev@example.com');
@@ -132,7 +168,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockResolvedValue({ ok: true, url: '/select-tenant' });
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'dev@example.com');
@@ -149,7 +185,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockResolvedValue({ error: 'Invalid email' });
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'invalid@example.com');
@@ -171,7 +207,7 @@ describe('LoginForm', () => {
           }),
       );
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'dev@example.com');
@@ -186,14 +222,14 @@ describe('LoginForm', () => {
     });
 
     it('requires email to submit form', async () => {
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       expect(emailInput).toBeRequired();
     });
 
     it('validates email format', async () => {
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       expect(emailInput).toHaveAttribute('type', 'email');
@@ -205,7 +241,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup();
       (signIn as jest.Mock).mockRejectedValue(new Error('Network error'));
 
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'dev@example.com');
@@ -223,7 +259,7 @@ describe('LoginForm', () => {
 
       // First attempt - fails
       (signIn as jest.Mock).mockResolvedValueOnce({ error: 'First error' });
-      renderWithProviders(<LoginForm />);
+      renderLogin(enMessages);
 
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'dev@example.com');

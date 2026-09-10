@@ -9,6 +9,7 @@
 
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import * as React from 'react';
 
 import { Badge } from '@/shared/components/ui/badge';
@@ -41,6 +42,7 @@ export function SearchSuggestions({
   showSimilarity = true,
   className,
 }: SearchSuggestionsProps) {
+  const t = useTranslations('search');
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const displayResults = results.slice(0, maxResults);
 
@@ -93,7 +95,7 @@ export function SearchSuggestions({
       >
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <span>Searching...</span>
+          <span>{t('searching')}</span>
         </div>
       </div>
     );
@@ -147,11 +149,11 @@ export function SearchSuggestions({
       </div>
       <div className="border-t px-3 py-2 text-xs text-muted-foreground flex items-center justify-between bg-muted/30">
         <span>
-          <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">↑↓</kbd> to navigate
+          <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">↑↓</kbd> {t('navigateHint')}
           <span className="mx-2">•</span>
-          <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">↵</kbd> to select
+          <kbd className="px-1 py-0.5 rounded bg-muted font-mono text-xs">↵</kbd> {t('selectHint')}
         </span>
-        <span>{displayResults.length} results</span>
+        <span>{t('resultsCount', { count: displayResults.length })}</span>
       </div>
     </div>
   );
