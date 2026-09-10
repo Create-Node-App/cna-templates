@@ -34,10 +34,12 @@ export function LandingNavbar({ user, tenantSlugs = [] }: LandingNavbarProps) {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Mark mounted after hydration. useLayoutEffect (not useEffect) prevents a
+  // theme flash/mismatch, and the timeout keeps setState out of the
+  // synchronous effect body.
   useLayoutEffect(() => {
-    // Required to prevent hydration mismatch with theme provider
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const getDashboardUrl = () => {

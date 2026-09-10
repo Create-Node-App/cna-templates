@@ -53,24 +53,29 @@ interface GlobalSearchProviderProps {
   children: React.ReactNode;
 }
 
+/**
+ * Read persisted recent searches. Runs in the state initializer (not an
+ * effect) so the first render already has the stored value and no
+ * cascading render is needed. SSR-safe: returns [] without window.
+ */
+function loadPersistedRecentSearches(): RecentSearch[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored) as RecentSearch[];
+    return parsed.slice(0, MAX_RECENT_SEARCHES);
+  } catch (e) {
+    console.error('Failed to load recent searches:', e);
+    return [];
+  }
+}
+
 export function GlobalSearchProvider({ children }: GlobalSearchProviderProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = React.useState(false);
-  const [recentSearches, setRecentSearches] = React.useState<RecentSearch[]>([]);
+  const [recentSearches, setRecentSearches] = React.useState<RecentSearch[]>(loadPersistedRecentSearches);
   const [globalQuery, setGlobalQuery] = React.useState('');
   const cachedResultsRef = React.useRef(new Map<string, SearchResult[]>());
-
-  // Load recent searches from localStorage on mount
-  React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as RecentSearch[];
-        setRecentSearches(parsed.slice(0, MAX_RECENT_SEARCHES));
-      }
-    } catch (e) {
-      console.error('Failed to load recent searches:', e);
-    }
-  }, []);
 
   // Save recent searches to localStorage when they change
   React.useEffect(() => {

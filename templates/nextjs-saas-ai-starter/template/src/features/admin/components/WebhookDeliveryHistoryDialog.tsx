@@ -5,7 +5,7 @@
  */
 
 import { AlertCircle, CheckCircle2, Clock, Loader2, RefreshCw, XCircle } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import {
   Badge,
@@ -39,7 +39,9 @@ export function WebhookDeliveryHistoryDialog({
   const [deliveries, setDeliveries] = useState<WebhookDeliveryOutput[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDeliveries = () => {
+  // State updates run inside startTransition (async continuation), so calling
+  // this from the effect below never sets state synchronously.
+  const fetchDeliveries = useCallback(() => {
     startTransition(async () => {
       setError(null);
       const result = await getWebhookDeliveries(tenantSlug, endpointId, 50);
@@ -50,14 +52,13 @@ export function WebhookDeliveryHistoryDialog({
         setError(result.error);
       }
     });
-  };
+  }, [tenantSlug, endpointId]);
 
   useEffect(() => {
     if (isOpen) {
       fetchDeliveries();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, endpointId]);
+  }, [isOpen, fetchDeliveries]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

@@ -8,7 +8,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -89,7 +89,8 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
     }
   }, [tenantSlug]);
 
-  // When dialog opens: sync reset + fetch roles; when editing, fetch member roleIds (async)
+  // When dialog opens: sync reset + fetch roles; when editing, fetch member roleIds (async).
+  // Runs in the open event handler (not an effect) so no cascading render occurs.
   const openDialog = (editingMember: MemberWithDetails | null) => {
     setEditing(editingMember);
     setError(null);
@@ -107,6 +108,22 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
       });
     }
     setDialogOpen(true);
+    void fetchRoles();
+    if (editingMember) {
+      getAvailableRoles(tenantSlug).then((res) => {
+        if (res.success && res.data?.roles?.length) {
+          getMemberRoleIds(tenantSlug, editingMember.id).then((idsRes) => {
+            if (idsRes.success && idsRes.data) {
+              form.reset({
+                email: editingMember.user.email || '',
+                name: editingMember.user.name || '',
+                roleIds: idsRes.data ?? [],
+              });
+            }
+          });
+        }
+      });
+    }
   };
 
   const closeDialog = () => {
@@ -120,26 +137,7 @@ export function MembersClient({ tenantSlug, initialData, currentUserId }: Member
     });
   };
 
-  useEffect(() => {
-    if (!dialogOpen) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetchRoles callback
-    fetchRoles();
-    if (editing) {
-      getAvailableRoles(tenantSlug).then((res) => {
-        if (res.success && res.data?.roles?.length) {
-          getMemberRoleIds(tenantSlug, editing.id).then((idsRes) => {
-            if (idsRes.success && idsRes.data) {
-              form.reset({
-                email: editing.user.email || '',
-                name: editing.user.name || '',
-                roleIds: idsRes.data ?? [],
-              });
-            }
-          });
-        }
-      });
-    }
-  }, [dialogOpen, editing, fetchRoles, tenantSlug, form]);
+
 
   // Handle form submit
   const handleSubmit = async (values: MemberFormValues) => {

@@ -47,33 +47,50 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
   const open = controlledOpen ?? globalSearch?.isCommandPaletteOpen ?? internalOpen;
   const setOpen = onOpenChange ?? globalSearch?.toggleCommandPalette ?? setInternalOpen;
 
+  const clearSearchState = useCallback(() => {
+    setQuery('');
+    setResults([]);
+    setSearchMethod(null);
+  }, []);
+
+  // Reset search state when the palette closes. Every close path goes through
+  // this handler (event-driven) instead of syncing state in an effect.
+  const handleOpenChange = useCallback(
+    (next: boolean) => {
+      if (!next) clearSearchState();
+      setOpen(next);
+    },
+    [setOpen, clearSearchState],
+  );
+
   // Keyboard shortcut: Cmd+K / Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setOpen(!open);
+        handleOpenChange(!open);
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, setOpen]);
+  }, [open, handleOpenChange]);
 
-  // Clear state when closing
-  useEffect(() => {
-    if (!open) {
-      setQuery('');
-      setResults([]);
-      setSearchMethod(null);
-    }
-  }, [open]);
+  // Clear stale results as the query empties (event-driven, not in an effect).
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+      if (!value.trim()) {
+        setResults([]);
+        setSearchMethod(null);
+      }
+    },
+    [],
+  );
 
   // Debounced search
   useEffect(() => {
     if (!query.trim() || !tenant?.slug) {
-      setResults([]);
-      setSearchMethod(null);
       return;
     }
 
@@ -130,10 +147,10 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
       if (query.trim() && globalSearch) {
         globalSearch.addRecentSearch(query);
       }
-      setOpen(false);
+      handleOpenChange(false);
       router.push(url);
     },
-    [router, setOpen, query, globalSearch],
+    [router, handleOpenChange, query, globalSearch],
   );
 
   const handleRecentSearchClick = useCallback((recentQuery: string) => {
@@ -141,7 +158,7 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
   }, []);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-lg max-w-2xl">
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           <div className="flex items-center border-b px-3">
@@ -149,7 +166,7 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
             <Command.Input
               placeholder="Search knowledge base..."
               value={query}
-              onValueChange={setQuery}
+              onValueChange={handleQueryChange}
               className="flex h-12 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
             />
             {isSearching && <Loader2 className="h-4 w-4 animate-spin opacity-50" />}

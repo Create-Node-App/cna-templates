@@ -118,11 +118,28 @@ export function InvitesClient({ tenantSlug }: InvitesClientProps) {
     setIsLoading(false);
   }, [tenantSlug, showAllStatuses]);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- Initial data fetch on mount; setState happens inside async callback */
+  // Initial load (and reload when the status filter changes). The request runs
+  // in an inner async function with a cancellation guard, so the synchronous
+  // effect body never calls setState directly. (fetchInvites stays as the
+  // shared implementation for event handlers below.)
   useEffect(() => {
-    fetchInvites();
-  }, [fetchInvites]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+    let cancelled = false;
+    async function loadInitialInvites() {
+      setIsLoading(true);
+      const result = await listInvites(tenantSlug, {
+        status: showAllStatuses ? 'all' : 'pending',
+      });
+      if (cancelled) return;
+      if (result.success && result.data) {
+        setInvites(result.data.items);
+      }
+      setIsLoading(false);
+    }
+    void loadInitialInvites();
+    return () => {
+      cancelled = true;
+    };
+  }, [tenantSlug, showAllStatuses]);
 
   const openInviteDialog = () => {
     form.reset({

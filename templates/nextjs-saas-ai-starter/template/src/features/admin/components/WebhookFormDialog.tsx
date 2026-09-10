@@ -106,14 +106,22 @@ export function WebhookFormDialog({
     }
   };
 
-  /* eslint-disable react-hooks/set-state-in-effect -- Reset when parent-controlled `isOpen`/`editingEndpoint` props change; effect required for prop-driven state sync */
+  // Clear a previous submit error whenever a fresh dialog session starts
+  // (render-phase adjustment instead of syncing in an effect).
+  const dialogSessionKey = isOpen ? (editingEndpoint?.id ?? 'new') : 'closed';
+  const [prevDialogSessionKey, setPrevDialogSessionKey] = useState(dialogSessionKey);
+  if (prevDialogSessionKey !== dialogSessionKey) {
+    setPrevDialogSessionKey(dialogSessionKey);
+    setServerError(null);
+  }
+
+  // Sync the form with the endpoint being edited. form.reset touches the
+  // react-hook-form store (not React render state), so it stays in an effect.
   useEffect(() => {
     if (isOpen) {
       form.reset(getDefaultValues(editingEndpoint));
-      setServerError(null);
     }
   }, [isOpen, editingEndpoint, form]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Group events by category
   const eventsByCategory = eventTypes.reduce(
