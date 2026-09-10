@@ -20,6 +20,7 @@ import {
   FormLabel,
   Input,
 } from '@/shared/components/ui';
+import { getAuthProviderDisplayName, getPublicAuthProviderId } from '@/shared/lib/auth-providers';
 import { navigateToSameOrigin } from '@/shared/lib/navigation';
 
 // ============================================================================
@@ -86,11 +87,15 @@ export const LoginForm = ({ initialEmail = '' }: LoginFormProps) => {
     }
   };
 
-  // Handle Auth0 login
-  const handleAuth0Login = async () => {
+  // Active production SSO provider (Auth0 default, WorkOS when configured)
+  const ssoProviderId = getPublicAuthProviderId();
+  const ssoProviderName = getAuthProviderDisplayName(ssoProviderId);
+
+  // Handle SSO login with the active provider
+  const handleSsoLogin = async () => {
     setIsLoading(true);
     try {
-      await signIn('auth0', { callbackUrl });
+      await signIn(ssoProviderId, { callbackUrl });
     } catch {
       setServerError(t('failedToStartLogin'));
       setIsLoading(false);
@@ -111,16 +116,16 @@ export const LoginForm = ({ initialEmail = '' }: LoginFormProps) => {
           {serverError}
         </FormGlobalError>
 
-        {/* Auth0 Login Button */}
+        {/* SSO Login Button (active provider) */}
         <Button
           type="button"
           className="w-full h-12 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold group"
-          onClick={handleAuth0Login}
+          onClick={handleSsoLogin}
           disabled={isLoading}
           aria-busy={isLoading}
         >
           <Lock className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-          {isLoading ? t('signingIn') : t('continueWith', { provider: 'Auth0' })}
+          {isLoading ? t('signingIn') : t('continueWith', { provider: ssoProviderName })}
         </Button>
 
         <div className="relative">

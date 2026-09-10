@@ -21,12 +21,19 @@ export const env = createEnv({
     // Database
     DATABASE_URL: z.url().describe('PostgreSQL connection string'),
 
-    // Authentication (Auth.js / Auth0)
+    // Authentication (Auth.js / Auth0 / WorkOS)
     AUTH_SECRET: z.string().min(32).describe('Secret for signing tokens (min 32 chars)'),
     AUTH_URL: z.url().optional().describe('Canonical URL of the app'),
+    AUTH_PROVIDER: z
+      .enum(['auth0', 'workos'])
+      .default('auth0')
+      .describe('Active production SSO provider (Auth0 default, WorkOS opt-in)'),
     AUTH0_CLIENT_ID: z.string().optional().describe('Auth0 client ID'),
     AUTH0_CLIENT_SECRET: z.string().optional().describe('Auth0 client secret'),
     AUTH0_ISSUER: z.url().optional().describe('Auth0 issuer URL'),
+    WORKOS_CLIENT_ID: z.string().optional().describe('WorkOS client ID'),
+    WORKOS_CLIENT_SECRET: z.string().optional().describe('WorkOS API key (client secret)'),
+    WORKOS_CONNECTION_ID: z.string().optional().describe('WorkOS SSO connection ID (optional)'),
 
     // AI / LLM
     OPENAI_API_KEY: z.string().optional().describe('OpenAI API key'),
@@ -72,6 +79,10 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.url().default('http://localhost:3000'),
     NEXT_PUBLIC_APP_NAME: z.string().default('Next.js SaaS AI Template'),
     NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
+    NEXT_PUBLIC_AUTH_PROVIDER: z
+      .enum(['auth0', 'workos'])
+      .default('auth0')
+      .describe('Client mirror of AUTH_PROVIDER for login buttons'),
   },
 
   /**
@@ -84,9 +95,13 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
+    AUTH_PROVIDER: process.env.AUTH_PROVIDER,
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
     AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
     AUTH0_ISSUER: process.env.AUTH0_ISSUER,
+    WORKOS_CLIENT_ID: process.env.WORKOS_CLIENT_ID,
+    WORKOS_CLIENT_SECRET: process.env.WORKOS_CLIENT_SECRET,
+    WORKOS_CONNECTION_ID: process.env.WORKOS_CONNECTION_ID,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
@@ -109,6 +124,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_AUTH_PROVIDER: process.env.NEXT_PUBLIC_AUTH_PROVIDER,
   },
 
   /**

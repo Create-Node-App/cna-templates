@@ -2,7 +2,9 @@
  * Auth.js Configuration - Next.js SaaS AI Template
  *
  * Centralized authentication configuration using Auth.js v5.
- * Supports Auth0 as primary provider with Drizzle adapter.
+ * Supports a configurable production SSO provider (Auth0 by default,
+ * WorkOS opt-in via `AUTH_PROVIDER`) with Drizzle adapter, plus a
+ * development credentials provider outside production.
  *
  * @see https://authjs.dev
  */
@@ -12,6 +14,7 @@ import { eq } from 'drizzle-orm';
 import NextAuth, { type NextAuthConfig, type Session } from 'next-auth';
 import Auth0 from 'next-auth/providers/auth0';
 import Credentials from 'next-auth/providers/credentials';
+import WorkOS from 'next-auth/providers/workos';
 
 // Re-export Session type for use in tests and type utilities
 export type { Session };
@@ -19,6 +22,7 @@ export type { Session };
 import { db } from '@/shared/db';
 import * as schema from '@/shared/db/schema';
 import type { TenantRole } from '@/shared/db/schema/auth';
+import { type AuthProviderId, resolveAuthProviderId } from '@/shared/lib/auth-providers';
 import { env } from '@/shared/lib/env';
 import { getAllTenantPermissionsForUser } from '@/shared/lib/permissions';
 
@@ -45,16 +49,39 @@ declare module 'next-auth' {
 // PROVIDERS
 // ============================================================================
 
+/**
+ * The resolved production SSO provider ID for this deployment.
+ *
+ * `AUTH_PROVIDER` selects the provider; credentials must be present or the
+ * resolution falls back to Auth0-with-credentials or development-only.
+ */
+export const activeAuthProviderId: AuthProviderId = resolveAuthProviderId({
+  configured: env.AUTH_PROVIDER,
+  auth0Configured: Boolean(env.AUTH0_CLIENT_ID && env.AUTH0_CLIENT_SECRET && env.AUTH0_ISSUER),
+  workosConfigured: Boolean(env.WORKOS_CLIENT_ID && env.WORKOS_CLIENT_SECRET),
+});
+
 // Build providers array based on available configuration
 const providers: NextAuthConfig['providers'] = [];
 
-// Auth0 provider (production)
-if (env.AUTH0_CLIENT_ID && env.AUTH0_CLIENT_SECRET && env.AUTH0_ISSUER) {
+// Auth0 provider (production default)
+if (activeAuthProviderId === 'auth0' && env.AUTH0_CLIENT_ID && env.AUTH0_CLIENT_SECRET && env.AUTH0_ISSUER) {
   providers.push(
     Auth0({
       clientId: env.AUTH0_CLIENT_ID,
       clientSecret: env.AUTH0_CLIENT_SECRET,
       issuer: env.AUTH0_ISSUER,
+    }),
+  );
+}
+
+// WorkOS provider (production opt-in via AUTH_PROVIDER=workos)
+if (activeAuthProviderId === 'workos' && env.WORKOS_CLIENT_ID && env.WORKOS_CLIENT_SECRET) {
+  providers.push(
+    WorkOS({
+      clientId: env.WORKOS_CLIENT_ID,
+      clientSecret: env.WORKOS_CLIENT_SECRET,
+      ...(env.WORKOS_CONNECTION_ID ? { connection: env.WORKOS_CONNECTION_ID } : {}),
     }),
   );
 }
@@ -130,7 +157,11 @@ async function loadUserRoles(userId: string): Promise<Record<string, TenantRole>
 // NEXT AUTH CONFIG
 // ============================================================================
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+/**
+ * Exported Auth.js configuration (exported for unit tests of provider
+ * wiring and session callbacks; runtime uses the NextAuth() result below).
+ */
+export const authConfig: NextAuthConfig = {
   adapter: DrizzleAdapter(db, {
     usersTable: schema.users,
     accountsTable: schema.accounts,
@@ -225,4 +256,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   trustHost: true,
   debug: process.env.NEXT_PUBLIC_STAGE === 'dev' || process.env.NODE_ENV === 'development',
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
