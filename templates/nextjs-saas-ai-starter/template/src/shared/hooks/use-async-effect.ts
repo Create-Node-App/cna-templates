@@ -50,6 +50,8 @@ export function useAsyncEffect(
         cleanup();
       }
     };
+    // `deps` is caller-provided (not an array literal), so static verification
+    // is impossible by design; callers own their dependency lists.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
@@ -84,6 +86,8 @@ export function useAsyncEffectOnce(effect: () => Promise<void>, deps: Dependency
     return () => {
       mounted = false;
     };
+    // `deps` is caller-provided (not an array literal), so static verification
+    // is impossible by design; callers own their dependency lists.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

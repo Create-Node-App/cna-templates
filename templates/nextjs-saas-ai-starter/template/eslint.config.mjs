@@ -41,10 +41,11 @@ const config = typescriptEslint.config(
       ...eslintPluginNext.configs.recommended.rules,
       ...eslintPluginNext.configs['core-web-vitals'].rules,
       ...eslintPluginReactHooks.configs.recommended.rules,
-      // Downgrade strict v7 rules from error to warn (pre-existing code patterns)
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/immutability': 'warn',
-      'react-hooks/refs': 'warn',
+      // Strict v7 rules stay at error: all call sites were restructured
+      // (refs #435) so regressions fail lint instead of warning silently.
+      'react-hooks/set-state-in-effect': 'error',
+      'react-hooks/immutability': 'error',
+      'react-hooks/refs': 'error',
       ...eslintPluginJsxA11y.configs.recommended.rules,
       // Accessibility rules configuration
       'jsx-a11y/alt-text': 'warn',

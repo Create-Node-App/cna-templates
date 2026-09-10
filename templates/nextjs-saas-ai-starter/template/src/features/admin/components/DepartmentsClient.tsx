@@ -9,7 +9,7 @@
 
 import { Building2, ChevronDown, ChevronRight, Loader2, Pencil, Plus, Trash2, UserPlus, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { listTenantPersonsForRelations } from '@/features/admin/services/members-service';
 import {
@@ -136,17 +136,17 @@ export function DepartmentsClient({ tenantSlug, initialDepartments }: Department
     setLoadingPersons(false);
   }, [tenantSlug]);
 
-  useEffect(() => {
-    if (expandedId) {
-      fetchDetails(expandedId);
+  // Load details on expand (event-driven): fetching in response to the user's
+  // expand action instead of syncing via an effect avoids cascading renders.
+  const toggleExpand = (id: string) => {
+    const next = expandedId === id ? null : id;
+    setExpandedId(next);
+    if (next) {
+      void fetchDetails(next);
       void loadPersons();
     } else {
       setDetails(null);
     }
-  }, [expandedId, fetchDetails, loadPersons]);
-
-  const toggleExpand = (id: string) => {
-    setExpandedId((prev) => (prev === id ? null : id));
   };
 
   const addManager = async (departmentId: string, managerId: string, isPrimary: boolean) => {
@@ -316,7 +316,10 @@ export function DepartmentsClient({ tenantSlug, initialDepartments }: Department
         throw new Error(data.error ?? 'Failed to delete department');
       }
       setEditingDeptId(null);
-      if (expandedId === departmentId) setExpandedId(null);
+      if (expandedId === departmentId) {
+        setExpandedId(null);
+        setDetails(null);
+      }
       await refetchDepartments();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to delete department');

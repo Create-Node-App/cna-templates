@@ -72,6 +72,51 @@ const PROVIDER_TO_ENDPOINT: Record<Provider, string> = {
   google_workspace: 'google-workspace',
 };
 
+interface OpsData {
+  runs: SyncRunRow[];
+  conflicts: ConflictRow[];
+  metrics: Metrics | null;
+  mappings: FieldMappingRow[];
+  readiness: Readiness | null;
+}
+
+/**
+ * Fetch ops data without touching React state, so both event handlers and
+ * effects can share the request logic. State updates happen in async
+ * continuations at the call site instead of the synchronous effect body.
+ */
+async function fetchOpsData(tenantSlug: string, provider: Provider): Promise<OpsData> {
+  const empty: OpsData = { runs: [], conflicts: [], metrics: null, mappings: [], readiness: null };
+  const [runsRes, conflictsRes, metricsRes, mappingsRes, readinessRes] = await Promise.all([
+    fetch(`/api/tenants/${tenantSlug}/admin/integrations/runs?provider=${provider}&limit=10`),
+    fetch(`/api/tenants/${tenantSlug}/admin/integrations/conflicts?provider=${provider}&onlyOpen=true&limit=10`),
+    fetch(`/api/tenants/${tenantSlug}/admin/integrations/metrics?provider=${provider}&days=14`),
+    fetch(`/api/tenants/${tenantSlug}/admin/integrations/field-mappings?provider=${provider}`),
+    fetch(`/api/tenants/${tenantSlug}/admin/integrations/readiness?provider=${provider}`),
+  ]);
+  if (runsRes.ok) {
+    const data = (await runsRes.json()) as { runs: SyncRunRow[] };
+    empty.runs = data.runs ?? [];
+  }
+  if (conflictsRes.ok) {
+    const data = (await conflictsRes.json()) as { conflicts: ConflictRow[] };
+    empty.conflicts = data.conflicts ?? [];
+  }
+  if (metricsRes.ok) {
+    const data = (await metricsRes.json()) as { metrics: Metrics };
+    empty.metrics = data.metrics;
+  }
+  if (mappingsRes.ok) {
+    const data = (await mappingsRes.json()) as { mappings: FieldMappingRow[] };
+    empty.mappings = data.mappings ?? [];
+  }
+  if (readinessRes.ok) {
+    const data = (await readinessRes.json()) as { readiness: Readiness };
+    empty.readiness = data.readiness;
+  }
+  return empty;
+}
+
 export function IntegrationControlPlanePanel({ tenantSlug }: IntegrationControlPlanePanelProps) {
   const t = useTranslations('admin.integrationsControl');
   const [provider, setProvider] = useState<Provider>('github');
@@ -93,38 +138,33 @@ export function IntegrationControlPlanePanel({ tenantSlug }: IntegrationControlP
   const [resolvingConflictId, setResolvingConflictId] = useState<string | null>(null);
 
   const refreshOpsData = useCallback(async () => {
-    const [runsRes, conflictsRes, metricsRes, mappingsRes, readinessRes] = await Promise.all([
-      fetch(`/api/tenants/${tenantSlug}/admin/integrations/runs?provider=${provider}&limit=10`),
-      fetch(`/api/tenants/${tenantSlug}/admin/integrations/conflicts?provider=${provider}&onlyOpen=true&limit=10`),
-      fetch(`/api/tenants/${tenantSlug}/admin/integrations/metrics?provider=${provider}&days=14`),
-      fetch(`/api/tenants/${tenantSlug}/admin/integrations/field-mappings?provider=${provider}`),
-      fetch(`/api/tenants/${tenantSlug}/admin/integrations/readiness?provider=${provider}`),
-    ]);
-    if (runsRes.ok) {
-      const data = (await runsRes.json()) as { runs: SyncRunRow[] };
-      setRuns(data.runs ?? []);
-    }
-    if (conflictsRes.ok) {
-      const data = (await conflictsRes.json()) as { conflicts: ConflictRow[] };
-      setConflicts(data.conflicts ?? []);
-    }
-    if (metricsRes.ok) {
-      const data = (await metricsRes.json()) as { metrics: Metrics };
-      setMetrics(data.metrics);
-    }
-    if (mappingsRes.ok) {
-      const data = (await mappingsRes.json()) as { mappings: FieldMappingRow[] };
-      setMappings(data.mappings ?? []);
-    }
-    if (readinessRes.ok) {
-      const data = (await readinessRes.json()) as { readiness: Readiness };
-      setReadiness(data.readiness);
-    }
+    const data = await fetchOpsData(tenantSlug, provider);
+    setRuns(data.runs);
+    setConflicts(data.conflicts);
+    setMetrics(data.metrics);
+    setMappings(data.mappings);
+    setReadiness(data.readiness);
   }, [provider, tenantSlug]);
 
+  // Initial load (and reload when the provider changes). The request runs in
+  // an inner async function with a cancellation guard, so the synchronous
+  // effect body only subscribes and never calls setState directly.
   useEffect(() => {
-    void refreshOpsData();
-  }, [refreshOpsData]);
+    let cancelled = false;
+    async function loadInitialOpsData() {
+      const data = await fetchOpsData(tenantSlug, provider);
+      if (cancelled) return;
+      setRuns(data.runs);
+      setConflicts(data.conflicts);
+      setMetrics(data.metrics);
+      setMappings(data.mappings);
+      setReadiness(data.readiness);
+    }
+    void loadInitialOpsData();
+    return () => {
+      cancelled = true;
+    };
+  }, [provider, tenantSlug]);
 
   const endpoint = useMemo(() => PROVIDER_TO_ENDPOINT[provider], [provider]);
 
@@ -182,7 +222,7 @@ export function IntegrationControlPlanePanel({ tenantSlug }: IntegrationControlP
     } finally {
       setIsRunning(false);
     }
-  }, [endpoint, mode, provider, refreshOpsData, t, tenantSlug]);
+  }, [endpoint, refreshOpsData, t, tenantSlug]);
 
   const resolveConflict = useCallback(
     async (conflictId: string) => {

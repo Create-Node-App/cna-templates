@@ -24,7 +24,8 @@ export function DocsSearch({ open, onOpenChange }: DocsSearchProps) {
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>([]);
   const [selectedIdx, setSelectedIdx] = useState(0);
 
-  // Load search index on first open
+  // Load search index on first open. State updates land in promise
+  // continuations, so the synchronous effect body stays setState-free.
   useEffect(() => {
     if (open && searchIndex.length === 0) {
       fetch('/api/docs/search-index')
@@ -34,15 +35,23 @@ export function DocsSearch({ open, onOpenChange }: DocsSearchProps) {
     }
   }, [open, searchIndex.length]);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- Reset search state when dialog open state changes */
-  useEffect(() => {
+  // Reset search state when the dialog opens. Adjusted during render
+  // (previous-value comparison) instead of syncing in an effect.
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (prevOpen !== open) {
+    setPrevOpen(open);
     if (open) {
       setQuery('');
       setSelectedIdx(0);
-      setTimeout(() => inputRef.current?.focus(), 100);
     }
+  }
+
+  // Focus the input after the dialog opens (no state updates here).
+  useEffect(() => {
+    if (!open) return;
+    const id = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(id);
   }, [open]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   const fuse = useMemo(() => {
     return new Fuse(searchIndex, {

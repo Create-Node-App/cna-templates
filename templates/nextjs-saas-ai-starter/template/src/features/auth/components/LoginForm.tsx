@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -42,6 +42,15 @@ interface LoginFormProps {
 export const LoginForm = ({ initialEmail = '' }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+  // Perform navigation in an effect: assigning window.location (a value owned
+  // outside React) is an external-system sync, not render state.
+  useEffect(() => {
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, [redirectUrl]);
 
   const {
     register,
@@ -74,7 +83,7 @@ export const LoginForm = ({ initialEmail = '' }: LoginFormProps) => {
       } else if (result?.url) {
         // Keep navigation on current origin even if Auth.js returns an absolute URL with a stale host.
         const target = new URL(result.url, window.location.origin);
-        window.location.href = `${target.pathname}${target.search}${target.hash}`;
+        setRedirectUrl(`${target.pathname}${target.search}${target.hash}`);
       }
     } catch {
       setServerError('An unexpected error occurred');

@@ -53,7 +53,11 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const initialContent = toHtml(value);
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  // Keep the ref current in an effect: refs must not be read or written
+  // during render.
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
   const editor = useEditor(
     {

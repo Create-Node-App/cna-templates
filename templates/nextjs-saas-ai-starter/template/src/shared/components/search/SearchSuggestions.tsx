@@ -44,10 +44,13 @@ export function SearchSuggestions({
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const displayResults = results.slice(0, maxResults);
 
-  // Reset selection when results change
-  React.useEffect(() => {
+  // Reset selection when results change. Adjusted during render (previous
+  // value comparison) instead of syncing in an effect, per React docs.
+  const [prevResults, setPrevResults] = React.useState(results);
+  if (prevResults !== results) {
+    setPrevResults(results);
     setSelectedIndex(-1);
-  }, [results]);
+  }
 
   // Keyboard navigation
   React.useEffect(() => {
