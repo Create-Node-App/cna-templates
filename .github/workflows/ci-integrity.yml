@@ -46,3 +46,6 @@ jobs:
 
       - name: Validate curated CI profiles
         run: node scripts/ci/generate-matrix.js --layer validate-profiles
+
+      - name: Validate incompatibleWith matrix (negative + positive controls)
+        run: node scripts/ci/generate-matrix.js --layer validate-incompat
