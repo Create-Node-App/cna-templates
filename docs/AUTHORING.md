@@ -64,6 +64,14 @@ Extensions are simpler — they only add files and dependencies.
 Everything else in the extension directory is copied into the project,
 respecting all file suffix conventions above.
 
+The extension root `README.md` is bank-only documentation for this
+repository and is never copied into generated projects (the CLI loader
+filters it along with root-level `LICENSE` / `CONTRIBUTING.md`). Put
+content meant for the generated project under `docs/` (e.g.
+`docs/README.md.append`) or the relevant target path instead. Do not add
+a `template/` subdirectory to extensions — CNA extensions are flat by
+contract (see [ARCHITECTURE.md](./ARCHITECTURE.md)).
+
 ## `customOptions` — Interactive Prompts
 
 Only templates can define these. They become EJS variables and control bracket directory renaming.
