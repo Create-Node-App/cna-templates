@@ -1,10 +1,14 @@
 {
   "name": "nextjs-prisma-extension",
   "dependencies": {
-    "@prisma/client": "^6.19.0"
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "dotenv": "^17.2.3",
+    "pg": "^8.17.2"
   },
   "devDependencies": {
-    "prisma": "^6.19.0"
+    "@types/pg": "^8.16.0",
+    "prisma": "^7.10.0"
   },
   "scripts": {
     "postinstall": "prisma generate",
