@@ -1,0 +1,7 @@
+{
+  "name": "nextjs-workos-extension",
+  "dependencies": {
+    "next-auth": "5.0.0-beta.32"
+  },
+  "devDependencies": {}
+}
