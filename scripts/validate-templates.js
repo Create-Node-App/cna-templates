@@ -256,6 +256,38 @@ function validateCnaConfig(data) {
   }
 }
 
+function validateExtensionBankHygiene(data) {
+  info('Checking extension bank-only hygiene (refs #396)...');
+
+  // CNA convention: extensions are flat (no `template/` overlay) and every
+  // extension root `README.md` is bank-only documentation. The CLI loader
+  // (`create-node-app/packages/create-node-app-core/loaders.ts`) filters
+  // root-level README.md/LICENSE/CONTRIBUTING.md for extension entries
+  // (index > 0) so they can never race the template's generated README.
+  // This validator pins the bank side of that contract.
+  data.extensions.forEach((extension) => {
+    const match = extension.url.match(/\/extensions\/([^\/]+)/);
+    if (!match) return;
+    const dir = path.join(EXTENSIONS_DIR, match[1]);
+    if (!fs.existsSync(dir)) return; // covered by validateDirectoryReferences
+    if (fs.existsSync(path.join(dir, 'template'))) {
+      error(
+        `Extension "${extension.slug}" has a template/ subdirectory — ` +
+          `extensions are flat in CNA; bank-only README.md relies on the loader filter (refs #396)`,
+      );
+    }
+    if (!fs.existsSync(path.join(dir, 'README.md'))) {
+      warning(
+        `Extension "${extension.slug}" is missing bank README.md at the extension root`,
+      );
+    }
+  });
+
+  if (!hasErrors) {
+    success('Extension bank hygiene validated (flat layout, bank-only root README)');
+  }
+}
+
 function validateIncompatibleSymmetry(data) {
   info('Checking incompatibleWith symmetry...');
 
@@ -416,6 +448,7 @@ function main() {
   validateCategories(data);
   validatePackageModuleConflict(data);
   validateCnaConfig(data);
+  validateExtensionBankHygiene(data);
   validateIncompatibleSymmetry(data);
   validateJsonSchema(data);
   
