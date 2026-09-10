@@ -1,0 +1,5 @@
+import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+
+appProviders.push((children) => (
+  <ChakraProvider value={defaultSystem}>{children}</ChakraProvider>
+));
