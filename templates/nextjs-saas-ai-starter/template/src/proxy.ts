@@ -1,7 +1,9 @@
+import { authkitProxy } from '@workos-inc/authkit-nextjs';
 import { NextResponse } from 'next/server';
 
 import type { TenantRole } from '@/shared/db/schema/auth';
 import { auth } from '@/shared/lib/auth';
+import { isWorkosAuthKitConfigured } from '@/shared/lib/workos';
 
 /**
  * Proxy for Next.js SaaS AI Template application (formerly middleware)
@@ -9,14 +11,18 @@ import { auth } from '@/shared/lib/auth';
  * Responsibilities:
  * 1. Inject pathname header for server components
  * 2. Handle tenant route validation
- * 3. Auth protection via Auth.js
+ * 3. Auth protection via Auth.js (default) or WorkOS AuthKit (opt-in)
  * 4. RBAC protection for admin routes
  * 5. Allow tenant login pages without auth
  *
  * Note: In Next.js 16+, middleware is renamed to proxy.
  * See: https://nextjs.org/docs/messages/middleware-to-proxy
+ *
+ * AuthKit mode activates only when all AuthKit env vars are set (see
+ * `isWorkosAuthKitConfigured`); otherwise this runs the Auth.js handler
+ * exactly as before.
  */
-export default auth((request) => {
+const authHandler = auth((request) => {
   const response = NextResponse.next();
   const { pathname } = request.nextUrl;
 
@@ -55,6 +61,14 @@ export default auth((request) => {
 
   return response;
 });
+
+/**
+ * Advanced opt-in: when all AuthKit env vars are set, AuthKit manages the
+ * session (refresh, redirects). Otherwise the Auth.js handler below runs —
+ * byte-identical to the previous behavior. The branch is evaluated once at
+ * startup; changing providers requires a restart (as with any env change).
+ */
+export default isWorkosAuthKitConfigured() ? authkitProxy() : authHandler;
 
 export const config = {
   matcher: [

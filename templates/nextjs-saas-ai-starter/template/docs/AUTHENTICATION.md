@@ -212,6 +212,58 @@ both variables together when deploying.
 See [docs/MIGRATION_AUTH0_TO_WORKOS.md](./MIGRATION_AUTH0_TO_WORKOS.md) for
 migrating an existing Auth0 deployment.
 
+## WorkOS AuthKit (Advanced Opt-In)
+
+[AuthKit](https://workos.com/docs/authkit) is a complete hosted auth platform
+(pre-built login/signup/MFA UI, enterprise SSO, social login, native
+organization multi-tenancy) for teams that prefer it over wiring the raw SSO
+provider above. It is **off by default** and activates only when fully
+configured.
+
+### 1. Install
+
+```bash
+pnpm add @workos-inc/authkit-nextjs
+```
+
+### 2. Environment Variables
+
+```env
+WORKOS_API_KEY="sk_..."            # WorkOS API key
+WORKOS_CLIENT_ID="client_..."      # WorkOS client ID
+WORKOS_COOKIE_PASSWORD="<32+ char secret>"  # generate: openssl rand -base64 32
+WORKOS_REDIRECT_URI="http://localhost:3000/api/auth/workos/callback"
+```
+
+### 3. Integration Points (Already Wired)
+
+- `src/proxy.ts` — delegates session management to `authkitProxy()` when
+  AuthKit is configured; otherwise runs the Auth.js handler unchanged
+- `src/app/api/auth/workos/callback/route.ts` — AuthKit callback handler
+  (`handleAuth()`); point `WORKOS_REDIRECT_URI` here
+- `src/app/api/auth/workos/login/route.ts` — redirects to the hosted login
+- `src/shared/lib/workos.ts` — `isWorkosAuthKitConfigured()` gate plus
+  organization-to-tenant mapping helpers (`workosOrganizationToTenantSlug()`,
+  `selectWorkosOrganization()`)
+
+### 4. Organization-to-Tenant Mapping
+
+AuthKit's native `organization` maps to the template's `tenants`:
+
+- Resolve the active organization per request and convert it with
+  `workosOrganizationToTenantSlug()` (or store an explicit mapping)
+- Sync AuthKit users into Drizzle via
+  [WorkOS webhooks](https://workos.com/docs/authkit/webhooks) so the
+  existing RBAC/permissions system keeps working unchanged
+- Manage SAML/OIDC connections per organization in the WorkOS dashboard
+
+### Verification
+
+- AuthKit login flow works end-to-end; organization selection maps to
+  tenant switching
+- Existing RBAC/permissions work with synced AuthKit user data
+- `pnpm build`, `pnpm test`, `pnpm type-check` pass
+
 ## Best Practices
 
 1. **Always check auth server-side** before rendering sensitive data
