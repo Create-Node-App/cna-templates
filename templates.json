@@ -1044,7 +1044,22 @@
         "enterprise",
         "auth"
       ],
-      "incompatibleWith": ["nextjs-auth"]
+      "incompatibleWith": ["nextjs-auth", "nextjs-workos"]
+    },
+    {
+      "name": "WorkOS SSO",
+      "slug": "nextjs-workos",
+      "description": "Enterprise SSO via WorkOS — SAML, OIDC, and social login with connection support.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-workos",
+      "type": "nextjs",
+      "category": "Auth",
+      "labels": [
+        "sso",
+        "workos",
+        "enterprise",
+        "auth"
+      ],
+      "incompatibleWith": ["nextjs-authkit"]
     },
     {
       "name": "t3-env for Next.js",
