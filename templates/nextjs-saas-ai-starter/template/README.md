@@ -80,6 +80,38 @@ Open [http://localhost:3000](http://localhost:3000).
 
 > **Note:** Create `.env.local` only if you need to override specific values (e.g., `OPENAI_API_KEY` for AI features).
 
+### Manual Setup
+
+For development outside the DevContainer, install Node.js 22 or newer, pnpm 10
+or newer, and PostgreSQL 17 with the pgvector extension. MinIO is optional and
+is only needed to exercise local file storage.
+
+```bash
+pnpm install
+cp .env.example .env.local
+```
+
+Set `DATABASE_URL` in `.env.local` to a reachable PostgreSQL database before
+running database commands or starting the application:
+
+```dotenv
+DATABASE_URL=postgresql://user:password@localhost:5432/saas_template_dev
+```
+
+Also set `AUTH_SECRET` in `.env.local` to a secret of at least 32 characters
+before running database commands or starting the application (generate one with
+`openssl rand -base64 32`):
+
+```dotenv
+AUTH_SECRET=your-secret-key-at-least-32-characters-long
+```
+
+Then run `pnpm db:push` and `pnpm dev`. Production builds also validate the
+environment, so `DATABASE_URL` must normally be available to `pnpm build`.
+For build-only checks that deliberately do not connect to services, use
+`SKIP_ENV_VALIDATION=true pnpm build`. This bypasses validation only; it does
+not configure a working database for runtime use.
+
 ---
 
 ## 🛠️ Tech Stack
