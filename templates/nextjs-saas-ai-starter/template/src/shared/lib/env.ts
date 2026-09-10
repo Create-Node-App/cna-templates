@@ -34,6 +34,10 @@ export const env = createEnv({
     WORKOS_CLIENT_ID: z.string().optional().describe('WorkOS client ID'),
     WORKOS_CLIENT_SECRET: z.string().optional().describe('WorkOS API key (client secret)'),
     WORKOS_CONNECTION_ID: z.string().optional().describe('WorkOS SSO connection ID (optional)'),
+    // WorkOS AuthKit (advanced opt-in, see docs/AUTHENTICATION.md)
+    WORKOS_API_KEY: z.string().optional().describe('WorkOS API key for AuthKit'),
+    WORKOS_COOKIE_PASSWORD: z.string().min(32).optional().describe('AuthKit session cookie password (min 32 chars)'),
+    WORKOS_REDIRECT_URI: z.string().optional().describe('AuthKit callback URL (e.g. http://localhost:3000/api/auth/workos/callback)'),
 
     // AI / LLM
     OPENAI_API_KEY: z.string().optional().describe('OpenAI API key'),
@@ -102,6 +106,9 @@ export const env = createEnv({
     WORKOS_CLIENT_ID: process.env.WORKOS_CLIENT_ID,
     WORKOS_CLIENT_SECRET: process.env.WORKOS_CLIENT_SECRET,
     WORKOS_CONNECTION_ID: process.env.WORKOS_CONNECTION_ID,
+    WORKOS_API_KEY: process.env.WORKOS_API_KEY,
+    WORKOS_COOKIE_PASSWORD: process.env.WORKOS_COOKIE_PASSWORD,
+    WORKOS_REDIRECT_URI: process.env.WORKOS_REDIRECT_URI,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
