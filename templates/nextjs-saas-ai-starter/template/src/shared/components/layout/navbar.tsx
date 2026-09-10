@@ -89,7 +89,7 @@ export function Navbar({ tenantSlug }: NavbarProps) {
 
         {/* Navigation */}
         {tenantSlug && (
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1" aria-label="Primary">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -166,8 +166,14 @@ export function Navbar({ tenantSlug }: NavbarProps) {
 
           {/* Mobile menu button */}
           {tenantSlug && (
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
-              <Menu className="h-5 w-5" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" aria-hidden />
             </Button>
           )}
         </div>
@@ -185,7 +191,7 @@ export function Navbar({ tenantSlug }: NavbarProps) {
                 <span className="text-lg font-bold">Next.js SaaS AI Template</span>
               </SheetTitle>
             </SheetHeader>
-            <nav className="mt-6 flex flex-col gap-1">
+            <nav className="mt-6 flex flex-col gap-1" aria-label="Mobile">
               {navItems.map((item) => (
                 <Link
                   key={item.href}

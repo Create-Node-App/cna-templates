@@ -47,6 +47,7 @@ export function DocsSidebar({ onNavigate }: DocsSidebarProps) {
                 'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm font-semibold transition-colors',
                 hasActivePage ? 'text-primary' : 'text-foreground hover:bg-muted',
               )}
+              aria-expanded={isOpen}
             >
               <Icon className="h-4 w-4 shrink-0" />
               <span className="flex-1 text-left">{t(section.titleKey)}</span>

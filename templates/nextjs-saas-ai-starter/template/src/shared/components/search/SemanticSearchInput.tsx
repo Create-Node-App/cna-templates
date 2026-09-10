@@ -96,8 +96,15 @@ export function SemanticSearchInput({
           </Badge>
         )}
         {showClearButton && (
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-muted" onClick={handleClear} type="button">
-            <X className="h-3 w-3" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0 hover:bg-muted"
+            onClick={handleClear}
+            type="button"
+            aria-label="Clear search"
+          >
+            <X className="h-3 w-3" aria-hidden />
           </Button>
         )}
       </div>

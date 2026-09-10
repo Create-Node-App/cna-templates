@@ -148,8 +148,13 @@ export function StorageSettings() {
                 type="button"
                 onClick={() => setShowSecretKey(!showSecretKey)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label={showSecretKey ? 'Hide secret key' : 'Show secret key'}
               >
-                {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showSecretKey ? (
+                  <EyeOff className="h-4 w-4" aria-hidden />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden />
+                )}
               </button>
             </div>
           </div>

@@ -36,7 +36,7 @@ export function AdminPageHeader({
   if (backHref != null) {
     return (
       <div className="space-y-1">
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground" aria-label="Breadcrumb">
           <Link href={backHref} className="hover:text-foreground transition-colors">
             {backLabel ?? 'Admin'}
           </Link>

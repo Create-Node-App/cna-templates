@@ -193,6 +193,7 @@ export function AuditLogsClient({
         <button
           onClick={() => setFiltersExpanded(!filtersExpanded)}
           className="flex w-full items-center justify-between p-4 transition-colors hover:bg-muted/50"
+          aria-expanded={filtersExpanded}
         >
           <div className="flex items-center gap-2">
             <Filter className="h-5 w-5 text-muted-foreground" />

@@ -63,6 +63,7 @@ export function StarRating({
             )}
             onClick={() => onChange?.(starValue)}
             onMouseEnter={() => !readonly && setHoverValue(starValue)}
+            aria-label={`Rate ${starValue} out of ${maxValue}`}
           >
             <Icon className={cn(sizeClasses[size], isFilled && 'fill-current')} />
           </button>

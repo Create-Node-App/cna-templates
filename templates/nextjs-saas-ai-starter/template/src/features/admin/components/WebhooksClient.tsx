@@ -200,6 +200,7 @@ export function WebhooksClient({ tenantSlug, initialEndpoints, eventTypes, isEna
                           onClick={() => copyToClipboard(endpoint.url, endpoint.id)}
                           className="text-muted-foreground hover:text-foreground"
                           title="Copy URL"
+                          aria-label="Copy URL"
                         >
                           {copiedId === endpoint.id ? (
                             <Check className="h-3 w-3 text-green-500" />

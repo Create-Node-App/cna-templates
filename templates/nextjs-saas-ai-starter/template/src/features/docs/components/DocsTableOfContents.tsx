@@ -63,7 +63,7 @@ export function DocsTableOfContents({ content }: DocsTableOfContentsProps) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto">
+    <nav className="sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto" aria-label={t('docs.toc.onThisPage')}>
       <p className="mb-3 text-sm font-semibold text-foreground">{t('docs.toc.onThisPage')}</p>
       <ul className="space-y-1.5">
         {headings.map((heading) => (

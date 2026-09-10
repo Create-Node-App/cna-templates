@@ -116,7 +116,7 @@ export function PageHeader({
     <div className={cn('space-y-4', className)}>
       {/* Breadcrumb Navigation - only if not minimal */}
       {breadcrumb && !isMinimal && (
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground" aria-label="Breadcrumb">
           <Link href={breadcrumb.backTo} className="flex items-center gap-1 hover:text-foreground transition-colors">
             <Home className="h-4 w-4" />
             {breadcrumb.backLabel}

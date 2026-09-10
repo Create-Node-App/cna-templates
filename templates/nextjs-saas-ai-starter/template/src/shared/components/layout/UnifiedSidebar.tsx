@@ -267,7 +267,7 @@ export function UnifiedSidebar({ tenantSlug, permissions: permissionsProp }: Uni
               <ViewSwitcher tenantSlug={tenantSlug} />
             </div>
 
-            <nav className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 py-4">
+            <nav className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 py-4" aria-label="Mobile">
               {renderNavContent(() => setMobileMenuOpen(false))}
             </nav>
 

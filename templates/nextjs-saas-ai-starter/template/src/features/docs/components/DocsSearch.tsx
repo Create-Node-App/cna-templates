@@ -107,6 +107,7 @@ export function DocsSearch({ open, onOpenChange }: DocsSearchProps) {
             }}
             onKeyDown={handleKeyDown}
             placeholder={t('docs.search.placeholder')}
+            aria-label={t('docs.search.placeholder')}
             className="flex-1 bg-transparent px-3 py-3 text-sm outline-none placeholder:text-muted-foreground"
           />
           {query && (
