@@ -40,7 +40,14 @@ export interface DepartmentManager {
 // ============================================================================
 
 /**
- * Get all departments for a tenant
+ * Get all departments for a tenant.
+ *
+ * Departments are stored in the tenant settings document, not in a
+ * dedicated table.
+ *
+ * @param tenantSlug - The tenant slug to read departments for.
+ * @returns `{ success: true, data }` with the department list, or `{ success: false, error }`.
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function getDepartments(
   tenantSlug: string,
@@ -57,7 +64,14 @@ export async function getDepartments(
 }
 
 /**
- * Get departments with member counts and manager info
+ * Get departments enriched with live member counts and manager IDs.
+ *
+ * Combines the settings-document department list with active-person counts
+ * and current (non-ended) manager assignments from the database.
+ *
+ * @param tenantSlug - The tenant slug to read departments for.
+ * @returns `{ success: true, data }` with {@link DepartmentWithMembers} rows, or `{ success: false, error }` (including `'Tenant not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function getDepartmentsWithDetails(
   tenantSlug: string,
@@ -119,7 +133,12 @@ export async function getDepartmentsWithDetails(
 // ============================================================================
 
 /**
- * Get all members of a department
+ * Get active members of a department, ordered by last then first name.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentId - The department ID to list members for.
+ * @returns `{ success: true, data }` with {@link DepartmentMember} rows, or `{ success: false, error }` (including `'Tenant not found'` / `'Department not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function getDepartmentMembers(
   tenantSlug: string,
@@ -181,7 +200,15 @@ export async function getDepartmentMembers(
 // ============================================================================
 
 /**
- * Get manager(s) for a department
+ * Get current managers of a department, primary first.
+ *
+ * Only assignments without an end date (or with a future end date) are
+ * returned, each joined with the manager's display name and email.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentId - The department ID to list managers for.
+ * @returns `{ success: true, data }` with {@link DepartmentManager} rows, or `{ success: false, error }` (including `'Tenant not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function getDepartmentManager(
   tenantSlug: string,
@@ -237,7 +264,15 @@ export async function getDepartmentManager(
 // ============================================================================
 
 /**
- * Create a new department
+ * Create a new department in the tenant settings document.
+ *
+ * Generates a `dept_<timestamp>_<random>` ID for the new entry and appends
+ * it to the tenant's department list.
+ *
+ * @param tenantSlug - The tenant slug to create the department in.
+ * @param departmentData - Department fields without the generated `id`.
+ * @returns `{ success: true, data: { id } }` with the new department ID, or `{ success: false, error }`.
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function createDepartment(
   tenantSlug: string,
@@ -274,7 +309,13 @@ export async function createDepartment(
 // ============================================================================
 
 /**
- * Update a department
+ * Update a department's fields in the tenant settings document.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentId - The department ID to update.
+ * @param updates - Partial department fields to merge (excluding `id`).
+ * @returns `{ success: true }`, or `{ success: false, error }` (including `'Department not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function updateDepartment(
   tenantSlug: string,
@@ -317,8 +358,16 @@ export async function updateDepartment(
 // ============================================================================
 
 /**
- * Delete a department
- * Note: This does not remove department_id from persons. That should be handled separately.
+ * Delete a department from the tenant settings document.
+ *
+ * Note: this does not clear `department_id` on member rows — callers must
+ * reassign members separately. Deletion is refused while members remain;
+ * open manager assignments are ended as part of the delete.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentId - The department ID to delete.
+ * @returns `{ success: true }`, or `{ success: false, error }` (including `'Tenant not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function deleteDepartment(
   tenantSlug: string,
@@ -385,7 +434,13 @@ export async function deleteDepartment(
 // ============================================================================
 
 /**
- * Assign a person to a department
+ * Assign a person to a department (or unassign with `null`).
+ *
+ * @param tenantSlug - The tenant slug owning the person.
+ * @param personId - The person ID to (un)assign.
+ * @param departmentId - The department ID, or `null` to remove the assignment.
+ * @returns `{ success: true }`, or `{ success: false, error }` (including `'Tenant not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function assignPersonToDepartment(
   tenantSlug: string,
@@ -444,7 +499,14 @@ export async function assignPersonToDepartment(
 // ============================================================================
 
 /**
- * Assign a manager to a department
+ * Assign a manager to a department, optionally as the primary manager.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentId - The department ID to manage.
+ * @param managerId - The person ID becoming a manager.
+ * @param isPrimary - Whether this is the primary manager (default `false`).
+ * @returns `{ success: true, data: { id } }` with the assignment ID, or `{ success: false, error }`.
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function assignManagerToDepartment(
   tenantSlug: string,
@@ -535,7 +597,12 @@ export async function assignManagerToDepartment(
 }
 
 /**
- * Remove a manager from a department
+ * End a manager assignment for a department.
+ *
+ * @param tenantSlug - The tenant slug owning the department.
+ * @param departmentManagerId - The manager-assignment row ID to end.
+ * @returns `{ success: true }`, or `{ success: false, error }` (including `'Tenant not found'`).
+ * @throws Never throws — failures are returned as `{ success: false, error }`.
  */
 export async function removeManagerFromDepartment(
   tenantSlug: string,
