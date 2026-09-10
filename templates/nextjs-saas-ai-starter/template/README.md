@@ -80,6 +80,44 @@ Open [http://localhost:3000](http://localhost:3000).
 
 > **Note:** Create `.env.local` only if you need to override specific values (e.g., `OPENAI_API_KEY` for AI features).
 
+### Option 4: Manual Setup (without DevContainer)
+
+If you are not using the DevContainer (e.g., a plain clone on your own machine), set up the prerequisites and environment manually:
+
+**Prerequisites:** Node.js >= 22, pnpm >= 10, PostgreSQL 17 (pgvector optional, required for AI embeddings), MinIO optional (S3-compatible file storage for local dev).
+
+```bash
+git clone https://github.com/Create-Node-App/nextjs-saas-ai-template.git my-saas-app
+cd my-saas-app
+pnpm install
+cp .env.example .env.local
+```
+
+**Required environment variables** (see `.env.example` for the full list):
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/saas_template_dev
+AUTH_SECRET=your-secret-key-at-least-32-characters-long  # generate: openssl rand -base64 32
+```
+
+Optional for production SSO: `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_ISSUER` — see [docs/AUTHENTICATION.md](docs/AUTHENTICATION.md).
+
+Then run database migrations and build:
+
+```bash
+pnpm db:migrate
+pnpm build
+pnpm dev
+```
+
+> **Note:** `pnpm build` validates environment variables at build time. If `DATABASE_URL` is not reachable during the build (e.g., in CI or before the database is provisioned), set `SKIP_ENV_VALIDATION=true` to skip validation:
+>
+> ```bash
+> SKIP_ENV_VALIDATION=true pnpm build
+> ```
+>
+> Routes that need the database (such as `/api/health`) still require a live `DATABASE_URL` at runtime.
+
 ---
 
 ## 🛠️ Tech Stack
