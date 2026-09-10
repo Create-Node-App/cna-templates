@@ -803,6 +803,23 @@
       ]
     },
     {
+      "name": "Chakra UI",
+      "slug": "chakra-ui",
+      "description": "Add Chakra UI components and theming capabilities to your React application with TypeScript support and best practices.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-chakra-ui",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "Chakra UI",
+        "Components",
+        "Theming",
+        "UI Library",
+        "TypeScript",
+        "Cursor Rules"
+      ]
+    },
+    {
       "name": "Ant Design for React",
       "slug": "ant-design-react",
       "description": "Add Ant Design React components with TypeScript support, theming capabilities and enterprise-grade UI patterns.",
