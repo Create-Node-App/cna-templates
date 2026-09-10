@@ -98,6 +98,14 @@ running database commands or starting the application:
 DATABASE_URL=postgresql://user:password@localhost:5432/saas_template_dev
 ```
 
+Also set `AUTH_SECRET` in `.env.local` to a secret of at least 32 characters
+before running database commands or starting the application (generate one with
+`openssl rand -base64 32`):
+
+```dotenv
+AUTH_SECRET=your-secret-key-at-least-32-characters-long
+```
+
 Then run `pnpm db:push` and `pnpm dev`. Production builds also validate the
 environment, so `DATABASE_URL` must normally be available to `pnpm build`.
 For build-only checks that deliberately do not connect to services, use
