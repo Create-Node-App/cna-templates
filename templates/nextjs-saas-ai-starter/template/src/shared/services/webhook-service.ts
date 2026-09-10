@@ -45,8 +45,14 @@ interface DeliveryResult {
 // ============================================================================
 
 /**
- * Generate HMAC-SHA256 signature for webhook payload.
- * Recipients can verify using: HMAC-SHA256(secret, JSON.stringify(payload))
+ * Generate HMAC-SHA256 signature for a webhook payload.
+ *
+ * Recipients can verify using: HMAC-SHA256(secret, JSON.stringify(payload)).
+ *
+ * @param secret - Endpoint signing secret.
+ * @param payload - Event payload to sign.
+ * @returns The hex-encoded signature.
+ * @throws When the secret is not a valid HMAC key.
  */
 export function signPayload(secret: string, payload: WebhookEventPayload): string {
   const hmac = createHmac('sha256', secret);
@@ -65,11 +71,17 @@ export function signPayload(secret: string, payload: WebhookEventPayload): strin
  * 1. Checks if webhooks are enabled for the tenant
  * 2. Finds all webhook endpoints subscribed to this event type
  * 3. Creates delivery records for each endpoint
- * 4. Attempts immediate delivery (best-effort)
+ * 4. Attempts immediate delivery (best-effort, failures retry via the queue)
  *
- * @param tenantSlug - Tenant identifier
- * @param eventType - Event type (e.g., 'person.created')
- * @param data - Event payload data
+ * Failures are captured in the result (never thrown) so emitting stays safe
+ * on hot paths.
+ *
+ * @param tenantSlug - Tenant identifier.
+ * @param eventType - Event type (e.g., 'person.created').
+ * @param data - Event payload data.
+ * @returns `{success: true, deliveryIds}` with one ID per subscribed
+ * endpoint, or `{success: false, deliveryIds: []}` when the tenant is
+ * missing or emitting fails.
  */
 export async function emitWebhookEvent(
   tenantSlug: string,
@@ -323,8 +335,14 @@ async function deliverWebhook(endpoint: schema.WebhookEndpoint, payload: Webhook
 // ============================================================================
 
 /**
- * Process pending retries.
- * Call this from a cron job or scheduled task.
+ * Process pending webhook retries.
+ *
+ * Picks up `pending` / `retrying` deliveries whose backoff has elapsed (in
+ * batches of 100), attempts delivery, and applies exponential backoff or
+ * terminal failure. Call this from a cron job or scheduled task.
+ *
+ * @returns Counts of processed, succeeded, and terminally failed deliveries.
+ * @throws When the database lookup or update fails.
  */
 export async function processRetryQueue(): Promise<{ processed: number; succeeded: number; failed: number }> {
   const now = new Date();
@@ -424,6 +442,12 @@ export async function processRetryQueue(): Promise<{ processed: number; succeede
 
 /**
  * Send a test event to a specific webhook endpoint.
+ *
+ * @param tenantSlug - Tenant identifier.
+ * @param endpointId - Endpoint to test.
+ * @returns `{success}` plus the HTTP status and round-trip time when the
+ * request completed, or `{success: false, error}` when the tenant/endpoint
+ * is missing or delivery fails (never throws).
  */
 export async function sendTestWebhook(
   tenantSlug: string,

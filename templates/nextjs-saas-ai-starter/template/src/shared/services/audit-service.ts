@@ -17,19 +17,35 @@ import { auditEvents } from '@/shared/db/schema';
 import { logger } from '@/shared/lib/logger';
 
 export interface AuditLogInput {
+  /** Tenant the event belongs to, if any. */
   tenantId?: string;
+  /** ID of the user (or service) that performed the action, if known. */
   actorId?: string;
+  /** Action identifier, e.g. `person.created` (see {@link AuditActions}). */
   action: string;
+  /** Type of entity acted upon, e.g. `person`, `file`. */
   entityType: string;
+  /** ID of the entity acted upon, if any. */
   entityId?: string;
+  /** Before/after field changes, if applicable. */
   changes?: Record<string, unknown>;
+  /** Extra context (request IDs, feature flags, ...). */
   metadata?: Record<string, unknown>;
+  /** AI model version when the event relates to an AI operation. */
   aiModelVersion?: string;
+  /** Prompt version when the event relates to an AI operation. */
   aiPromptVersion?: string;
 }
 
 /**
- * Get request correlation IDs from headers or generate new ones
+ * Get request correlation IDs from headers or generate new ones.
+ *
+ * Reads `x-request-id` / `x-trace-id` from the incoming request headers so
+ * logs and audit rows can be correlated across services. Falls back to fresh
+ * UUIDs when the headers are absent (e.g. background jobs).
+ *
+ * @returns The correlation IDs for the current request.
+ * @throws When called outside a request scope where headers are unavailable.
  */
 export async function getCorrelationIds(): Promise<{ requestId: string; traceId: string }> {
   const headersList = await headers();
@@ -40,7 +56,14 @@ export async function getCorrelationIds(): Promise<{ requestId: string; traceId:
 }
 
 /**
- * Log an audit event
+ * Log an audit event.
+ *
+ * Persists the event to the audit log table and mirrors it to the structured
+ * logger with the current request correlation IDs attached.
+ *
+ * @param input - The audit event to record (actor, action, entity, context).
+ * @returns The ID of the inserted audit event row.
+ * @throws When the database insert fails or headers are unavailable.
  */
 export async function logAuditEvent(input: AuditLogInput): Promise<string> {
   const { requestId, traceId } = await getCorrelationIds();

@@ -40,7 +40,11 @@ export interface DepartmentManager {
 // ============================================================================
 
 /**
- * Get all departments for a tenant
+ * Get all departments for a tenant.
+ *
+ * @param tenantSlug - Tenant slug whose departments to list.
+ * @returns `{success: true, data}` with the department list, or
+ * `{success: false, error}` when the lookup fails.
  */
 export async function getDepartments(
   tenantSlug: string,
@@ -57,7 +61,12 @@ export async function getDepartments(
 }
 
 /**
- * Get departments with member counts and manager info
+ * Get departments with member counts and manager info.
+ *
+ * @param tenantSlug - Tenant slug whose departments to list.
+ * @returns `{success: true, data}` with departments enriched with
+ * `memberCount` and `managerIds`, or `{success: false, error}` when the
+ * tenant is missing or the lookup fails.
  */
 export async function getDepartmentsWithDetails(
   tenantSlug: string,
@@ -119,7 +128,13 @@ export async function getDepartmentsWithDetails(
 // ============================================================================
 
 /**
- * Get all members of a department
+ * Get all active members of a department, ordered by name.
+ *
+ * @param tenantSlug - Tenant slug owning the department.
+ * @param departmentId - Department whose members to list.
+ * @returns `{success: true, data}` with the member list, or
+ * `{success: false, error}` when the tenant/department is missing or the
+ * lookup fails.
  */
 export async function getDepartmentMembers(
   tenantSlug: string,
@@ -181,7 +196,15 @@ export async function getDepartmentMembers(
 // ============================================================================
 
 /**
- * Get manager(s) for a department
+ * Get current manager assignments for a department.
+ *
+ * Only active assignments (no end date, or end date in the future) are
+ * returned, primary first.
+ *
+ * @param tenantSlug - Tenant slug owning the department.
+ * @param departmentId - Department whose managers to list.
+ * @returns `{success: true, data}` with the manager assignments, or
+ * `{success: false, error}` when the tenant is missing or the lookup fails.
  */
 export async function getDepartmentManager(
   tenantSlug: string,
@@ -237,7 +260,14 @@ export async function getDepartmentManager(
 // ============================================================================
 
 /**
- * Create a new department
+ * Create a new department.
+ *
+ * Appends the department (with a generated ID) to the tenant's settings.
+ *
+ * @param tenantSlug - Tenant slug owning the department.
+ * @param departmentData - Department fields (everything except `id`).
+ * @returns `{success: true, data: {id}}` with the new department ID, or
+ * `{success: false, error}` when creation fails.
  */
 export async function createDepartment(
   tenantSlug: string,
@@ -274,7 +304,13 @@ export async function createDepartment(
 // ============================================================================
 
 /**
- * Update a department
+ * Update a department's fields.
+ *
+ * @param tenantSlug - Tenant slug owning the department.
+ * @param departmentId - Department to update.
+ * @param updates - Partial department fields (the `id` cannot change).
+ * @returns `{success: true}` on success, or `{success: false, error}` when
+ * the department is missing or the update fails.
  */
 export async function updateDepartment(
   tenantSlug: string,
@@ -317,8 +353,16 @@ export async function updateDepartment(
 // ============================================================================
 
 /**
- * Delete a department
- * Note: This does not remove department_id from persons. That should be handled separately.
+ * Delete a department.
+ *
+ * Refuses when the department still has members (reassign them first) and
+ * ends all active manager assignments. Note: this does not clear
+ * `department_id` on persons; that should be handled separately.
+ *
+ * @param tenantSlug - Tenant slug owning the department.
+ * @param departmentId - Department to delete.
+ * @returns `{success: true}` on success, or `{success: false, error}` when
+ * the tenant is missing, the department has members, or the delete fails.
  */
 export async function deleteDepartment(
   tenantSlug: string,
@@ -385,7 +429,13 @@ export async function deleteDepartment(
 // ============================================================================
 
 /**
- * Assign a person to a department
+ * Assign a person to a department (or unassign with `null`).
+ *
+ * @param tenantSlug - Tenant slug owning the person and department.
+ * @param personId - Person to (re)assign.
+ * @param departmentId - Target department, or `null` to unassign.
+ * @returns `{success: true}` on success, or `{success: false, error}` when
+ * the tenant, person, or department is missing, or the update fails.
  */
 export async function assignPersonToDepartment(
   tenantSlug: string,
@@ -444,7 +494,18 @@ export async function assignPersonToDepartment(
 // ============================================================================
 
 /**
- * Assign a manager to a department
+ * Assign a manager to a department.
+ *
+ * Ends any existing active assignment for the same manager, and when
+ * `isPrimary` is set, demotes other active primary managers first.
+ *
+ * @param tenantSlug - Tenant slug owning the department and manager.
+ * @param departmentId - Department to manage.
+ * @param managerId - Person to assign as manager.
+ * @param isPrimary - Whether this is the primary manager (default false).
+ * @returns `{success: true, data: {id}}` with the assignment ID, or
+ * `{success: false, error}` when the tenant, department, or manager is
+ * missing, or the assignment fails.
  */
 export async function assignManagerToDepartment(
   tenantSlug: string,
@@ -535,7 +596,12 @@ export async function assignManagerToDepartment(
 }
 
 /**
- * Remove a manager from a department
+ * Remove a manager from a department by ending the assignment.
+ *
+ * @param tenantSlug - Tenant slug owning the assignment.
+ * @param departmentManagerId - Assignment ID to end.
+ * @returns `{success: true}` on success, or `{success: false, error}` when
+ * the tenant is missing or the update fails.
  */
 export async function removeManagerFromDepartment(
   tenantSlug: string,

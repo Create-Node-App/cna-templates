@@ -56,8 +56,15 @@ const bucket = process.env.S3_BUCKET || env.AWS_S3_BUCKET || 'saas-template-uplo
 const tenantS3Clients = new Map<string, { client: S3Client; presignClient: S3Client; bucket: string }>();
 
 /**
- * Get S3 clients for a specific tenant
- * Falls back to env vars if tenant has no storage settings configured
+ * Get S3 clients for a specific tenant.
+ *
+ * Returns cached clients when available; otherwise builds clients from the
+ * tenant's storage settings. Falls back to environment-variable clients when
+ * the tenant has no storage configured.
+ *
+ * @param tenantId - Tenant whose storage clients to resolve.
+ * @returns The S3 and presign clients, bucket, and resolved storage settings.
+ * @throws When the tenant lookup or client construction fails.
  */
 export async function getTenantS3Client(tenantId: string): Promise<{
   client: S3Client;
@@ -129,7 +136,13 @@ export async function getTenantS3Client(tenantId: string): Promise<{
 }
 
 /**
- * Clear cached S3 client for a tenant (call when settings change)
+ * Clear the cached S3 clients for a tenant.
+ *
+ * Call this after storage settings change so the next lookup rebuilds the
+ * clients from fresh settings.
+ *
+ * @param tenantId - Tenant whose cached clients should be dropped.
+ * @returns Nothing.
  */
 export function clearTenantS3Client(tenantId: string): void {
   tenantS3Clients.delete(tenantId);
@@ -153,8 +166,13 @@ export interface UploadResult {
 }
 
 /**
- * Generate a presigned URL for uploading a file to S3
- * Uses the public endpoint so browsers can access it
+ * Generate a presigned URL for uploading a file to S3.
+ *
+ * Uses the public endpoint so browsers can PUT directly to storage.
+ *
+ * @param options - Upload target (key, content type, expiry, size limit).
+ * @returns A presigned PUT URL valid for `expiresIn` seconds.
+ * @throws When URL signing fails.
  */
 export async function getPresignedUploadUrl(options: PresignedUrlOptions): Promise<string> {
   const { key, contentType, expiresIn = 3600 } = options;
@@ -170,8 +188,14 @@ export async function getPresignedUploadUrl(options: PresignedUrlOptions): Promi
 }
 
 /**
- * Generate a presigned URL for downloading a file from S3
- * Uses the public endpoint so browsers can access it
+ * Generate a presigned URL for downloading a file from S3.
+ *
+ * Uses the public endpoint so browsers can GET directly from storage.
+ *
+ * @param key - File key (path) in S3.
+ * @param expiresIn - URL lifetime in seconds (default 3600).
+ * @returns A presigned GET URL valid for `expiresIn` seconds.
+ * @throws When URL signing fails.
  */
 export async function getPresignedDownloadUrl(key: string, expiresIn = 3600): Promise<string> {
   const command = new GetObjectCommand({
@@ -184,7 +208,12 @@ export async function getPresignedDownloadUrl(key: string, expiresIn = 3600): Pr
 }
 
 /**
- * Generate a presigned URL for uploading using tenant-specific storage settings
+ * Generate a presigned upload URL using tenant-specific storage settings.
+ *
+ * @param tenantId - Tenant whose bucket and credentials to use.
+ * @param options - Upload target (key, content type, expiry, size limit).
+ * @returns A presigned PUT URL valid for `expiresIn` seconds.
+ * @throws When the tenant lookup or URL signing fails.
  */
 export async function getTenantPresignedUploadUrl(tenantId: string, options: PresignedUrlOptions): Promise<string> {
   const { key, contentType, expiresIn = 3600 } = options;
@@ -201,7 +230,13 @@ export async function getTenantPresignedUploadUrl(tenantId: string, options: Pre
 }
 
 /**
- * Generate a presigned URL for downloading using tenant-specific storage settings
+ * Generate a presigned download URL using tenant-specific storage settings.
+ *
+ * @param tenantId - Tenant whose bucket and credentials to use.
+ * @param key - File key (path) in the tenant's bucket.
+ * @param expiresIn - URL lifetime in seconds (default 3600).
+ * @returns A presigned GET URL valid for `expiresIn` seconds.
+ * @throws When the tenant lookup or URL signing fails.
  */
 export async function getTenantPresignedDownloadUrl(tenantId: string, key: string, expiresIn = 3600): Promise<string> {
   const { presignClient: tenantPresignClient, bucket: tenantBucket } = await getTenantS3Client(tenantId);
@@ -216,7 +251,15 @@ export async function getTenantPresignedDownloadUrl(tenantId: string, key: strin
 }
 
 /**
- * Generate a unique file key with tenant isolation
+ * Generate a unique file key with tenant isolation.
+ *
+ * The key embeds the tenant ID, category, timestamp, and a random suffix so
+ * uploads never collide and stay namespaced per tenant.
+ *
+ * @param tenantId - Tenant namespace prefix.
+ * @param category - Storage category (e.g. `avatars`, `attachments`).
+ * @param filename - Original filename (sanitized before use).
+ * @returns A unique namespaced key like `<tenant>/<category>/<ts>-<rand>-<file>`.
  */
 export function generateFileKey(tenantId: string, category: string, filename: string): string {
   const timestamp = Date.now();
@@ -226,7 +269,13 @@ export function generateFileKey(tenantId: string, category: string, filename: st
 }
 
 /**
- * Get the public URL for a file (if bucket has public read access)
+ * Get the public URL for a file.
+ *
+ * Only usable when the bucket has public read access; otherwise use a
+ * presigned download URL.
+ *
+ * @param key - File key (path) in S3.
+ * @returns The public HTTPS URL for the file.
  */
 export function getPublicUrl(key: string): string {
   const endpoint = process.env.S3_ENDPOINT || `https://s3.${env.AWS_REGION || 'us-east-1'}.amazonaws.com`;
