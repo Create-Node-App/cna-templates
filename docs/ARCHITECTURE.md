@@ -68,5 +68,28 @@ compatible = [ext.type].flat().includes(template.type)
 4. Process special files (`.template`, `.append`, `.if-pnpm`) — see [AUTHORING.md](./AUTHORING.md)
 5. Rename `[bracket]/` directories based on `customOptions` answers
 6. Use the static `template/package.json` as the base manifest (legacy `package/index.js` is no longer used — no template currently ships it)
-7. Merge each extension's files and dependencies on top, in user-provided order
+7. Merge each extension's files and dependencies on top, in user-provided order (extension root `README.md`/`LICENSE`/`CONTRIBUTING.md` are bank-only and skipped by the loader — see below)
 8. Write the final project to disk
+
+## Single Architecture (CNA)
+
+CNA uses exactly one layout convention:
+
+- **Templates** ship scaffold files under `template/` plus bank-only docs
+  (`README.md`, `cna.config.json`) at the template root. The CLI resolves
+  the scaffold directory with `getTemplateDirPath`, which prefers
+  `template/` when present — sibling bank docs are never copied.
+- **Extensions** are flat: every file in the extension directory (except
+  `package.json`, whose dependencies are merged) is copied on top of the
+  template output. The extension root `README.md` (and `LICENSE` /
+  `CONTRIBUTING.md` when present) is **bank-only documentation** — the CLI
+  loader skips those root files for extension entries so they can never
+  race the template's generated `README.md` (see #396). Nested payloads
+  such as `docs/README.md.append` still merge normally.
+
+Do not introduce a `template/` overlay inside extensions or a second
+ignore-file convention: `scripts/validate-templates.js`
+(`validateExtensionBankHygiene`) fails CI if an extension gains a
+`template/` subdirectory. Sibling products (CPA/CVA) use the `template/`
+overlay for extensions instead — that is their canonical convention, not
+CNA's.
