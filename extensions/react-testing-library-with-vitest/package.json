@@ -3,10 +3,10 @@
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
-    "@vitest/coverage-v8": "^4.1.9",
-    "@vitest/ui": "^4.1.9",
+    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/ui": "^5.0.0",
     "jsdom": "^29.1.1",
-    "vitest": "^4.1.9"
+    "vitest": "^5.0.0"
   },
   "scripts": {
     "test": "vitest run",

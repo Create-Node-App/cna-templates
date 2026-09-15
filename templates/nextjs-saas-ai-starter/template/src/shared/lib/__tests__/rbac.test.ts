@@ -40,9 +40,9 @@ import {
   requireTenantManager,
   requireTenantMember,
 } from '../rbac';
-// eslint-disable-next-line import/order -- must import after jest.mock
+// eslint-disable-next-line import-x/order -- must import after jest.mock
 import { auth } from '../auth';
-// eslint-disable-next-line import/order -- must import after jest.mock
+// eslint-disable-next-line import-x/order -- must import after jest.mock
 import { hasPermission } from '../permissions';
 
 // Get typed references to the mocked functions
