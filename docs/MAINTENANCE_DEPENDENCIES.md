@@ -73,6 +73,33 @@ If a version is missing, `npm view` returns a 404. That immediately tells you th
 
 In newer npm versions, peer conflicts can fail installs even when the rest of the tree resolves. Treat peer conflicts as errors if CI breaks.
 
+### 2.4 Held majors: TypeScript 7 and ESLint 10 (supersedes #458)
+
+**Meaning:** Dependabot PR #458 proposed `typescript@^7.0.2` (10 templates) and
+`eslint@^10.10.0` / `@eslint/js@^10.0.1` (5 templates). Every affected L1 job
+failed with `ERESOLVE` (or a post-install `lint` crash for the two templates
+whose pre-existing `.npmrc` masks the install conflict). No newer release of
+the blocking packages covers the new majors, so the majors are **held** —
+templates stay on `typescript@^6.0.3` / `eslint@^9.39.4` / `@eslint/js@^9.39.4`
+until upstream ships support. This is a hold, not a downgrade: nothing on
+`main` is moved back.
+
+| Blocked major | Blocking package (latest) | Upstream cap | Held templates |
+|---|---|---|---|
+| `typescript@7` | `typescript-eslint@8.70.0`, `@typescript-eslint/parser@8.70.0`, `@typescript-eslint/eslint-plugin@8.70.0` | `peer typescript@">=4.8.4 <6.1.0"`; TS ≥ 7.1 tracked in [typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940) | hono, nestjs, nextjs-saas-ai, nextjs, react-vite, remix, turborepo, wdio, webextension-react-vite |
+| `typescript@7` | `@astrojs/check@0.9.10` | `peer typescript@"^5.0.0 \|\| ^6.0.0"` (no TS 7 release exists) | astro (`astro check` is the template's `type-check` script, so the plugin cannot be dropped) |
+| `eslint@10` | `eslint-plugin-jsx-a11y@6.10.2` | `peer eslint@"^3 \|\| ^4 \|\| ^5 \|\| ^6 \|\| ^7 \|\| ^8 \|\| ^9"` (no ESLint 10 release exists) | nextjs-saas-ai, nextjs, react-vite, remix, webextension-react-vite |
+| `esbuild-node-externals@2` | `serverless-esbuild@1.57.2` (latest) | `peerOptional esbuild-node-externals@"^1.0.0"` (npm still ERESOLVEs while the package is present alongside the extension's direct `^2.0.0`) | nestjs-serverless extension (breaks L2 `serverless-framework @ nestjs-starter`) |
+
+**Taken from #458** (blocker-free): `prettier-plugin-astro@^1.0.0` (peer is only
+`prettier@^3.5.3`; the v1 rewrite targets the Astro 7 compiler and the template
+uses `astro@^7.0.6`) and `chromedriver@^153.0.0`.
+
+**Revisit when:** `typescript-eslint` / `@astrojs/check` publish a TS 7-compatible
+release, `eslint-plugin-jsx-a11y` publishes an ESLint 10-compatible release, or
+`serverless-esbuild` widens its `esbuild-node-externals` peer range.
+Re-run the affected L1/L2 cells, then lift the hold.
+
 ---
 
 ## 3. Updating dependencies
