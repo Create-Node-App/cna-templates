@@ -1,0 +1,4 @@
+/* StyleX Atomic CSS entrypoint */
+/* See https://stylexjs.com/docs/learn/installation/vite/vite-react/ */
+
+@layer priority1, priority2, priority3;

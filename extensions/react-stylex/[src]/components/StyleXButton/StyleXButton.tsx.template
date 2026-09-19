@@ -1,0 +1,45 @@
+import React from 'react';
+import * as stylex from '@stylexjs/stylex';
+import { colors, spacing } from '../../theme/tokens.stylex';
+
+const styles = stylex.create({
+  base: {
+    backgroundColor: {
+      default: colors.primary,
+      ':hover': colors.primaryHover,
+    },
+    color: '#ffffff',
+    padding: `0.625rem 1.25rem`,
+    borderWidth: 0,
+    borderStyle: 'none',
+    borderRadius: '0.375rem',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    transition: 'background-color 0.2s',
+  },
+  loading: {
+    opacity: 0.7,
+    cursor: 'wait',
+  },
+});
+
+export interface StyleXButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+}
+
+const StyleXButton: React.FC<StyleXButtonProps> = ({ children, loading, className, style, disabled, ...rest }) => {
+  const stylexProps = stylex.props(styles.base, loading && styles.loading);
+  return (
+    <button 
+      {...rest} 
+      disabled={disabled || loading} 
+      {...stylexProps}
+      style={{ ...style, ...stylexProps.style }}
+      className={[className, stylexProps.className].filter(Boolean).join(' ')}
+    >
+      {loading ? 'Loading...' : children}
+    </button>
+  );
+};
+
+export default StyleXButton;
