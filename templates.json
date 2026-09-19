@@ -979,6 +979,21 @@
       ]
     },
     {
+      "name": "StyleX",
+      "slug": "react-stylex",
+      "description": "Add StyleX for zero-runtime, type-safe, atomic CSS-in-JS.",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/react-stylex",
+      "type": "react",
+      "category": "UI",
+      "labels": [
+        "React",
+        "StyleX",
+        "CSS-in-JS",
+        "Styling",
+        "Atomic"
+      ]
+    },
+    {
       "name": "shadcn/ui",
       "slug": "shadcn-ui",
       "description": "Add shadcn/ui component primitives (Radix UI + Tailwind CSS) with variant-based theming utilities.",

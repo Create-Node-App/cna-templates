@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "dev": "vite --config vite.config.stylex.mjs",
+    "build": "tsc && vite build --config vite.config.stylex.mjs",
+    "preview": "vite preview --config vite.config.stylex.mjs",
+    "lint": "eslint . --config eslint.config.stylex.mjs",
+    "lint:fix": "eslint . --config eslint.config.stylex.mjs --fix"
+  },
+  "dependencies": {
+    "@stylexjs/stylex": "^0.19.1"
+  },
+  "devDependencies": {
+    "@stylexjs/eslint-plugin": "^0.19.1",
+    "@stylexjs/unplugin": "^0.19.1"
+  }
+}

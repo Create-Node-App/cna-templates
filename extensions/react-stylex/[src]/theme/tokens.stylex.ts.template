@@ -1,0 +1,15 @@
+import * as stylex from '@stylexjs/stylex';
+
+// A typed theme example demonstrating tokens
+export const colors = stylex.defineVars({
+  primary: '#0070f3',
+  primaryHover: '#0051a2',
+  background: '#ffffff',
+  text: '#111111',
+});
+
+export const spacing = stylex.defineVars({
+  small: '0.5rem',
+  medium: '1rem',
+  large: '1.5rem',
+});

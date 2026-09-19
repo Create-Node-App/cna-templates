@@ -1,0 +1,8 @@
+
+## Styling (StyleX)
+
+This project uses [StyleX](https://stylexjs.com) for zero-runtime, type-safe, atomic CSS-in-JS.
+
+- **Tokens:** Theme variables are defined using `stylex.defineVars` in `src/theme/tokens.stylex.ts`.
+- **Authoring:** Styles are defined in components using `stylex.create` and applied with `{...stylex.props(...)}`.
+- **CSS:** Atomic CSS is generated at compile time and emitted efficiently for production. See the example `Button` component in `src/components/Button`.
