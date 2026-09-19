@@ -70,6 +70,27 @@ Las extensiones son más simples: solo agregan archivos y dependencias.
 Todo lo demás en el directorio de la extensión se copia al proyecto,
 respetando las convenciones de sufijos descritas arriba.
 
+### Inyección de configuración componible (react-vite-starter)
+
+Las extensiones no deben incluir configs envoltorio (`vite.config.*` /
+`eslint.config.*`) ni reescribir los scripts base de `package.json`: la
+fusión de scripts/configs es last-wins y los envoltorios se eliminan entre
+sí al apilarse. En su lugar, `react-vite-starter` expone puntos de
+extensión basados en append:
+
+- `vite.extensions.ts`: exporta `viteExtensionPlugins`. Las extensiones
+  incluyen un archivo `vite.extensions.ts.append` que importa su plugin y
+  lo agrega; las entradas se ejecutan **antes** de los plugins base (en
+  particular antes de `@vitejs/plugin-react`, que plugins como StyleX
+  requieren para preservar Fast Refresh).
+- `eslint.extensions.mjs`: exporta `eslintExtensionConfigs`. Las
+  extensiones incluyen un `eslint.extensions.mjs.append` con un bloque de
+  flat-config; las entradas se aplican **después** de la config base.
+
+Ambos están vacíos por defecto, así que los proyectos sin extensiones se
+comportan exactamente igual que antes. Implementación de referencia:
+`extensions/react-stylex/`.
+
 ## `customOptions` — Prompts interactivos
 
 Solo las plantillas pueden definirlos. Se convierten en variables EJS y controlan

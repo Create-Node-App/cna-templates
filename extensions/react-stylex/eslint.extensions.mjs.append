@@ -1,0 +1,14 @@
+import stylexPlugin from '@stylexjs/eslint-plugin';
+
+// Contributes StyleX lint rules through the base template's
+// `eslint.extensions.mjs` extension point (applied after the base
+// config), with no wrapper config or `--config` rewrites.
+eslintExtensionConfigs.push({
+  files: ['**/*.{ts,tsx}'],
+  plugins: {
+    '@stylexjs': stylexPlugin,
+  },
+  rules: {
+    '@stylexjs/valid-styles': 'error',
+  },
+});

@@ -72,6 +72,25 @@ content meant for the generated project under `docs/` (e.g.
 a `template/` subdirectory to extensions — CNA extensions are flat by
 contract (see [ARCHITECTURE.md](./ARCHITECTURE.md)).
 
+### Composable config injection (react-vite-starter)
+
+Extensions must not ship wrapper configs (`vite.config.*` / `eslint.config.*`)
+or rewrite base `package.json` scripts — script/config merging is last-wins,
+so wrappers silently drop each other when stacked. Instead,
+`react-vite-starter` exposes append-based extension points:
+
+- `vite.extensions.ts` — exports `viteExtensionPlugins`. Extensions ship a
+  `vite.extensions.ts.append` file that imports their plugin and pushes it;
+  entries run **before** the base plugins (notably before
+  `@vitejs/plugin-react`, which plugins like StyleX require to preserve
+  Fast Refresh).
+- `eslint.extensions.mjs` — exports `eslintExtensionConfigs`. Extensions ship
+  an `eslint.extensions.mjs.append` file pushing a flat-config block;
+  entries apply **after** the base config.
+
+Both are empty by default, so projects without extensions behave exactly as
+before. Reference implementation: `extensions/react-stylex/`.
+
 ## `customOptions` — Interactive Prompts
 
 Only templates can define these. They become EJS variables and control bracket directory renaming.
