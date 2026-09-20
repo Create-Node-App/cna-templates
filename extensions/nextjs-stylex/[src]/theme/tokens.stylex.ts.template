@@ -1,0 +1,8 @@
+import * as stylex from '@stylexjs/stylex';
+
+export const tokens = stylex.defineVars({
+  primary: '#0070f3',
+  secondary: '#1c1c1e',
+  background: '#ffffff',
+  text: '#000000',
+});

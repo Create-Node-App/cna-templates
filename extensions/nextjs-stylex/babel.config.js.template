@@ -1,0 +1,24 @@
+const path = require('path');
+const dev = process.env.NODE_ENV === 'development';
+
+module.exports = {
+  presets: ['next/babel'],
+  plugins: [
+    [
+      '@stylexjs/babel-plugin',
+      {
+        dev,
+        runtimeInjection: false,
+        genConditionalClasses: true,
+        treeshakeCompensation: true,
+        aliases: {
+          '<%= typeof projectImportPath !== "undefined" ? projectImportPath : "@/" %>*': [path.join(__dirname, '<%= typeof srcDir !== "undefined" ? srcDir : "src" %>', '*')]
+        },
+        unstable_moduleResolution: {
+          type: 'commonJS',
+          rootDir: __dirname,
+        },
+      },
+    ],
+  ],
+};
