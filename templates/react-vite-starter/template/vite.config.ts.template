@@ -3,6 +3,7 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 import eslint from 'vite-plugin-eslint';
 import { VitePWA } from 'vite-plugin-pwa';
+import { viteExtensionPlugins } from './vite.extensions';
 
 const { PORT = '3000' } = process.env;
 
@@ -43,7 +44,9 @@ const vitePluginPWA = () =>
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), eslint(), vitePluginPWA()],
+  // Extension plugins first: entries from `vite.extensions.ts` (e.g. StyleX)
+  // must precede `@vitejs/plugin-react` to preserve Fast Refresh.
+  plugins: [...viteExtensionPlugins, react(), eslint(), vitePluginPWA()],
   css: {
     preprocessorOptions: {
       less: {

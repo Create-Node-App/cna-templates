@@ -5,6 +5,7 @@ import react from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import { importX } from 'eslint-plugin-import-x';
+import { eslintExtensionConfigs } from './eslint.extensions.mjs';
 
 export default [
   {
@@ -97,4 +98,7 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
+  // Extension configs last: entries from `eslint.extensions.mjs` refine
+  // the base setup instead of replacing it.
+  ...eslintExtensionConfigs,
 ];

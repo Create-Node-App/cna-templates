@@ -1,0 +1,7 @@
+import stylexPlugin from '@stylexjs/unplugin';
+
+// Contributes the StyleX Vite plugin through the base template's
+// `vite.extensions.ts` extension point. It runs before
+// `@vitejs/plugin-react` (see template/vite.config.ts) to preserve
+// Fast Refresh, with no wrapper config or script rewrites.
+viteExtensionPlugins.push(stylexPlugin.vite({ useCSSLayers: true }));
