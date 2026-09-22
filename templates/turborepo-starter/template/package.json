@@ -21,7 +21,7 @@
     "@app/eslint-config-base": "0.0.0",
     "prettier": "^3.9.4",
     "turbo": "^2.10.2",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^5.0.0"
   },
   "packageManager": "npm@10.9.0",
