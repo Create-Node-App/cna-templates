@@ -24,6 +24,9 @@ updates:
       # typescript-eslint@8 currently rejects TypeScript 7; tracked in #371/#395.
       - dependency-name: typescript
         versions: [">=7.0.0"]
+      # ESLint 10 is incompatible with eslint-plugin-jsx-a11y@6.10.2 peer range; see #468.
+      - dependency-name: eslint
+        versions: [">=10.0.0"]
       # jsdom 30 breaks @testing-library/dom getComputedStyle (font-sizes.js:116) — see #341
       - dependency-name: jsdom
         versions: [">=30"]
