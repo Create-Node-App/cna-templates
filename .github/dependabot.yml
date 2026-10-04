@@ -21,12 +21,17 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@prisma/client"
         update-types: ["version-update:semver-major"]
+      # typescript-eslint@8 currently rejects TypeScript 7; tracked in #371/#395.
+      - dependency-name: typescript
+        versions: [">=7.0.0"]
       # jsdom 30 breaks @testing-library/dom getComputedStyle (font-sizes.js:116) — see #341
       - dependency-name: jsdom
         versions: [">=30"]
     groups:
       devDependencies:
         dependency-type: development
+        exclude-patterns:
+          - typescript
       productionDependencies:
         dependency-type: production
 
