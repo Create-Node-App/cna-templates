@@ -1251,6 +1251,23 @@
         "Vite",
         "SPA"
       ]
+    },
+    {
+      "name": "StyleX (Next.js)",
+      "slug": "nextjs-stylex",
+      "description": "Official StyleX integration for Next.js App Router (Babel/PostCSS).",
+      "url": "https://github.com/Create-Node-App/cna-templates/tree/main/extensions/nextjs-stylex",
+      "type": [
+        "nextjs",
+        "nextjs-saas-ai"
+      ],
+      "category": "Styling",
+      "labels": [
+        "StyleX",
+        "Next.js",
+        "CSS-in-JS",
+        "Atomic CSS"
+      ]
     }
   ]
 }

@@ -1,0 +1,13 @@
+
+## StyleX Configuration
+
+This project is configured with [StyleX](https://stylexjs.com/).
+
+### Turbopack Limitation
+Because StyleX requires a custom Babel plugin (`babel.config.js`), Next.js opts out of SWC. 
+As a result, `next dev --turbo` is not supported (the Babel plugin will be ignored). 
+Always use the standard `npm run dev` (Webpack) for development.
+
+### Usage
+
+Check out the `StyleXExample.tsx` component and the theme tokens in `theme/tokens.stylex.ts`.

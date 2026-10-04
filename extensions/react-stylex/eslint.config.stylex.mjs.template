@@ -1,0 +1,15 @@
+import baseConfig from './eslint.config.mjs';
+import stylexPlugin from '@stylexjs/eslint-plugin';
+
+export default [
+  ...baseConfig,
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: {
+      '@stylexjs': stylexPlugin,
+    },
+    rules: {
+      '@stylexjs/valid-styles': 'error',
+    },
+  },
+];

@@ -1,0 +1,16 @@
+
+// StyleX PostCSS integration (appended by nextjs-stylex)
+// Must come before other transform plugins (e.g. autoprefixer) to inject atomic CSS first
+config.plugins = Object.assign(
+  {
+    '@stylexjs/postcss-plugin': {
+      include: [
+        'app/**/*.{js,jsx,ts,tsx}',
+        'src/**/*.{js,jsx,ts,tsx}',
+        'components/**/*.{js,jsx,ts,tsx}',
+        'pages/**/*.{js,jsx,ts,tsx}',
+      ],
+    },
+  },
+  config.plugins,
+);

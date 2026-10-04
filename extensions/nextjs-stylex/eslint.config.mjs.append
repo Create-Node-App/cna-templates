@@ -1,0 +1,12 @@
+
+// StyleX ESLint integration (appended)
+const eslintPluginStylex = (await import("@stylexjs/eslint-plugin")).default;
+
+config.push({
+  plugins: {
+    "@stylexjs": eslintPluginStylex,
+  },
+  rules: {
+    "@stylexjs/valid-styles": "error",
+  },
+});
