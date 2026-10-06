@@ -17,15 +17,15 @@ npx create-awesome-node-app my-app \
   --addons nextjs-stylex nextjs-tailwindcss
 ```
 
-The StyleX PostCSS plugin is prepended before the existing PostCSS plugins, so
-it processes StyleX output before Tailwind and Autoprefixer. Keep both
-extensions' configuration contributions in place; do not replace the generated
-PostCSS config. The combined `nextjs-saas-ai-starter` setup passed lint,
-type-check, and production build in [PR #465](https://github.com/Create-Node-App/cna-templates/pull/465).
+The generated PostCSS plugin order is stable in either selection order:
+StyleX, Tailwind, then Autoprefixer. Keep both extensions' configuration
+contributions in place; do not replace the generated PostCSS config. The
+combined `nextjs-saas-ai-starter` setup passed lint, type-check, and production
+build in [PR #465](https://github.com/Create-Node-App/cna-templates/pull/465).
 
-## Turbopack and SWC limitation
+## Turbopack compatibility
 
-**Important:** The official StyleX Next.js integration relies on `@stylexjs/babel-plugin`. 
-Next.js will automatically opt out of the SWC compiler when it detects `babel.config.js`. 
-Therefore, `next dev --turbo` will ignore the Babel configuration and StyleX will not compile during a Turbopack dev session. 
-This is an accepted tradeoff as documented by the official StyleX Next.js setup guidelines.
+The StyleX Babel plugin transforms StyleX code, and the PostCSS plugin extracts
+the generated CSS. Next.js 16 and later Turbopack supports detected Babel
+configurations and PostCSS plugins; use Webpack with earlier Next.js versions.
+See the [Next.js Turbopack compatibility table](https://nextjs.org/docs/app/api-reference/turbopack#supported-features).

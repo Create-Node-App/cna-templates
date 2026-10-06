@@ -1,2 +1,23 @@
+const postcssPlugins = Object.entries(config.plugins ?? {});
+const stylexPlugin = postcssPlugins.find(
+  ([name]) => name === '@stylexjs/postcss-plugin',
+);
+const tailwindPlugin = postcssPlugins.find(
+  ([name]) => name === '@tailwindcss/postcss',
+);
+const autoprefixerPlugin = postcssPlugins.find(
+  ([name]) => name === 'autoprefixer',
+);
+const otherPlugins = postcssPlugins.filter(
+  ([name]) =>
+    name !== '@stylexjs/postcss-plugin' &&
+    name !== '@tailwindcss/postcss' &&
+    name !== 'autoprefixer',
+);
 
-config.plugins = Object.assign({ '@tailwindcss/postcss': {} }, config.plugins);
+config.plugins = Object.fromEntries([
+  ...(stylexPlugin ? [stylexPlugin] : []),
+  ...otherPlugins,
+  tailwindPlugin ?? ['@tailwindcss/postcss', {}],
+  ...(autoprefixerPlugin ? [autoprefixerPlugin] : []),
+]);
