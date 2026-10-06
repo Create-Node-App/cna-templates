@@ -50,6 +50,18 @@ npx create-awesome-node-app --template react-vite-boilerplate --addons material-
 | [docs/MAINTENANCE_RUNBOOK.md](./docs/MAINTENANCE_RUNBOOK.md) | Operational procedures for maintaining templates, extensions, CI, dependencies, security, and releases |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | How to add templates and extensions |
 
+## Styling extensions
+
+Use [`react-tailwindcss`](./extensions/react-tailwindcss/README.md) or
+[`nextjs-tailwindcss`](./extensions/nextjs-tailwindcss/README.md) for utility
+classes. Choose [`react-stylex`](./extensions/react-stylex/README.md) or
+[`nextjs-stylex`](./extensions/nextjs-stylex/README.md) for typed StyleX styles
+compiled to atomic CSS. In Next.js, StyleX and Tailwind can be combined; the
+StyleX PostCSS plugin runs before the existing Tailwind and Autoprefixer
+plugins. The public
+[extensions guide](https://create-awesome-node-app.vercel.app/docs/extensions)
+summarizes the tradeoffs and links to each option.
+
 ## CI trust layers
 
 Green Actions mean templates and realistic selections work — **not** that every
