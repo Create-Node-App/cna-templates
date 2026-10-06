@@ -20,6 +20,10 @@ npx create-awesome-node-app my-app --template nextjs-starter --addons nextjs-tai
 - `tailwindcss` and `@tailwindcss/postcss` - Tailwind CSS dependencies
 - `postcss` and `autoprefixer` - PostCSS development dependencies
 
+When combined with `nextjs-stylex`, the generated PostCSS plugin map keeps
+StyleX before Tailwind and Autoprefixer regardless of extension selection
+order.
+
 ## Verify
 
 After scaffolding the app, install dependencies and run a production build:

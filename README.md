@@ -58,7 +58,8 @@ classes. Choose [`react-stylex`](./extensions/react-stylex/README.md) or
 [`nextjs-stylex`](./extensions/nextjs-stylex/README.md) for typed StyleX styles
 compiled to atomic CSS. In Next.js, StyleX and Tailwind can be combined; the
 StyleX PostCSS plugin runs before the existing Tailwind and Autoprefixer
-plugins. The public
+plugins regardless of the order in which those two extensions are selected.
+The public
 [extensions guide](https://create-awesome-node-app.vercel.app/docs/extensions)
 summarizes the tradeoffs and links to each option.
 

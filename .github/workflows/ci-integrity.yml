@@ -38,6 +38,9 @@ jobs:
       - name: Validate templates.json (incl. on-disk paths)
         run: node scripts/validate-templates.js
 
+      - name: Verify StyleX and Tailwind PostCSS ordering
+        run: node scripts/ci/test-stylex-tailwind-postcss-order.js
+
       - name: Check landing/README doc links
         run: node scripts/check-template-integrity.js
 
