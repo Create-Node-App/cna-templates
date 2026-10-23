@@ -27,6 +27,12 @@ updates:
       # ESLint 10 is incompatible with eslint-plugin-jsx-a11y@6.10.2 peer range; see #468.
       - dependency-name: eslint
         versions: [">=10.0.0"]
+      # @eslint/js 10 peers on eslint 10, so it has to move with eslint (above).
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0"]
+      # serverless-esbuild@1.57 peers on esbuild-node-externals ^1.
+      - dependency-name: esbuild-node-externals
+        versions: [">=2.0.0"]
       # jsdom 30 breaks @testing-library/dom getComputedStyle (font-sizes.js:116) — see #341
       - dependency-name: jsdom
         versions: [">=30"]
