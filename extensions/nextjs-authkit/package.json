@@ -2,7 +2,7 @@
   "name": "nextjs-authkit-extension",
   "dependencies": {
     "@workos-inc/authkit-nextjs": "^4.3.0",
-    "@workos-inc/node": "^11.0.0"
+    "@workos-inc/node": "^12.0.0"
   },
   "devDependencies": {}
 }
