@@ -51,7 +51,7 @@
     "dotenv": "^18.0.5",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
-    "glob": "^13.0.6",
+    "glob": "^14.0.3",
     "log4js": "^6.9.1",
     "prettier": "^3.9.5",
     "selenium-standalone": "^10.0.2",
