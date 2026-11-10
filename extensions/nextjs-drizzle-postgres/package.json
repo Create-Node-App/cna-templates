@@ -3,7 +3,7 @@
   "dependencies": {
     "drizzle-orm": "^0.45.1",
     "pg": "^8.17.2",
-    "postgres": "^3.4.8"
+    "postgres": "^4.0.0"
   },
   "devDependencies": {
     "@types/pg": "^8.16.0",
